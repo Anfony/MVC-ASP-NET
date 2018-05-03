@@ -1,0 +1,11 @@
+c:\users\gray-dell\documents\visual studio 2013\Projects\Prueba\Prueba\bin\Debug\Prueba.exe.config
+c:\users\gray-dell\documents\visual studio 2013\Projects\Prueba\Prueba\bin\Debug\Prueba.exe
+c:\users\gray-dell\documents\visual studio 2013\Projects\Prueba\Prueba\bin\Debug\Prueba.pdb
+c:\users\gray-dell\documents\visual studio 2013\Projects\Prueba\Prueba\obj\Debug\Prueba.csprojResolveAssemblyReference.cache
+c:\users\gray-dell\documents\visual studio 2013\Projects\Prueba\Prueba\obj\Debug\Prueba.Form1.resources
+c:\users\gray-dell\documents\visual studio 2013\Projects\Prueba\Prueba\obj\Debug\Prueba.Properties.Resources.resources
+c:\users\gray-dell\documents\visual studio 2013\Projects\Prueba\Prueba\obj\Debug\Prueba.csproj.GenerateResource.Cache
+c:\users\gray-dell\documents\visual studio 2013\Projects\Prueba\Prueba\obj\Debug\RdlCompile.cache
+c:\users\gray-dell\documents\visual studio 2013\Projects\Prueba\Prueba\obj\Debug\RdlCompile.compiled
+c:\users\gray-dell\documents\visual studio 2013\Projects\Prueba\Prueba\obj\Debug\Prueba.exe
+c:\users\gray-dell\documents\visual studio 2013\Projects\Prueba\Prueba\obj\Debug\Prueba.pdb
