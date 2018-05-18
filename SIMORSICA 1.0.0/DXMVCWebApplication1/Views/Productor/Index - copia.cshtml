@@ -1,0 +1,342 @@
+﻿@{
+    ViewBag.Title = "Padrón de Unidades de Producción";
+}
+
+<h3>Registro del Padrón de Unidades de Producción</h3>
+<!--<h3>Registre aquí los Productores </h3>-->
+
+<div id="map" style="height:60%"></div>
+<script src="~/Scripts/PantallaMapa.js" type="text/javascript"></script>
+<script src="~/Scripts/utils.js"></script>
+<script type="text/javascript">
+
+    var selectedIDs = "";
+    function EstadoCombo_SelectedIndexChanged(s, e) {
+        Fk_IdMunicipio__SIS.PerformCallback();
+    }
+    function MunicipioCombo_BeginCallback(s, e) {
+        e.customArgs['Fk_IdEstado__SIS'] = Fk_IdEstado__SIS.GetValue();
+    }
+    function OnBeginCallback(s, e) {
+        //Pass all selected keys to GridView callback action
+        e.customArgs["selectedIDs"] = selectedIDs;
+        //alert("OnBeginCallback");
+
+    }
+
+    function SelectionChanged(s, e) {
+        //alert("SelectionChanged");
+        //s.GetSelectedFieldValues("Pk_IdProductor", OnGetValues);
+        var key = s.GetRowKey(e.visibleIndex);
+
+        for(i=0; i<idProductor.length; i++){
+            if(idProductor[i] == parseInt(key)){
+                if(e.isSelected){
+                    markersProductores[i].setMap(map);
+                    selectedMarker = i;
+                }else{
+                    markersProductores[i].setMap(null);
+                }
+
+            }
+        }
+        //alert("key: " + key);
+    }
+
+/*
+    function OnGetValues(selectedValues) {
+        //alert("OnGetValues");
+        //selectedIDs = selectedValues.join(',');
+        //selectedKeys = "";
+        for (var i=0; i<selectedValues.length; i++) {
+            //selectedKeys = selectedKeys + selectedValues[i] + ",";
+            if(markersProductores[i] == selectedValues[i]){
+                markersProductores[i].setMap(map);
+            }else{
+                markersProductores[i].setMap(null);
+            }
+
+
+        }
+        //alert(selectedKeys);
+    }
+*/
+
+
+    function capturaMapa(){
+        alert("Navegue por el mapa y haga clic en la ubicación deseada");
+        $('#btnGeocodificar').prop( "disabled", true );
+        $('#Latitud_I').prop( "disabled", true );
+        $('#Longitud_I').prop( "disabled", true );
+        $('#Direccion_I').prop( "disabled", true );
+        $('#Colonia_I').prop( "disabled", true );
+        $(".dxic").removeAttr("onmousedown");
+        $('#Fk_IdEstado__SIS_B-1').css( "visibility", 'hidden' );
+        $('#Fk_IdMunicipio__SIS_B-1').css( "visibility", 'hidden' );
+        //Borrar los markers
+        //removeMarkers(map, markers);
+        goFullScreen();
+        var resultGeocode = reverseGeocode();
+        //alert(resultGeocode.formatted_address);
+
+    }
+
+    function llenaDireccion(resultado){
+        document.getElementById('Direccion_I').innerHTML = resultado.formatted_address;
+    }
+
+/***********************************************************************************/
+    function actualizaDireccion(resultado){
+        var direccion = [];
+        $('#Colonia_I').html('');
+
+        for (var i in resultado.address_components){
+            switch(resultado.address_components[i].types[0]){
+                case 'route':
+                    //calle
+                    direccion[0] = resultado.address_components[i].long_name;
+                    break;
+                case 'street_number':
+                    //numero
+                    direccion[1] = resultado.address_components[i].long_name;
+                    break;
+                case 'locality':
+                    //localidad
+                    direccion[2] = resultado.address_components[i].long_name;
+                    break;
+                case 'sublocality_level_1':
+                    //colonia
+                    $('#Colonia_I').html(resultado.address_components[i].long_name);
+                    break;
+                case "administrative_area_level_1":
+                    //estado
+                    document.getElementById('Fk_IdEstado__SIS_I').value = resultado.address_components[i].long_name;
+                    break;
+                case "administrative_area_level_2":
+                    //municipio
+                    document.getElementById('Fk_IdMunicipio__SIS_I').value = resultado.address_components[i].long_name;
+                    break;
+                case "administrative_area_level_3":
+                    //municipio
+                    document.getElementById('Fk_IdMunicipio__SIS_I').value = resultado.address_components[i].long_name;
+                    break;
+/*
+                case "country":
+                    //pais
+                    document.getElementById('Direccion_I').innerHTML = resultado.address_components[i].long_name;
+                    break;
+                case "postal_code":
+                    //codigo postal
+                    document.getElementById('Direccion_I').innerHTML = resultado.address_components[i].long_name;
+                    break;
+*/
+            } //switch           
+        } //
+        var dirCompleta = "";
+        for(var i in direccion){
+            dirCompleta += direccion[i] + " ";
+        }
+        $('#Direccion_I').html(dirCompleta);
+
+        //var coords = "SRID=4326;POINT (" + resultado.geometry.location.lat().toString() + " " + resultado.geometry.location.lng().toString() + ")";
+        //$('#Ubicacion_I').html(coords);
+        $('#Latitud_I').html(resultado.geometry.location.lat().toString());
+        $('#Longitud_I').html(resultado.geometry.location.lng().toString());  
+
+    }
+
+/***********************************************************************************/
+    function capturaDireccion(){
+        alert("captura la direccion y da click en geocodificar");
+        $('#btnGeocodificar').prop( "disabled", false );
+        $('#Latitud_I').prop( "disabled", true );
+        $('#Longitud_I').prop( "disabled", true );
+        $('#Fk_IdEstado__SIS_B-1').css( "visibility", 'visible' );
+        $('#Fk_IdMunicipio__SIS_B-1').css( "visibility", 'visible' );
+       
+    }
+
+    function capturaCoordenadas(){
+        alert("captura las coordenadas y da click en geocodificar");
+        $('#btnGeocodificar').prop( "disabled", false );
+        $('#Latitud_I').prop( "disabled", false );
+        $('#Longitud_I').prop( "disabled", false );
+        $('#Direccion_I').prop( "disabled", true );
+        $('#Colonia_I').prop( "disabled", true );
+        $(".dxic").removeAttr("onmousedown");
+        $('#Fk_IdEstado__SIS_B-1').css( "visibility", 'hidden' );
+        $('#Fk_IdMunicipio__SIS_B-1').css( "visibility", 'hidden' );
+    }
+
+    /***********************************************************************************/
+    /******** boton geocodificar ***********************/
+    function elegirGeocod(){
+        if($( "input:checked" ).val() == 'Direccion'){
+            var direccion = $('#Direccion_I').val() + ", " + $("#Colonia_I").val() + ", " + 
+                $("#Fk_IdMunicipio__SIS_I").val() + ", " + $("#Fk_IdEstado__SIS_I").val();
+            //alert("enviando: " + direccion);
+            geocodeAddress(direccion);
+            
+        }
+        else if ($( "input:checked" ).val() == 'Coordenada'){
+            //alert('Geocodificacion inversa');
+            //var coords = $('#Ubicacion_I').val();
+            var arrCoords = [
+                $('#Latitud_I').val(),
+                $('#Longitud_I').val()
+            ];
+                //coords.split(",");
+            reverseGeocodeByCoords(arrCoords);
+        }
+        else {
+            alert('Para geocodificar debe estar activada la opción Direccion o Coordenadas');
+        }
+    }
+
+/***********************************************************************************/
+    function enviaCoords(Coords) {
+        //var coords = "SRID=4326;POINT (" + Coords.lat + " " + Coords.lng + ")";
+        //$('#Ubicacion_I').html(coords);           
+        $('#Latitud_I').html(Coords.lat);
+        $('#Longitud_I').html(Coords.lng);        
+    }
+</script>
+
+
+<script>
+    //globales
+    var latlng = [];
+    var prodCount = 0;
+    var nomProductor = [];
+    var idProductor = [];
+    var map;
+    var geocoder;
+    var markers = [];
+    var markersProductores = [];
+    var resultGeocode;
+    var selectedMarker;
+    var gPosicionMarker //posicion actual del Marker por si se cancela regresarlo a su posicion original
+    //var gCancela = false;
+
+    //variables del mapa
+    var interval;
+    var mapDiv;
+    var divStyle;
+    var originalPos;
+    var originalWidth;
+    var originalHeight;
+    var originalTop;
+    var inalLeft;
+    var originalZIndex;
+    var bodyStyle;
+    var originalOverflow;
+
+</script>
+
+@foreach (var item in Model)
+{
+    <script>
+        nomProductor[prodCount] = "@item.RazonSocial";
+        idProductor[prodCount] = @item.Pk_IdProductor;
+        //alert (idProductor[prodCount]);
+        var lat = parseFloat("@item.Ubicacion.Latitude".replace(",", "."));
+        var lng = parseFloat("@item.Ubicacion.Longitude".replace(",", "."));
+        latlng[prodCount] = { lat: lat, lng: lng };
+        prodCount = prodCount + 1;
+    </script>
+}
+
+
+
+
+<script>
+
+
+    jQuery(window).load(function () {
+        detectUserLocation();
+        google.maps.event.trigger(map, 'resize');
+        geocoder = new google.maps.Geocoder();
+
+    });
+
+    /***********************************************************************************/
+    function initMap() {
+        //alert("initMap");
+
+        map = new google.maps.Map(document.getElementById('map'), {
+            center: { lat: 21.118314, lng: -101.683038 }, //Centro de Leon
+            zoom: 11,
+            zoomControl: true,
+            zoomControlOptions: {
+                position: google.maps.ControlPosition.LEFT_CENTER
+            },
+            scaleControl: true,
+            streetViewControl: true,
+            streetViewControlOptions: {
+                position: google.maps.ControlPosition.LEFT_TOP
+            }
+        });
+
+        //variables del mapa
+        mapDiv = map.getDiv();
+        divStyle = mapDiv.style;
+        if (mapDiv.runtimeStyle) {
+            divStyle = mapDiv.runtimeStyle;
+        }
+        originalPos = divStyle.position;
+        originalWidth = divStyle.width;
+        originalHeight = divStyle.height;
+        // ie8 hack
+        if (originalWidth === "") {
+            originalWidth = mapDiv.style.width;
+        }
+        if (originalHeight === "") {
+            originalHeight = mapDiv.style.height;
+        }
+        originalTop = divStyle.top;
+        originalLeft = divStyle.left;
+        originalZIndex = divStyle.zIndex;
+        bodyStyle = document.body.style;
+        if (document.body.runtimeStyle) {
+            bodyStyle = document.body.runtimeStyle;
+        }
+        originalOverflow = bodyStyle.overflow;
+
+
+        /*map.controls[google.maps.ControlPosition.TOP_RIGHT].push(
+             FullScreenControl(map, "Pantalla Completa",
+             "Restaurar Pantalla"));*/
+
+        // detectUserLocation();
+
+        var marker;
+        var info = ""
+        //alert('Productor 0: ' + nomProductor[0]);
+        for (i = 0; i < prodCount; i++) {
+            info = "Nombre del Productor: " + nomProductor[i] + "<br />" +
+                "<input type='button' title='Editar' value='Editar' onclick='editarProductor("+idProductor[i]+");' />" +
+                "<input type='button' title='Eliminar' value='Eliminar' onclick='eliminarProductor("+idProductor[i]+");' />";
+            marker = placeMarker(latlng[i], false, info);
+            markersProductores.push(marker);
+            markersProductores[i].setMap(null);
+            //Id_ProductoresActivos[i] = idProductor[i];
+        }
+
+    }
+
+
+</script>
+
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDck_KnRYo0h8DYMYcWyoTrN8i3__X5ZW0&callback=initMap&signed_in=true" async defer>
+</script>
+
+@Html.Action("ProductorGridViewPartial")
+
+@using (Html.BeginForm("Index", "Home"))
+{
+    @Html.Hidden("selectedIDsHF");
+}
+
+
+
+

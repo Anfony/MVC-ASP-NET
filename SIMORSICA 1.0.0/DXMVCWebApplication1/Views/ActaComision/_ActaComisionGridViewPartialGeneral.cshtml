@@ -1,0 +1,115 @@
+﻿@{
+    var grid = Html.DevExpress().GridView(settings =>
+    {
+        settings.Name = "AComision";
+        settings.Style["position"] = "relative";
+        settings.Style["left"] = "10px";
+
+        settings.CallbackRouteValues = new { Controller = "ActaComision", Action = "ActaComisionGridViewPartialGeneral" };
+
+        settings.SettingsEditing.Mode = GridViewEditingMode.PopupEditForm;
+        settings.SettingsBehavior.ConfirmDelete = true;
+
+        settings.SettingsPopup.EditForm.Height = 300;
+        settings.SettingsPopup.EditForm.Width = 70;
+        settings.SettingsPopup.EditForm.HorizontalAlign = PopupHorizontalAlign.WindowCenter;
+        settings.SettingsPopup.EditForm.VerticalAlign = PopupVerticalAlign.WindowCenter;
+        settings.SettingsPopup.EditForm.Modal = true;
+
+        settings.CommandColumn.ShowClearFilterButton = true;
+
+        settings.CommandColumn.Visible = false;
+        settings.SettingsPager.Visible = true;
+        settings.SettingsPager.Position = PagerPosition.Bottom;
+        settings.SettingsPager.FirstPageButton.Visible = true;
+        settings.SettingsPager.LastPageButton.Visible = true;
+        settings.SettingsPager.PageSizeItemSettings.Visible = true;
+        settings.SettingsPager.PageSize = 10;
+        settings.SettingsPager.PageSizeItemSettings.Items = new string[] { "5", "10", "15" };
+        settings.Settings.ShowFilterRowMenu = true;
+
+        settings.KeyFieldName = "Pk_IdActaComision";
+
+        settings.Settings.ShowGroupPanel = true;
+        settings.Settings.ShowFilterRow = true;
+        settings.SettingsBehavior.AllowSelectByRowClick = true;
+
+        settings.Settings.ShowFooter = true;
+
+        DB_SENASICAEntities db = new DB_SENASICAEntities();
+        int IdAnioPres = FuncionesAuxiliares.GetCurrent_IdAnioPresupuestal();
+        int IdAnio = db.Anios.Where(i => i.Pk_IdAnio == IdAnioPres).Select(i => i.Anio1).First();
+        
+        if (IdAnio < 2018)
+        {
+            if (FuncionesAuxiliares.GetCurrent_RolUsuario() == RolesUsuarios.UR_VEGETAL
+                || FuncionesAuxiliares.GetCurrent_RolUsuario() == RolesUsuarios.UR_INOCUIDAD
+                || FuncionesAuxiliares.GetCurrent_RolUsuario() == RolesUsuarios.UR_ANIMAL
+                || FuncionesAuxiliares.GetCurrent_RolUsuario() == RolesUsuarios.UR_ACUICOLA_PESQUERA
+                || FuncionesAuxiliares.GetCurrent_RolUsuario() == RolesUsuarios.UR_MOVILIZACION
+                || FuncionesAuxiliares.GetCurrent_RolUsuario() == RolesUsuarios.UR_UPV)
+            {
+                settings.Columns.Add("Estado");
+                settings.Columns.Add("Mes");
+            }
+            else
+            {
+                settings.Columns.Add("Estado.Nombre", "Estado");
+                settings.Columns.Add("Me.Descripcion", "Mes");                
+            }
+        }
+        else
+        {
+            if (FuncionesAuxiliares.GetCurrent_RolUsuario() == RolesUsuarios.UR_VEGETAL
+                || FuncionesAuxiliares.GetCurrent_RolUsuario() == RolesUsuarios.UR_INOCUIDAD
+                || FuncionesAuxiliares.GetCurrent_RolUsuario() == RolesUsuarios.UR_ANIMAL
+                || FuncionesAuxiliares.GetCurrent_RolUsuario() == RolesUsuarios.UR_ACUICOLA_PESQUERA
+                || FuncionesAuxiliares.GetCurrent_RolUsuario() == RolesUsuarios.UR_MOVILIZACION
+                || FuncionesAuxiliares.GetCurrent_RolUsuario() == RolesUsuarios.UR_UPV)
+            {
+                settings.Columns.Add("Estado");
+                settings.Columns.Add("Periodo");
+            }
+            else
+            {
+                settings.Columns.Add("Estado.Nombre", "Estado");
+                settings.Columns.Add("MesByTrimestre.Descripcion", "Periodo");                
+            }
+        }
+        settings.Columns.Add("CT_Date", "Fecha de Publicación").PropertiesEdit.DisplayFormatString="D";
+        
+        settings.Columns.Add(column =>
+        {
+            column.Caption = "Actas de Comisión";
+            column.SetDataItemTemplateContent(c =>
+            {
+                ViewContext.Writer.Write("<table>");
+                ViewContext.Writer.Write("<tr>");
+                if ((DataBinder.Eval(c.DataItem, "Documento") ?? "").ToString() != "")
+                {
+                    using (Html.BeginForm("DescargaActaComision", "ActaComision", new { IdActaComision = c.KeyValue.ToString() }, FormMethod.Post))
+                    {
+                        Html.DevExpress().Button(btnSettings =>
+                        {
+                            btnSettings.Name = "btnDescargarCierre_" + c.KeyValue.ToString();
+                            btnSettings.Text = "";
+                            btnSettings.ToolTip = "Descargar";
+                            btnSettings.ControlStyle.CssClass = "button";
+                            btnSettings.ImagePosition = ImagePosition.Right;
+                            btnSettings.Images.Image.Width = 16;
+                            btnSettings.Images.Image.Url = "/Content/Images/downloadFile.png";
+                            btnSettings.UseSubmitBehavior = true;
+                            btnSettings.ControlStyle.Border.BorderWidth = Unit.Pixel(0);
+                        }).Render();
+                    }
+                }
+                ViewContext.Writer.Write("</td>");
+
+                ViewContext.Writer.Write("</tr>");
+                ViewContext.Writer.Write("</table>");
+            });
+        });
+    });
+}
+
+@grid.Bind(Model).GetHtml()

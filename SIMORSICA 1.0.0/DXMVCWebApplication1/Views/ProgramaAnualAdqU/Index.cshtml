@@ -1,0 +1,58 @@
+﻿@{
+    ViewBag.Title = "Programa Anual de Adquisiciones";
+}
+
+<div style="float: right; margin-right: 20px"><a href="https://docs.google.com/document/d/1ZJURCxDAT76zN4TpKa2cBHEdF3RZFUNkAv3o9iyWxG4/edit#heading=h.4du1wux" target="_blank"><u>Ayuda</u></a>  |  <a href="http://soporte.simosica.com/support/solutions/articles/22000184563-preguntas-frecuentes" target="_blank"> <u>Preguntas Frecuentes</u></a></div>
+
+<h3 style="font-size:17px; font:bold; text-align:center">Gastos Fijos de Operación - Programas U</h3>
+<h3 style="font-size: 13px; text-align: center; position: relative; top: -10px">Registre aquí los Gastos Fijos de Operación Relativos a la Instancia Ejecutora</h3>
+<br>
+<br>
+@Html.Partial("~/Views/ExportExcelPDF/_ExportExcelPDF.cshtml", new ViewDataDictionary { { "Clave", DXMVCWebApplication1.Common.ListaPantallas.UE_PROGRAMA_ANUAL_ADQUISICIONES_U } })
+
+<br>
+<br>
+
+@Html.Action("ProgramaAnualGridViewPartial")
+
+
+<script src="~/Scripts/NecesidadesCampanias.js"> </script>
+
+<script type="text/javascript">
+
+    function CambiaBienServ(s, e) {
+
+        IdBienOServ = Fk_IdBienOServ__SIS.GetValue();
+
+        $.ajax({
+            type: "GET",
+            url: "/ProgramaAnualAdq/GetBienOServDetails",
+            datatype: "Json",
+            data: { IdBienOServ: IdBienOServ },
+            success: function (data) {
+
+                if (data.porcentajeMaximo != null) {
+                    porcentajeMaximo.SetText(data.porcentajeMaximo);
+                }
+                else {
+                    porcentajeMaximo.SetText("-");
+                }
+
+                if (data.precioMaximo != null) {
+                    precioMaximo.SetText(data.precioMaximo);
+                }
+                else {
+                    precioMaximo.SetText("-");
+                }
+            }
+        });
+    }
+
+    function BienServTransversalCombo_SelectedIndexChanged(s, e) {
+        Fk_IdUnidadDeMedida__SIS.PerformCallback();
+    }
+
+    function UnidadMedidaTransversalCombo_BeginCallback(s, e) {
+        e.customArgs['Fk_IdBienOServ__SIS'] = Fk_IdBienOServ__SIS.GetValue();
+    }
+</script>

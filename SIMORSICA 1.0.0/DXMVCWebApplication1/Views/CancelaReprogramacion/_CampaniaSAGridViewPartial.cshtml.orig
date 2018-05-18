@@ -1,0 +1,529 @@
+@{
+    var grid = Html.DevExpress().GridView(settings =>
+    {
+        settings.Name = "CampaniaSAGridView";
+        settings.CallbackRouteValues = new { Controller = "CampaniaSA", Action = "CampaniaSAGridViewPartial" };
+
+        settings.SettingsEditing.AddNewRowRouteValues = new { Controller = "CampaniaSA", Action = "CampaniaSAGridViewPartialAddNew" };
+        settings.SettingsEditing.UpdateRowRouteValues = new { Controller = "CampaniaSA", Action = "CampaniaSAGridViewPartialUpdate" };
+        settings.SettingsEditing.DeleteRowRouteValues = new { Controller = "CampaniaSA", Action = "CampaniaSAGridViewPartialDelete" };
+        settings.SettingsEditing.Mode = GridViewEditingMode.PopupEditForm;
+
+        settings.SettingsPopup.EditForm.Height = 475;
+        settings.SettingsPopup.EditForm.Width = 425;
+        settings.SettingsPopup.EditForm.HorizontalAlign = DevExpress.Web.ASPxClasses.PopupHorizontalAlign.WindowCenter;
+        settings.SettingsPopup.EditForm.VerticalAlign = DevExpress.Web.ASPxClasses.PopupVerticalAlign.WindowCenter;
+        settings.SettingsPopup.EditForm.Modal = true;
+        settings.SettingsText.PopupEditFormCaption = "Edición de la campaña";
+
+        settings.SettingsBehavior.ConfirmDelete = true;
+
+        settings.CommandColumn.Visible = true;
+        settings.CommandColumn.ShowDeleteButton = true;
+        settings.CommandColumn.ShowEditButton = true;
+        settings.CommandColumn.ShowNewButtonInHeader = true;
+        settings.CommandColumn.ShowClearFilterButton = true;
+
+        settings.SettingsBehavior.AllowSelectByRowClick = true;
+        settings.SettingsDetail.AllowOnlyOneMasterRowExpanded = true;
+
+        settings.KeyFieldName = "Pk_IdCampania";
+
+        settings.SettingsPager.Visible = true;
+        settings.SettingsPager.Position = PagerPosition.Bottom;
+        settings.SettingsPager.FirstPageButton.Visible = true;
+        settings.SettingsPager.LastPageButton.Visible = true;
+        settings.SettingsPager.PageSizeItemSettings.Visible = true;
+        settings.SettingsPager.PageSize = 15;
+        settings.SettingsPager.PageSizeItemSettings.Items = new string[] { "5", "10", "15" };
+        settings.Settings.ShowGroupPanel = true;
+        settings.Settings.ShowFilterRow = true;
+        settings.Settings.ShowFilterRowMenu = true;
+        settings.SettingsBehavior.AllowSelectByRowClick = true;
+
+        settings.Columns.Add("UnidadEjecutora.Nombre", "Instancia Ejecutora");
+        settings.Columns.Add("SubComponente.Nombre", "SubComponente");
+        settings.Columns.Add("ProyectoAutorizado.Nombre", "Proyecto Autorizado");
+        settings.Columns.Add("FechaInicio", MVCxGridViewColumnType.DateEdit);
+        settings.Columns.Add("FechaFin", MVCxGridViewColumnType.DateEdit);
+        settings.Columns.Add("StatusKardex", "Status Actual de la Campaña");
+
+        settings.Columns.Add("RecFed", "Recurso Federal").PropertiesEdit.DisplayFormatString = "c";
+        settings.Columns.Add("RecEst", "Recurso Estatal").PropertiesEdit.DisplayFormatString = "c";
+        settings.Columns.Add("RecPro", "Recurso Productores").PropertiesEdit.DisplayFormatString = "c";
+        settings.Columns.Add("RecTot", "Total de Recursos").PropertiesEdit.DisplayFormatString = "c";
+
+        //**************************************Comienza Custom Form*************************
+
+        settings.SetEditFormTemplateContent(c =>
+        {
+            int? Fk_IdUnidadEjecutora = Convert.ToInt32(ViewData["_Fk_IdUnidadEjecutora"]);
+            string RolUsuario = Convert.ToString(ViewData["_rolusuario"]);
+            int? Fk_IdEstado = Convert.ToInt32(ViewData["_Fk_IdEstado"]);
+            int? FK_IdUnidadResponsable = Convert.ToInt32(ViewData["_FK_IdUnidadResponsable"]);
+            int Fk_IdAnio = Convert.ToInt32(ViewData["_FK_IdAnio"]);
+
+            var campania = c.DataItem;
+
+            ViewContext.Writer.Write("<br />");
+
+            ViewContext.Writer.Write("<table>");
+            ViewContext.Writer.Write("<tr><td>");
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Recurso Federal: " + String.Format("{0:C}", Convert.ToDecimal(DataBinder.Eval(campania, "RecFed")));
+                edtSettings.AssociatedControlName = "RecFed";
+            }).Render();
+            ViewContext.Writer.Write("</td>");
+
+            ViewContext.Writer.Write("<td>");
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Recurso Estatal: " + String.Format("{0:C}", Convert.ToDecimal(DataBinder.Eval(campania, "RecEst")));
+                edtSettings.AssociatedControlName = "RecEst";
+            }).Render();
+            ViewContext.Writer.Write("</td>");
+
+            ViewContext.Writer.Write("<td>");
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Recurso Productores: " + String.Format("{0:C}", Convert.ToDecimal(DataBinder.Eval(campania, "RecPro")));
+                edtSettings.AssociatedControlName = "RecPro";
+            }).Render();
+            ViewContext.Writer.Write("</td>");
+
+            ViewContext.Writer.Write("<td>");
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Recurso Total: " + String.Format("{0:C}", Convert.ToDecimal(DataBinder.Eval(campania, "RecTot")));
+                edtSettings.AssociatedControlName = "RecTot";
+            }).Render();
+            ViewContext.Writer.Write("</td></tr>");
+            ViewContext.Writer.Write("</table>");
+
+            ViewContext.Writer.Write("<br />");
+
+            ViewContext.Writer.Write("<table><tr><td>");
+
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Instancia Ejecutora";
+                edtSettings.AssociatedControlName = "Fk_IdUnidadEjecutora__UE";
+            }).Render();
+
+            Html.DevExpress().ComboBox(edtSettings =>
+            {
+                edtSettings.Name = "Fk_IdUnidadEjecutora__UE";
+                edtSettings.ControlStyle.CssClass = "editor";
+                edtSettings.Properties.TextField = "Nombre";
+                edtSettings.Properties.NullText = "Campo Requerido";
+                edtSettings.Properties.ValueField = "Pk_IdUnidadEjecutora";
+                edtSettings.Properties.ValueType = typeof(int);
+                edtSettings.ShowModelErrors = true;
+                edtSettings.Width = Unit.Pixel(300);
+                edtSettings.ToolTip = c.KeyValue == null ? "Seleccione una Instancia Ejecutora" : "Cambiar Instancia Ejecutora";
+            }).BindList(DXMVCWebApplication1.Models.Senasica.GetUnidadEjecutoraByUsuario(RolUsuario, FK_IdUnidadResponsable, Fk_IdEstado, Fk_IdUnidadEjecutora))
+               .Bind(DataBinder.Eval(campania, "Fk_IdUnidadEjecutora__UE"))
+               .Render();
+
+            ViewContext.Writer.Write("</td><td>");
+
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "SubComponente";
+                edtSettings.AssociatedControlName = "Fk_IdSubComponente__SIS";
+            }).Render();
+
+            Html.DevExpress().ComboBox(edtSettings =>
+            {
+                edtSettings.Name = "Fk_IdSubComponente__SIS";
+                edtSettings.ControlStyle.CssClass = "editor";
+                edtSettings.Properties.TextField = "Nombre";
+                edtSettings.Properties.NullText = "Campo Requerido";
+                edtSettings.Properties.ValueField = "Pk_IdSubComponente";
+                edtSettings.ToolTip = c.KeyValue == null ? "Seleccione el SubComponente" : "Cambiar SubComponente";
+                edtSettings.Properties.ValueType = typeof(int);
+                edtSettings.ShowModelErrors = true;
+                edtSettings.Width = Unit.Pixel(300);
+                edtSettings.Properties.EnableSynchronization = DefaultBoolean.False;
+                edtSettings.Properties.IncrementalFilteringMode = IncrementalFilteringMode.StartsWith;
+                edtSettings.Properties.ClientSideEvents.SelectedIndexChanged ="function(s, e){ SubComponenteCombo_SelectedIndexChanged(s, e); Fk_IdProyectoAutorizado__SIS.SetEnabled(true);}";
+            }) .BindList(DXMVCWebApplication1.Models.Senasica.GetSubComponenteByUR(RolUsuario, FK_IdUnidadResponsable, Fk_IdAnio)) //Salud Animal
+               .Bind(DataBinder.Eval(campania, "Fk_IdSubComponente__SIS"))
+               .Render();
+
+            ViewContext.Writer.Write("</td><td>");
+
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Proyecto Autorizado";
+                edtSettings.AssociatedControlName = "Fk_IdProyectoAutorizado__SIS";
+            }).Render();
+
+            var Pk_IdSubComponente = c.Grid.GetRowValues(c.Grid.EditingRowVisibleIndex, "Fk_IdSubComponente__SIS");
+            var Fk_IdProyectoAutorizado__SIS = DataBinder.Eval(campania, "Fk_IdProyectoAutorizado__SIS");
+            ViewData["Fk_IdProyectoAutorizado__SIS"] = Fk_IdProyectoAutorizado__SIS;
+            var PROY = (Pk_IdSubComponente == null)
+                ? DXMVCWebApplication1.Models.Senasica.GetProyectosAutorizados()
+                : DXMVCWebApplication1.Models.Senasica.GetProyectosAutorizadosBySubComponente((int)Pk_IdSubComponente);
+            @Html.RenderPartial("_ComboBoxProyectoPartial", PROY);
+
+            ViewContext.Writer.Write("</td><td>");
+            ViewContext.Writer.Write("</ tr>");
+            ViewContext.Writer.Write("<tr>");
+            ViewContext.Writer.Write("<td>");
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Fecha Inicio";
+                edtSettings.AssociatedControlName = "FechaInicio";
+            }).Render();
+
+            Html.DevExpress().DateEdit(edtSettings =>
+            {
+                edtSettings.Name = "FechaInicio";
+                edtSettings.Properties.NullText = "Campo Requerido";
+                edtSettings.ControlStyle.CssClass = "editor";
+                edtSettings.ShowModelErrors = true;
+                edtSettings.Width = Unit.Pixel(125);
+                edtSettings.ToolTip = "DD/MM/YYYY";
+                edtSettings.ToolTip = c.KeyValue == null ? "Seleccione la Fecha de Inicio para este Programa de Trabajo" : "Cambiar Fecha de Inicio";
+
+            }).Bind(DataBinder.Eval(campania, "FechaInicio"))
+              .Render();
+
+            ViewContext.Writer.Write("</td><td>");
+
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Fecha Fin";
+                edtSettings.AssociatedControlName = "FechaFin";
+            }).Render();
+
+            Html.DevExpress().DateEdit(edtSettings =>
+            {
+                edtSettings.Name = "FechaFin";
+                edtSettings.Properties.NullText = "Campo Requerido";
+                edtSettings.ControlStyle.CssClass = "editor";
+                edtSettings.ShowModelErrors = true;
+                edtSettings.Width = Unit.Pixel(125);
+                edtSettings.ToolTip = "DD/MM/YYYY";
+                edtSettings.ToolTip = c.KeyValue == null ? "Seleccione la Fecha que Finaliza este Programa de Trabajo" : "Cambiar Fecha Fin";
+            }).Bind(DataBinder.Eval(campania, "FechaFin"))
+             .Render();
+
+            ViewContext.Writer.Write("</td></tr></table>");
+            ViewContext.Writer.Write("<br>");
+
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Introducción";
+                edtSettings.AssociatedControlName = "Introduccion";
+            }).Render();
+
+            Html.DevExpress().Memo(edtSettings =>
+            {
+                edtSettings.Name = "Introduccion";
+                edtSettings.Properties.NullText = "Campo Requerido";
+                edtSettings.ControlStyle.CssClass = "editor";
+                edtSettings.ShowModelErrors = true;
+                edtSettings.Width = Unit.Pixel(1010);
+                edtSettings.Height = Unit.Pixel(50);
+                edtSettings.ToolTip = c.KeyValue == null ? "Descripción de la Introducción para este Programa de Trabajo" : "Editar Introducción";
+            }).Bind(DataBinder.Eval(campania, "Introduccion"))
+              .Render();
+
+            ViewContext.Writer.Write("<br>");
+
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Describa la Situación Actual";
+                edtSettings.AssociatedControlName = "SituacionActual";
+            }).Render();
+
+            Html.DevExpress().Memo(edtSettings =>
+            {
+                edtSettings.Name = "SituacionActual";
+                edtSettings.Properties.NullText = "Campo Requerido";
+                edtSettings.ControlStyle.CssClass = "editor";
+                edtSettings.ShowModelErrors = true;
+                edtSettings.Width = Unit.Pixel(1010);
+                edtSettings.Height = Unit.Pixel(50);
+                edtSettings.ToolTip = c.KeyValue == null ? "Descripción de la Situación Actual para este Programa de Trabajo" : "Editar Situación Actual";
+            }).Bind(DataBinder.Eval(campania, "SituacionActual"))
+              .Render();
+
+            ViewContext.Writer.Write("<br>");
+
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Objetivo Estratégico de la Campaña";
+                edtSettings.AssociatedControlName = "ObjetivoEstrategico";
+            }).Render();
+
+            Html.DevExpress().Memo(edtSettings =>
+            {
+                edtSettings.Name = "ObjetivoEstrategico";
+                edtSettings.Properties.NullText = "Campo Requerido";
+                edtSettings.ControlStyle.CssClass = "editor";
+                edtSettings.ShowModelErrors = true;
+                edtSettings.Width = Unit.Pixel(1010);
+                edtSettings.Height = Unit.Pixel(50);
+                edtSettings.ToolTip = c.KeyValue == null ? "Introducir el Objetivo para este Programa de Trabajo" : "Editar el Objetivo del Programa";
+            }).Bind(DataBinder.Eval(campania, "ObjetivoEstrategico"))
+              .Render();
+
+            ViewContext.Writer.Write("<br>");
+
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Describa la Meta Anual";
+                edtSettings.AssociatedControlName = "MetaAnual";
+            }).Render();
+
+            Html.DevExpress().Memo(edtSettings =>
+            {
+                edtSettings.Name = "MetaAnual";
+                edtSettings.Properties.NullText = "Campo Requerido";
+                edtSettings.ControlStyle.CssClass = "editor";
+                edtSettings.ShowModelErrors = true;
+                edtSettings.Width = Unit.Pixel(1010);
+                edtSettings.Height = Unit.Pixel(50);
+                edtSettings.ToolTip = c.KeyValue == null ? "Descripción de la Meta Anual para este Programa de Trabajo" : "Editar Meta Anual";
+            }).Bind(DataBinder.Eval(campania, "MetaAnual"))
+              .Render();
+<<<<<<< Updated upstream
+            
+=======
+
+            ViewContext.Writer.Write("<br />");
+
+>>>>>>> Stashed changes
+            //BOTONES
+
+            ViewContext.Writer.Write("<div class=\"line\">");
+            ViewContext.Writer.Write("<br />");
+
+            ViewContext.Writer.Write("<table><tr><td>");
+            Html.DevExpress().Button(btnSettings =>
+            {
+                btnSettings.Name = "btnUpdate";
+                btnSettings.Text = "Guardar";
+                btnSettings.ControlStyle.CssClass = "button";
+                btnSettings.Images.Image.Url = "/Content/Images/guardar.png";
+                btnSettings.ImagePosition = ImagePosition.Right;
+                btnSettings.Images.Image.Width = 16;
+                btnSettings.ClientSideEvents.Click = "function(s, e){ CampaniaSAGridView.UpdateEdit(); }";
+            }).Render();
+            ViewContext.Writer.Write("</td>");
+
+            ViewContext.Writer.Write("<td>");
+            Html.DevExpress().Button(btnSettings =>
+            {
+                btnSettings.Name = "btnCancel";
+                btnSettings.Text = "Cancelar";
+                btnSettings.ControlStyle.CssClass = "button";
+                btnSettings.Images.Image.Url = "/Content/Images/cancelar.png";
+                btnSettings.ImagePosition = ImagePosition.Right;
+                btnSettings.Style["position"] = "relative";
+                btnSettings.Style["left"] = "5px";
+                btnSettings.ClientSideEvents.Click = "function(s, e){ CampaniaSAGridView.CancelEdit(); }";
+            }).Render();
+            ViewContext.Writer.Write("</td>");
+
+            ViewContext.Writer.Write("<td>");
+            using (Html.BeginForm("Index", "SACampania", new { PK_IdCampania = c.KeyValue == null ? "-1" : c.KeyValue.ToString() }, FormMethod.Post))
+            {
+                Html.DevExpress().Button(btnSettings =>
+                {
+                    btnSettings.Name = "btnImprimir";
+                    btnSettings.Text = "Imprimir";
+                    btnSettings.ControlStyle.CssClass = "button";
+                    btnSettings.Images.Image.Url = "/Content/Images/ico_print.png";
+                    btnSettings.ImagePosition = ImagePosition.Right;
+                    btnSettings.Images.Image.Width = 16;
+                    btnSettings.Style["position"] = "relative";
+                    btnSettings.Style["left"] = "10px";
+                    btnSettings.ClientVisible = c.KeyValue == null ? false : true;
+                    btnSettings.UseSubmitBehavior = true;
+                }).Render();
+            }
+            ViewContext.Writer.Write("</td>");
+
+            ViewContext.Writer.Write("<td>");
+            ///// boton ayuda //////////
+            ViewContext.Writer.Write(" &nbsp ");
+            ViewContext.Writer.Write(" &nbsp ");
+            ViewContext.Writer.Write(" <a href='https://docs.google.com/document/d/1ZJURCxDAT76zN4TpKa2cBHEdF3RZFUNkAv3o9iyWxG4/edit#heading=h.48pi1tg'target='_blank'>Ayuda</a>");
+            ViewContext.Writer.Write("</td></tr></table>");
+
+            ViewContext.Writer.Write("</div>"); // Termina Codigo de Botones
+
+            // COMIENZAN LOS TABS DE LA CAMPAÑA*
+            @Html.DevExpress().PageControl(PCsettings =>
+            {
+                PCsettings.Name = "pcScrolling";
+                PCsettings.Width = Unit.Percentage(100);
+                PCsettings.Height = 350;
+                PCsettings.EnableTabScrolling = true;
+                PCsettings.TabAlign = TabAlign.Justify;
+                PCsettings.Styles.Tab.CssClass = "scrolling_Tab";
+
+                PCsettings.Name = "pcFeatures";
+                PCsettings.ClientVisible = c.KeyValue == null ? false : true;
+
+                PCsettings.TabPages.Add("Importancia Económica").SetContent(() =>
+                {
+                    ViewContext.Writer.Write("<H3>Importancia Económica de la Población</H3>");
+                    Html.RenderPartial("~/Views/ExportExcelPDF/_ExportExcelPDF.cshtml", new ViewDataDictionary
+                                                                                    {
+                                                                                        { "Clave", DXMVCWebApplication1.Common.ListaPantallas.UE_IMPORTANCIA_SA },
+                                                                                        { "IdCampania", DataBinder.Eval(campania, "Pk_IdCampania") }
+                                                                                    });
+
+                    @Html.RenderAction("PoblacionSAGridViewPartial", "SAImportanciaEconomica", new { IdCampania = DataBinder.Eval(campania, "Pk_IdCampania"), IdEstado = DataBinder.Eval(campania, "UnidadEjecutora.Fk_IdEstado__SIS") });
+                });
+
+                PCsettings.TabPages.Add("Atendido").SetContent(() =>
+                {
+                    ViewContext.Writer.Write("<H3>Atendido por la Campaña</H3>");
+                    Html.RenderPartial("~/Views/ExportExcelPDF/_ExportExcelPDF.cshtml", new ViewDataDictionary
+                                                                                    {
+                                                                                        { "Clave", DXMVCWebApplication1.Common.ListaPantallas.UE_ATENDIDO_SA },
+                                                                                        { "IdCampania", DataBinder.Eval(campania, "Pk_IdCampania") }
+                                                                                    });
+
+                    @Html.RenderAction("AtendidoSAGridViewPartial", "SAAtendido", new { IdCampania = DataBinder.Eval(campania, "Pk_IdCampania"), IdEstado = DataBinder.Eval(campania, "UnidadEjecutora.Fk_IdEstado__SIS") });
+                });
+
+                PCsettings.TabPages.Add("Importancia de la Enfermedad").SetContent(() =>
+                {
+                    ViewContext.Writer.Write("<H3>Importancia de la Enfermedad</H3>");
+                    Html.RenderPartial("~/Views/ExportExcelPDF/_ExportExcelPDF.cshtml", new ViewDataDictionary
+                                                                                    {
+                                                                                        { "Clave", DXMVCWebApplication1.Common.ListaPantallas.UE_IMPORTANCIA_SA_ENFERMEDAD },
+                                                                                        { "IdCampania", DataBinder.Eval(campania, "Pk_IdCampania") }
+                                                                                    });
+
+                    @Html.RenderAction("ImportanciaSAGridViewPartial", "SAImportanciaEnfermedad", new { IdCampania = DataBinder.Eval(campania, "Pk_IdCampania"), IdEstado = DataBinder.Eval(campania, "UnidadEjecutora.Fk_IdEstado__SIS") });
+
+                });
+
+                PCsettings.TabPages.Add("Acciones por Campaña").SetContent(() =>
+                {
+                    ViewContext.Writer.Write("<H3>Acciones a realizar en la Campaña</H3>");
+                    Html.RenderPartial("~/Views/ExportExcelPDF/_ExportExcelPDF.cshtml", new ViewDataDictionary
+                                                                                    {
+                                                                                        { "Clave", DXMVCWebApplication1.Common.ListaPantallas.UE_ACTIVIDADES_ACCION },
+                                                                                        { "IdCampania", DataBinder.Eval(campania, "Pk_IdCampania") }
+                                                                                    });
+
+                    @Html.RenderAction("AccionXCampaniaGridViewPartial", "AccionXCampania", new { IdCampania = DataBinder.Eval(campania, "Pk_IdCampania"), IdProyectoAutorizado = DataBinder.Eval(campania, "Fk_IdProyectoAutorizado__SIS"), IdUnidadEjecutora = DataBinder.Eval(campania, "Fk_IdUnidadEjecutora__UE") });
+                });
+
+                PCsettings.TabPages.Add("Gastos Relativos a la Campaña").SetContent(() =>
+                {
+                    ViewContext.Writer.Write("<H3>Gastos Relativos a la Campaña</H3>");
+                    Html.RenderPartial("~/Views/ExportExcelPDF/_ExportExcelPDF.cshtml", new ViewDataDictionary
+                                                                                    {
+                                                                                        { "Clave", DXMVCWebApplication1.Common.ListaPantallas.UE_GASTOS_FIJOS_OPERACION_INSTANCIA_EJECUTORA },
+                                                                                        { "IdCampania", DataBinder.Eval(campania, "Pk_IdCampania") }
+                                                                                    });
+
+                    @Html.RenderAction("GastosRelativosCampaniaGridViewPartial", "ProgramaAnualAdq", new { IdCampania = DataBinder.Eval(campania, "Pk_IdCampania"), IdUnidadEjecutora = DataBinder.Eval(campania, "Fk_IdUnidadEjecutora__UE"), IdProyectoAutorizado = DataBinder.Eval(campania, "Fk_IdProyectoAutorizado__SIS") });
+                });
+
+                PCsettings.TabPages.Add("Status").SetContent(() =>
+                {
+                    ViewContext.Writer.Write("<H3>Historico de cambio de Estatus</H3>");
+                    Html.RenderPartial("~/Views/ExportExcelPDF/_ExportExcelPDF.cshtml", new ViewDataDictionary
+                                                                                    {
+                                                                                        { "Clave",  DXMVCWebApplication1.Common.ListaPantallas.UE_STATUS_CAMPANIA },
+                                                                                        { "IdCampania", DataBinder.Eval(campania, "Pk_IdCampania") }
+                                                                                    });
+                    Html.RenderAction("StatusCampaniaGridViewPartial", "StatusCampaniaKardex", new { IdCampania = DataBinder.Eval(campania, "Pk_IdCampania") });
+                });
+
+                PCsettings.TabPages.Add("Archivos").SetContent(() =>
+                {
+                    Html.RenderAction("CargaArchivos", "ArchivosCampania", new { IdCampania = DataBinder.Eval(campania, "Pk_IdCampania") });
+                });
+            }).GetHtml();
+        });
+    });
+    if (ViewData["EditError"] != null)
+    {
+        grid.SetEditErrorText((string)ViewData["EditError"]);
+    }
+}
+@grid.Bind(Model).GetHtml()
+
+<script type="text/javascript">
+
+    /*****************************************************************************************
+        Suma las cantidades mensuales para mostrar el total anual
+    *****************************************************************************************/
+    function calculaCantidadesMensuales(s, e) {
+        var sumaCantidadesMensuales = ((Cant_Ene.number * 10) + (Cant_Feb.number * 10) + (Cant_Mar.number * 10) + (Cant_Abr.number * 10) + (Cant_May.number * 10) + (Cant_Jun.number * 10)
+                                    + (Cant_Jul.number * 10) + (Cant_Ago.number * 10) + (Cant_Sep.number * 10) + (Cant_Oct.number * 10) + (Cant_Nov.number * 10) + (Cant_Dic.number * 10)) / 10;
+
+        document.getElementById('SumaCantidadesTotales_I').value = sumaCantidadesMensuales;
+    }
+
+    /*****************************************************************************************
+        Verifica que la suma de los importes mensuales no supere el presupuesto otorgado
+    *****************************************************************************************/
+    function calculaImportesMensuales(s, e) {
+        var sumaCantidadesMensuales = ((imp_Ene.number * 10) + (imp_Feb.number * 10) + (imp_Mar.number * 10) + (imp_Abr.number * 10) + (imp_May.number * 10) + (imp_Jun.number * 10)
+                                    + (imp_Jul.number * 10) + (imp_Ago.number * 10) + (imp_Sep.number * 10) + (imp_Oct.number * 10) + (imp_Nov.number * 10) + (imp_Dic.number * 10)) / 10;
+
+        var sumaPresupuestoTotal = sumaPresupuestos();
+
+        var restante = sumaPresupuestoTotal - sumaCantidadesMensuales;
+
+        document.getElementById('PresupuestoRestanteImporteMensuales_I').value = sumaPresupuestoTotal - sumaCantidadesMensuales;
+
+        if (restante < 0) popUpPresupuestoSuperado.Show();
+    }
+
+    function sumaPresupuestos() {
+        return ((RecFed.number * 10) + (RecEst.number * 10) + (RecProp.number * 10)) / 10;
+    }
+
+    function ComparaSumasGastosRelativos(s, e) {
+
+        var totalImportes = document.getElementById('PresupuestoRestanteImporteMensuales_I').value;
+
+        if (totalImportes != 0) popUpCantidadesImportes.Show();
+        else { ProgramaAnualGridView.UpdateEdit(); }
+    }
+
+    function ComparaSumasNecesidades(s, e) {
+
+        var totalImportes = document.getElementById('PresupuestoRestanteImporteMensuales_I').value;
+
+        if (totalImportes != 0) popUpCantidadesImportes.Show();
+        else { NecesidadesGridView.UpdateEdit(); }
+    }
+
+    function calculaTotalPresupuesto(s, e) {
+        var sumaTotalRecursos = ((RecFed.number * 10) + (RecEst.number * 10) + (RecProp.number * 10)) / 10;
+
+        document.getElementById('PresupuestoTotal_I').value = sumaTotalRecursos;
+
+        calculaImportesMensuales(s, e);
+    }
+
+</script>

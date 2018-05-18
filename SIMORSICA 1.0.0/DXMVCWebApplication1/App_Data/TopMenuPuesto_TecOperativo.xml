@@ -1,0 +1,6 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<items>
+  <group Text="Ejecución">
+  <item Text="Informe de Avances" NavigateUrl="~/ReporteActividadAsignada"/>
+</group>
+</items>

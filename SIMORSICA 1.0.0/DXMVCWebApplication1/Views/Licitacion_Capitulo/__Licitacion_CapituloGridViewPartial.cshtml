@@ -1,0 +1,103 @@
+@{
+	var grid = Html.DevExpress().GridView(settings => {
+        settings.Name = "gridViewLC";
+        settings.CallbackRouteValues = new { Controller = "Licitacion_Capitulo", Action = "_Licitacion_CapituloGridViewPartial", Pk_IdLicitacion = ViewData["Pk_IdLicitacion"] };
+
+        settings.SettingsEditing.AddNewRowRouteValues = new { Controller = "Licitacion_Capitulo", Action = "_Licitacion_CapituloGridViewPartialAddNew", Pk_IdLicitacion = ViewData["Pk_IdLicitacion"] };
+        settings.SettingsEditing.UpdateRowRouteValues = new { Controller = "Licitacion_Capitulo", Action = "_Licitacion_CapituloGridViewPartialUpdate", Pk_IdLicitacion = ViewData["Pk_IdLicitacion"] };
+        settings.SettingsEditing.DeleteRowRouteValues = new { Controller = "Licitacion_Capitulo", Action = "_Licitacion_CapituloGridViewPartialDelete", Pk_IdLicitacion = ViewData["Pk_IdLicitacion"] };
+        settings.SettingsEditing.Mode = GridViewEditingMode.PopupEditForm;
+        settings.SettingsBehavior.ConfirmDelete = true;
+
+        settings.SettingsPopup.EditForm.HorizontalAlign = PopupHorizontalAlign.WindowCenter;
+        settings.SettingsPopup.EditForm.VerticalAlign = PopupVerticalAlign.WindowCenter;
+        settings.SettingsPopup.EditForm.Modal = true;
+        settings.SettingsBehavior.ConfirmDelete = true;
+        
+		settings.CommandColumn.Visible = true;
+        settings.CommandColumn.ShowNewButton = true;
+ //       settings.CommandColumn.ShowDeleteButton = true;
+        settings.CommandColumn.ShowEditButton = true;
+
+		settings.KeyFieldName = "Pk_IdLicitacion_Capitulo";
+
+		settings.SettingsPager.Visible = true;
+		settings.Settings.ShowGroupPanel = true;
+		settings.Settings.ShowFilterRow = true;
+		settings.SettingsBehavior.AllowSelectByRowClick = true;
+
+		settings.Columns.Add("Descripcion");
+        settings.Columns.Add("CapituloPartidaLicitacion.Clave", "Capitulo Partida");
+        settings.SetEditFormTemplateContent(c =>
+        {
+            var capitulo = ViewData["dataItem"] ?? c.DataItem;
+            ViewContext.Writer.Write("<table>");
+            Html.DevExpress().Label(lblsettings =>
+            {
+                lblsettings.ControlStyle.CssClass = "label";
+                lblsettings.Text = "Descripcion";
+                lblsettings.Name = "lblDescripcion";
+            }).Render();
+            Html.DevExpress().Memo(edtSettings =>
+            {
+                edtSettings.Name = "Descripcion";
+                edtSettings.ControlStyle.CssClass = "editor";
+                edtSettings.ShowModelErrors = true;
+                edtSettings.Width = Unit.Pixel(500);
+                edtSettings.Height = Unit.Pixel(50);
+            }).Bind(DataBinder.Eval(capitulo, "Descripcion")).Render();
+            Html.DevExpress().Label(lblsettings =>
+            {
+                lblsettings.ControlStyle.CssClass = "label";
+                lblsettings.Text = "Capitulo";
+                lblsettings.Name = "lblCapitulo";
+            }).Render();
+            Html.DevExpress().ComboBox(cbxSettings =>
+            {
+                cbxSettings.Name = "Fk_IdCapituloPartida_INFO";
+                cbxSettings.ControlStyle.CssClass = "editor";
+                cbxSettings.Properties.TextField = "Clave";
+                cbxSettings.Properties.NullText = "Campo requerido";
+                cbxSettings.Properties.ValueField = "Pk_IdCapituloPartida";
+                cbxSettings.Properties.Columns.Add("Clave");
+                cbxSettings.Properties.Columns.Add("Descripcion");
+                cbxSettings.Properties.ValueType = typeof(int);
+                cbxSettings.ShowModelErrors = true;
+                cbxSettings.Width = Unit.Pixel(400);
+                cbxSettings.ToolTip = "";
+                cbxSettings.Properties.IncrementalFilteringMode = IncrementalFilteringMode.Contains;
+
+            }).BindList(DXMVCWebApplication1.Models.Senasica.GetCapituloPartidas()).Bind(DataBinder.Eval(capitulo, "Fk_IdCapituloPartida_INFO")).Render();
+
+            Html.DevExpress().Button(btnSettings =>
+            {
+                btnSettings.Name = "btnUpdat";
+                btnSettings.Text = "Guardar";
+                btnSettings.ControlStyle.CssClass = "button";
+                btnSettings.Images.Image.Url = "Content/Images/guardar.png";
+                btnSettings.ImagePosition = ImagePosition.Right;
+                btnSettings.Images.Image.Width = 16;
+                btnSettings.ClientSideEvents.Click = "function(s, e){ gridViewLC.UpdateEdit(); }";
+                
+            }).Render();
+
+            Html.DevExpress().Button(btnSettings =>
+            {
+                btnSettings.Name = "btnCance";
+                btnSettings.Text = "Cancelar";
+                btnSettings.ControlStyle.CssClass = "button";
+                btnSettings.Images.Image.Url = "Content/Images/cancelar.png";
+                btnSettings.ImagePosition = ImagePosition.Right;
+                btnSettings.Style["position"] = "relative";
+                btnSettings.Style["left"] = "5px";
+                btnSettings.ClientSideEvents.Click = "function(s, e){ gridViewLC.CancelEdit(); }";
+            }).Render();
+
+            ViewContext.Writer.Write("</table>");
+        });
+	});
+		if (ViewData["EditError"] != null){
+        grid.SetEditErrorText((string)ViewData["EditError"]);
+    }
+}
+@grid.Bind(Model).GetHtml()

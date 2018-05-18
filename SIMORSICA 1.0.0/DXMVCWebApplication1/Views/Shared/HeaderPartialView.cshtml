@@ -1,0 +1,139 @@
+@using Microsoft.AspNet.Identity
+
+<div class="headerTop">
+    <a href="@Url.Action("Index","Home")">
+        <img id="LogoSimosicaHome" title="Inicio" src="@Url.Content("~/Content/Images/ssoriginal.png")" />
+    </a>
+    <div class="loginControl">
+        @Html.Partial("LogOnPartialView")
+    </div>
+</div>
+<div class="headerMenu">
+
+    @{string topMenu = "~/App_Data/"; }
+
+    @{
+        if (User.IsInRole(DXMVCWebApplication1.Common.RolesUsuarios.SUP_AUDITOR)) { topMenu += "TopMenuAuditor.xml"; }
+        if (User.IsInRole(DXMVCWebApplication1.Common.RolesUsuarios.IE_PROGRAMAS_U)) { topMenu += "TopMenuAdminProgramasU.xml"; }
+        if (User.IsInRole(DXMVCWebApplication1.Common.RolesUsuarios.SUP_NACIONAL)) { topMenu += "TopMenuSupNacional.xml"; }
+        if (User.IsInRole(DXMVCWebApplication1.Common.RolesUsuarios.REPRESENTANTE_ESTATAL)) { topMenu += "TopMenuRepEstatal.xml"; }
+        if (User.IsInRole(DXMVCWebApplication1.Common.RolesUsuarios.SUPERUSUARIO)) { topMenu += "TopMenuAdmin.xml"; }
+        if (User.IsInRole(DXMVCWebApplication1.Common.RolesUsuarios.IE_INOCUIDAD)) { topMenu += "TopMenuAdminInstanciaEjecutoraInocuidad.xml"; }
+        if (User.IsInRole(DXMVCWebApplication1.Common.RolesUsuarios.IE_MOVILIZACION)) { topMenu += "TopMenuAdminInstanciaEjecutoraMovilizacion.xml"; }
+        if (User.IsInRole(DXMVCWebApplication1.Common.RolesUsuarios.IE_ANIMAL)) { topMenu += "TopMenuAdminInstanciaEjecutoraSaludAnimal.xml"; }
+        if (User.IsInRole(DXMVCWebApplication1.Common.RolesUsuarios.IE_ACUICOLA_PESQUERA)) { topMenu += "TopMenuAdminInstanciaEjecutoraSanidadAcuicolaPesquera.xml"; }
+        if (User.IsInRole(DXMVCWebApplication1.Common.RolesUsuarios.IE_VEGETAL)) { topMenu += "TopMenuAdminInstanciaEjecutoraSanidadVegetal.xml"; }
+        if (User.IsInRole(DXMVCWebApplication1.Common.RolesUsuarios.UR_INOCUIDAD)) { topMenu += "TopMenuAdminUnidadResponsableInocuidad.xml"; }
+        if (User.IsInRole(DXMVCWebApplication1.Common.RolesUsuarios.UR_MOVILIZACION)) { topMenu += "TopMenuAdminUnidadResponsableMovilizacion.xml"; }
+        if (User.IsInRole(DXMVCWebApplication1.Common.RolesUsuarios.UR_ANIMAL)) { topMenu += "TopMenuAdminUnidadResponsableSaludAnimal.xml"; }
+        if (User.IsInRole(DXMVCWebApplication1.Common.RolesUsuarios.UR_ACUICOLA_PESQUERA)) { topMenu += "TopMenuAdminUnidadResponsableSanidadAcuicolaPesquera.xml"; }
+        if (User.IsInRole(DXMVCWebApplication1.Common.RolesUsuarios.UR_VEGETAL)) { topMenu += "TopMenuAdminUnidadResponsableSanidadVegetal.xml"; }
+        if (User.IsInRole(DXMVCWebApplication1.Common.RolesUsuarios.PUESTO_AUXILIAR_ADMINISTRATIVO)) { topMenu += "TopMenuPuesto_AuxAdmin.xml"; }
+        if (User.IsInRole(DXMVCWebApplication1.Common.RolesUsuarios.PUESTO_AUXILIAR_CAMPO)) { topMenu += "TopMenuPuesto_AuxCampo.xml"; }
+        if (User.IsInRole(DXMVCWebApplication1.Common.RolesUsuarios.PUESTO_AUXILIAR_INFORMATICA)) { topMenu += "TopMenuPuesto_AuxInformatica.xml"; }
+        if (User.IsInRole(DXMVCWebApplication1.Common.RolesUsuarios.PUESTO_COOR_ADMINISTRATIVO)) { topMenu += "TopMenuPuesto_CooAdministrativo.xml"; }
+        if (User.IsInRole(DXMVCWebApplication1.Common.RolesUsuarios.SUP_ESTATAL)) { topMenu += "TopMenuEstatal.xml"; }
+        if (User.IsInRole(DXMVCWebApplication1.Common.RolesUsuarios.SUP_REGIONAL)) { topMenu += "TopMenuRegional.xml"; }
+        if (User.IsInRole(DXMVCWebApplication1.Common.RolesUsuarios.ESTATAL_PRES)) { topMenu += "TopMenuEstatal_PRES.xml"; }
+        if (User.IsInRole(DXMVCWebApplication1.Common.RolesUsuarios.ESTATAL_PRES)) { topMenu += "TopMenuEstatal_PRES.xml"; }
+        if (User.IsInRole(DXMVCWebApplication1.Common.RolesUsuarios.UR_UPV)) { topMenu += "TopMenuAdminUnidadResponsableUPV.xml"; }
+
+        //Coordinador de campaña
+        if (User.IsInRole(DXMVCWebApplication1.Common.RolesUsuarios.COORDINADOR_CAMPANIA)
+        && (DXMVCWebApplication1.Models.Senasica.GetSubComponenteByUser(User.Identity.GetUserId()) == 1))
+        {
+            topMenu += "TopMenuPuesto_CooCampania_SAnimal.xml";
+        }
+        if (User.IsInRole(DXMVCWebApplication1.Common.RolesUsuarios.COORDINADOR_CAMPANIA)
+           && (DXMVCWebApplication1.Models.Senasica.GetSubComponenteByUser(User.Identity.GetUserId()) == 3))
+        {
+            topMenu += "TopMenuPuesto_CooCampania_SAcuicola.xml";
+        }
+        if (User.IsInRole(DXMVCWebApplication1.Common.RolesUsuarios.COORDINADOR_CAMPANIA)
+          && (DXMVCWebApplication1.Models.Senasica.GetSubComponenteByUser(User.Identity.GetUserId()) == 4))
+        {
+            topMenu += "TopMenuPuesto_CooCampania_SVegetal.xml";
+        }
+        //Coordinador de Proyecto
+        if (User.IsInRole(DXMVCWebApplication1.Common.RolesUsuarios.PUESTO_COOR_PROYECTO)
+            && (DXMVCWebApplication1.Models.Senasica.GetSubComponenteByUser(User.Identity.GetUserId()) == 1))
+        {
+            topMenu += "TopMenuPuesto_CooProyecto_SAnimal.xml";
+        }
+        if (User.IsInRole(DXMVCWebApplication1.Common.RolesUsuarios.PUESTO_COOR_PROYECTO)
+           && (DXMVCWebApplication1.Models.Senasica.GetSubComponenteByUser(User.Identity.GetUserId()) == 3))
+        {
+            topMenu += "TopMenuPuesto_CooProyecto_SAcuicola.xml";
+        }
+        if (User.IsInRole(DXMVCWebApplication1.Common.RolesUsuarios.PUESTO_COOR_PROYECTO)
+          && (DXMVCWebApplication1.Models.Senasica.GetSubComponenteByUser(User.Identity.GetUserId()) == 4))
+        {
+            topMenu += "TopMenuPuesto_CooProyecto_SVegetal.xml";
+        }
+
+        //Gerente
+        if (User.IsInRole(DXMVCWebApplication1.Common.RolesUsuarios.PUESTO_GERENTE)
+            && (DXMVCWebApplication1.Models.Senasica.GetSubComponenteByUser(User.Identity.GetUserId()) == 1))
+        {
+            topMenu += "TopMenuPuesto_Gerente_SAnimal.xml";
+        }
+        if (User.IsInRole(DXMVCWebApplication1.Common.RolesUsuarios.PUESTO_GERENTE)
+           && (DXMVCWebApplication1.Models.Senasica.GetSubComponenteByUser(User.Identity.GetUserId()) == 3))
+        {
+            topMenu += "TopMenuPuesto_Gerente_SAcuicola.xml";
+        }
+        if (User.IsInRole(DXMVCWebApplication1.Common.RolesUsuarios.PUESTO_GERENTE)
+          && (DXMVCWebApplication1.Models.Senasica.GetSubComponenteByUser(User.Identity.GetUserId()) == 4))
+        {
+            topMenu += "TopMenuPuesto_Gerente_SVegetal.xml";
+        }
+
+        if (User.IsInRole(DXMVCWebApplication1.Common.RolesUsuarios.PUESTO_PROF_ADMINISTRATIVO)) { topMenu += "TopMenuPuesto_ProAdministrativo.xml"; }
+        if (User.IsInRole(DXMVCWebApplication1.Common.RolesUsuarios.PUESTO_PROF_TEC_CAPACITACION_DIVULGACION)) { topMenu += "TopMenuPuesto_ProDivulgacion.xml"; }
+
+        //Profesional Responsable de Informática
+        if (User.IsInRole(DXMVCWebApplication1.Common.RolesUsuarios.PUESTO_PROF_RESP_INFORMATICA)
+            && (DXMVCWebApplication1.Models.Senasica.GetSubComponenteByUser(User.Identity.GetUserId()) == 1))
+        {
+            topMenu += "TopMenuPuesto_ProResInformatica_SAnimal.xml";
+        }
+        if (User.IsInRole(DXMVCWebApplication1.Common.RolesUsuarios.PUESTO_PROF_RESP_INFORMATICA)
+           && (DXMVCWebApplication1.Models.Senasica.GetSubComponenteByUser(User.Identity.GetUserId()) == 3))
+        {
+            topMenu += "TopMenuPuesto_ProResInformatica_SAcuicola.xml";
+        }
+        if (User.IsInRole(DXMVCWebApplication1.Common.RolesUsuarios.PUESTO_PROF_RESP_INFORMATICA)
+          && (DXMVCWebApplication1.Models.Senasica.GetSubComponenteByUser(User.Identity.GetUserId()) == 4))
+        {
+            topMenu += "TopMenuPuesto_ProResInformatica_SVegetal.xml";
+        }
+
+        if (User.IsInRole(DXMVCWebApplication1.Common.RolesUsuarios.PUESTO_COOR_REGIONAL)) { topMenu += "TopMenuPuesto_CooRegional.xml"; }
+        if (User.IsInRole(DXMVCWebApplication1.Common.RolesUsuarios.TECNICO_OPERATIVO)) { topMenu += "TopMenuPuesto_TecOperativo.xml"; }
+        if (User.IsInRole(DXMVCWebApplication1.Common.RolesUsuarios.PUESTO_PROF_ADMI_ESTATAL_SISTEMAS_INFORMATICOS)) { topMenu += "TopMenuPuesto_ProInformatico.xml"; }
+        if (User.IsInRole(DXMVCWebApplication1.Common.RolesUsuarios.PUESTO_PROF_TECNICO_CALIDAD_MEJORA_PROCESOS)) { topMenu += "TopMenuPuesto_ProProcesos.xml"; }
+        if (User.IsInRole(DXMVCWebApplication1.Common.RolesUsuarios.PUESTO_PROF_PROYECTO)) { topMenu += "TopMenuPuesto_ProProyecto.xml"; }
+        if (User.IsInRole(DXMVCWebApplication1.Common.RolesUsuarios.PUESTO_SECRETARIA)) { topMenu += "TopMenuPuesto_SecSecretaria.xml"; }
+    }
+
+    <br />
+
+    @{
+        if (topMenu != "~/App_Data/")
+        {
+            @Html.DevExpress().Menu(settings =>
+            {
+                settings.Name = "HeaderMenu";
+                settings.ItemAutoWidth = false;
+                settings.Width = Unit.Percentage(100);
+                settings.Styles.Style.Border.BorderWidth = Unit.Pixel(0);
+                settings.Styles.Style.BorderTop.BorderWidth = Unit.Pixel(1);
+            }).BindToXML(HttpContext.Current.Server.MapPath(topMenu), "/items/*").GetHtml()
+            //.Bind(new DXMVCWebApplication1.Common.CreaMenu()).GetHtml();
+            
+
+
+        }
+    }
+
+</div>

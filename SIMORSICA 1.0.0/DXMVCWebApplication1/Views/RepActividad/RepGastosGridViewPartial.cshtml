@@ -1,0 +1,196 @@
+﻿@Html.DevExpress().GridView(
+settings =>
+{
+    settings.Name = "RepGastosGridView" + ViewData["IdActividad"];
+    settings.SettingsDetail.MasterGridName = "RepActividadGridView";
+    settings.CallbackRouteValues = new { Controller = "RepActividad", Action = "RepGastosGridViewPartial", IdActividad = ViewData["IdActividad"] };
+    //settings.Width = Unit.Percentage(100);
+    settings.SettingsEditing.AddNewRowRouteValues = new { Controller = "RepActividad", Action = "RepGastosGridViewPartialAddNew", IdActividad = ViewData["IdActividad"] };
+    settings.SettingsEditing.UpdateRowRouteValues = new { Controller = "RepActividad", Action = "RepGastosGridViewPartialUpdate", IdActividad = ViewData["IdActividad"] };
+    settings.SettingsEditing.DeleteRowRouteValues = new { Controller = "RepActividad", Action = "RepGastosGridViewPartialDelete", IdActividad = ViewData["IdActividad"] };
+    settings.SettingsEditing.Mode = GridViewEditingMode.PopupEditForm;
+    settings.SettingsBehavior.ConfirmDelete = true;
+
+    settings.CommandColumn.Visible = true;
+    // settings.CommandColumn.ShowNewButton = true:;
+    settings.SettingsCommandButton.NewButton.Text = "Nuevo Reporte";
+    settings.CommandColumn.ShowNewButtonInHeader = true;
+    settings.CommandColumn.ShowDeleteButton = true;
+    settings.CommandColumn.ShowEditButton = true;
+
+    settings.KeyFieldName = "Pk_IdRepGasto";
+
+    settings.SettingsPager.Visible = true;
+    settings.Settings.ShowGroupPanel = false;
+    settings.Settings.ShowFilterRow = false;
+    settings.SettingsBehavior.AllowSelectByRowClick = true;
+
+    //settings.Columns.Add("FechaGasto", "Fecha Gasto");
+    settings.Columns.Add("Concepto");
+    settings.Columns.Add("Importe").ColumnType = MVCxGridViewColumnType.SpinEdit;
+    settings.Columns.Add("FechaGasto", "Fecha Gasto").ColumnType = MVCxGridViewColumnType.DateEdit;
+    settings.Columns.Add("Comentario").ColumnType = MVCxGridViewColumnType.Memo;
+
+
+    //**************************************Comienza Custom Form*************************
+    //***********************************************************************************
+
+    settings.SetEditFormTemplateContent(c =>
+    {
+        var repgastos = ViewData["dataItem"] ?? c.DataItem;
+
+        ViewContext.Writer.Write("<p>Edición de Reporte de Actividades</p>");
+        ViewContext.Writer.Write(
+"<table>" +
+ "<tr>" +
+     "<td>");
+
+        //Concepto
+
+        ViewContext.Writer.Write("<td>");
+        Html.DevExpress().Label(
+                   edtSettings =>
+                   {
+                       edtSettings.ControlStyle.CssClass = "label";
+                       edtSettings.Text = "Concepto";
+                       edtSettings.AssociatedControlName = "Concepto";
+                   }
+               )
+               .Render();
+        Html.DevExpress().TextBox(
+            edtSettings =>
+            {
+                edtSettings.Name = "Concepto";
+                edtSettings.ControlStyle.CssClass = "editor";
+                edtSettings.ShowModelErrors = true;
+                edtSettings.Width = Unit.Pixel(250);
+
+
+            }
+        )
+        .Bind(DataBinder.Eval(repgastos, "Concepto"))
+        .Render();
+        ViewContext.Writer.Write("</td>");
+
+        //Importe
+        ViewContext.Writer.Write("<td>");
+        Html.DevExpress().Label(
+            edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Importe";
+                edtSettings.AssociatedControlName = "Importe";
+            }
+        )
+        .Render();
+
+        Html.DevExpress().SpinEdit(
+           edtSettings =>
+           {
+               edtSettings.Name = "Importe";
+               edtSettings.ControlStyle.CssClass = "editor";
+               edtSettings.ShowModelErrors = true;
+               edtSettings.Width = Unit.Pixel(250);
+           }
+       )
+       .Bind(DataBinder.Eval(repgastos, "Importe"))
+       .Render();
+
+        ViewContext.Writer.Write("</td>");
+
+
+        //Fecha Informe
+        ViewContext.Writer.Write("<td>");
+        Html.DevExpress().Label(
+                   edtSettings =>
+                   {
+                       edtSettings.ControlStyle.CssClass = "label";
+                       edtSettings.Text = "Fecha Gasto";
+                       edtSettings.AssociatedControlName = "FechaGasto";
+                   }
+               )
+               .Render();
+        Html.DevExpress().DateEdit(
+            edtSettings =>
+            {
+                edtSettings.Name = "FechaGasto";
+                edtSettings.ControlStyle.CssClass = "editor";
+                edtSettings.ShowModelErrors = true;
+                edtSettings.Width = Unit.Pixel(250);
+
+            }
+        )
+        .Bind(DataBinder.Eval(repgastos, "FechaGasto"))
+        .Render();
+        ViewContext.Writer.Write("</td>");
+        ViewContext.Writer.Write("</tr>");
+        ViewContext.Writer.Write("</table>");
+
+        //Comentario
+
+        ViewContext.Writer.Write("<br>");
+        Html.DevExpress().Label(
+                   edtSettings =>
+                   {
+                       edtSettings.ControlStyle.CssClass = "label";
+                       edtSettings.Text = "Comentario";
+                       edtSettings.AssociatedControlName = "Comentario";
+                   }
+               )
+               .Render();
+        Html.DevExpress().Memo(
+            edtSettings =>
+            {
+                edtSettings.Name = "Comentario";
+                edtSettings.ControlStyle.CssClass = "editor";
+                edtSettings.ShowModelErrors = true;
+                edtSettings.Width = Unit.Pixel(1010);
+                edtSettings.Height = Unit.Pixel(50);
+
+            }
+        )
+        .Bind(DataBinder.Eval(repgastos, "Comentario"))
+        .Render();
+        ViewContext.Writer.Write("</br>");
+
+        //Botones
+        Html.DevExpress().Label(
+                   edtSettings =>
+                   {
+                       edtSettings.ControlStyle.CssClass = "label";
+                   }
+               )
+               .Render();
+        Html.DevExpress().Button(
+            btnSettings =>
+            {
+                btnSettings.Name = "btnUpdat";
+                btnSettings.ControlStyle.CssClass = "button";
+                btnSettings.Text = "Guardar";
+                btnSettings.ClientSideEvents.Click = "function(s, e){ RepGastosGridView" + ViewData["IdActividad"] + ".UpdateEdit(); }";
+            }
+        )
+        .Render();
+
+        Html.DevExpress().Button(
+                    btnSettings =>
+                    {
+                        btnSettings.Name = "btnCance";
+                        btnSettings.ControlStyle.CssClass = "button";
+                        btnSettings.Text = "Cancelar";
+                        btnSettings.ClientSideEvents.Click = "function(s, e){ RepGastosGridView" + ViewData["IdActividad"] + ".CancelEdit(); }";
+                    }
+                )
+                .Render();
+
+
+    });
+}).Bind(Model).GetHtml()
+@*});
+
+        if (ViewData["EditError"] != null)
+        {
+            grid.SetEditErrorText((string)ViewData["EditError"]);
+        }
+    }
+    @grid.Bind(Model).GetHtml()*@

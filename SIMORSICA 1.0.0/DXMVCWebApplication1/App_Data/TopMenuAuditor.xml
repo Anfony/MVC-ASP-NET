@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<items>
+  <group Text="Planeación">
+    <item Text="Programas de Trabajo S" NavigateUrl="~/CampaniaN" />
+    <item Text="Programas de Trabajo U" NavigateUrl="~/CampaniaU" />
+  </group>
+  <group Text="Reportes">
+    <item Text="Cierre Mensual" NavigateUrl="~/ReporteInformeMensualAvance" />
+    <item Text="Reporte Cierre Trimestral" NavigateUrl="~/ReporteCierrePeriodo" />
+    <item Text="Detalle Físico/Financiero" NavigateUrl="~/ReporteInformeDetalleFisicoFinanciero" />
+    <item Text="Actas de Comisión" NavigateUrl="~/ActaComision" />
+  </group>
+  <group Text="Reporteador Dinámico">
+    <group Text="Avance Financiero">
+      <item Text="Federal" NavigateUrl="~/PivotAvanceFisicoFinanciero_Federal" />
+      <item Text="Estatal" NavigateUrl="~/PivotAvanceFisicoFinanciero_Estatal" />
+      <item Text="Productor" NavigateUrl="~/PivotAvanceFisicoFinanciero_Productor" />
+    </group>
+    <item Text="Avance Físico" NavigateUrl="~/PivotAvanceFisico" />
+  </group>
+  
+  <group Text="Ejecución">
+    <item Text="Informe de Avances" NavigateUrl="~/ReporteActividadAsignada"  />
+    <item Text="Informe de Adquisiciones" NavigateUrl="~/ReporteDeAdquisiciones"  />
+  </group>
+  <group Text="Ministración">
+    <item Text="Registro de Ministraciones" NavigateUrl="~/MinistracionesXComite" />
+    <item Text="Reintegros" NavigateUrl="~/Tesofe" />
+  </group>
+    <group Text="Cierre">
+    <item Text="Cierre Mensual" NavigateUrl="~/CierreMensual"  />
+  </group>
+</items>

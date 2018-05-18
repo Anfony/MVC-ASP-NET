@@ -1,0 +1,56 @@
+@{
+	var grid = Html.DevExpress().GridView(settings => {
+        settings.Name = "StatusCampaniaSAGridView" + ViewData["IdCampania"];
+        settings.CallbackRouteValues = new { Controller = "CampaniaSA", Action = "StatusCampaniaSAGridViewPartial", IdCampania = ViewData["IdCampania"] };
+        settings.SettingsDetail.MasterGridName = "CampaniaSAGridView";
+        
+        settings.SettingsEditing.AddNewRowRouteValues = new { Controller = "CampaniaSA", Action = "StatusCampaniaSAGridViewPartialAddNew", IdCampania = ViewData["IdCampania"] };
+        settings.SettingsEditing.UpdateRowRouteValues = new { Controller = "CampaniaSA", Action = "StatusCampaniaSAGridViewPartialUpdate", IdCampania = ViewData["IdCampania"] };
+        settings.SettingsEditing.DeleteRowRouteValues = new { Controller = "CampaniaSA", Action = "StatusCampaniaSAGridViewPartialDelete", IdCampania = ViewData["IdCampania"] };
+        settings.SettingsEditing.Mode = GridViewEditingMode.PopupEditForm;
+        settings.SettingsBehavior.ConfirmDelete = true;
+
+        settings.CommandColumn.Visible = true;
+        // settings.CommandColumn.ShowNewButton = true:;
+        settings.SettingsCommandButton.NewButton.Text = "Cambiar Estado";
+        settings.CommandColumn.ShowNewButtonInHeader = true;
+        settings.CommandColumn.ShowDeleteButton = true;
+        settings.CommandColumn.ShowEditButton = true;
+
+		settings.KeyFieldName = "PK_IdStatusCampaniaKardex";
+
+		settings.SettingsPager.Visible = true;
+		settings.Settings.ShowGroupPanel = false;
+		settings.Settings.ShowFilterRow = false;
+        settings.SettingsBehavior.AllowSelectByRowClick = true;
+
+            //settings.Columns.Add("FK_IdStatusCampania__SIS");
+            settings.Columns.Add(column =>
+            {
+                column.FieldName = "FK_IdStatusCampania__SIS";
+                column.Caption = "Nuevo Estado";
+                column.ColumnType = MVCxGridViewColumnType.ComboBox;
+                var comboBoxProperties = column.PropertiesEdit as ComboBoxProperties;
+                comboBoxProperties.DataSource = DXMVCWebApplication1.Models.Senasica.GetStatusSiguienteCampania( 1, "" );
+                comboBoxProperties.TextField = "Nombre";
+                comboBoxProperties.ValueField = "PK_IdStatusCampania";
+                comboBoxProperties.ValueType = typeof(int);
+                comboBoxProperties.Width = Unit.Pixel(250);
+                //comboBoxProperties.Height = Unit.Pixel(20);
+
+            });
+            settings.Columns.Add(column =>
+            {
+                column.FieldName = "Fecha";
+                column.Caption = "Fecha";
+                column.ColumnType = MVCxGridViewColumnType.DateEdit;
+            });
+
+            //settings.Columns.Add("Fecha");
+            settings.Columns.Add("Comentarios").ColumnType = MVCxGridViewColumnType.Memo;
+			});
+		if (ViewData["EditError"] != null){
+        grid.SetEditErrorText((string)ViewData["EditError"]);
+    }
+}
+@grid.Bind(Model).GetHtml()

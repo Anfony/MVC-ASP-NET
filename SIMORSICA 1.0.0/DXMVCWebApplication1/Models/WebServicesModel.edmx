@@ -1,0 +1,694 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="DB_SENASICA_PRODUCCIONModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <!--Errores durante la generación:
+advertencia 6002: La tabla o vista 'DB_SENASICA_PRODUCCION.UE.VW_TipoActividad' no tiene definida ninguna clave principal. Se ha inferido la clave y la definición se creado como una vista o tabla de solo lectura.-->
+        <EntityType Name="VW_TipoActividad">
+          <Key>
+            <PropertyRef Name="IdTipoActividad" />
+            <PropertyRef Name="ConceptoApoyo" />
+            <PropertyRef Name="ProyectoAutorizado" />
+            <PropertyRef Name="TipoAccion" />
+            <PropertyRef Name="TipoActividad" />
+            <PropertyRef Name="IdAnio" />
+            <PropertyRef Name="Anio" />
+          </Key>
+          <Property Name="IdTipoActividad" Type="int" Nullable="false" />
+          <Property Name="ConceptoApoyo" Type="varchar(max)" Nullable="false" />
+          <Property Name="ProyectoAutorizado" Type="varchar" MaxLength="150" Nullable="false" />
+          <Property Name="TipoAccion" Type="varchar" MaxLength="1000" Nullable="false" />
+          <Property Name="TipoActividad" Type="varchar" MaxLength="150" Nullable="false" />
+          <Property Name="UnidadMedida" Type="varchar(max)" />
+          <Property Name="IdAnio" Type="int" Nullable="false" />
+          <Property Name="Anio" Type="int" Nullable="false" />
+        </EntityType>
+        <Function Name="GetComites_All" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="API">
+          <ReturnType>
+            <CollectionType>
+              <RowType>
+                <Property Name="IdUR" Type="int" Nullable="false" />
+                <Property Name="UnidadResponsable" Type="nvarchar" MaxLength="100" Nullable="false" />
+                <Property Name="IdEstado" Type="int" Nullable="false" />
+                <Property Name="Estado" Type="varchar" MaxLength="150" Nullable="false" />
+                <Property Name="IdComite" Type="int" Nullable="false" />
+                <Property Name="Comite" Type="varchar" MaxLength="200" Nullable="false" />
+                <Property Name="SitioWeb" Type="nvarchar" MaxLength="100" />
+              </RowType>
+            </CollectionType>
+          </ReturnType>
+        </Function>
+        <Function Name="GetComites_ByComite" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="API">
+          <Parameter Name="IdComite" Type="int" Mode="In" />
+          <ReturnType>
+            <CollectionType>
+              <RowType>
+                <Property Name="IdUR" Type="int" Nullable="false" />
+                <Property Name="UnidadResponsable" Type="nvarchar" MaxLength="100" Nullable="false" />
+                <Property Name="IdEstado" Type="int" Nullable="false" />
+                <Property Name="Estado" Type="varchar" MaxLength="150" Nullable="false" />
+                <Property Name="IdComite" Type="int" Nullable="false" />
+                <Property Name="Comite" Type="varchar" MaxLength="200" Nullable="false" />
+                <Property Name="SitioWeb" Type="nvarchar" MaxLength="100" />
+              </RowType>
+            </CollectionType>
+          </ReturnType>
+        </Function>
+        <Function Name="GetComites_ByEstado" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="API">
+          <Parameter Name="IdEstado" Type="int" Mode="In" />
+          <ReturnType>
+            <CollectionType>
+              <RowType>
+                <Property Name="IdUR" Type="int" Nullable="false" />
+                <Property Name="UnidadResponsable" Type="nvarchar" MaxLength="100" Nullable="false" />
+                <Property Name="IdEstado" Type="int" Nullable="false" />
+                <Property Name="Estado" Type="varchar" MaxLength="150" Nullable="false" />
+                <Property Name="IdComite" Type="int" Nullable="false" />
+                <Property Name="Comite" Type="varchar" MaxLength="200" Nullable="false" />
+                <Property Name="SitioWeb" Type="nvarchar" MaxLength="100" />
+              </RowType>
+            </CollectionType>
+          </ReturnType>
+        </Function>
+        <Function Name="GetComites_ByUR" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="API">
+          <Parameter Name="IdUR" Type="int" Mode="In" />
+          <ReturnType>
+            <CollectionType>
+              <RowType>
+                <Property Name="IdUR" Type="int" Nullable="false" />
+                <Property Name="UnidadResponsable" Type="nvarchar" MaxLength="100" Nullable="false" />
+                <Property Name="IdEstado" Type="int" Nullable="false" />
+                <Property Name="Estado" Type="varchar" MaxLength="150" Nullable="false" />
+                <Property Name="IdComite" Type="int" Nullable="false" />
+                <Property Name="Comite" Type="varchar" MaxLength="200" Nullable="false" />
+                <Property Name="SitioWeb" Type="nvarchar" MaxLength="100" />
+              </RowType>
+            </CollectionType>
+          </ReturnType>
+        </Function>
+        <Function Name="GetEstados" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="API">
+          <ReturnType>
+            <CollectionType>
+              <RowType>
+                <Property Name="Id" Type="int" Nullable="false" />
+                <Property Name="Nombre" Type="varchar" MaxLength="150" Nullable="false" />
+              </RowType>
+            </CollectionType>
+          </ReturnType>
+        </Function>
+        <Function Name="GetPEFXEstados" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="API">
+          <Parameter Name="Anio" Type="int" Mode="In" />
+          <ReturnType>
+            <CollectionType>
+              <RowType>
+                <Property Name="Estado" Type="varchar" MaxLength="150" Nullable="false" />
+                <Property Name="SistemaInform" Type="decimal" Precision="18" Scale="2" />
+                <Property Name="Capacitacion" Type="decimal" Precision="18" Scale="2" />
+                <Property Name="Divulgacion" Type="decimal" Precision="18" Scale="2" />
+                <Property Name="Emergencias" Type="decimal" Precision="18" Scale="2" />
+                <Property Name="Gtotransv" Type="decimal" Precision="21" Scale="2" />
+                <Property Name="Comp_CampFitoZoo" Type="decimal" Precision="18" Scale="2" />
+                <Property Name="Comp_InspVig" Type="decimal" Precision="18" Scale="2" />
+                <Property Name="Comp_VigCuarentenaria" Type="decimal" Precision="18" Scale="2" />
+                <Property Name="Comp_IAAP" Type="decimal" Precision="18" Scale="2" />
+                <Property Name="Componentes" Type="decimal" Precision="21" Scale="2" />
+                <Property Name="GtoInversion" Type="decimal" Precision="18" Scale="2" />
+                <Property Name="GtoOperacion" Type="decimal" Precision="18" Scale="2" />
+                <Property Name="Importe" Type="decimal" Precision="18" Scale="0" />
+              </RowType>
+            </CollectionType>
+          </ReturnType>
+        </Function>
+        <Function Name="GetPresComite_All" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="API">
+          <Parameter Name="Anio" Type="int" Mode="In" />
+          <ReturnType>
+            <CollectionType>
+              <RowType>
+                <Property Name="IdComite" Type="int" Nullable="false" />
+                <Property Name="Comite" Type="varchar" MaxLength="200" Nullable="false" />
+                <Property Name="RecursoAsignado" Type="numeric" Precision="14" Scale="2" Nullable="false" />
+              </RowType>
+            </CollectionType>
+          </ReturnType>
+        </Function>
+        <Function Name="GetPresComite_ByComite" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="API">
+          <Parameter Name="Anio" Type="int" Mode="In" />
+          <Parameter Name="IdComite" Type="int" Mode="In" />
+          <ReturnType>
+            <CollectionType>
+              <RowType>
+                <Property Name="IdComite" Type="int" Nullable="false" />
+                <Property Name="Comite" Type="varchar" MaxLength="200" Nullable="false" />
+                <Property Name="RecursoAsignado" Type="numeric" Precision="14" Scale="2" Nullable="false" />
+              </RowType>
+            </CollectionType>
+          </ReturnType>
+        </Function>
+        <Function Name="GetProveedores_All" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="API">
+          <ReturnType>
+            <CollectionType>
+              <RowType>
+                <Property Name="Id" Type="int" Nullable="false" />
+                <Property Name="RazonSocial" Type="varchar" MaxLength="300" />
+                <Property Name="RFC" Type="varchar" MaxLength="300" Nullable="false" />
+                <Property Name="Estado" Type="varchar" MaxLength="150" Nullable="false" />
+                <Property Name="Municipio" Type="varchar" MaxLength="150" Nullable="false" />
+                <Property Name="Colonia" Type="varchar" MaxLength="200" />
+                <Property Name="Calle" Type="varchar" MaxLength="300" />
+                <Property Name="Telefono" Type="varchar" MaxLength="20" />
+                <Property Name="Email" Type="varchar" MaxLength="100" />
+              </RowType>
+            </CollectionType>
+          </ReturnType>
+        </Function>
+        <Function Name="GetProveedores_ByEstado" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="API">
+          <Parameter Name="IdEstado" Type="int" Mode="In" />
+          <ReturnType>
+            <CollectionType>
+              <RowType>
+                <Property Name="Id" Type="int" Nullable="false" />
+                <Property Name="RazonSocial" Type="varchar" MaxLength="300" />
+                <Property Name="RFC" Type="varchar" MaxLength="300" Nullable="false" />
+                <Property Name="Estado" Type="varchar" MaxLength="150" Nullable="false" />
+                <Property Name="Municipio" Type="varchar" MaxLength="150" Nullable="false" />
+                <Property Name="Colonia" Type="varchar" MaxLength="200" />
+                <Property Name="Calle" Type="varchar" MaxLength="300" />
+                <Property Name="Telefono" Type="varchar" MaxLength="20" />
+                <Property Name="Email" Type="varchar" MaxLength="100" />
+              </RowType>
+            </CollectionType>
+          </ReturnType>
+        </Function>
+        <Function Name="GetProyectosAutorizadosComitesById" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="API">
+          <Parameter Name="Anio" Type="int" Mode="In" />
+          <Parameter Name="IdComite" Type="int" Mode="In" />
+          <ReturnType>
+            <CollectionType>
+              <RowType>
+                <Property Name="Id" Type="int" Nullable="false" />
+                <Property Name="Comite" Type="varchar" MaxLength="200" Nullable="false" />
+                <Property Name="ProyectoAutorizado" Type="varchar" MaxLength="150" Nullable="false" />
+                <Property Name="RecursoAsignado" Type="numeric" Precision="14" Scale="2" Nullable="false" />
+              </RowType>
+            </CollectionType>
+          </ReturnType>
+        </Function>
+        <Function Name="GetUnidadesResponsables" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="API">
+          <ReturnType>
+            <CollectionType>
+              <RowType>
+                <Property Name="Id" Type="int" Nullable="false" />
+                <Property Name="Nombre" Type="nvarchar" MaxLength="100" Nullable="false" />
+              </RowType>
+            </CollectionType>
+          </ReturnType>
+        </Function>
+        <EntityContainer Name="DB_SENASICA_PRODUCCIONModelStoreContainer">
+          <EntitySet Name="VW_TipoActividad" EntityType="Self.VW_TipoActividad" store:Type="Views" store:Schema="UE">
+            <DefiningQuery>SELECT 
+    [VW_TipoActividad].[IdTipoActividad] AS [IdTipoActividad], 
+    [VW_TipoActividad].[ConceptoApoyo] AS [ConceptoApoyo], 
+    [VW_TipoActividad].[ProyectoAutorizado] AS [ProyectoAutorizado], 
+    [VW_TipoActividad].[TipoAccion] AS [TipoAccion], 
+    [VW_TipoActividad].[TipoActividad] AS [TipoActividad], 
+    [VW_TipoActividad].[UnidadMedida] AS [UnidadMedida], 
+    [VW_TipoActividad].[IdAnio] AS [IdAnio], 
+    [VW_TipoActividad].[Anio] AS [Anio]
+    FROM [UE].[VW_TipoActividad] AS [VW_TipoActividad]</DefiningQuery>
+          </EntitySet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="DB_SENASICA_PRODUCCIONModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <ComplexType Name="GetComitesXUR_All_Result">
+          <Property Name="IdUR" Type="Int32" Nullable="false" />
+          <Property Name="UnidadResponsable" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="IdComite" Type="Int32" Nullable="false" />
+          <Property Name="Comite" Type="String" MaxLength="200" FixedLength="false" Unicode="false" Nullable="false" />
+        </ComplexType>
+        <ComplexType Name="GetComitesXUR_ByComite_Result">
+          <Property Name="IdUR" Type="Int32" Nullable="false" />
+          <Property Name="UnidadResaponsable" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="IdComite" Type="Int32" Nullable="false" />
+          <Property Name="Comite" Type="String" MaxLength="200" FixedLength="false" Unicode="false" Nullable="false" />
+        </ComplexType>
+        <ComplexType Name="GetComitesXUR_ByUR_Result">
+          <Property Name="IdUR" Type="Int32" Nullable="false" />
+          <Property Name="UnidadResaponsable" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="IdComite" Type="Int32" Nullable="false" />
+          <Property Name="Comite" Type="String" MaxLength="200" FixedLength="false" Unicode="false" Nullable="false" />
+        </ComplexType>
+        <ComplexType Name="GetUnidadesResponsables_Result">
+          <Property Name="Id" Type="Int32" Nullable="false" />
+          <Property Name="Nombre" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+        </ComplexType>
+        <EntityContainer Name="WebServicesModel" annotation:LazyLoadingEnabled="true">
+          <FunctionImport Name="GetEstados" IsComposable="true" ReturnType="Collection(DB_SENASICA_PRODUCCIONModel.GetEstados_Result1)" />
+          <FunctionImport Name="GetPEFXEstados" IsComposable="true" ReturnType="Collection(DB_SENASICA_PRODUCCIONModel.GetPEFXEstados_Result1)">
+          <Parameter Name="Anio" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="GetPresComite_All" IsComposable="true" ReturnType="Collection(DB_SENASICA_PRODUCCIONModel.GetPresComite_All_Result1)">
+          <Parameter Name="Anio" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="GetPresComite_ByComite" IsComposable="true" ReturnType="Collection(DB_SENASICA_PRODUCCIONModel.GetPresComite_ByComite_Result1)">
+            <Parameter Name="Anio" Mode="In" Type="Int32" />
+            <Parameter Name="IdComite" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="GetProveedores_All" IsComposable="true" ReturnType="Collection(DB_SENASICA_PRODUCCIONModel.GetProveedores_All_Result1)" />
+          <FunctionImport Name="GetProveedores_ByEstado" IsComposable="true" ReturnType="Collection(DB_SENASICA_PRODUCCIONModel.GetProveedores_ByEstado_Result1)">
+          <Parameter Name="IdEstado" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="GetUnidadesResponsables" IsComposable="true" ReturnType="Collection(DB_SENASICA_PRODUCCIONModel.GetUnidadesResponsables_Result2)" />
+          <FunctionImport Name="GetComites_All" IsComposable="true" ReturnType="Collection(DB_SENASICA_PRODUCCIONModel.GetComites_All_Result1)" />
+          <FunctionImport Name="GetComites_ByComite" IsComposable="true" ReturnType="Collection(DB_SENASICA_PRODUCCIONModel.GetComites_ByComite_Result1)">
+          <Parameter Name="IdComite" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="GetComites_ByEstado" IsComposable="true" ReturnType="Collection(DB_SENASICA_PRODUCCIONModel.GetComites_ByEstado_Result1)">
+          <Parameter Name="IdEstado" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="GetComites_ByUR" IsComposable="true" ReturnType="Collection(DB_SENASICA_PRODUCCIONModel.GetComites_ByUR_Result1)">
+          <Parameter Name="IdUR" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="GetProyectosAutorizadosComitesById" IsComposable="true" ReturnType="Collection(DB_SENASICA_PRODUCCIONModel.GetProyectosAutorizadosComitesById_Result)">
+            <Parameter Name="Anio" Mode="In" Type="Int32" />
+            <Parameter Name="IdComite" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <EntitySet Name="VW_TipoActividad" EntityType="DB_SENASICA_PRODUCCIONModel.VW_TipoActividad" />
+        </EntityContainer>
+        <ComplexType Name="GetComitesXUR_All_Result1">
+          <Property Type="Int32" Name="IdUR" Nullable="false" />
+          <Property Type="String" Name="UnidadResponsable" Nullable="false" MaxLength="100" />
+          <Property Type="Int32" Name="IdComite" Nullable="false" />
+          <Property Type="String" Name="Comite" Nullable="false" MaxLength="200" />
+        </ComplexType>
+        <ComplexType Name="GetComitesXUR_ByComite_Result1">
+          <Property Type="Int32" Name="IdUR" Nullable="false" />
+          <Property Type="String" Name="UnidadResponsable" Nullable="false" MaxLength="100" />
+          <Property Type="Int32" Name="IdComite" Nullable="false" />
+          <Property Type="String" Name="Comite" Nullable="false" MaxLength="200" />
+        </ComplexType>
+        <ComplexType Name="GetComitesXUR_ByUR_Result1">
+          <Property Type="Int32" Name="IdUR" Nullable="false" />
+          <Property Type="String" Name="UnidadResponsable" Nullable="false" MaxLength="100" />
+          <Property Type="Int32" Name="IdComite" Nullable="false" />
+          <Property Type="String" Name="Comite" Nullable="false" MaxLength="200" />
+        </ComplexType>
+        <ComplexType Name="GetUnidadesResponsables_Result1">
+          <Property Type="Int32" Name="Id" Nullable="false" />
+          <Property Type="String" Name="Nombre" Nullable="false" MaxLength="100" />
+        </ComplexType>
+        <ComplexType Name="GetPEFXEstados_Result">
+          <Property Type="String" Name="Estado" Nullable="false" MaxLength="150" />
+          <Property Type="Decimal" Name="SistemaInform" Nullable="true" Precision="18" Scale="2" />
+          <Property Type="Decimal" Name="Capacitacion" Nullable="true" Precision="18" Scale="2" />
+          <Property Type="Decimal" Name="Divulgacion" Nullable="true" Precision="18" Scale="2" />
+          <Property Type="Decimal" Name="Emergencias" Nullable="true" Precision="18" Scale="2" />
+          <Property Type="Decimal" Name="Gtotransv" Nullable="true" Precision="21" Scale="2" />
+          <Property Type="Decimal" Name="Comp_CampFitoZoo" Nullable="true" Precision="18" Scale="2" />
+          <Property Type="Decimal" Name="Comp_InspVig" Nullable="true" Precision="18" Scale="2" />
+          <Property Type="Decimal" Name="Comp_VigCuarentenaria" Nullable="true" Precision="18" Scale="2" />
+          <Property Type="Decimal" Name="Comp_IAAP" Nullable="true" Precision="18" Scale="2" />
+          <Property Type="Decimal" Name="Componentes" Nullable="true" Precision="21" Scale="2" />
+          <Property Type="Decimal" Name="GtoInversion" Nullable="true" Precision="18" Scale="2" />
+          <Property Type="Decimal" Name="GtoOperacion" Nullable="true" Precision="18" Scale="2" />
+          <Property Type="Decimal" Name="Importe" Nullable="true" Precision="18" Scale="0" />
+        </ComplexType>
+        <ComplexType Name="GetPresComite_All_Result">
+          <Property Type="Int32" Name="IdComite" Nullable="false" />
+          <Property Type="String" Name="Comite" Nullable="false" MaxLength="200" />
+          <Property Type="Decimal" Name="RecursoAsignado" Nullable="false" Precision="14" Scale="2" />
+        </ComplexType>
+        <ComplexType Name="GetPresComite_ByComite_Result">
+          <Property Type="Int32" Name="IdComite" Nullable="false" />
+          <Property Type="String" Name="Comite" Nullable="false" MaxLength="200" />
+          <Property Type="Decimal" Name="RecursoAsignado" Nullable="false" Precision="14" Scale="2" />
+        </ComplexType>
+        <ComplexType Name="GetEstados_Result">
+          <Property Type="Int32" Name="Id" Nullable="false" />
+          <Property Type="String" Name="Nombre" Nullable="false" MaxLength="150" />
+        </ComplexType>
+        <ComplexType Name="GetProveedores_All_Result">
+          <Property Type="Int32" Name="Id" Nullable="false" />
+          <Property Type="String" Name="RazonSocial" Nullable="false" MaxLength="300" />
+          <Property Type="String" Name="RFC" Nullable="false" MaxLength="300" />
+          <Property Type="String" Name="Estado" Nullable="false" MaxLength="150" />
+          <Property Type="String" Name="Municipio" Nullable="false" MaxLength="150" />
+          <Property Type="String" Name="Colonia" Nullable="true" MaxLength="200" />
+          <Property Type="String" Name="Calle" Nullable="true" MaxLength="300" />
+          <Property Type="String" Name="Telefono" Nullable="true" MaxLength="20" />
+          <Property Type="String" Name="Email" Nullable="true" MaxLength="100" />
+        </ComplexType>
+        <ComplexType Name="GetProveedores_ByEstado_Result">
+          <Property Type="Int32" Name="Id" Nullable="false" />
+          <Property Type="String" Name="RazonSocial" Nullable="false" MaxLength="300" />
+          <Property Type="String" Name="RFC" Nullable="false" MaxLength="300" />
+          <Property Type="String" Name="Estado" Nullable="false" MaxLength="150" />
+          <Property Type="String" Name="Municipio" Nullable="false" MaxLength="150" />
+          <Property Type="String" Name="Colonia" Nullable="true" MaxLength="200" />
+          <Property Type="String" Name="Calle" Nullable="true" MaxLength="300" />
+          <Property Type="String" Name="Telefono" Nullable="true" MaxLength="20" />
+          <Property Type="String" Name="Email" Nullable="true" MaxLength="100" />
+        </ComplexType>
+        <ComplexType Name="GetComites_All_Result">
+          <Property Type="Int32" Name="IdUR" Nullable="false" />
+          <Property Type="String" Name="UnidadResponsable" Nullable="false" MaxLength="100" />
+          <Property Type="Int32" Name="IdEstado" Nullable="false" />
+          <Property Type="String" Name="Estado" Nullable="false" MaxLength="150" />
+          <Property Type="Int32" Name="IdComite" Nullable="false" />
+          <Property Type="String" Name="Comite" Nullable="false" MaxLength="200" />
+        </ComplexType>
+        <ComplexType Name="GetComites_ByComite_Result">
+          <Property Type="Int32" Name="IdUR" Nullable="false" />
+          <Property Type="String" Name="UnidadResponsable" Nullable="false" MaxLength="100" />
+          <Property Type="Int32" Name="IdEstado" Nullable="false" />
+          <Property Type="String" Name="Estado" Nullable="false" MaxLength="150" />
+          <Property Type="Int32" Name="IdComite" Nullable="false" />
+          <Property Type="String" Name="Comite" Nullable="false" MaxLength="200" />
+        </ComplexType>
+        <ComplexType Name="GetComites_ByEstado_Result">
+          <Property Type="Int32" Name="IdUR" Nullable="false" />
+          <Property Type="String" Name="UnidadResponsable" Nullable="false" MaxLength="100" />
+          <Property Type="Int32" Name="IdEstado" Nullable="false" />
+          <Property Type="String" Name="Estado" Nullable="false" MaxLength="150" />
+          <Property Type="Int32" Name="IdComite" Nullable="false" />
+          <Property Type="String" Name="Comite" Nullable="false" MaxLength="200" />
+        </ComplexType>
+        <ComplexType Name="GetComites_ByUR_Result">
+          <Property Type="Int32" Name="IdUR" Nullable="false" />
+          <Property Type="String" Name="UnidadResponsable" Nullable="false" MaxLength="100" />
+          <Property Type="Int32" Name="IdEstado" Nullable="false" />
+          <Property Type="String" Name="Estado" Nullable="false" MaxLength="150" />
+          <Property Type="Int32" Name="IdComite" Nullable="false" />
+          <Property Type="String" Name="Comite" Nullable="false" MaxLength="200" />
+        </ComplexType>
+        <ComplexType Name="GetEstados_Result1">
+          <Property Type="Int32" Name="Id" Nullable="false" />
+          <Property Type="String" Name="Nombre" Nullable="false" MaxLength="150" />
+        </ComplexType>
+        <ComplexType Name="GetPEFXEstados_Result1">
+          <Property Type="String" Name="Estado" Nullable="false" MaxLength="150" />
+          <Property Type="Decimal" Name="SistemaInform" Nullable="true" Precision="18" Scale="2" />
+          <Property Type="Decimal" Name="Capacitacion" Nullable="true" Precision="18" Scale="2" />
+          <Property Type="Decimal" Name="Divulgacion" Nullable="true" Precision="18" Scale="2" />
+          <Property Type="Decimal" Name="Emergencias" Nullable="true" Precision="18" Scale="2" />
+          <Property Type="Decimal" Name="Gtotransv" Nullable="true" Precision="21" Scale="2" />
+          <Property Type="Decimal" Name="Comp_CampFitoZoo" Nullable="true" Precision="18" Scale="2" />
+          <Property Type="Decimal" Name="Comp_InspVig" Nullable="true" Precision="18" Scale="2" />
+          <Property Type="Decimal" Name="Comp_VigCuarentenaria" Nullable="true" Precision="18" Scale="2" />
+          <Property Type="Decimal" Name="Comp_IAAP" Nullable="true" Precision="18" Scale="2" />
+          <Property Type="Decimal" Name="Componentes" Nullable="true" Precision="21" Scale="2" />
+          <Property Type="Decimal" Name="GtoInversion" Nullable="true" Precision="18" Scale="2" />
+          <Property Type="Decimal" Name="GtoOperacion" Nullable="true" Precision="18" Scale="2" />
+          <Property Type="Decimal" Name="Importe" Nullable="true" Precision="18" Scale="0" />
+        </ComplexType>
+        <ComplexType Name="GetPresComite_All_Result1">
+          <Property Type="Int32" Name="IdComite" Nullable="false" />
+          <Property Type="String" Name="Comite" Nullable="false" MaxLength="200" />
+          <Property Type="Decimal" Name="RecursoAsignado" Nullable="false" Precision="14" Scale="2" />
+        </ComplexType>
+        <ComplexType Name="GetPresComite_ByComite_Result1">
+          <Property Type="Int32" Name="IdComite" Nullable="false" />
+          <Property Type="String" Name="Comite" Nullable="false" MaxLength="200" />
+          <Property Type="Decimal" Name="RecursoAsignado" Nullable="false" Precision="14" Scale="2" />
+        </ComplexType>
+        <ComplexType Name="GetProveedores_All_Result1">
+          <Property Type="Int32" Name="Id" Nullable="false" />
+          <Property Type="String" Name="RazonSocial" Nullable="true" MaxLength="300" />
+          <Property Type="String" Name="RFC" Nullable="false" MaxLength="300" />
+          <Property Type="String" Name="Estado" Nullable="false" MaxLength="150" />
+          <Property Type="String" Name="Municipio" Nullable="false" MaxLength="150" />
+          <Property Type="String" Name="Colonia" Nullable="true" MaxLength="200" />
+          <Property Type="String" Name="Calle" Nullable="true" MaxLength="300" />
+          <Property Type="String" Name="Telefono" Nullable="true" MaxLength="20" />
+          <Property Type="String" Name="Email" Nullable="true" MaxLength="100" />
+        </ComplexType>
+        <ComplexType Name="GetProveedores_ByEstado_Result1">
+          <Property Type="Int32" Name="Id" Nullable="false" />
+          <Property Type="String" Name="RazonSocial" Nullable="true" MaxLength="300" />
+          <Property Type="String" Name="RFC" Nullable="false" MaxLength="300" />
+          <Property Type="String" Name="Estado" Nullable="false" MaxLength="150" />
+          <Property Type="String" Name="Municipio" Nullable="false" MaxLength="150" />
+          <Property Type="String" Name="Colonia" Nullable="true" MaxLength="200" />
+          <Property Type="String" Name="Calle" Nullable="true" MaxLength="300" />
+          <Property Type="String" Name="Telefono" Nullable="true" MaxLength="20" />
+          <Property Type="String" Name="Email" Nullable="true" MaxLength="100" />
+        </ComplexType>
+        <ComplexType Name="GetUnidadesResponsables_Result2">
+          <Property Type="Int32" Name="Id" Nullable="false" />
+          <Property Type="String" Name="Nombre" Nullable="false" MaxLength="100" />
+        </ComplexType>
+        <ComplexType Name="GetComites_All_Result1">
+          <Property Type="Int32" Name="IdUR" Nullable="false" />
+          <Property Type="String" Name="UnidadResponsable" Nullable="false" MaxLength="100" />
+          <Property Type="Int32" Name="IdEstado" Nullable="false" />
+          <Property Type="String" Name="Estado" Nullable="false" MaxLength="150" />
+          <Property Type="Int32" Name="IdComite" Nullable="false" />
+          <Property Type="String" Name="Comite" Nullable="false" MaxLength="200" />
+          <Property Type="String" Name="SitioWeb" Nullable="true" MaxLength="100" />
+        </ComplexType>
+        <ComplexType Name="GetComites_ByComite_Result1">
+          <Property Type="Int32" Name="IdUR" Nullable="false" />
+          <Property Type="String" Name="UnidadResponsable" Nullable="false" MaxLength="100" />
+          <Property Type="Int32" Name="IdEstado" Nullable="false" />
+          <Property Type="String" Name="Estado" Nullable="false" MaxLength="150" />
+          <Property Type="Int32" Name="IdComite" Nullable="false" />
+          <Property Type="String" Name="Comite" Nullable="false" MaxLength="200" />
+          <Property Type="String" Name="SitioWeb" Nullable="true" MaxLength="100" />
+        </ComplexType>
+        <ComplexType Name="GetComites_ByEstado_Result1">
+          <Property Type="Int32" Name="IdUR" Nullable="false" />
+          <Property Type="String" Name="UnidadResponsable" Nullable="false" MaxLength="100" />
+          <Property Type="Int32" Name="IdEstado" Nullable="false" />
+          <Property Type="String" Name="Estado" Nullable="false" MaxLength="150" />
+          <Property Type="Int32" Name="IdComite" Nullable="false" />
+          <Property Type="String" Name="Comite" Nullable="false" MaxLength="200" />
+          <Property Type="String" Name="SitioWeb" Nullable="true" MaxLength="100" />
+        </ComplexType>
+        <ComplexType Name="GetComites_ByUR_Result1">
+          <Property Type="Int32" Name="IdUR" Nullable="false" />
+          <Property Type="String" Name="UnidadResponsable" Nullable="false" MaxLength="100" />
+          <Property Type="Int32" Name="IdEstado" Nullable="false" />
+          <Property Type="String" Name="Estado" Nullable="false" MaxLength="150" />
+          <Property Type="Int32" Name="IdComite" Nullable="false" />
+          <Property Type="String" Name="Comite" Nullable="false" MaxLength="200" />
+          <Property Type="String" Name="SitioWeb" Nullable="true" MaxLength="100" />
+        </ComplexType>
+        <ComplexType Name="GetProyectosAutorizadosComitesById_Result">
+          <Property Type="Int32" Name="Id" Nullable="false" />
+          <Property Type="String" Name="Comite" Nullable="false" MaxLength="200" />
+          <Property Type="String" Name="ProyectoAutorizado" Nullable="false" MaxLength="150" />
+          <Property Type="Decimal" Name="RecursoAsignado" Nullable="false" Precision="14" Scale="2" />
+        </ComplexType>
+        <EntityType Name="VW_TipoActividad">
+          <Key>
+            <PropertyRef Name="IdTipoActividad" />
+            <PropertyRef Name="ConceptoApoyo" />
+            <PropertyRef Name="ProyectoAutorizado" />
+            <PropertyRef Name="TipoAccion" />
+            <PropertyRef Name="TipoActividad" />
+            <PropertyRef Name="IdAnio" />
+            <PropertyRef Name="Anio" />
+          </Key>
+          <Property Name="IdTipoActividad" Type="Int32" Nullable="false" />
+          <Property Name="ConceptoApoyo" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="ProyectoAutorizado" Type="String" Nullable="false" MaxLength="150" FixedLength="false" Unicode="false" />
+          <Property Name="TipoAccion" Type="String" Nullable="false" MaxLength="1000" FixedLength="false" Unicode="false" />
+          <Property Name="TipoActividad" Type="String" Nullable="false" MaxLength="150" FixedLength="false" Unicode="false" />
+          <Property Name="UnidadMedida" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="IdAnio" Type="Int32" Nullable="false" />
+          <Property Name="Anio" Type="Int32" Nullable="false" />
+        </EntityType>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="DB_SENASICA_PRODUCCIONModelStoreContainer" CdmEntityContainer="WebServicesModel">
+          <FunctionImportMapping FunctionImportName="GetEstados" FunctionName="DB_SENASICA_PRODUCCIONModel.Store.GetEstados">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="DB_SENASICA_PRODUCCIONModel.GetEstados_Result1">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="GetPEFXEstados" FunctionName="DB_SENASICA_PRODUCCIONModel.Store.GetPEFXEstados">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="DB_SENASICA_PRODUCCIONModel.GetPEFXEstados_Result1">
+                <ScalarProperty Name="Estado" ColumnName="Estado" />
+                <ScalarProperty Name="SistemaInform" ColumnName="SistemaInform" />
+                <ScalarProperty Name="Capacitacion" ColumnName="Capacitacion" />
+                <ScalarProperty Name="Divulgacion" ColumnName="Divulgacion" />
+                <ScalarProperty Name="Emergencias" ColumnName="Emergencias" />
+                <ScalarProperty Name="Gtotransv" ColumnName="Gtotransv" />
+                <ScalarProperty Name="Comp_CampFitoZoo" ColumnName="Comp_CampFitoZoo" />
+                <ScalarProperty Name="Comp_InspVig" ColumnName="Comp_InspVig" />
+                <ScalarProperty Name="Comp_VigCuarentenaria" ColumnName="Comp_VigCuarentenaria" />
+                <ScalarProperty Name="Comp_IAAP" ColumnName="Comp_IAAP" />
+                <ScalarProperty Name="Componentes" ColumnName="Componentes" />
+                <ScalarProperty Name="GtoInversion" ColumnName="GtoInversion" />
+                <ScalarProperty Name="GtoOperacion" ColumnName="GtoOperacion" />
+                <ScalarProperty Name="Importe" ColumnName="Importe" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="GetPresComite_All" FunctionName="DB_SENASICA_PRODUCCIONModel.Store.GetPresComite_All">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="DB_SENASICA_PRODUCCIONModel.GetPresComite_All_Result1">
+                <ScalarProperty Name="IdComite" ColumnName="IdComite" />
+                <ScalarProperty Name="Comite" ColumnName="Comite" />
+                <ScalarProperty Name="RecursoAsignado" ColumnName="RecursoAsignado" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="GetPresComite_ByComite" FunctionName="DB_SENASICA_PRODUCCIONModel.Store.GetPresComite_ByComite">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="DB_SENASICA_PRODUCCIONModel.GetPresComite_ByComite_Result1">
+                <ScalarProperty Name="IdComite" ColumnName="IdComite" />
+                <ScalarProperty Name="Comite" ColumnName="Comite" />
+                <ScalarProperty Name="RecursoAsignado" ColumnName="RecursoAsignado" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="GetProveedores_All" FunctionName="DB_SENASICA_PRODUCCIONModel.Store.GetProveedores_All">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="DB_SENASICA_PRODUCCIONModel.GetProveedores_All_Result1">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="RazonSocial" ColumnName="RazonSocial" />
+                <ScalarProperty Name="RFC" ColumnName="RFC" />
+                <ScalarProperty Name="Estado" ColumnName="Estado" />
+                <ScalarProperty Name="Municipio" ColumnName="Municipio" />
+                <ScalarProperty Name="Colonia" ColumnName="Colonia" />
+                <ScalarProperty Name="Calle" ColumnName="Calle" />
+                <ScalarProperty Name="Telefono" ColumnName="Telefono" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="GetProveedores_ByEstado" FunctionName="DB_SENASICA_PRODUCCIONModel.Store.GetProveedores_ByEstado">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="DB_SENASICA_PRODUCCIONModel.GetProveedores_ByEstado_Result1">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="RazonSocial" ColumnName="RazonSocial" />
+                <ScalarProperty Name="RFC" ColumnName="RFC" />
+                <ScalarProperty Name="Estado" ColumnName="Estado" />
+                <ScalarProperty Name="Municipio" ColumnName="Municipio" />
+                <ScalarProperty Name="Colonia" ColumnName="Colonia" />
+                <ScalarProperty Name="Calle" ColumnName="Calle" />
+                <ScalarProperty Name="Telefono" ColumnName="Telefono" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="GetUnidadesResponsables" FunctionName="DB_SENASICA_PRODUCCIONModel.Store.GetUnidadesResponsables">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="DB_SENASICA_PRODUCCIONModel.GetUnidadesResponsables_Result2">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="GetComites_All" FunctionName="DB_SENASICA_PRODUCCIONModel.Store.GetComites_All">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="DB_SENASICA_PRODUCCIONModel.GetComites_All_Result1">
+                <ScalarProperty Name="IdUR" ColumnName="IdUR" />
+                <ScalarProperty Name="UnidadResponsable" ColumnName="UnidadResponsable" />
+                <ScalarProperty Name="IdEstado" ColumnName="IdEstado" />
+                <ScalarProperty Name="Estado" ColumnName="Estado" />
+                <ScalarProperty Name="IdComite" ColumnName="IdComite" />
+                <ScalarProperty Name="Comite" ColumnName="Comite" />
+                <ScalarProperty Name="SitioWeb" ColumnName="SitioWeb" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="GetComites_ByComite" FunctionName="DB_SENASICA_PRODUCCIONModel.Store.GetComites_ByComite">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="DB_SENASICA_PRODUCCIONModel.GetComites_ByComite_Result1">
+                <ScalarProperty Name="IdUR" ColumnName="IdUR" />
+                <ScalarProperty Name="UnidadResponsable" ColumnName="UnidadResponsable" />
+                <ScalarProperty Name="IdEstado" ColumnName="IdEstado" />
+                <ScalarProperty Name="Estado" ColumnName="Estado" />
+                <ScalarProperty Name="IdComite" ColumnName="IdComite" />
+                <ScalarProperty Name="Comite" ColumnName="Comite" />
+                <ScalarProperty Name="SitioWeb" ColumnName="SitioWeb" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="GetComites_ByEstado" FunctionName="DB_SENASICA_PRODUCCIONModel.Store.GetComites_ByEstado">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="DB_SENASICA_PRODUCCIONModel.GetComites_ByEstado_Result1">
+                <ScalarProperty Name="IdUR" ColumnName="IdUR" />
+                <ScalarProperty Name="UnidadResponsable" ColumnName="UnidadResponsable" />
+                <ScalarProperty Name="IdEstado" ColumnName="IdEstado" />
+                <ScalarProperty Name="Estado" ColumnName="Estado" />
+                <ScalarProperty Name="IdComite" ColumnName="IdComite" />
+                <ScalarProperty Name="Comite" ColumnName="Comite" />
+                <ScalarProperty Name="SitioWeb" ColumnName="SitioWeb" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="GetComites_ByUR" FunctionName="DB_SENASICA_PRODUCCIONModel.Store.GetComites_ByUR">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="DB_SENASICA_PRODUCCIONModel.GetComites_ByUR_Result1">
+                <ScalarProperty Name="IdUR" ColumnName="IdUR" />
+                <ScalarProperty Name="UnidadResponsable" ColumnName="UnidadResponsable" />
+                <ScalarProperty Name="IdEstado" ColumnName="IdEstado" />
+                <ScalarProperty Name="Estado" ColumnName="Estado" />
+                <ScalarProperty Name="IdComite" ColumnName="IdComite" />
+                <ScalarProperty Name="Comite" ColumnName="Comite" />
+                <ScalarProperty Name="SitioWeb" ColumnName="SitioWeb" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="GetProyectosAutorizadosComitesById" FunctionName="DB_SENASICA_PRODUCCIONModel.Store.GetProyectosAutorizadosComitesById">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="DB_SENASICA_PRODUCCIONModel.GetProyectosAutorizadosComitesById_Result">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Comite" ColumnName="Comite" />
+                <ScalarProperty Name="ProyectoAutorizado" ColumnName="ProyectoAutorizado" />
+                <ScalarProperty Name="RecursoAsignado" ColumnName="RecursoAsignado" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <EntitySetMapping Name="VW_TipoActividad">
+            <EntityTypeMapping TypeName="DB_SENASICA_PRODUCCIONModel.VW_TipoActividad">
+              <MappingFragment StoreEntitySet="VW_TipoActividad">
+                <ScalarProperty Name="Anio" ColumnName="Anio" />
+                <ScalarProperty Name="IdAnio" ColumnName="IdAnio" />
+                <ScalarProperty Name="UnidadMedida" ColumnName="UnidadMedida" />
+                <ScalarProperty Name="TipoActividad" ColumnName="TipoActividad" />
+                <ScalarProperty Name="TipoAccion" ColumnName="TipoAccion" />
+                <ScalarProperty Name="ProyectoAutorizado" ColumnName="ProyectoAutorizado" />
+                <ScalarProperty Name="ConceptoApoyo" ColumnName="ConceptoApoyo" />
+                <ScalarProperty Name="IdTipoActividad" ColumnName="IdTipoActividad" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

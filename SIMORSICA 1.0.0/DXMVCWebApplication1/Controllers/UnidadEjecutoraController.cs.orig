@@ -1,0 +1,565 @@
+﻿using DXMVCWebApplication1.Common;
+using DXMVCWebApplication1.Models;
+using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.EntityFramework;
+using System;
+using System.Linq;
+using System.Web.Mvc;
+
+namespace DXMVCWebApplication1.Controllers
+{
+    [Authorize(Roles = RolesUsuarios.ADMIN
+                         + "," + RolesUsuarios.IE_INOCUIDAD
+                         + "," + RolesUsuarios.IE_MOVILIZACION
+                         + "," + RolesUsuarios.IE_SALUD_ANIMAL
+                         + "," + RolesUsuarios.IE_ACUICOLA_PESQUERA
+                         + "," + RolesUsuarios.IE_VEGETAL
+                         + "," + RolesUsuarios.UR_INOCUIDAD
+                         + "," + RolesUsuarios.UR_MOVILIZACION
+                         + "," + RolesUsuarios.UR_ANIMAL
+                         + "," + RolesUsuarios.UR_ACUICOLA_PESQUERA
+                         + "," + RolesUsuarios.UR_VEGETAL
+        )]
+    public class UnidadEjecutoraController : Controller
+    {
+        private DB_SENASICAEntities db = new DB_SENASICAEntities();
+
+        private UserManager<ApplicationUser> manager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(new ApplicationDbContext()));
+        // GET: /UnidadEjecutora/
+        #region Original
+        public ActionResult Index()
+        {
+            return View();
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                db.Dispose();
+            }
+            base.Dispose(disposing);
+        } 
+        #endregion
+
+        #region  UnidadEjecutoraGridView
+
+        [ValidateInput(false)]
+        public ActionResult UnidadEjecutoraGridViewPartial()
+        {
+            int? _Fk_IdEstado = ((UserData)Session["DataUsuario"]).setFilter(((UserData)Session["DataUsuario"]).FK_IdEstado__SIS);
+            int? _Fk_IdUnidadEjecutora = ((UserData)Session["DataUsuario"]).setFilter(((UserData)Session["DataUsuario"]).FK_IdUnidadEjecutora__UE);
+            string rolusuario = ((UserData)Session["DataUsuario"]).RolesUsuario[0].ToString();
+            ViewData["rolusuario"] = rolusuario;
+
+            return PartialView("_UnidadEjecutoraGridViewPartial", Senasica.GetUnidadEjecutoraXUsuario(rolusuario, _Fk_IdUnidadEjecutora));
+        }
+
+        [HttpPost, ValidateInput(false)]
+        public ActionResult UnidadEjecutoraGridViewPartialAddNew(UnidadEjecutora item)
+        {
+            int? _Fk_IdEstado = ((UserData)Session["DataUsuario"]).setFilter(((UserData)Session["DataUsuario"]).FK_IdEstado__SIS);
+            int? _Fk_IdUnidadEjecutora = ((UserData)Session["DataUsuario"]).setFilter(((UserData)Session["DataUsuario"]).FK_IdUnidadEjecutora__UE);
+            string rolusuario = ((UserData)Session["DataUsuario"]).RolesUsuario[0].ToString();
+            ViewData["rolusuario"] = rolusuario;
+
+            var model = db.UnidadEjecutoras;
+            item.Fk_IdStatusUE = 1;
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    model.Add(item);
+                    db.SaveChanges();
+                }
+                catch (Exception e)
+                {
+                    ViewData["EditError"] = e.Message;
+                }
+            }
+            else
+                ViewData["EditError"] = "Por favor corrija los errores marcados.";
+            return PartialView("_UnidadEjecutoraGridViewPartial", Senasica.GetUnidadEjecutoraXUsuario(rolusuario, _Fk_IdUnidadEjecutora));
+        }
+        [HttpPost, ValidateInput(false)]
+
+        public ActionResult UnidadEjecutoraGridViewPartialUpdate(UnidadEjecutora item)
+        {
+            int? _Fk_IdEstado = ((UserData)Session["DataUsuario"]).setFilter(((UserData)Session["DataUsuario"]).FK_IdEstado__SIS);
+            int? _Fk_IdUnidadEjecutora = ((UserData)Session["DataUsuario"]).setFilter(((UserData)Session["DataUsuario"]).FK_IdUnidadEjecutora__UE);
+            String rolusuario = ((UserData)Session["DataUsuario"]).RolesUsuario[0].ToString();
+            ViewData["rolusuario"] = rolusuario;
+
+            var model = db.UnidadEjecutoras;
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    var modelItem = model.FirstOrDefault(it => it.Pk_IdUnidadEjecutora == item.Pk_IdUnidadEjecutora);
+                    if (modelItem != null)
+                    {
+                        this.UpdateModel(modelItem);
+                        db.SaveChanges();
+                    }
+                }
+                catch (Exception e)
+                {
+                    ViewData["EditError"] = e.Message;
+                }
+            }
+            else
+                ViewData["EditError"] = "Por favor corrija los errores marcados.";
+            return PartialView("_UnidadEjecutoraGridViewPartial", Senasica.GetUnidadEjecutoraXUsuario(rolusuario, _Fk_IdUnidadEjecutora));
+        }
+        [HttpPost, ValidateInput(false)]
+        public ActionResult UnidadEjecutoraGridViewPartialDelete(Int32 Pk_IdUnidadEjecutora)
+        {
+            int? _Fk_IdEstado = ((UserData)Session["DataUsuario"]).setFilter(((UserData)Session["DataUsuario"]).FK_IdEstado__SIS);
+            int? _Fk_IdUnidadEjecutora = ((UserData)Session["DataUsuario"]).setFilter(((UserData)Session["DataUsuario"]).FK_IdUnidadEjecutora__UE);
+            String rolusuario = ((UserData)Session["DataUsuario"]).RolesUsuario[0].ToString();
+            ViewData["rolusuario"] = rolusuario;
+
+            var model = db.UnidadEjecutoras;
+            if (Pk_IdUnidadEjecutora >= 0)
+            {
+                try
+                {
+                    var item = model.FirstOrDefault(it => it.Pk_IdUnidadEjecutora == Pk_IdUnidadEjecutora);
+                    if (item != null)
+                        model.Remove(item);
+                    db.SaveChanges();
+                }
+                catch (Exception e)
+                {
+                    ViewData["EditError"] = e.Message;
+                }
+            }
+            return PartialView("_UnidadEjecutoraGridViewPartial", Senasica.GetUnidadEjecutoraXUsuario(rolusuario, _Fk_IdUnidadEjecutora));
+        } 
+        #endregion
+
+
+        #region Comboboxes
+        public ActionResult _ComboBoxMunicipioPartial()
+        {
+            int Pk_IdEstado = (Request.Params["Fk_IdEstado__SIS"] != null) ? int.Parse(Request.Params["Fk_IdEstado__SIS"]) : -1;
+<<<<<<< Updated upstream
+            return PartialView(DXMVCWebApplication1.Models.Senasica.GetMunicipiosByEstado(Pk_IdEstado));
+=======
+            return PartialView(Senasica.GetMunicipios(Pk_IdEstado));
+>>>>>>> Stashed changes
+        }
+        public ActionResult _ComboBoxMunicipio1Partial()
+        {
+            int Pk_IdEstado = (Request.Params["Fk_IdEstado__SIS"] != null) ? int.Parse(Request.Params["Fk_IdEstado__SIS"]) : -1;
+<<<<<<< Updated upstream
+            return PartialView(DXMVCWebApplication1.Models.Senasica.GetMunicipiosByEstado(Pk_IdEstado));
+=======
+            return PartialView(Senasica.GetMunicipios(Pk_IdEstado));
+>>>>>>> Stashed changes
+        } 
+        #endregion
+
+        //******************************Instalacion*****************************************************
+        //********************************************************************************************
+        #region InstalacionesGridView
+        public ActionResult InstalacionesGridViewPartial(int? UEID)
+        {
+            ViewData["UEID"] = UEID;
+            return PartialView("InstalacionesGridViewPartial", DXMVCWebApplication1.Models.Senasica.GetInstalacionesByUnidadEjecutora(UEID));
+        }
+
+        [HttpPost, ValidateInput(false)]
+        public ActionResult InstalacionesGridViewPartialAddNew(Instalacion item, int UEID)
+        {
+            ViewData["UEID"] = UEID;
+            var model = db.Instalacions;
+            item.Fk_IdUnidadEjecutora = UEID;
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    model.Add(item);
+                    db.SaveChanges();
+                }
+                catch (Exception e)
+                {
+                    ViewData["EditError"] = e.Message;
+                }
+            }
+            else
+                ViewData["EditError"] = "Por favor corrija los errores marcados.";
+            return PartialView("InstalacionesGridViewPartial", DXMVCWebApplication1.Models.Senasica.GetInstalacionesByUnidadEjecutora(UEID));
+        }
+
+        [HttpPost, ValidateInput(false)]
+        public ActionResult InstalacionesGridViewPartialUpdate(Instalacion item, int UEID)
+        {
+            ViewData["UEID"] = UEID;
+            var model = db.Instalacions;
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    //Actualiza detalle
+                    var modelItem = model.FirstOrDefault(it => it.Pk_IdInstalacion == item.Pk_IdInstalacion);
+                    if (modelItem != null)
+                    {
+                        modelItem = item;
+                        modelItem.Fk_IdUnidadEjecutora = UEID;
+                        this.UpdateModel(modelItem);
+                        db.SaveChanges();
+                    }
+                    //Actualiza maestro
+                    var tablamaestro = db.UnidadEjecutoras;
+                    var miregistrodemaestro = tablamaestro.FirstOrDefault(a => a.Pk_IdUnidadEjecutora == UEID);
+                    if (miregistrodemaestro != null)
+                    {
+                        //miregistrodemaestro.Fk_IdStatusUE = 1;
+                        //this.UpdateModel(modelItem);
+                        //db.SaveChanges();
+
+                    }
+                }
+                catch (Exception e)
+                {
+                    ViewData["EditError"] = e.Message;
+                }
+            }
+            else
+                ViewData["EditError"] = "Por favor corrija los errores marcados.";
+
+            return PartialView("InstalacionesGridViewPartial", DXMVCWebApplication1.Models.Senasica.GetInstalacionesByUnidadEjecutora(UEID));
+        }
+
+        [HttpPost, ValidateInput(false)]
+        public ActionResult InstalacionesGridViewPartialDelete(Int32 Pk_IdInstalacion, int UEID)
+        {
+            ViewData["UEID"] = UEID;
+            var model = db.Instalacions;
+            if (Pk_IdInstalacion >= 0)
+            {
+                try
+                {
+                    var item = model.FirstOrDefault(it => it.Pk_IdInstalacion == Pk_IdInstalacion);
+                    if (item != null)
+                        model.Remove(item);
+                    db.SaveChanges();
+                }
+                catch (Exception e)
+                {
+                    ViewData["EditError"] = e.Message;
+                }
+            }
+            return PartialView("InstalacionesGridViewPartial", DXMVCWebApplication1.Models.Senasica.GetInstalacionesByUnidadEjecutora(UEID));
+        } 
+        #endregion
+
+        #region PersonaGridView
+
+        //******************************Persona*****************************************************
+        //********************************************************************************************
+
+        public ActionResult PersonaGridViewPartial(int? UEID, int? IdEstado)
+        {
+            ViewData["UEID"] = UEID;
+            ViewData["IdEstado"] = IdEstado;
+            String rolusuario = ((UserData)Session["DataUsuario"]).RolesUsuario[0].ToString();
+            ViewData["rolusuario"] = rolusuario;
+            
+            return PartialView("PersonaGridViewPartial", DXMVCWebApplication1.Models.Senasica.GetPersonasByUnidadEjecutora(UEID));
+        }
+
+        [HttpPost, ValidateInput(false)]
+        public ActionResult PersonaGridViewPartialAddNew(Persona item, int UEID, int IdEstado)
+        {
+            ViewData["UEID"] = UEID;
+            ViewData["IdEstado"] = IdEstado;
+            String rolusuario = ((UserData)Session["DataUsuario"]).RolesUsuario[0].ToString();
+            var model = db.Personas;
+            ViewData["rolusuario"] = rolusuario;
+
+            item.Fk_IdUnidadEjecutora__UE = UEID;
+            item.Fk_IdEstado__SIS = IdEstado;
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    model.Add(item);
+                    db.SaveChanges();
+                }
+                catch (Exception e)
+                {
+                    ViewData["EditError"] = e.Message;
+                }
+            }
+            else
+                ViewData["EditError"] = "Por favor corrija los errores marcados.";
+            return PartialView("PersonaGridViewPartial", DXMVCWebApplication1.Models.Senasica.GetPersonasByUnidadEjecutora(UEID));
+        }
+
+        [HttpPost, ValidateInput(false)]
+        public ActionResult PersonaGridViewPartialUpdate(Persona item, int UEID, int IdEstado)
+        {
+            ViewData["UEID"] = UEID;
+            ViewData["IdEstado"] = IdEstado;
+            string rolusuario = ((UserData)Session["DataUsuario"]).RolesUsuario[0].ToString();
+
+            var model = db.Personas;
+            ViewData["rolusuario"] = rolusuario;
+
+            item.Fk_IdUnidadEjecutora__UE = UEID;
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    //Actualiza detalle
+                    var modelItem = model.FirstOrDefault(it => it.Pk_IdPersona == item.Pk_IdPersona);
+                    if (modelItem != null)
+                    {
+                        this.UpdateModel(modelItem);
+                        db.SaveChanges();
+                    }
+                    //Actualiza maestro
+                    var tablamaestro = db.UnidadEjecutoras;
+                    var miregistrodemaestro = tablamaestro.FirstOrDefault(a => a.Pk_IdUnidadEjecutora == UEID);
+                    if (miregistrodemaestro != null)
+                    {
+                        //miregistrodemaestro.Fk_IdStatusUE = 1;
+                        //this.UpdateModel(modelItem);
+                        //db.SaveChanges();
+                    }
+                }
+                catch (Exception e)
+                {
+                    ViewData["EditError"] = e.Message;
+                }
+            }
+            else
+                ViewData["EditError"] = "Por favor corrija los errores marcados.";
+
+            return PartialView("PersonaGridViewPartial", DXMVCWebApplication1.Models.Senasica.GetPersonasByUnidadEjecutora(UEID));
+        }
+
+        [HttpPost, ValidateInput(false)]
+        public ActionResult PersonaGridViewPartialDelete(Int32 Pk_IdPersona, int UEID, int IdEstado)
+        {
+            ViewData["UEID"] = UEID;
+            ViewData["IdEstado"] = IdEstado;
+            String rolusuario = ((UserData)Session["DataUsuario"]).RolesUsuario[0].ToString();
+            var model = db.Personas;
+            ViewData["rolusuario"] = rolusuario;
+
+            if (Pk_IdPersona >= 0)
+            {
+                try
+                {
+                    var item = model.FirstOrDefault(it => it.Pk_IdPersona == Pk_IdPersona);
+                    if (item != null)
+                        model.Remove(item);
+                    db.SaveChanges();
+                }
+                catch (Exception e)
+                {
+                    ViewData["EditError"] = e.Message;
+                }
+            }
+            return PartialView("PersonaGridViewPartial", DXMVCWebApplication1.Models.Senasica.GetPersonasByUnidadEjecutora(UEID));
+        } 
+        #endregion
+
+        #region Vigencias
+        //******************************Vigencias*****************************************************
+        //********************************************************************************************
+
+        public ActionResult VigenciaGridViewPartial(int? UEID)
+        {
+            ViewData["UEID"] = UEID;
+            return PartialView("VigenciaGridViewPartial", DXMVCWebApplication1.Models.Senasica.GetVigenciasByUnidadEjecutora(UEID));
+        }
+
+        [HttpPost, ValidateInput(false)]
+        public ActionResult VigenciaGridViewPartialAddNew(Vigencia item, int UEID)
+        {
+            ViewData["UEID"] = UEID;
+            var model = db.Vigencias;
+            item.Fk_IdUnidadEjecutora = UEID;
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    model.Add(item);
+                    db.SaveChanges();
+                }
+                catch (Exception e)
+                {
+                    ViewData["EditError"] = e.Message;
+                }
+            }
+            else
+                ViewData["EditError"] = "Por favor corrija los errores marcados.";
+            return PartialView("VigenciaGridViewPartial", DXMVCWebApplication1.Models.Senasica.GetVigenciasByUnidadEjecutora(UEID));
+        }
+
+        [HttpPost, ValidateInput(false)]
+        public ActionResult VigenciaGridViewPartialUpdate(Vigencia item, int UEID)
+        {
+            ViewData["UEID"] = UEID;
+            var model = db.Vigencias;
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    //Actualiza detalle
+                    var modelItem = model.FirstOrDefault(it => it.Pk_IdVigencia == item.Pk_IdVigencia);
+                    if (modelItem != null)
+                    {
+                        modelItem = item;
+                        modelItem.Fk_IdUnidadEjecutora = UEID;
+                        this.UpdateModel(modelItem);
+                        db.SaveChanges();
+                    }
+                    //Actualiza maestro
+                    var tablamaestro = db.UnidadEjecutoras;
+                    var miregistrodemaestro = tablamaestro.FirstOrDefault(a => a.Pk_IdUnidadEjecutora == UEID);
+                    if (miregistrodemaestro != null)
+                    {
+                        //miregistrodemaestro.Fk_IdStatusUE = 1;
+                        //this.UpdateModel(modelItem);
+                        //db.SaveChanges();
+
+                    }
+                }
+                catch (Exception e)
+                {
+                    ViewData["EditError"] = e.Message;
+                }
+            }
+            else
+                ViewData["EditError"] = "Por favor corrija los errores marcados.";
+
+            return PartialView("VigenciaGridViewPartial", DXMVCWebApplication1.Models.Senasica.GetVigenciasByUnidadEjecutora(UEID));
+        }
+
+        [HttpPost, ValidateInput(false)]
+        public ActionResult VigenciaGridViewPartialDelete(Int32 Pk_IdVigencia, int UEID)
+        {
+            ViewData["UEID"] = UEID;
+            var model = db.Vigencias;
+            if (Pk_IdVigencia >= 0)
+            {
+                try
+                {
+                    var item = model.FirstOrDefault(it => it.Pk_IdVigencia == Pk_IdVigencia);
+                    if (item != null)
+                        model.Remove(item);
+                    db.SaveChanges();
+                }
+                catch (Exception e)
+                {
+                    ViewData["EditError"] = e.Message;
+                }
+            }
+            return PartialView("VigenciaGridViewPartial", DXMVCWebApplication1.Models.Senasica.GetVigenciasByUnidadEjecutora(UEID));
+        } 
+        #endregion
+
+        #region Inventario
+        //******************************Inventario*****************************************************
+        //********************************************************************************************
+
+        public ActionResult InventarioGridViewPartial(int? UEID)
+        {
+            ViewData["UEID"] = UEID;
+            return PartialView("InventarioGridViewPartial", DXMVCWebApplication1.Models.Senasica.GetInventarioByUnidadEjecutora(UEID));
+        }
+
+        [HttpPost, ValidateInput(false)]
+        public ActionResult InventarioGridViewPartialAddNew(Inventario item, int UEID)
+        {
+            ViewData["UEID"] = UEID;
+            var model = db.Inventarios;
+            item.Fk_IdUnidadEjecutora = UEID;
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    model.Add(item);
+                    db.SaveChanges();
+                }
+                catch (Exception e)
+                {
+                    ViewData["EditError"] = e.Message;
+                }
+            }
+            else
+                ViewData["EditError"] = "Por favor corrija los errores marcados.";
+            return PartialView("InventarioGridViewPartial", DXMVCWebApplication1.Models.Senasica.GetInventarioByUnidadEjecutora(UEID));
+        }
+
+        [HttpPost, ValidateInput(false)]
+        public ActionResult InventarioGridViewPartialUpdate(Inventario item, int UEID)
+        {
+            ViewData["UEID"] = UEID;
+            var model = db.Inventarios;
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    //Actualiza detalle
+                    var modelItem = model.FirstOrDefault(it => it.PK_IdInventario == item.PK_IdInventario);
+                    if (modelItem != null)
+                    {
+                        modelItem = item;
+                        modelItem.Fk_IdUnidadEjecutora = UEID;
+                        this.UpdateModel(modelItem);
+                        db.SaveChanges();
+                    }
+                    //Actualiza maestro
+                    var tablamaestro = db.UnidadEjecutoras;
+                    var miregistrodemaestro = tablamaestro.FirstOrDefault(a => a.Pk_IdUnidadEjecutora == UEID);
+                    if (miregistrodemaestro != null)
+                    {
+                        //miregistrodemaestro.Fk_IdStatusUE = 1;
+                        //this.UpdateModel(modelItem);
+                        //db.SaveChanges();
+
+                    }
+                }
+                catch (Exception e)
+                {
+                    ViewData["EditError"] = e.Message;
+                }
+            }
+            else
+                ViewData["EditError"] = "Por favor corrija los errores marcados.";
+
+            return PartialView("InventarioGridViewPartial", DXMVCWebApplication1.Models.Senasica.GetInventarioByUnidadEjecutora(UEID));
+        }
+
+        [HttpPost, ValidateInput(false)]
+        public ActionResult InventarioGridViewPartialDelete(Int32 PK_IdInventario, int UEID)
+        {
+            ViewData["UEID"] = UEID;
+            var model = db.Inventarios;
+            if (PK_IdInventario >= 0)
+            {
+                try
+                {
+                    var item = model.FirstOrDefault(it => it.PK_IdInventario == PK_IdInventario);
+                    if (item != null)
+                        model.Remove(item);
+                    db.SaveChanges();
+                }
+                catch (Exception e)
+                {
+                    ViewData["EditError"] = e.Message;
+                }
+            }
+            return PartialView("InventarioGridViewPartial", DXMVCWebApplication1.Models.Senasica.GetInventarioByUnidadEjecutora(UEID));
+        }
+        #endregion
+    }
+}

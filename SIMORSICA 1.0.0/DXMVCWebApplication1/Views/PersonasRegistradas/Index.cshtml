@@ -1,0 +1,62 @@
+﻿
+<script type="text/javascript">
+
+    function ChangeRol(s, e) {
+
+        dropDownEstado.SetValue(0);
+        dropDownInstanciaEjecutora.SetValue(0);
+        IdRol = dropDownRoles.GetValue();
+
+        if (IdRol == 1  // Administrador de Instancia Ejecutora de Inocuidad
+            || IdRol == 2   // Administrador de Instancia Ejecutora de Movilizacion
+            || IdRol == 3   // Administrador de Instancia Ejecutora de Salud Animal
+            || IdRol == 4   // Administrador de Instancia Ejecutora de Sanidad Acuicola y Pesquera
+            || IdRol == 5   // Administrador de Instancia Ejecutora de Sanidad Vegetal
+            || IdRol == 30  // Representante Estatal
+            || IdRol == 28) {   // Supervisor Estatal
+
+            estadoLbl.SetVisible(true);
+            dropDownEstado.SetVisible(true);
+        }
+        else {
+            estadoLbl.SetVisible(false);
+            dropDownEstado.SetVisible(false);
+            dropDownEstado.SetValue(0);
+        }
+
+        if (IdRol == 1  // Administrador de Instancia Ejecutora de Inocuidad
+            || IdRol == 2   // Administrador de Instancia Ejecutora de Movilizacion
+            || IdRol == 3   // Administrador de Instancia Ejecutora de Salud Animal
+            || IdRol == 4   // Administrador de Instancia Ejecutora de Sanidad Acuicola y Pesquera
+            || IdRol == 5) {   // Administrador de Instancia Ejecutora de Sanidad Vegetal
+
+            IELbl.SetVisible(true);
+            dropDownInstanciaEjecutora.SetVisible(true);
+        }
+        else {
+            IELbl.SetVisible(false);
+            dropDownInstanciaEjecutora.SetVisible(false);
+            dropDownInstanciaEjecutora.SetValue(0);
+        }
+    }
+</script>
+
+@{
+    ViewBag.Title = "Personas Registradas";
+}
+
+<div style="float: right; margin-right: 20px"><a href="https://docs.google.com/document/d/1ZJURCxDAT76zN4TpKa2cBHEdF3RZFUNkAv3o9iyWxG4/edit#heading=h.3l18frh" target="_blank"><u>Ayuda</u></a>  |  <a href="http://soporte.simosica.com/support/solutions/articles/22000184563-preguntas-frecuentes" target="_blank"> <u>Preguntas Frecuentes</u></a></div>
+ 
+<h3 style="font-size:17px; font:bold; text-align:center">PERSONAS CON ACCESO AL SISTEMA</h3>
+<h3 style="font-size: 13px; text-align: center; position: relative; top: -10px">Registros del personal con acceso al sistema.</h3>
+<br>
+<br>
+
+@Html.Partial("~/Views/ExportExcelPDF/_ExportExcelPDF.cshtml", new ViewDataDictionary { { "Clave", DXMVCWebApplication1.Common.ListaPantallas.SIS_PERSONAL_SISTEMA } })
+
+<br>
+<br>
+
+@Html.Action("PersonasRegistradasGridViewPartial")
+
+

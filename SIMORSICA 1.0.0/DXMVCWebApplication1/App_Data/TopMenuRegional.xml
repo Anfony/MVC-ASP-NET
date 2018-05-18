@@ -1,0 +1,47 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<items>
+  <group Text="Catálogos de Sistema">
+    <item Text="Presupuesto por Proyecto" NavigateUrl="~/ProyectoPresupuesto"  />
+    <item Text="Instancia Ejecutora" NavigateUrl="~/UnidadEjecutora"  />
+    <item Text="Padrón de Unidades de Producción" NavigateUrl="~/Productor"  />
+    <item Text="Registro de Proveedores" NavigateUrl="~/Proveedor"  />
+    <item Text="Bienes y Servicios Transversales" NavigateUrl="~/BienOServTransversales"  />
+  </group>
+
+  <group Text="Planeación">
+    <item Text="Programas de Trabajo S" NavigateUrl="~/CampaniaN" />
+    <item Text="Programas de Trabajo U" NavigateUrl="~/CampaniaU" />
+  </group>
+
+  <group Text="Ejecución">
+    <item Text="Informe de Avances" NavigateUrl="~/ReporteActividadAsignada"  />
+    <item Text="Informe de Adquisiciones" NavigateUrl="~/ReporteDeAdquisiciones"  />
+  </group>
+  
+  <group Text="Ministración">
+    <item Text="Registro de Ministraciones" NavigateUrl="~/MinistracionesXComite" />
+    <item Text="Reintegros" NavigateUrl="~/Tesofe" />
+  </group>
+  <group Text="Reportes">
+    <item Text="Personal de Instancia Ejecutora" NavigateUrl="~/ReportePersonalInstanciaEjecutora" />
+    <item Text="Reporte Proyectos" NavigateUrl="~/Proyecto" />
+    <item Text="Reporte Avance de Captura" NavigateUrl="~/ReporteAvancesDeCaptura" />
+    <item Text="Reporte Apéndice" NavigateUrl="~/DetalleApendice" />
+    <item Text="Reporte Anexo Técnico Apendice 1" NavigateUrl="~/ReporteAnexoTecnico1" />
+    <item Text="Reporte Anexo Técnico Apendice 2" NavigateUrl="~/ReporteAnexoTecnico2" />
+    <item Text="Reporte Anexo Técnico Apendice 3" NavigateUrl="~/ReporteAnexoTecnico3" />
+    <item Text="Reporte Inventario de Bienes" NavigateUrl="~/ReporteInventarioDeBienes" />
+    <item Text="Reporte Detalle de Bienes" NavigateUrl="~/ReporteDetalleDeBienes" />
+    <group Text="Programa Integral">
+      <item Text="Federal" NavigateUrl="~/ReporteGastosFijosDeOperacion" />
+      <item Text="Estatal" NavigateUrl="~/ReporteGastosFijosDeOperacionEstatal" />
+    </group>  
+    <item Text="Reporte Cierre Mensual (Previo)" NavigateUrl="~/ReporteInformeMensualAvance" />
+    <item Text="Reporte Detalle Físico/Financiero" NavigateUrl="~/ReporteInformeDetalleFisicoFinanciero" />
+    <item Text="Actas de Comisión" NavigateUrl="~/ActaComision" />
+  </group>
+  <group Text="Cierre">
+    <item Text="Cierre Mensual" NavigateUrl="~/CierreMensual"  />
+  </group>
+</items>
+

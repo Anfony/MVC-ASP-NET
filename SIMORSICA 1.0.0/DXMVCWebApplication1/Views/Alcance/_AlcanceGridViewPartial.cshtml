@@ -1,0 +1,807 @@
+@{
+    var grid = Html.DevExpress().GridView(settings =>
+    {
+        settings.Name = "AlcanceGridView";
+        settings.CallbackRouteValues = new { Controller = "Alcance", Action = "AlcanceGridViewPartial" };
+
+        settings.SettingsEditing.AddNewRowRouteValues = new { Controller = "Alcance", Action = "AlcanceGridViewPartialAddNew" };
+        settings.SettingsEditing.UpdateRowRouteValues = new { Controller = "Alcance", Action = "AlcanceGridViewPartialUpdate" };
+        settings.SettingsEditing.DeleteRowRouteValues = new { Controller = "Alcance", Action = "AlcanceGridViewPartialDelete" };
+        settings.SettingsEditing.Mode = GridViewEditingMode.PopupEditForm;
+        settings.SettingsBehavior.ConfirmDelete = true;
+
+        settings.CommandColumn.Visible = true;
+        settings.CommandColumn.ShowDeleteButton = true;
+        settings.CommandColumn.ShowEditButton = true;
+        settings.CommandColumn.ShowNewButtonInHeader = true;
+        settings.CommandColumn.ShowClearFilterButton = true;
+
+
+        settings.SettingsBehavior.AllowSelectByRowClick = true;
+        settings.SettingsDetail.AllowOnlyOneMasterRowExpanded = true;
+
+        settings.KeyFieldName = "Pk_IdAccion";
+
+        settings.SettingsPager.Visible = true;
+        settings.Settings.ShowGroupPanel = true;
+        settings.Settings.ShowFilterRow = true;
+        settings.SettingsBehavior.AllowSelectByRowClick = true;
+
+        //Combo de Campañas
+        //settings.Columns.Add(column =>
+        //{
+        //    column.FieldName = "Fk_IdCampania__UE";
+        //    column.Caption = "Campaña";
+        //    column.ColumnType = MVCxGridViewColumnType.ComboBox;
+        //    var comboBoxProperties = column.PropertiesEdit as ComboBoxProperties;
+        //    comboBoxProperties.DataSource = DXMVCWebApplication1.Models.Senasica.GetCampaniasByUE(ViewBag.Fk_IdUnidadEjecutora);
+        //    comboBoxProperties.TextField = "NombreCampania";
+        //    comboBoxProperties.ValueField = "Pk_IdCampania";
+        //    comboBoxProperties.ValueType = typeof(int);
+        //});
+
+        settings.Columns.Add("Campania.NombreCampania", "Nombre de la Campaña");
+        settings.Columns.Add("TipoDeRecurso.Nombre", "Tipo de Recurso");
+        settings.Columns.Add("TipoDeAccion.Nombre", "Tipo De Acción");
+        settings.Columns.Add("UnidadDeMedida.Nombre", "Unidad de Medida");
+        
+        //settings.Columns.Add("Fk_IdTipoDeRecurso__SIS");
+        //settings.Columns.Add(column =>
+        //{
+        //    column.FieldName = "Fk_IdTipoDeRecurso__SIS";
+        //    column.Caption = "Tipo de Recurso";
+        //    column.ColumnType = MVCxGridViewColumnType.ComboBox;
+        //    var comboBoxProperties = column.PropertiesEdit as ComboBoxProperties;
+        //    comboBoxProperties.DataSource = DXMVCWebApplication1.Models.Senasica.GetTiposDeRecurso();
+        //    comboBoxProperties.TextField = "Nombre";
+        //    comboBoxProperties.ValueField = "Pk_IdTipoDeRecurso";
+        //    comboBoxProperties.ValueType = typeof(int);
+        //});
+
+        //settings.Columns.Add("Fk_IdUnidadDeMedida__SIS");
+        //settings.Columns.Add(column =>
+        //{
+        //    column.FieldName = "Fk_IdUnidadDeMedida__SIS";
+        //    column.Caption = "Unidad de Medida";
+        //    column.ColumnType = MVCxGridViewColumnType.ComboBox;
+        //    var comboBoxProperties = column.PropertiesEdit as ComboBoxProperties;
+        //    comboBoxProperties.DataSource = DXMVCWebApplication1.Models.Senasica.GetUnidadesDeMedida();
+        //    comboBoxProperties.TextField = "Nombre";
+        //    comboBoxProperties.ValueField = "Pk_IdUnidadDeMedida";
+        //    comboBoxProperties.ValueType = typeof(int);
+        //});
+
+        //settings.Columns.Add("Fk_IdTipoDeAccion__SIS");
+        //settings.Columns.Add(column =>
+        //{
+        //    column.FieldName = "Fk_IdTipoDeAccion__SIS";
+        //    column.Caption = "Tipo de Acción";
+        //    column.ColumnType = MVCxGridViewColumnType.ComboBox;
+        //    var comboBoxProperties = column.PropertiesEdit as ComboBoxProperties;
+        //    comboBoxProperties.DataSource = DXMVCWebApplication1.Models.Senasica.GetTiposDeAccion();
+        //    comboBoxProperties.TextField = "Nombre";
+        //    comboBoxProperties.ValueField = "Pk_IdTipoDeAccion";
+        //    comboBoxProperties.ValueType = typeof(int);
+        //});
+
+        //settings.Columns.Add("FK_IdPersona__SIS");
+        //**** Eliminar este Campo De el Modelo
+        //settings.Columns.Add(column =>
+        //{
+        //    column.FieldName = "FK_IdPersona__SIS";
+        //    column.Caption = "Persona Responsable";
+        //    column.ColumnType = MVCxGridViewColumnType.ComboBox;
+        //    var comboBoxProperties = column.PropertiesEdit as ComboBoxProperties;
+        //    comboBoxProperties.DataSource = DXMVCWebApplication1.Models.Senasica.GetPersonas();
+        //    comboBoxProperties.TextField = "Nombre";
+        //    comboBoxProperties.ValueField = "Pk_IdPersona";
+        //    comboBoxProperties.ValueType = typeof(int);
+        //});
+
+        settings.Columns.Add("Actividad","Acción");
+        //settings.Columns.Add("Indicador"); // En la forma hay que volverla Memo
+
+        settings.Columns.AddBand(MetasBand =>
+        {
+            MetasBand.Caption = "Metas Mensuales";
+            MetasBand.HeaderStyle.HorizontalAlign = HorizontalAlign.Center;
+            MetasBand.Columns.Add("Meta_Ene", "Enero");
+            MetasBand.Columns.Add("Meta_Feb", "Febrero");
+            MetasBand.Columns.Add("Meta_Mar", "Marzo");
+            MetasBand.Columns.Add("Meta_Abr", "Abril");
+            MetasBand.Columns.Add("Meta_May", "Mayo");
+            MetasBand.Columns.Add("Meta_Jun", "Junio");
+            MetasBand.Columns.Add("Meta_Jul", "Julio");
+            MetasBand.Columns.Add("Meta_Ago", "Agosto");
+            MetasBand.Columns.Add("Meta_Sep", "Septiembre");
+            MetasBand.Columns.Add("Meta_Oct", "Octubre");
+            MetasBand.Columns.Add("Meta_Nov", "Noviembre");
+            MetasBand.Columns.Add("Meta_Dic", "Diciembre");
+        });
+
+        settings.Columns.Add("Costo");
+        settings.Columns.Add("StatusAlcance.Nombre", "Estado de la Actividad");
+        settings.Columns.Add("Justificacion", "Justificación");
+
+        //COMIENZA CODIGO DE FORMA CUSTOM
+        settings.SetEditFormTemplateContent(c =>
+       {
+           //var product = ViewData["EditError"] != null ? ViewData["EditError"] : c.DataItem;
+           var alcance = c.DataItem;
+           ViewContext.Writer.Write("<H2>Acciones de la Campaña</H2>");
+           ViewContext.Writer.Write("<table>");
+           //ViewContext.Writer.Write("<tr>");
+           ViewContext.Writer.Write("<td>");
+
+           //COMBOBOX Campaña
+           Html.DevExpress().Label(
+                  edtSettings =>
+                  {
+                      edtSettings.ControlStyle.CssClass = "label";
+                      edtSettings.Text = "Campaña";
+                      edtSettings.AssociatedControlName = "Fk_IdCampania__UE";
+                  }
+              )
+              .Render();
+           Html.DevExpress().ComboBox(
+               edtSettings =>
+               {
+                   edtSettings.Name = "Fk_IdCampania__UE";
+                   edtSettings.ControlStyle.CssClass = "editor";
+                   edtSettings.Properties.TextField = "NombreCampania";
+                   edtSettings.Properties.ValueField = "Pk_IdCampania";
+                   edtSettings.Properties.ValueType = typeof(int);
+                   edtSettings.ShowModelErrors = true;
+                   edtSettings.Width = Unit.Pixel(250);
+               }
+           )
+
+           .BindList(DXMVCWebApplication1.Models.Senasica.GetCampaniasByUnidadEjecutora(ViewBag.Fk_IdUnidadEjecutora))
+              .Bind(DataBinder.Eval(alcance, "Fk_IdCampania__UE"))
+              .Render();
+           ViewContext.Writer.Write("</td>");
+
+
+           //COMBOBOX TIPO DE RECURSO
+           ViewContext.Writer.Write("<td>");
+           Html.DevExpress().Label(
+                      edtSettings =>
+                      {
+                          edtSettings.ControlStyle.CssClass = "label";
+                          edtSettings.Text = "Tipo de Recurso";
+                          edtSettings.AssociatedControlName = "Fk_IdTipoDeRecurso__SIS";
+                      }
+                  )
+                  .Render();
+           Html.DevExpress().ComboBox(
+               edtSettings =>
+               {
+                   edtSettings.Name = "Fk_IdTipoDeRecurso__SIS";
+                   edtSettings.ControlStyle.CssClass = "editor";
+                   edtSettings.Properties.TextField = "Nombre";
+                   edtSettings.Properties.ValueField = "Pk_IdTipoDeRecurso";
+                   edtSettings.Properties.ValueType = typeof(int);
+                   edtSettings.ShowModelErrors = true;
+                   edtSettings.Width = Unit.Pixel(250);
+               }
+           )
+
+           .BindList(DXMVCWebApplication1.Models.Senasica.GetTiposDeRecurso())
+              .Bind(DataBinder.Eval(alcance, "Fk_IdTipoDeRecurso__SIS"))
+              .Render();
+
+
+           ViewContext.Writer.Write("</td>");
+
+           //COMBOBOX unidad de medida
+           ViewContext.Writer.Write("<td>");
+           Html.DevExpress().Label(
+                      edtSettings =>
+                      {
+                          edtSettings.ControlStyle.CssClass = "label";
+                          edtSettings.Text = "Unidad de Medida";
+                          edtSettings.AssociatedControlName = "Fk_IdUnidadDeMedida__SIS";
+                      }
+                  )
+                  .Render();
+           Html.DevExpress().ComboBox(
+               edtSettings =>
+               {
+                   edtSettings.Name = "Fk_IdUnidadDeMedida__SIS";
+                   edtSettings.ControlStyle.CssClass = "editor";
+                   edtSettings.Properties.TextField = "Nombre";
+                   edtSettings.Properties.ValueField = "Pk_IdUnidadDeMedida";
+                   edtSettings.Properties.IncrementalFilteringMode = IncrementalFilteringMode.Contains;
+                   edtSettings.Properties.IncrementalFilteringDelay = 3;                   
+                   edtSettings.Properties.ValueType = typeof(int);
+                   edtSettings.ShowModelErrors = true;
+                   edtSettings.Width = Unit.Pixel(250);
+               }
+           )
+
+           .BindList(DXMVCWebApplication1.Models.Senasica.GetUnidadesDeMedida())
+              .Bind(DataBinder.Eval(alcance, "Fk_IdUnidadDeMedida__SIS"))
+              .Render();
+
+
+           ViewContext.Writer.Write("</td>");
+           
+           //COMBOBOX TIPO DE ACCION
+           ViewContext.Writer.Write("<td>");
+
+
+
+           Html.DevExpress().Label(
+                          edtSettings =>
+                          {
+                              edtSettings.ControlStyle.CssClass = "label";
+                              edtSettings.Text = "Tipo de Acción";
+                              edtSettings.AssociatedControlName = "Fk_IdTipoDeAccion__SIS";
+                          }
+                      )
+                      .Render();
+           Html.DevExpress().ComboBox(
+               edtSettings =>
+               {
+                   edtSettings.Name = "Fk_IdTipoDeAccion__SIS";
+                   edtSettings.ControlStyle.CssClass = "editor";
+                   edtSettings.Properties.TextField = "Nombre";
+                   edtSettings.Properties.ValueField = "Pk_IdTipoDeAccion";
+                   edtSettings.Properties.ValueType = typeof(int);
+                   edtSettings.Properties.IncrementalFilteringMode = IncrementalFilteringMode.Contains;
+                   edtSettings.Properties.IncrementalFilteringDelay = 3;
+                   edtSettings.ShowModelErrors = true;
+                   edtSettings.Width = Unit.Pixel(250);
+               }
+           )
+
+           .BindList(DXMVCWebApplication1.Models.Senasica.GetTiposDeAccion())
+              .Bind(DataBinder.Eval(alcance, "Fk_IdTipoDeAccion__SIS"))
+              .Render();
+
+
+           ViewContext.Writer.Write("</td>");
+
+           //COMBOBOX PERSONA RESPONSABLE
+
+           ViewContext.Writer.Write("<td>");
+           Html.DevExpress().Label(
+                      edtSettings =>
+                      {
+                          edtSettings.ControlStyle.CssClass = "label";
+                          edtSettings.Text = "Responsable de la Actividad";
+                          edtSettings.AssociatedControlName = "FK_IdPersona__SIS";
+                      }
+                  )
+                  .Render();
+           Html.DevExpress().ComboBox(
+               edtSettings =>
+               {
+                   edtSettings.Name = "FK_IdPersona__SIS";
+                   edtSettings.ControlStyle.CssClass = "editor";
+                   edtSettings.Properties.TextField = "Nombre";
+                   edtSettings.Properties.ValueField = "Pk_IdPersona";
+                   edtSettings.Properties.ValueType = typeof(int);
+                   edtSettings.ShowModelErrors = true;
+                   edtSettings.Width = Unit.Pixel(250);
+               }
+           )
+           .BindList(DXMVCWebApplication1.Models.Senasica.GetPersonas())
+              .Bind(DataBinder.Eval(alcance, "FK_IdPersona__SIS"))
+              .Render();
+
+
+           ViewContext.Writer.Write("</td>");
+
+           //TEXTBOX ACTIVIDAD
+           ViewContext.Writer.Write("<tr>");
+           ViewContext.Writer.Write("<td>");
+
+
+           Html.DevExpress().Label(
+                      edtSettings =>
+                      {
+                          edtSettings.ControlStyle.CssClass = "label";
+                          edtSettings.Text = "Actividad";
+                          edtSettings.AssociatedControlName = "Actividad";
+                      }
+                  )
+                  .Render();
+           Html.DevExpress().TextBox(
+               edtSettings =>
+               {
+                   edtSettings.Name = "Actividad";
+                   edtSettings.ControlStyle.CssClass = "editor";
+                   edtSettings.ShowModelErrors = true;
+                   edtSettings.Width = Unit.Pixel(250);
+
+               }
+           )
+           .Bind(DataBinder.Eval(alcance, "Actividad"))
+           .Render();
+
+
+           ViewContext.Writer.Write("</td>");
+
+           //TEXTBOX INDICADOR
+           ViewContext.Writer.Write("<td>");
+
+           Html.DevExpress().Label(
+                     edtSettings =>
+                     {
+                         edtSettings.ControlStyle.CssClass = "label";
+                         edtSettings.Text = "Indicador";
+                         edtSettings.AssociatedControlName = "Indicador";
+                     }
+                 )
+                 .Render();
+           Html.DevExpress().TextBox(
+               edtSettings =>
+               {
+                   edtSettings.Name = "Indicador";
+                   edtSettings.ControlStyle.CssClass = "editor";
+                   edtSettings.ShowModelErrors = true;
+                   edtSettings.Width = Unit.Pixel(250);
+
+               }
+           )
+           .Bind(DataBinder.Eval(alcance, "Indicador"))
+           .Render();
+
+           ViewContext.Writer.Write("</td>");
+
+           //Costo
+           ViewContext.Writer.Write("<td>");
+           Html.DevExpress().Label(
+                     edtSettings =>
+                     {
+                         edtSettings.ControlStyle.CssClass = "label";
+                         edtSettings.Text = "Costo";
+                         edtSettings.AssociatedControlName = "Costo";
+                     }
+                 )
+                 .Render();
+           Html.DevExpress().SpinEdit(
+               edtSettings =>
+               {
+                   edtSettings.Name = "Costo";
+                   edtSettings.ControlStyle.CssClass = "editor";
+                   edtSettings.ShowModelErrors = true;
+                   edtSettings.Width = Unit.Pixel(250);
+               }
+           )
+           .Bind(DataBinder.Eval(alcance, "Costo"))
+           .Render();
+
+           ViewContext.Writer.Write("</td>");
+           ViewContext.Writer.Write("</tr>");
+
+           //Enero
+           ViewContext.Writer.Write("<tr>");
+           ViewContext.Writer.Write("<td>");
+           //ViewContext.Writer.Write("<br>");
+
+
+           Html.DevExpress().Label(
+                     edtSettings =>
+                     {
+                         edtSettings.ControlStyle.CssClass = "label";
+                         edtSettings.Text = "Enero";
+                         edtSettings.AssociatedControlName = "Meta_Ene";
+                     }
+                 )
+                 .Render();
+           Html.DevExpress().SpinEdit(
+               edtSettings =>
+               {
+                   edtSettings.Name = "Meta_Ene";
+                   edtSettings.ControlStyle.CssClass = "editor";
+                   edtSettings.ShowModelErrors = true;
+               }
+           )
+           .Bind(DataBinder.Eval(alcance, "Meta_Ene"))
+           .Render();
+
+           //ViewContext.Writer.Write("</br>");
+           ViewContext.Writer.Write("</td>");
+
+           //Febrero
+           ViewContext.Writer.Write("<td>");
+           Html.DevExpress().Label(
+                    edtSettings =>
+                    {
+                        edtSettings.ControlStyle.CssClass = "label";
+                        edtSettings.Text = "Febrero";
+                        edtSettings.AssociatedControlName = "Meta_Feb";
+                    }
+                )
+                .Render();
+           Html.DevExpress().SpinEdit(
+               edtSettings =>
+               {
+                   edtSettings.Name = "Meta_Feb";
+                   edtSettings.ControlStyle.CssClass = "editor";
+                   edtSettings.ShowModelErrors = true;
+               }
+           )
+           .Bind(DataBinder.Eval(alcance, "Meta_Feb"))
+           .Render();
+
+           ViewContext.Writer.Write("</td>");
+
+           //Marzo
+           ViewContext.Writer.Write("<td>");
+           Html.DevExpress().Label(
+                    edtSettings =>
+                    {
+                        edtSettings.ControlStyle.CssClass = "label";
+                        edtSettings.Text = "Marzo";
+                        edtSettings.AssociatedControlName = "Meta_Mar";
+                    }
+                )
+                .Render();
+           Html.DevExpress().SpinEdit(
+               edtSettings =>
+               {
+                   edtSettings.Name = "Meta_Mar";
+                   edtSettings.ControlStyle.CssClass = "editor";
+                   edtSettings.ShowModelErrors = true;
+               }
+           )
+           .Bind(DataBinder.Eval(alcance, "Meta_Mar"))
+           .Render();
+
+           ViewContext.Writer.Write("</td>");
+
+           //Abril
+           ViewContext.Writer.Write("<td>");
+
+           Html.DevExpress().Label(
+                     edtSettings =>
+                     {
+                         edtSettings.ControlStyle.CssClass = "label";
+                         edtSettings.Text = "Abril";
+                         edtSettings.AssociatedControlName = "Meta_Abr";
+                     }
+                 )
+                 .Render();
+           Html.DevExpress().SpinEdit(
+               edtSettings =>
+               {
+                   edtSettings.Name = "Meta_Abr";
+                   edtSettings.ControlStyle.CssClass = "editor";
+                   edtSettings.ShowModelErrors = true;
+               }
+           )
+           .Bind(DataBinder.Eval(alcance, "Meta_Abr"))
+           .Render();
+
+           ViewContext.Writer.Write("</td>");
+           ViewContext.Writer.Write("</tr>");
+
+           //Mayo
+           ViewContext.Writer.Write("<tr>");
+           ViewContext.Writer.Write("<td>");
+
+           Html.DevExpress().Label(
+                    edtSettings =>
+                    {
+                        edtSettings.ControlStyle.CssClass = "label";
+                        edtSettings.Text = "Mayo";
+                        edtSettings.AssociatedControlName = "Meta_May";
+                    }
+                )
+                .Render();
+           Html.DevExpress().SpinEdit(
+               edtSettings =>
+               {
+                   edtSettings.Name = "Meta_May";
+                   edtSettings.ControlStyle.CssClass = "editor";
+                   edtSettings.ShowModelErrors = true;
+               }
+           )
+           .Bind(DataBinder.Eval(alcance, "Meta_May"))
+           .Render();
+
+
+           ViewContext.Writer.Write("</td>");
+
+
+           //Junio
+           ViewContext.Writer.Write("<td>");
+           Html.DevExpress().Label(
+                    edtSettings =>
+                    {
+                        edtSettings.ControlStyle.CssClass = "label";
+                        edtSettings.Text = "Junio";
+                        edtSettings.AssociatedControlName = "Meta_Jun";
+                    }
+                )
+                .Render();
+           Html.DevExpress().SpinEdit(
+               edtSettings =>
+               {
+                   edtSettings.Name = "Meta_Jun";
+                   edtSettings.ControlStyle.CssClass = "editor";
+                   edtSettings.ShowModelErrors = true;
+               }
+           )
+           .Bind(DataBinder.Eval(alcance, "Meta_Jun"))
+           .Render();
+
+           ViewContext.Writer.Write("</td>");
+
+           //Julio
+
+           ViewContext.Writer.Write("<td>");
+           Html.DevExpress().Label(
+                     edtSettings =>
+                     {
+                         edtSettings.ControlStyle.CssClass = "label";
+                         edtSettings.Text = "Julio";
+                         edtSettings.AssociatedControlName = "Meta_Jul";
+                     }
+                 )
+                 .Render();
+           Html.DevExpress().SpinEdit(
+               edtSettings =>
+               {
+                   edtSettings.Name = "Meta_Jul";
+                   edtSettings.ControlStyle.CssClass = "editor";
+                   edtSettings.ShowModelErrors = true;
+                   //edtSettings.Width = Unit.Pixel(250);
+
+               }
+           )
+           .Bind(DataBinder.Eval(alcance, "Meta_Jul"))
+           .Render();
+
+           ViewContext.Writer.Write("</td>");
+
+           //Agosto
+           ViewContext.Writer.Write("<td>");
+           Html.DevExpress().Label(
+                    edtSettings =>
+                    {
+                        edtSettings.ControlStyle.CssClass = "label";
+                        edtSettings.Text = "Agosto";
+                        edtSettings.AssociatedControlName = "Meta_Ago";
+                    }
+                )
+                .Render();
+           Html.DevExpress().SpinEdit(
+               edtSettings =>
+               {
+                   edtSettings.Name = "Meta_Ago";
+                   edtSettings.ControlStyle.CssClass = "editor";
+                   edtSettings.ShowModelErrors = true;
+                   //edtSettings.Width = Unit.Pixel(250);
+
+               }
+           )
+           .Bind(DataBinder.Eval(alcance, "Meta_Ago"))
+           .Render();
+
+           ViewContext.Writer.Write("</td>");
+           ViewContext.Writer.Write("</tr>");
+
+           //Septiembre
+           ViewContext.Writer.Write("<tr>");
+           ViewContext.Writer.Write("<td>");
+
+           Html.DevExpress().Label(
+                    edtSettings =>
+                    {
+                        edtSettings.ControlStyle.CssClass = "label";
+                        edtSettings.Text = "Septiembre";
+                        edtSettings.AssociatedControlName = "Meta_Sep";
+                    }
+                )
+                .Render();
+           Html.DevExpress().SpinEdit(
+               edtSettings =>
+               {
+                   edtSettings.Name = "Meta_Sep";
+                   edtSettings.ControlStyle.CssClass = "editor";
+                   edtSettings.ShowModelErrors = true;
+                   //edtSettings.Width = Unit.Pixel(250);
+
+               }
+           )
+           .Bind(DataBinder.Eval(alcance, "Meta_Sep"))
+           .Render();
+
+
+           ViewContext.Writer.Write("</td>");
+
+
+
+           //Octubre
+
+           ViewContext.Writer.Write("<td>");
+
+           Html.DevExpress().Label(
+                     edtSettings =>
+                     {
+                         edtSettings.ControlStyle.CssClass = "label";
+                         edtSettings.Text = "Octubre";
+                         edtSettings.AssociatedControlName = "Meta_Oct";
+                     }
+                 )
+                 .Render();
+           Html.DevExpress().SpinEdit(
+               edtSettings =>
+               {
+                   edtSettings.Name = "Meta_Oct";
+                   edtSettings.ControlStyle.CssClass = "editor";
+                   edtSettings.ShowModelErrors = true;
+                   //edtSettings.Width = Unit.Pixel(250);
+
+               }
+           )
+           .Bind(DataBinder.Eval(alcance, "Meta_Oct"))
+           .Render();
+
+           ViewContext.Writer.Write("</td>");
+
+           //Noviembre
+           ViewContext.Writer.Write("<td>");
+           Html.DevExpress().Label(
+                    edtSettings =>
+                    {
+                        edtSettings.ControlStyle.CssClass = "label";
+                        edtSettings.Text = "Noviembre";
+                        edtSettings.AssociatedControlName = "Meta_Nov";
+                    }
+                )
+                .Render();
+           Html.DevExpress().SpinEdit(
+               edtSettings =>
+               {
+                   edtSettings.Name = "Meta_Nov";
+                   edtSettings.ControlStyle.CssClass = "editor";
+                   edtSettings.ShowModelErrors = true;
+                   //edtSettings.Width = Unit.Pixel(250);
+
+               }
+           )
+           .Bind(DataBinder.Eval(alcance, "Meta_Nov"))
+           .Render();
+
+           ViewContext.Writer.Write("</td>");
+
+
+           //Diciembre
+           ViewContext.Writer.Write("<td>");
+           Html.DevExpress().Label(
+                    edtSettings =>
+                    {
+                        edtSettings.ControlStyle.CssClass = "label";
+                        edtSettings.Text = "Diciembre";
+                        edtSettings.AssociatedControlName = "Meta_Dic";
+                    }
+                )
+                .Render();
+           Html.DevExpress().SpinEdit(
+               edtSettings =>
+               {
+                   edtSettings.Name = "Meta_Dic";
+                   edtSettings.ControlStyle.CssClass = "editor";
+                   edtSettings.ShowModelErrors = true;
+                   //edtSettings.Width = Unit.Pixel(250);
+
+               }
+           )
+           .Bind(DataBinder.Eval(alcance, "Meta_Dic"))
+           .Render();
+
+           ViewContext.Writer.Write("</td>");
+           ViewContext.Writer.Write("</tr>");
+
+
+           ViewContext.Writer.Write("</table>");
+
+           //Justificación
+           ViewContext.Writer.Write("<tr>");
+           ViewContext.Writer.Write("<td>");
+           //ViewContext.Writer.Write("<br>");
+
+
+           Html.DevExpress().Label(
+                     edtSettings =>
+                     {
+                         edtSettings.ControlStyle.CssClass = "label";
+                         edtSettings.Text = "Justificacion";
+                         edtSettings.AssociatedControlName = "Justificacion";
+                     }
+                 )
+                 .Render();
+           Html.DevExpress().Memo(
+               edtSettings =>
+               {
+                   edtSettings.Name = "Justificacion";
+                   edtSettings.ControlStyle.CssClass = "editor";
+                   edtSettings.ShowModelErrors = true;
+                   edtSettings.Width = Unit.Pixel(1100);
+                   edtSettings.Height = Unit.Pixel(50);
+               }
+           )
+           .Bind(DataBinder.Eval(alcance, "Justificacion"))
+           .Render();
+           ViewContext.Writer.Write("</br>");
+           ViewContext.Writer.Write("</td>");
+
+           //Botones
+
+           Html.DevExpress().Label(
+                       edtSettings =>
+                       {
+                           edtSettings.ControlStyle.CssClass = "label";
+                       }
+                   )
+                   .Render();
+           Html.DevExpress().Button(
+               btnSettings =>
+               {
+                   btnSettings.Name = "btnUpdate";
+                   btnSettings.ControlStyle.CssClass = "button";
+                   btnSettings.Text = "Actualizar";
+                   btnSettings.ClientSideEvents.Click = "function(s, e){ AlcanceGridView.UpdateEdit(); }";
+               }
+           )
+           .Render();
+
+           Html.DevExpress().Button(
+                       btnSettings =>
+                       {
+                           btnSettings.Name = "btnCancel";
+                           btnSettings.ControlStyle.CssClass = "button";
+                           btnSettings.Text = "Cancelar";
+                           btnSettings.ClientSideEvents.Click = "function(s, e){ AlcanceGridView.CancelEdit(); }";
+                       }
+                   )
+                   .Render();
+
+           Html.DevExpress().Button(
+                       btnSettings =>
+                       {
+                           btnSettings.Name = "btnImprimir";
+                           btnSettings.ControlStyle.CssClass = "button";
+                           btnSettings.Text = "Imprimir";
+                           btnSettings.ClientSideEvents.Click = "function(s, e){ AlcanceGridView.CancelEdit(); }";
+                       }
+                   )
+                   .Render();
+           //Termina Botones
+
+           ViewContext.Writer.Write("</div>"); // Termina Codigo de Botones
+
+           @Html.DevExpress().PageControl(PCsettings =>
+           {
+               PCsettings.Name = "pcFeatures";
+               //settings.ActivateTabPageAction = options.ActivateTabPageAction;
+               //settings.EnableHotTrack = options.EnableHotTrack;
+               //settings.SaveStateToCookies = options.SaveStateToCookies;
+               //settings.TabAlign = options.TabAlign;
+               //settings.TabPosition = options.TabPosition;
+               PCsettings.TabPages.Add("Acciones").SetContent(() =>
+               {
+                   ViewContext.Writer.Write("<H3>Actividades Programadas para esta Acción</H3>");
+
+
+                   Html.RenderAction("ActividadGridViewPartial", new { Pk_IdAccion = DataBinder.Eval(alcance, "Pk_IdAccion") });
+
+               });
+               PCsettings.TabPages.Add("Necesidades").SetContent(() =>
+               {
+                   ViewContext.Writer.Write("<H3>No hay necesidades Programadas para esta actividad</H3>");
+               });
+           }).GetHtml();
+       });
+    });
+    if (ViewData["EditError"] != null)
+    {
+        grid.SetEditErrorText((string)ViewData["EditError"]);
+    }
+}
+@grid.Bind(Model).GetHtml()

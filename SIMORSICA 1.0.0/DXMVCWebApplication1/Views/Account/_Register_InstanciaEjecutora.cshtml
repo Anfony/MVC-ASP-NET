@@ -1,0 +1,20 @@
+﻿<div id="InstanciaEjecutora" style="position:absolute; left:165px; top:460px; visibility:hidden">
+    <div class="form-group">
+        @Html.Label("Estado: ", new { @class = "col-md-2 control-label" })
+        <div class="col-md-10">
+            @Html.DropDownList("dropDownEstado", new SelectList(string.Empty, "Value", "Text"), "Seleccione...", new { @style = "width: 250px" })
+        </div>
+    </div>
+    <div class="form-group">
+        @Html.Label("Instancia Ejecutora: ", new { @class = "col-md-2 control-label" })
+        <div class="col-md-10">
+            @Html.DropDownList("dropDownInstanciaEjecutora", new SelectList(string.Empty, "Value", "Text"), "Seleccione...", new { @style = "width: 400px" })
+        </div>
+    </div>
+    <div class="form-group">
+        @Html.Label("Persona: ", new { @class = "col-md-2 control-label" })
+        <div class="col-md-10">
+            @Html.DropDownList("dropDownPersona", new SelectList(string.Empty, "Value", "Text"), "Seleccione...", new { @style = "width: 400px" })
+        </div>
+    </div>
+</div>

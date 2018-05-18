@@ -1,0 +1,12 @@
+@Html.DevExpress().DocumentViewer(settings => {
+    settings.Name = "Report";
+    settings.Height = 530;
+    settings.Width = 1120;
+    settings.ControlStyle.HorizontalAlign = HorizontalAlign.Center;
+    settings.ControlStyle.VerticalAlign = VerticalAlign.Middle;
+    settings.CallbackRouteValues = new { Controller = "ReporteInstanciaEjecutora", Action = "ReportPartial", PK_IdUnidadEjecutora = ViewData["PK_IdUnidadEjecutora"] };
+    settings.ExportRouteValues = new { Controller = "ReporteInstanciaEjecutora", Action = "ReportPartialExport" };
+	settings.Report = (XtraReport)Model;
+	settings.ToolbarMode = DocumentViewerToolbarMode.StandardToolbar;
+}).GetHtml()
+

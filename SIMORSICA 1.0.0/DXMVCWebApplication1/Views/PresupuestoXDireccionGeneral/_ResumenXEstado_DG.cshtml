@@ -1,0 +1,390 @@
+﻿@{
+    var grid = Html.DevExpress().GridView(settings =>
+    {
+        settings.Name = "ResumenXEstado_DG";
+        settings.CallbackRouteValues = new { Controller = "PresupuestoXDireccionGeneral", Action = "ResumenXEstado" };
+
+        settings.SettingsEditing.Mode = GridViewEditingMode.PopupEditForm;
+        settings.SettingsBehavior.ConfirmDelete = true;
+
+        settings.SettingsPopup.EditForm.Height = 150;
+        settings.SettingsPopup.EditForm.Width = 70;
+        settings.SettingsPopup.EditForm.HorizontalAlign = PopupHorizontalAlign.WindowCenter;
+        settings.SettingsPopup.EditForm.VerticalAlign = PopupVerticalAlign.WindowCenter;
+        settings.SettingsPopup.EditForm.Modal = true;
+
+        settings.CommandColumn.ShowClearFilterButton = true;
+
+        settings.SettingsPager.Visible = true;
+        settings.SettingsPager.Position = PagerPosition.Bottom;
+        settings.SettingsPager.FirstPageButton.Visible = true;
+        settings.SettingsPager.LastPageButton.Visible = true;
+        settings.SettingsPager.PageSizeItemSettings.Visible = true;
+        settings.SettingsPager.PageSize = 15;
+        settings.SettingsPager.PageSizeItemSettings.Items = new string[] { "5", "10", "15" };
+        settings.Settings.ShowFilterRowMenu = true;
+
+        settings.KeyFieldName = "Id";
+
+        settings.Settings.ShowGroupPanel = true;
+        settings.Settings.ShowFilterRow = true;
+        settings.SettingsBehavior.AllowSelectByRowClick = true;
+
+        settings.Settings.ShowFooter = true;
+
+        settings.Columns.Add("Estado", "Estado");
+        settings.Columns.Add("DGSA", "DGSA").PropertiesEdit.DisplayFormatString = "c";
+        settings.Columns.Add("DGSV", "DGSV").PropertiesEdit.DisplayFormatString = "c";
+        settings.Columns.Add("DGIAAP", "DGIAAP").PropertiesEdit.DisplayFormatString = "c";
+        settings.Columns.Add("DGIF", "DGIF").PropertiesEdit.DisplayFormatString = "c";
+        settings.Columns.Add("TotalEstado", "Total suma DG").PropertiesEdit.DisplayFormatString = "c";
+        settings.Columns.Add("GastoInversion", "Gastos de Inversión").PropertiesEdit.DisplayFormatString = "c";
+        settings.Columns.Add("Restante", "Presupuesto Disponible").PropertiesEdit.DisplayFormatString = "c";
+
+        settings.TotalSummary.Add(DevExpress.Data.SummaryItemType.Sum, "DGSA").DisplayFormat = "c";
+        settings.TotalSummary.Add(DevExpress.Data.SummaryItemType.Sum, "DGSV").DisplayFormat = "c";
+        settings.TotalSummary.Add(DevExpress.Data.SummaryItemType.Sum, "DGIAAP").DisplayFormat = "c";
+        settings.TotalSummary.Add(DevExpress.Data.SummaryItemType.Sum, "DGIF").DisplayFormat = "c";
+        settings.TotalSummary.Add(DevExpress.Data.SummaryItemType.Sum, "TotalEstado").DisplayFormat = "c";
+        settings.TotalSummary.Add(DevExpress.Data.SummaryItemType.Sum, "GastoInversion").DisplayFormat = "c";
+        settings.TotalSummary.Add(DevExpress.Data.SummaryItemType.Sum, "Restante").DisplayFormat = "c";
+    });
+    if (ViewData["EditError"] != null)
+    {
+        grid.SetEditErrorText((string)ViewData["EditError"]);
+    }
+}
+@grid.Bind(Model).GetHtml()
+
+
+@Html.DevExpress().PopupControl(settings =>
+{
+    settings.Name = "popUpDistribucionRecursos";
+    settings.Width = 400;
+    settings.AllowDragging = true;
+    settings.CloseAction = CloseAction.CloseButton;
+    settings.PopupAnimationType = AnimationType.None;
+    settings.HeaderText = "Distribuye el recurso";
+    settings.Modal = true;
+    settings.PopupHorizontalAlign = PopupHorizontalAlign.WindowCenter;
+    settings.PopupVerticalAlign = PopupVerticalAlign.WindowCenter;
+
+    settings.SetContent(() =>
+    {
+        using (Html.BeginForm("GuardaPresupuestoAsignado", "PresupuestoXDireccionGeneral", FormMethod.Post, new { id = "Formulario" }))
+        {
+            ViewContext.Writer.Write("<hr style='align-content:center; width: 100%; height: 1px; background-color: black' />");
+
+            ViewContext.Writer.Write("<table>");
+            ViewContext.Writer.Write("<tr>");
+            ViewContext.Writer.Write("<td>");
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Gastos de Inversión Otorgado";
+                edtSettings.AssociatedControlName = "GtoInvOtorgado";
+            }).Render();
+            ViewContext.Writer.Write("</td>");
+
+            ViewContext.Writer.Write("<td>");
+            Html.DevExpress().TextBox(edtSettings =>
+            {
+                edtSettings.Name = "GtoInvOtorgado";
+                edtSettings.ClientEnabled = false;
+                edtSettings.Text = Convert.ToInt64(ViewData["GastoInversionTotal"]).ToString("#,##0");
+                edtSettings.ControlStyle.CssClass = "editor";
+                edtSettings.ShowModelErrors = true;
+                edtSettings.Width = Unit.Pixel(150);
+            }).Render();
+            ViewContext.Writer.Write("</td>");
+            ViewContext.Writer.Write("</tr>");
+
+            ViewContext.Writer.Write("<tr>");
+            ViewContext.Writer.Write("<td>");
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Presupuesto Disponible";
+                edtSettings.AssociatedControlName = "Total";
+            }).Render();
+            ViewContext.Writer.Write("</td>");
+
+            ViewContext.Writer.Write("<td>");
+            Html.DevExpress().TextBox(edtSettings =>
+            {
+                edtSettings.Name = "PresupuestoNoAsignado";
+                edtSettings.ClientEnabled = false;
+                edtSettings.ControlStyle.CssClass = "editor";
+                edtSettings.ShowModelErrors = true;
+                edtSettings.Width = Unit.Pixel(150);
+            }).Render();
+            ViewContext.Writer.Write("</td>");
+            ViewContext.Writer.Write("</tr>");
+
+            ViewContext.Writer.Write("</table>");
+
+            ViewContext.Writer.Write("<hr style='align-content:center; width: 100%; height: 1px; background-color: black' />");
+
+            ViewContext.Writer.Write("<table>");
+            ViewContext.Writer.Write("<tr>");
+            ViewContext.Writer.Write("<td>");
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "DGSA";
+                edtSettings.ToolTip = "Dirección General de Salud Animal";
+                edtSettings.AssociatedControlName = "DGSA";
+            }).Render();
+            ViewContext.Writer.Write("</td>");
+
+            ViewContext.Writer.Write("<td>");
+            Html.DevExpress().SpinEdit(edtSettings =>
+            {
+                edtSettings.Name = "DGSA";
+                edtSettings.Number = Convert.ToDecimal(ViewData["DGSA"].ToString());
+                edtSettings.Properties.MinValue = 0;
+                edtSettings.Properties.MaxValue = 9999999999;
+                edtSettings.Properties.NumberType = SpinEditNumberType.Float;
+                edtSettings.Properties.Increment = 0.1M;
+                edtSettings.Properties.LargeIncrement = 1;
+                edtSettings.Properties.SpinButtons.ShowLargeIncrementButtons = true;
+                edtSettings.ControlStyle.CssClass = "editor";
+                edtSettings.ShowModelErrors = true;
+                edtSettings.Width = Unit.Pixel(150);
+                edtSettings.Properties.DisplayFormatString = "n";
+                edtSettings.Properties.ClientSideEvents.ValueChanged = "verificaSumaTotalDG";
+            }).Render();
+            ViewContext.Writer.Write("</td>");
+            ViewContext.Writer.Write("<tr>");
+
+            ViewContext.Writer.Write("<tr>");
+            ViewContext.Writer.Write("<td>");
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "DGSV";
+                edtSettings.ToolTip = "Dirección General de Sanidad Vegetal";
+                edtSettings.AssociatedControlName = "DGSV";
+            }).Render();
+            ViewContext.Writer.Write("</td>");
+
+            ViewContext.Writer.Write("<td>");
+            Html.DevExpress().SpinEdit(edtSettings =>
+            {
+                edtSettings.Name = "DGSV";
+                edtSettings.Number = Convert.ToDecimal(ViewData["DGSV"].ToString());
+                edtSettings.Properties.MinValue = 0;
+                edtSettings.Properties.MaxValue = 9999999999;
+                edtSettings.Properties.NumberType = SpinEditNumberType.Float;
+                edtSettings.Properties.Increment = 0.1M;
+                edtSettings.Properties.LargeIncrement = 1;
+                edtSettings.Properties.SpinButtons.ShowLargeIncrementButtons = true;
+                edtSettings.ControlStyle.CssClass = "editor";
+                edtSettings.ShowModelErrors = true;
+                edtSettings.Width = Unit.Pixel(150);
+                edtSettings.Properties.DisplayFormatString = "n";
+                edtSettings.Properties.ClientSideEvents.ValueChanged = "verificaSumaTotalDG";
+            }).Render();
+            ViewContext.Writer.Write("</td>");
+            ViewContext.Writer.Write("<tr>");
+
+            ViewContext.Writer.Write("<tr>");
+            ViewContext.Writer.Write("<td>");
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "DGIAAP";
+                edtSettings.ToolTip = "Dirección General de Inocuidad Agroalimentaria Acuícola y Pesquera";
+                edtSettings.AssociatedControlName = "DGIAAP";
+            }).Render();
+            ViewContext.Writer.Write("</td>");
+
+            ViewContext.Writer.Write("<td>");
+            Html.DevExpress().SpinEdit(edtSettings =>
+            {
+                edtSettings.Name = "DGIAAP";
+                edtSettings.Number = Convert.ToDecimal(ViewData["DGIAAP"].ToString());
+                edtSettings.Properties.MinValue = 0;
+                edtSettings.Properties.MaxValue = 9999999999;
+                edtSettings.Properties.NumberType = SpinEditNumberType.Float;
+                edtSettings.Properties.Increment = 0.1M;
+                edtSettings.Properties.LargeIncrement = 1;
+                edtSettings.Properties.SpinButtons.ShowLargeIncrementButtons = true;
+                edtSettings.ControlStyle.CssClass = "editor";
+                edtSettings.ShowModelErrors = true;
+                edtSettings.Width = Unit.Pixel(150);
+                edtSettings.Properties.DisplayFormatString = "n";
+                edtSettings.Properties.ClientSideEvents.ValueChanged = "verificaSumaTotalDG";
+            }).Render();
+            ViewContext.Writer.Write("</td>");
+            ViewContext.Writer.Write("<tr>");
+
+            ViewContext.Writer.Write("<tr>");
+            ViewContext.Writer.Write("<td>");
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "DGIF";
+                edtSettings.ToolTip = "Dirección General de Inspección Fitozoosanitaria";
+                edtSettings.AssociatedControlName = "DGIF";
+            }).Render();
+            ViewContext.Writer.Write("</td>");
+
+            ViewContext.Writer.Write("<td>");
+            Html.DevExpress().SpinEdit(edtSettings =>
+            {
+                edtSettings.Name = "DGIF";
+                edtSettings.Number = Convert.ToDecimal(ViewData["DGIF"].ToString());
+                edtSettings.Properties.MinValue = 0;
+                edtSettings.Properties.MaxValue = 9999999999;
+                edtSettings.Properties.NumberType = SpinEditNumberType.Float;
+                edtSettings.Properties.Increment = 0.1M;
+                edtSettings.Properties.LargeIncrement = 1;
+                edtSettings.Properties.SpinButtons.ShowLargeIncrementButtons = true;
+                edtSettings.ControlStyle.CssClass = "editor";
+                edtSettings.ShowModelErrors = true;
+                edtSettings.Width = Unit.Pixel(150);
+                edtSettings.Properties.DisplayFormatString = "n";
+                edtSettings.Properties.ClientSideEvents.ValueChanged = "verificaSumaTotalDG";
+            }).Render();
+            ViewContext.Writer.Write("</td>");
+            ViewContext.Writer.Write("<tr>");
+
+            ViewContext.Writer.Write("</table>");
+            ViewContext.Writer.Write("<hr style='align-content:center; width: 100%; height: 1px; background-color: black' />");
+
+            ViewContext.Writer.Write("<table>");
+            ViewContext.Writer.Write("<tr>");
+            ViewContext.Writer.Write("<td>");
+            Html.DevExpress().Button(btnSettings =>
+            {
+                btnSettings.Name = "btnGuardar";
+                btnSettings.Text = "Guardar";
+                btnSettings.ControlStyle.CssClass = "button";
+                btnSettings.Images.Image.Url = "/Content/Images/guardar.png";
+                btnSettings.ImagePosition = ImagePosition.Right;
+                btnSettings.Images.Image.Width = 16;
+                btnSettings.UseSubmitBehavior = true;
+            }).Render();
+            ViewContext.Writer.Write("</td>");
+
+            ViewContext.Writer.Write("<td>");
+            Html.DevExpress().Button(btnSettings =>
+            {
+                btnSettings.Name = "btnCancel";
+                btnSettings.Text = "Cancelar";
+                btnSettings.ControlStyle.CssClass = "button";
+                btnSettings.Images.Image.Url = "/Content/Images/cancelar.png";
+                btnSettings.ImagePosition = ImagePosition.Right;
+                btnSettings.Style["position"] = "relative";
+                btnSettings.Style["left"] = "5px";
+                btnSettings.ClientSideEvents.Click = "function(s, e){ popUpDistribucionRecursos.Hide(); }";
+            }).Render();
+            ViewContext.Writer.Write("</td>");
+            ViewContext.Writer.Write("</tr>");
+            ViewContext.Writer.Write("</table>");
+
+            ViewContext.Writer.Write("<br />");
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "*Debes de distribuir todo el recurso en las distintas Direcciones Generales";
+                edtSettings.AssociatedControlName = "DGIF";
+            }).Render();
+        }
+    });
+}).GetHtml()
+
+
+@Html.DevExpress().PopupControl(settings =>
+{
+    settings.Name = "popUpRecursoExcedido";
+    settings.Width = 400;
+    settings.AllowDragging = true;
+    settings.CloseAction = CloseAction.CloseButton;
+    settings.PopupAnimationType = AnimationType.None;
+    settings.HeaderText = "¡ERROR!";
+    settings.Modal = true;
+    settings.PopupHorizontalAlign = PopupHorizontalAlign.WindowCenter;
+    settings.PopupVerticalAlign = PopupVerticalAlign.WindowCenter;
+
+    settings.SetContent(() =>
+    {
+        Html.DevExpress().Label(edtSettings =>
+        {
+            edtSettings.ControlStyle.CssClass = "label";
+            edtSettings.Text = "Se ha excedido el recurso, favor de correjir";
+            edtSettings.ToolTip = "Se ha excedido el recurso, favor de correjir";
+        }).Render();
+
+        ViewContext.Writer.Write("<br />");
+        ViewContext.Writer.Write("<br />");
+
+        Html.DevExpress().Button(btnSettings =>
+        {
+            btnSettings.Name = "btnAceptar";
+            btnSettings.Text = "Aceptar";
+            btnSettings.ControlStyle.CssClass = "button";
+            btnSettings.Images.Image.Url = "/Content/Images/aceptar.png";
+            btnSettings.ImagePosition = ImagePosition.Right;
+            btnSettings.Style["position"] = "relative";
+            btnSettings.Style["left"] = "5px";
+            btnSettings.ClientSideEvents.Click = "function(s, e){ popUpRecursoExcedido.Hide(); }";
+        }).Render();
+    });
+}).GetHtml()
+
+
+
+@Html.DevExpress().PopupControl(settings =>
+{
+    settings.Name = "popUpCerrarDistribucion";
+    settings.Width = 400;
+    settings.AllowDragging = true;
+    settings.CloseAction = CloseAction.CloseButton;
+    settings.PopupAnimationType = AnimationType.None;
+    settings.HeaderText = "¡Movimiento irreversible!";
+    settings.Modal = true;
+    settings.PopupHorizontalAlign = PopupHorizontalAlign.WindowCenter;
+    settings.PopupVerticalAlign = PopupVerticalAlign.WindowCenter;
+
+    settings.SetContent(() =>
+    {
+        using (Html.BeginForm("CierraDistribucionRecurso", "PresupuestoXDireccionGeneral", FormMethod.Post, new { id = "Formulario" }))
+        {
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Una vez cerrado la distribución del recurso, no se podrán hacer modificaciones";
+                edtSettings.ToolTip = "Una vez cerrado la distribución del recurso, no se podrán hacer modificaciones";
+            }).Render();
+
+            ViewContext.Writer.Write("<br />");
+            ViewContext.Writer.Write("<br />");
+
+            Html.DevExpress().Button(btnSettings =>
+            {
+                btnSettings.Name = "btnAceptarCierre";
+                btnSettings.Text = "Aceptar";
+                btnSettings.ControlStyle.CssClass = "button";
+                btnSettings.Images.Image.Url = "/Content/Images/aceptar.png";
+                btnSettings.ImagePosition = ImagePosition.Right;
+                btnSettings.Style["position"] = "relative";
+                btnSettings.Style["left"] = "5px";
+                btnSettings.UseSubmitBehavior = true;
+            }).Render();
+
+            Html.DevExpress().Button(btnSettings =>
+            {
+                btnSettings.Name = "btnCancelarCierre";
+                btnSettings.Text = "Cancelar";
+                btnSettings.ControlStyle.CssClass = "button";
+                btnSettings.Images.Image.Url = "/Content/Images/cancelar.png";
+                btnSettings.ImagePosition = ImagePosition.Right;
+                btnSettings.Style["position"] = "relative";
+                btnSettings.Style["left"] = "5px";
+                btnSettings.ClientSideEvents.Click = "function(s, e){ popUpCerrarDistribucion.Hide(); }";
+            }).Render();
+        }
+    });
+}).GetHtml()

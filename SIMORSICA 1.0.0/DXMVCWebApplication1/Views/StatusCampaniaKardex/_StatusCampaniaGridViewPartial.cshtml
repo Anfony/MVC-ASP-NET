@@ -1,0 +1,165 @@
+﻿@{
+    var grid = Html.DevExpress().GridView(settings =>
+    {
+        settings.Name = "StatusCampaniaGridView";
+        settings.CallbackRouteValues = new { Controller = "StatusCampaniaKardex", Action = "StatusCampaniaGridViewPartial", IdCampania = ViewData["IdCampania"] };
+
+        settings.SettingsEditing.AddNewRowRouteValues = new { Controller = "StatusCampaniaKardex", Action = "StatusCampaniaGridViewPartialAddNew", IdCampania = ViewData["IdCampania"] };
+        settings.SettingsEditing.Mode = GridViewEditingMode.PopupEditForm;
+
+        settings.SettingsText.PopupEditFormCaption = "Cambia de Estado";
+        settings.SettingsPopup.EditForm.Height = 250;
+        settings.SettingsPopup.EditForm.Width = 325;
+        settings.SettingsPopup.EditForm.HorizontalAlign = PopupHorizontalAlign.WindowCenter;
+        settings.SettingsPopup.EditForm.VerticalAlign = PopupVerticalAlign.WindowCenter;
+        settings.SettingsPopup.EditForm.Modal = true;
+
+        settings.SettingsBehavior.ConfirmDelete = true;
+
+        settings.CommandColumn.Visible = true;
+        settings.SettingsCommandButton.NewButton.Text = "Cambiar Estado";
+        settings.CommandColumn.ShowNewButtonInHeader = true;
+        settings.CommandColumn.ShowDeleteButton = false;
+        settings.CommandColumn.ShowEditButton = false;
+
+        settings.KeyFieldName = "PK_IdStatusCampaniaKardex";
+
+        settings.SettingsPager.Visible = true;
+        settings.SettingsPager.Position = PagerPosition.Bottom;
+        settings.SettingsPager.FirstPageButton.Visible = true;
+        settings.SettingsPager.LastPageButton.Visible = true;
+        settings.SettingsPager.PageSizeItemSettings.Visible = true;
+        settings.SettingsPager.PageSize = 3;
+        settings.SettingsPager.PageSizeItemSettings.Items = new string[] { "5", "10", "15" };
+        settings.Settings.ShowFilterRowMenu = true;
+
+        settings.Columns.Add(column =>
+        {
+            column.Caption = "";
+
+            column.SetDataItemTemplateContent(c =>
+            {
+                ViewContext.Writer.Write("<table>");
+                ViewContext.Writer.Write("<tr><td>");
+
+                using (Html.BeginForm("EliminaStatus", "StatusCampaniaKardex", new { IdStatusCampaniaKardex = c.KeyValue.ToString() }, FormMethod.Post))
+                {
+                    Html.DevExpress().Button(btnSettings =>
+                    {
+                        btnSettings.Name = "btnBorraStatus" + c.KeyValue.ToString();
+                        btnSettings.ClientVisible = FuncionesAuxiliares.GetCurrent_RolUsuario() == RolesUsuarios.SUPERUSUARIO
+                                                    && Convert.ToInt32(DataBinder.Eval(c.DataItem, "FK_IdStatusCampania__SIS")) == 31;  //muestra el botón si la campaña está "Camapaña no Válida"
+                        btnSettings.Text = "";
+                        btnSettings.ToolTip = "Quitar Estatus";
+                        btnSettings.ControlStyle.CssClass = "button";
+                        btnSettings.ImagePosition = ImagePosition.Right;
+                        btnSettings.Images.Image.Width = 16;
+                        btnSettings.Images.Image.Url = "/Content/Images/cancelar.png";
+                        btnSettings.UseSubmitBehavior = true;
+                        btnSettings.ControlStyle.Border.BorderWidth = Unit.Pixel(0);
+                    }).Render();
+                }
+                ViewContext.Writer.Write("</td>");
+
+                ViewContext.Writer.Write("</td></tr>");
+                ViewContext.Writer.Write("</table>");
+            });
+        });
+
+        settings.Columns.Add("StatusCampania.Nombre", "Estado");
+
+        settings.Columns.Add(column =>
+        {
+            column.FieldName = "Fecha";
+            column.Caption = "Fecha";
+            column.ColumnType = MVCxGridViewColumnType.DateEdit;
+        });
+
+        settings.Columns.Add("Comentarios", "Comentarios");
+
+        settings.SetEditFormTemplateContent(c =>
+        {
+            var status = ViewData["dataItem"] ?? c.DataItem;
+            ViewContext.Writer.Write("<table><tr><td>");
+
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Nuevo Estado";
+                edtSettings.AssociatedControlName = "FK_IdStatusCampania__SIS";
+            }).Render();
+
+            Html.DevExpress().ComboBox(edtSettings =>
+            {
+                edtSettings.Name = "FK_IdStatusCampania__SIS";
+                edtSettings.ControlStyle.CssClass = "editor";
+                edtSettings.Properties.TextField = "Nombre";
+                edtSettings.Properties.NullText = "Campo Requerido";
+                edtSettings.Properties.ValueField = "Pk_IdStatusCampania";
+                edtSettings.Properties.ValueType = typeof(int);
+                edtSettings.ShowModelErrors = true;
+                edtSettings.Width = Unit.Pixel(250);
+                edtSettings.Properties.IncrementalFilteringMode = IncrementalFilteringMode.Contains;
+                edtSettings.Properties.IncrementalFilteringDelay = 5;
+            }).BindList(DXMVCWebApplication1.Models.Senasica.GetStatusCampania(Convert.ToInt32(ViewData["IdCampania"])))
+            .Bind(DataBinder.Eval(status, "FK_IdStatusCampania__SIS"))
+            .Render();
+
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Comentarios";
+                edtSettings.AssociatedControlName = "Comentarios";
+            }).Render();
+
+            Html.DevExpress().Memo(edtSettings =>
+            {
+                edtSettings.Name = "Comentarios";
+                edtSettings.Properties.NullText = "Campo Requerido";
+                edtSettings.ControlStyle.CssClass = "editor";
+                edtSettings.ShowModelErrors = true;
+                edtSettings.Width = Unit.Pixel(1010);
+                edtSettings.Height = Unit.Pixel(50);
+            }).Bind(DataBinder.Eval(status, "Comentarios"))
+            .Render();
+
+            ViewContext.Writer.Write("</td>");
+            ViewContext.Writer.Write("</tr>");
+            ViewContext.Writer.Write("</table>");
+            ViewContext.Writer.Write("<br>");
+
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+            }).Render();
+
+            Html.DevExpress().Button(btnSettings =>
+            {
+                btnSettings.Name = "btnUpdat";
+                btnSettings.Text = "Guardar";
+                btnSettings.ControlStyle.CssClass = "button";
+                btnSettings.Images.Image.Url = "Content/Images/guardar.png";
+                btnSettings.ImagePosition = ImagePosition.Right;
+                btnSettings.Images.Image.Width = 16;
+                btnSettings.ClientSideEvents.Click = "function(s, e){ StatusCampaniaGridView.UpdateEdit(); }";
+            }).Render();
+
+            Html.DevExpress().Button(btnSettings =>
+            {
+                btnSettings.Name = "btnCance";
+                btnSettings.Text = "Cancelar";
+                btnSettings.ControlStyle.CssClass = "button";
+                btnSettings.Images.Image.Url = "Content/Images/cancelar.png";
+                btnSettings.ImagePosition = ImagePosition.Right;
+                btnSettings.Style["position"] = "relative";
+                btnSettings.Style["left"] = "5px";
+                btnSettings.ClientSideEvents.Click = "function(s, e){ StatusCampaniaGridView.CancelEdit(); }";
+            }).Render();
+
+            ViewContext.Writer.Write("</br>");
+
+        });
+    });
+}
+
+@grid.Bind(Model).GetHtml()

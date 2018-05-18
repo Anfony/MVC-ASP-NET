@@ -1,0 +1,242 @@
+﻿<h3>Archivos de la Campaña</h3>
+
+<br />
+
+@{
+
+    if (Convert.ToBoolean(ViewData["Escritura"]))
+    {
+        ViewContext.Writer.Write("<table><tr><td>");
+        Html.DevExpress().Label(edtSettings =>
+        {
+            edtSettings.ControlStyle.CssClass = "label";
+            edtSettings.Text = "Anexo: ";
+        }).Render();
+
+        Html.DevExpress().Label(edtSettings =>
+        {
+            edtSettings.Name = "labelAnexo";
+            edtSettings.ClientVisible = Convert.ToBoolean(ViewData["existeAnexo"]);
+            edtSettings.ControlStyle.CssClass = "label";
+            edtSettings.Text = "(ya existe un archivo en el servidor)";
+            edtSettings.Properties.EnableClientSideAPI = true;
+        }).Render();
+
+        using (Html.BeginForm("CargaArchivo", "ArchivosCampania", new { TypeFile = "ANEXO" }, FormMethod.Post))
+        {
+            Html.DevExpress().UploadControl(CAsettings =>
+            {
+                CAsettings.Name = "UploadControlAnexo";
+                CAsettings.CallbackRouteValues = new { Controller = "ArchivosCampania", Action = "CargaArchivo", TypeFile = "ANEXO" };
+                CAsettings.ShowUploadButton = true;
+                CAsettings.UploadButton.Text = "Subir Anexo";
+                CAsettings.AddUploadButtonsHorizontalPosition = AddUploadButtonsHorizontalPosition.InputRightSide;
+                CAsettings.ShowProgressPanel = true;
+                CAsettings.ClientSideEvents.FileUploadComplete = "function(s, e) { popUpCargaFinalizadaAnexo.Show(); }";
+            }).Render();
+        }
+        ViewContext.Writer.Write("</td>");
+
+        ViewContext.Writer.Write("<td>");
+        using (Html.BeginForm("DescargaArchivo", "ArchivosCampania", new { IdCampania = Convert.ToInt32(ViewData["IdCampania"]), TypeFile = "ANEXO" }, FormMethod.Post))
+        {
+            Html.DevExpress().Button(btnSettings =>
+            {
+                btnSettings.Name = "btnDescargaAnexo";
+                btnSettings.Text = "Descarga Anexo";
+                btnSettings.ClientEnabled = Convert.ToBoolean(ViewData["existeAnexo"]);
+                btnSettings.ControlStyle.CssClass = "button";
+                btnSettings.Images.Image.Url = "/Content/Images/descargar.png";
+                btnSettings.ImagePosition = ImagePosition.Right;
+                btnSettings.Images.Image.Width = 16;
+                btnSettings.Style["position"] = "relative";
+                btnSettings.Style["left"] = "10px";
+                btnSettings.UseSubmitBehavior = true;
+            }).Render();
+        }
+        ViewContext.Writer.Write("</td></tr></table>");
+
+        ViewContext.Writer.Write("<br />");
+
+        ViewContext.Writer.Write("<table><tr><td>");
+        Html.DevExpress().Label(edtSettings =>
+        {
+            edtSettings.ControlStyle.CssClass = "label";
+            edtSettings.Text = "Programa: ";
+        }).Render();
+
+        Html.DevExpress().Label(edtSettings =>
+        {
+            edtSettings.Name = "labelInforme";
+            edtSettings.ClientVisible = Convert.ToBoolean(ViewData["existeInforme"]);
+            edtSettings.ControlStyle.CssClass = "label";
+            edtSettings.Text = "(ya existe un archivo en el servidor)";
+            edtSettings.Properties.EnableClientSideAPI = true;
+        }).Render();
+
+        using (Html.BeginForm("CargaArchivo", "ArchivosCampania", new { TypeFile = "INFORME" }, FormMethod.Post))
+        {
+            Html.DevExpress().UploadControl(CAsettings =>
+            {
+                CAsettings.Name = "UploadControlInforme";
+                CAsettings.CallbackRouteValues = new { Controller = "ArchivosCampania", Action = "CargaArchivo", TypeFile = "INFORME" };
+                CAsettings.ShowUploadButton = true;
+                CAsettings.UploadButton.Text = "Subir Programa";
+                CAsettings.AddUploadButtonsHorizontalPosition = AddUploadButtonsHorizontalPosition.InputRightSide;
+                CAsettings.ShowProgressPanel = true;
+                CAsettings.ClientSideEvents.FileUploadComplete = "function(s, e) { popUpCargaFinalizadaInforme.Show(); }";
+            }).Render();
+        }
+        ViewContext.Writer.Write("</td>");
+        ViewContext.Writer.Write("<td>");
+        using (Html.BeginForm("DescargaArchivo", "ArchivosCampania", new { IdCampania = Convert.ToInt32(ViewData["IdCampania"]), TypeFile = "INFORME" }, FormMethod.Post))
+        {
+            Html.DevExpress().Button(btnSettings =>
+            {
+                btnSettings.Name = "btnDescargaInforme";
+                btnSettings.Text = "Descarga Informe";
+                btnSettings.ClientEnabled = Convert.ToBoolean(ViewData["existeInforme"]);
+                btnSettings.ControlStyle.CssClass = "button";
+                btnSettings.Images.Image.Url = "/Content/Images/descargar.png";
+                btnSettings.ImagePosition = ImagePosition.Right;
+                btnSettings.Images.Image.Width = 16;
+                btnSettings.Style["position"] = "relative";
+                btnSettings.Style["left"] = "10px";
+                btnSettings.UseSubmitBehavior = true;
+            }).Render();
+        }
+        ViewContext.Writer.Write("</td></tr></table>");
+    }
+    else
+    {
+        Html.DevExpress().Label(edtSettings =>
+        {
+            edtSettings.Name = "labelInforme";
+            edtSettings.ClientVisible = !Convert.ToBoolean(ViewData["existeInforme"]) && !Convert.ToBoolean(ViewData["existeAnexo"]);
+            edtSettings.ControlStyle.CssClass = "label";
+            edtSettings.Text = "NO SE HAN CARGADO ARCHIVOS";
+        }).Render();
+
+        ViewContext.Writer.Write("<br >");
+        ViewContext.Writer.Write("<br >");
+
+        using (Html.BeginForm("DescargaArchivo", "ArchivosCampania", new { IdCampania = Convert.ToInt32(ViewData["IdCampania"]), TypeFile = "ANEXO" }, FormMethod.Post))
+        {
+            Html.DevExpress().Button(btnSettings =>
+            {
+                btnSettings.Name = "btnDescargaAnexo2";
+                btnSettings.Text = "Descarga Anexo";
+                btnSettings.ClientVisible = Convert.ToBoolean(ViewData["existeAnexo"]);
+                btnSettings.ControlStyle.CssClass = "button";
+                btnSettings.Images.Image.Url = "/Content/Images/descargar.png";
+                btnSettings.ImagePosition = ImagePosition.Right;
+                btnSettings.Images.Image.Width = 16;
+                btnSettings.Style["position"] = "relative";
+                btnSettings.Style["left"] = "10px";
+                btnSettings.UseSubmitBehavior = true;
+            }).Render();
+        }
+
+        ViewContext.Writer.Write("<br >");
+        ViewContext.Writer.Write("<br >");
+
+        using (Html.BeginForm("DescargaArchivo", "ArchivosCampania", new { IdCampania = Convert.ToInt32(ViewData["IdCampania"]), TypeFile = "INFORME" }, FormMethod.Post))
+        {
+            Html.DevExpress().Button(btnSettings =>
+            {
+                btnSettings.Name = "btnDescargaInforme2";
+                btnSettings.Text = "Descarga Informe";
+                btnSettings.ClientVisible = Convert.ToBoolean(ViewData["existeInforme"]);
+                btnSettings.ControlStyle.CssClass = "button";
+                btnSettings.Images.Image.Url = "/Content/Images/descargar.png";
+                btnSettings.ImagePosition = ImagePosition.Right;
+                btnSettings.Images.Image.Width = 16;
+                btnSettings.Style["position"] = "relative";
+                btnSettings.Style["left"] = "10px";
+                btnSettings.UseSubmitBehavior = true;
+            }).Render();
+        }
+
+        ViewContext.Writer.Write("<br >");
+        ViewContext.Writer.Write("<br >");
+    }
+    <br />
+
+    ViewContext.Writer.Write("<table><tr><td>");
+    Html.DevExpress().Label(edtSettings =>
+    {
+        edtSettings.ControlStyle.CssClass = "label";
+        edtSettings.Text = "Nota:";
+    }).Render();
+    ViewContext.Writer.Write("</td></tr>");
+
+    ViewContext.Writer.Write("<tr><td>");
+    Html.DevExpress().Label(edtSettings =>
+    {
+        edtSettings.ControlStyle.CssClass = "label";
+        edtSettings.Text = "1. El formato de los archivos debe ser PDF.";
+    }).Render();
+    ViewContext.Writer.Write("</td></tr>");
+
+    ViewContext.Writer.Write("<tr><td>");
+    Html.DevExpress().Label(edtSettings =>
+    {
+        edtSettings.ControlStyle.CssClass = "label";
+        edtSettings.Text = "2. Si ya existe un archivo, este será reemplazado por el nuevo a cargar.";
+    }).Render();
+    ViewContext.Writer.Write("</td></tr></table>");
+
+    Html.DevExpress().PopupControl(settings =>
+    {
+        settings.Name = "popUpCargaFinalizadaAnexo";
+        settings.Width = 300;
+        settings.AllowDragging = true;
+        settings.CloseAction = CloseAction.CloseButton;
+        settings.PopupAnimationType = AnimationType.None;
+        settings.HeaderText = "La carga ha finalizado";
+        settings.Modal = true;
+        settings.PopupHorizontalAlign = PopupHorizontalAlign.WindowCenter;
+        settings.PopupVerticalAlign = PopupVerticalAlign.WindowCenter;
+
+        settings.SetContent(() =>
+        {
+            Html.DevExpress().Button(btnSettings =>
+            {
+                btnSettings.Name = "btnCargaFinalizadaAnexo";
+                btnSettings.Text = "Aceptar";
+                btnSettings.ControlStyle.CssClass = "button";
+                btnSettings.Images.Image.Url = "/Content/Images/aceptar.png";
+                btnSettings.ImagePosition = ImagePosition.Right;
+                btnSettings.Images.Image.Width = 16;
+                btnSettings.ClientSideEvents.Click = "function(s, e){ popUpCargaFinalizadaAnexo.Hide(); btnDescargaAnexo.SetEnabled(true); labelAnexo.SetVisible(true); }";
+            }).Render();
+        });
+    }).Render();
+
+    Html.DevExpress().PopupControl(settings =>
+    {
+        settings.Name = "popUpCargaFinalizadaInforme";
+        settings.Width = 300;
+        settings.AllowDragging = true;
+        settings.CloseAction = CloseAction.CloseButton;
+        settings.PopupAnimationType = AnimationType.None;
+        settings.HeaderText = "La carga ha finalizado";
+        settings.Modal = true;
+        settings.PopupHorizontalAlign = PopupHorizontalAlign.WindowCenter;
+        settings.PopupVerticalAlign = PopupVerticalAlign.WindowCenter;
+
+        settings.SetContent(() =>
+        {
+            Html.DevExpress().Button(btnSettings =>
+            {
+                btnSettings.Name = "btnCargaFinalizadaInforme";
+                btnSettings.Text = "Aceptar";
+                btnSettings.ControlStyle.CssClass = "button";
+                btnSettings.Images.Image.Url = "/Content/Images/aceptar.png";
+                btnSettings.ImagePosition = ImagePosition.Right;
+                btnSettings.Images.Image.Width = 16;
+                btnSettings.ClientSideEvents.Click = "function(s, e){ popUpCargaFinalizadaInforme.Hide(); btnDescargaInforme.SetEnabled(true); labelInforme.SetVisible(true); }";
+            }).Render();
+        });
+    }).Render();
+}

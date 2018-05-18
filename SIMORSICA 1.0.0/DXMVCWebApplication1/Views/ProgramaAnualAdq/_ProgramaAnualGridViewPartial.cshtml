@@ -1,0 +1,1019 @@
+@{
+    var grid = Html.DevExpress().GridView(settings =>
+    {
+        settings.Name = "ProgramaAnualGridView";
+        settings.CallbackRouteValues = new { Controller = "ProgramaAnualAdq", Action = "ProgramaAnualGridViewPartial" };
+        settings.Width = Unit.Percentage(100);
+
+        settings.SettingsEditing.AddNewRowRouteValues = new { Controller = "ProgramaAnualAdq", Action = "ProgramaAnualGridViewPartialAddNew" };
+        settings.SettingsEditing.UpdateRowRouteValues = new { Controller = "ProgramaAnualAdq", Action = "ProgramaAnualGridViewPartialUpdate" };
+        settings.SettingsEditing.DeleteRowRouteValues = new { Controller = "ProgramaAnualAdq", Action = "ProgramaAnualGridViewPartialDelete" };
+        settings.SettingsEditing.Mode = GridViewEditingMode.PopupEditForm;
+        settings.SettingsText.PopupEditFormCaption = "Programa Anual de Adquisiciones - Gastos Transversales";
+
+
+
+        settings.SettingsPopup.EditForm.Height = 400;
+        settings.SettingsPopup.EditForm.Width = 625;
+        settings.SettingsPopup.EditForm.HorizontalAlign = PopupHorizontalAlign.WindowCenter;
+        settings.SettingsPopup.EditForm.VerticalAlign = PopupVerticalAlign.WindowCenter;
+        settings.SettingsPopup.EditForm.Modal = true;
+
+        settings.SettingsBehavior.ConfirmDelete = true;
+        settings.Settings.ShowFilterRow = true;
+        settings.Settings.ShowFilterRowMenu = true;
+
+        settings.CommandColumn.Visible = true;
+        settings.SettingsCommandButton.NewButton.Text = "Nuevo Gasto";
+        settings.CommandColumn.ShowNewButtonInHeader = Convert.ToBoolean(ViewData["Escritura"]);
+        settings.CommandColumn.ShowDeleteButton = Convert.ToBoolean(ViewData["Escritura"]);
+        settings.CommandColumn.ShowEditButton = Convert.ToBoolean(ViewData["Escritura"]) || Convert.ToBoolean(ViewData["Lectura"]);
+        settings.CommandColumn.ShowClearFilterButton = true;
+
+        settings.GroupSummary.Add(DevExpress.Data.SummaryItemType.Sum, "Fk_IdUnidadEjecutora__UE").DisplayFormat = "c";
+
+        settings.SettingsBehavior.AllowSelectByRowClick = true;
+        settings.SettingsDetail.AllowOnlyOneMasterRowExpanded = true;
+
+        settings.KeyFieldName = "Pk_IdProgramaAnualAdq";
+
+        settings.SettingsPager.Visible = true;
+        settings.SettingsPager.Position = PagerPosition.Bottom;
+        settings.SettingsPager.FirstPageButton.Visible = true;
+        settings.SettingsPager.LastPageButton.Visible = true;
+        settings.SettingsPager.PageSizeItemSettings.Visible = true;
+        settings.SettingsPager.PageSize = 15;
+        settings.SettingsPager.PageSizeItemSettings.Items = new string[] { "5", "10", "15", "20" };
+
+        settings.Columns.Add("UnidadEjecutora.Nombre", "Instancia Ejecutora");
+        settings.Columns.Add("BienOServ.Nombre", "Bien/Servicio");
+        settings.Columns.Add("UnidadDeMedida.Nombre", "U/Medida");
+
+        settings.Columns.Add("Cant_Anual", "Cantidad Anual").PropertiesEdit.DisplayFormatString = "n";
+        settings.Columns.Add("imp_Anual", "Importe Anual").PropertiesEdit.DisplayFormatString = "c";
+
+        settings.Columns.AddBand(RecursosBand =>
+        {
+            RecursosBand.Caption = "Origen de Recursos";
+            RecursosBand.HeaderStyle.HorizontalAlign = HorizontalAlign.Center;
+            RecursosBand.Columns.Add("RecFed", "Federales").PropertiesEdit.DisplayFormatString = "c";
+            RecursosBand.Columns.Add("RecEst", "Estatales").PropertiesEdit.DisplayFormatString = "c";
+            RecursosBand.Columns.Add("RecProp", "Propios").PropertiesEdit.DisplayFormatString = "c";
+        });
+
+        settings.TotalSummary.Add(DevExpress.Data.SummaryItemType.Sum, "Cant_Anual").DisplayFormat = "n";
+        settings.TotalSummary.Add(DevExpress.Data.SummaryItemType.Sum, "RecFed").DisplayFormat = "c";
+        settings.TotalSummary.Add(DevExpress.Data.SummaryItemType.Sum, "RecEst").DisplayFormat = "c";
+        settings.TotalSummary.Add(DevExpress.Data.SummaryItemType.Sum, "RecProp").DisplayFormat = "c";
+
+        settings.Settings.ShowGroupPanel = true;
+        settings.Settings.ShowFooter = true;
+        settings.Settings.ShowGroupFooter = GridViewGroupFooterMode.VisibleAlways;
+
+        settings.SetEditFormTemplateContent(c =>
+        {
+            var programaAnual = ViewData["dataItem"] ?? c.DataItem;
+            ViewContext.Writer.Write("<table><tr><td>");
+
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Bien o Servicio";
+                edtSettings.AssociatedControlName = "Fk_IdBienOServ__SIS";
+            }).Render();
+
+            Html.RenderPartial("_ComboBoxPartialBienOServicioTransversal", new ViewDataDictionary { { "Fk_IdBienOServ__SIS", DataBinder.Eval(programaAnual, "Fk_IdBienOServ__SIS") } });
+
+            ViewContext.Writer.Write("</td>");
+            ViewContext.Writer.Write("<td>");
+
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Unidad de Medida";
+                edtSettings.AssociatedControlName = "Fk_IdUnidadDeMedida__SIS";
+            }).Render();
+            
+            var Fk_IdBienOServ__SIS = c.Grid.GetRowValues(c.Grid.EditingRowVisibleIndex, "Fk_IdBienOServ__SIS");
+            var Fk_IdUnidadDeMedida__SIS = DataBinder.Eval(programaAnual, "Fk_IdUnidadDeMedida__SIS");
+            ViewData["Fk_IdUnidadDeMedida__SIS"] = Fk_IdUnidadDeMedida__SIS;
+            ViewData["Fk_IdBienOServ__SIS"] = Fk_IdBienOServ__SIS;
+            var UnidadMedida = DXMVCWebApplication1.Models.Senasica.GetBienesOServByUnidadMedida((int?)Fk_IdBienOServ__SIS);
+
+            @Html.RenderPartial("_ComboBoxPartialUnidadMedida", UnidadMedida);
+
+            ViewContext.Writer.Write("</td>");
+
+            ViewContext.Writer.Write("<td>");
+
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Porcentaje Máximo";
+                edtSettings.AssociatedControlName = "porcentajeMaximo";
+            }).Render();
+
+            Html.DevExpress().TextBox(edtSettings =>
+            {
+                edtSettings.Name = "porcentajeMaximo";
+                edtSettings.ReadOnly = true;
+                edtSettings.Properties.EnableClientSideAPI = true;
+                edtSettings.Width = Unit.Pixel(250);
+                edtSettings.ControlStyle.CssClass = "editor";
+                edtSettings.ShowModelErrors = true;
+                edtSettings.Properties.DisplayFormatString = "n";
+            }).Bind(DataBinder.Eval(programaAnual, "BienOServ.porcentajeMaximo"))
+            .Render();
+
+            ViewContext.Writer.Write("</td>");
+
+            ViewContext.Writer.Write("<td>");
+
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Precio Máximo";
+                edtSettings.AssociatedControlName = "precioMaximo";
+            }).Render();
+
+            Html.DevExpress().TextBox(edtSettings =>
+            {
+                edtSettings.Name = "precioMaximo";
+                edtSettings.ReadOnly = true;
+                edtSettings.Properties.EnableClientSideAPI = true;
+                edtSettings.Width = Unit.Pixel(250);
+                edtSettings.ControlStyle.CssClass = "editor";
+                edtSettings.ShowModelErrors = true;
+                edtSettings.Properties.DisplayFormatString = "n";
+            }).Bind(DataBinder.Eval(programaAnual, "BienOServ.precioMaximo"))
+            .Render();
+
+            ViewContext.Writer.Write("</td>");
+            ViewContext.Writer.Write("</tr>");
+            ViewContext.Writer.Write("</br>");
+            ViewContext.Writer.Write("</br>");
+
+            ViewContext.Writer.Write("<tr>");
+            ViewContext.Writer.Write("<tr><td colspan=4><h3>Cantidades  a adquirir Mensualmente:</h3></td></tr>");
+            ViewContext.Writer.Write("<td>");
+
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Enero";
+                edtSettings.AssociatedControlName = "Cant_Ene";
+            }).Render();
+
+            Html.DevExpress().SpinEdit(edtSettings =>
+            {
+                edtSettings.Name = "Cant_Ene";
+                edtSettings.Properties.MinValue = 0;
+                edtSettings.Properties.MaxValue = 999999999;
+                edtSettings.Properties.DecimalPlaces = 2;
+                edtSettings.Properties.NumberType = SpinEditNumberType.Float;
+                edtSettings.Properties.Increment = 0.1M;
+                edtSettings.Properties.LargeIncrement = 1;
+                edtSettings.Properties.SpinButtons.ShowLargeIncrementButtons = true;
+                edtSettings.Width = Unit.Pixel(250);
+                edtSettings.ControlStyle.CssClass = "editor";
+                edtSettings.ShowModelErrors = true;
+                edtSettings.Properties.DisplayFormatString = "n";
+                edtSettings.Properties.ClientSideEvents.ValueChanged = "calculaCantidadesMensuales";
+            }).Bind(DataBinder.Eval(programaAnual, "Cant_Ene"))
+            .Render();
+
+            ViewContext.Writer.Write("</td>");
+            ViewContext.Writer.Write("<td>");
+
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Febrero";
+                edtSettings.AssociatedControlName = "Cant_Feb";
+            }).Render();
+
+            Html.DevExpress().SpinEdit(edtSettings =>
+            {
+                edtSettings.Name = "Cant_Feb";
+                edtSettings.Properties.MinValue = 0;
+                edtSettings.Properties.MaxValue = 999999999;
+                edtSettings.Properties.DecimalPlaces = 2;
+                edtSettings.Properties.NumberType = SpinEditNumberType.Float;
+                edtSettings.Properties.Increment = 0.1M;
+                edtSettings.Properties.LargeIncrement = 1;
+                edtSettings.Properties.SpinButtons.ShowLargeIncrementButtons = true;
+                edtSettings.Width = Unit.Pixel(250);
+                edtSettings.ControlStyle.CssClass = "editor";
+                edtSettings.ShowModelErrors = true;
+                edtSettings.Properties.DisplayFormatString = "n";
+                edtSettings.Properties.ClientSideEvents.ValueChanged = "calculaCantidadesMensuales";
+            }).Bind(DataBinder.Eval(programaAnual, "Cant_Feb"))
+            .Render();
+
+            ViewContext.Writer.Write("</td>");
+            ViewContext.Writer.Write("<td>");
+
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Marzo";
+                edtSettings.AssociatedControlName = "Cant_Mar";
+            }).Render();
+
+            Html.DevExpress().SpinEdit(edtSettings =>
+            {
+                edtSettings.Name = "Cant_Mar";
+                edtSettings.Properties.MinValue = 0;
+                edtSettings.Properties.MaxValue = 999999999;
+                edtSettings.Properties.DecimalPlaces = 2;
+                edtSettings.Properties.NumberType = SpinEditNumberType.Float;
+                edtSettings.Properties.Increment = 0.1M;
+                edtSettings.Properties.LargeIncrement = 1;
+                edtSettings.Properties.SpinButtons.ShowLargeIncrementButtons = true;
+                edtSettings.Width = Unit.Pixel(250);
+                edtSettings.ControlStyle.CssClass = "editor";
+                edtSettings.ShowModelErrors = true;
+                edtSettings.Properties.DisplayFormatString = "n";
+                edtSettings.Properties.ClientSideEvents.ValueChanged = "calculaCantidadesMensuales";
+            }).Bind(DataBinder.Eval(programaAnual, "Cant_Mar"))
+            .Render();
+
+            ViewContext.Writer.Write("</td>");
+            ViewContext.Writer.Write("<td>");
+
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Abril";
+                edtSettings.AssociatedControlName = "Cant_Abr";
+            }).Render();
+
+            Html.DevExpress().SpinEdit(edtSettings =>
+            {
+                edtSettings.Name = "Cant_Abr";
+                edtSettings.Properties.MinValue = 0;
+                edtSettings.Properties.MaxValue = 999999999;
+                edtSettings.Properties.DecimalPlaces = 2;
+                edtSettings.Properties.NumberType = SpinEditNumberType.Float;
+                edtSettings.Properties.Increment = 0.1M;
+                edtSettings.Properties.LargeIncrement = 1;
+                edtSettings.Properties.SpinButtons.ShowLargeIncrementButtons = true;
+                edtSettings.Width = Unit.Pixel(250);
+                edtSettings.ControlStyle.CssClass = "editor";
+                edtSettings.ShowModelErrors = true;
+                edtSettings.Properties.DisplayFormatString = "n";
+                edtSettings.Properties.ClientSideEvents.ValueChanged = "calculaCantidadesMensuales";
+            }).Bind(DataBinder.Eval(programaAnual, "Cant_Abr"))
+            .Render();
+
+            ViewContext.Writer.Write("</td>");
+            ViewContext.Writer.Write("</tr>");
+            ViewContext.Writer.Write("<tr>");
+            ViewContext.Writer.Write("<td>");
+
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Mayo";
+                edtSettings.AssociatedControlName = "Cant_May";
+            }).Render();
+
+            Html.DevExpress().SpinEdit(edtSettings =>
+            {
+                edtSettings.Name = "Cant_May";
+                edtSettings.Properties.MinValue = 0;
+                edtSettings.Properties.MaxValue = 999999999;
+                edtSettings.Properties.DecimalPlaces = 2;
+                edtSettings.Properties.NumberType = SpinEditNumberType.Float;
+                edtSettings.Properties.Increment = 0.1M;
+                edtSettings.Properties.LargeIncrement = 1;
+                edtSettings.Properties.SpinButtons.ShowLargeIncrementButtons = true;
+                edtSettings.Width = Unit.Pixel(250);
+                edtSettings.ControlStyle.CssClass = "editor";
+                edtSettings.ShowModelErrors = true;
+                edtSettings.Properties.DisplayFormatString = "n";
+                edtSettings.Properties.ClientSideEvents.ValueChanged = "calculaCantidadesMensuales";
+            }).Bind(DataBinder.Eval(programaAnual, "Cant_May"))
+            .Render();
+
+            ViewContext.Writer.Write("</td>");
+            ViewContext.Writer.Write("<td>");
+
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Junio";
+                edtSettings.AssociatedControlName = "Cant_Jun";
+            }).Render();
+
+            Html.DevExpress().SpinEdit(edtSettings =>
+            {
+                edtSettings.Name = "Cant_Jun";
+                edtSettings.Properties.MinValue = 0;
+                edtSettings.Properties.MaxValue = 999999999;
+                edtSettings.Properties.DecimalPlaces = 2;
+                edtSettings.Properties.NumberType = SpinEditNumberType.Float;
+                edtSettings.Properties.Increment = 0.1M;
+                edtSettings.Properties.LargeIncrement = 1;
+                edtSettings.Properties.SpinButtons.ShowLargeIncrementButtons = true;
+                edtSettings.Width = Unit.Pixel(250);
+                edtSettings.ControlStyle.CssClass = "editor";
+                edtSettings.ShowModelErrors = true;
+                edtSettings.Properties.DisplayFormatString = "n";
+                edtSettings.Properties.ClientSideEvents.ValueChanged = "calculaCantidadesMensuales";
+            }).Bind(DataBinder.Eval(programaAnual, "Cant_Jun"))
+            .Render();
+
+            ViewContext.Writer.Write("</td>");
+            ViewContext.Writer.Write("<td>");
+
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Julio";
+                edtSettings.AssociatedControlName = "Cant_Jul";
+            }).Render();
+
+            Html.DevExpress().SpinEdit(edtSettings =>
+            {
+                edtSettings.Name = "Cant_Jul";
+                edtSettings.Properties.MinValue = 0;
+                edtSettings.Properties.MaxValue = 999999999;
+                edtSettings.Properties.DecimalPlaces = 2;
+                edtSettings.Properties.NumberType = SpinEditNumberType.Float;
+                edtSettings.Properties.Increment = 0.1M;
+                edtSettings.Properties.LargeIncrement = 1;
+                edtSettings.Properties.SpinButtons.ShowLargeIncrementButtons = true;
+                edtSettings.Width = Unit.Pixel(250);
+                edtSettings.ControlStyle.CssClass = "editor";
+                edtSettings.ShowModelErrors = true;
+                edtSettings.Properties.DisplayFormatString = "n";
+                edtSettings.Properties.ClientSideEvents.ValueChanged = "calculaCantidadesMensuales";
+            }).Bind(DataBinder.Eval(programaAnual, "Cant_Jul"))
+            .Render();
+
+            ViewContext.Writer.Write("</td>");
+            ViewContext.Writer.Write("<td>");
+
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Agosto";
+                edtSettings.AssociatedControlName = "Cant_Ago";
+            }).Render();
+
+            Html.DevExpress().SpinEdit(edtSettings =>
+            {
+                edtSettings.Name = "Cant_Ago";
+                edtSettings.Properties.MinValue = 0;
+                edtSettings.Properties.MaxValue = 999999999;
+                edtSettings.Properties.DecimalPlaces = 2;
+                edtSettings.Properties.NumberType = SpinEditNumberType.Float;
+                edtSettings.Properties.Increment = 0.1M;
+                edtSettings.Properties.LargeIncrement = 1;
+                edtSettings.Properties.SpinButtons.ShowLargeIncrementButtons = true;
+                edtSettings.Width = Unit.Pixel(250);
+                edtSettings.ControlStyle.CssClass = "editor";
+                edtSettings.ShowModelErrors = true;
+                edtSettings.Properties.DisplayFormatString = "n";
+                edtSettings.Properties.ClientSideEvents.ValueChanged = "calculaCantidadesMensuales";
+            }).Bind(DataBinder.Eval(programaAnual, "Cant_Ago"))
+            .Render();
+
+            ViewContext.Writer.Write("</td>");
+            ViewContext.Writer.Write("</tr>");
+            ViewContext.Writer.Write("<tr>");
+            ViewContext.Writer.Write("<td>");
+
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Septiembre";
+                edtSettings.AssociatedControlName = "Cant_Sep";
+            }).Render();
+
+            Html.DevExpress().SpinEdit(edtSettings =>
+            {
+                edtSettings.Name = "Cant_Sep";
+                edtSettings.Properties.MinValue = 0;
+                edtSettings.Properties.MaxValue = 999999999;
+                edtSettings.Properties.DecimalPlaces = 2;
+                edtSettings.Properties.NumberType = SpinEditNumberType.Float;
+                edtSettings.Properties.Increment = 0.1M;
+                edtSettings.Properties.LargeIncrement = 1;
+                edtSettings.Properties.SpinButtons.ShowLargeIncrementButtons = true;
+                edtSettings.Width = Unit.Pixel(250);
+                edtSettings.ControlStyle.CssClass = "editor";
+                edtSettings.ShowModelErrors = true;
+                edtSettings.Properties.DisplayFormatString = "n";
+                edtSettings.Properties.ClientSideEvents.ValueChanged = "calculaCantidadesMensuales";
+            }).Bind(DataBinder.Eval(programaAnual, "Cant_Sep"))
+            .Render();
+
+            ViewContext.Writer.Write("</td>");
+            ViewContext.Writer.Write("<td>");
+
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Octubre";
+                edtSettings.AssociatedControlName = "Cant_Oct";
+            }).Render();
+
+            Html.DevExpress().SpinEdit(edtSettings =>
+            {
+                edtSettings.Name = "Cant_Oct";
+                edtSettings.Properties.MinValue = 0;
+                edtSettings.Properties.MaxValue = 999999999;
+                edtSettings.Properties.DecimalPlaces = 2;
+                edtSettings.Properties.NumberType = SpinEditNumberType.Float;
+                edtSettings.Properties.Increment = 0.1M;
+                edtSettings.Properties.LargeIncrement = 1;
+                edtSettings.Properties.SpinButtons.ShowLargeIncrementButtons = true;
+                edtSettings.Width = Unit.Pixel(250);
+                edtSettings.ControlStyle.CssClass = "editor";
+                edtSettings.ShowModelErrors = true;
+                edtSettings.Properties.DisplayFormatString = "n";
+                edtSettings.Properties.ClientSideEvents.ValueChanged = "calculaCantidadesMensuales";
+            }).Bind(DataBinder.Eval(programaAnual, "Cant_Oct"))
+            .Render();
+
+            ViewContext.Writer.Write("</td>");
+            ViewContext.Writer.Write("<td>");
+
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Noviembre";
+                edtSettings.AssociatedControlName = "Cant_Nov";
+            }).Render();
+
+            Html.DevExpress().SpinEdit(edtSettings =>
+            {
+                edtSettings.Name = "Cant_Nov";
+                edtSettings.Properties.MinValue = 0;
+                edtSettings.Properties.MaxValue = 999999999;
+                edtSettings.Properties.DecimalPlaces = 2;
+                edtSettings.Properties.NumberType = SpinEditNumberType.Float;
+                edtSettings.Properties.Increment = 0.1M;
+                edtSettings.Properties.LargeIncrement = 1;
+                edtSettings.Properties.SpinButtons.ShowLargeIncrementButtons = true;
+                edtSettings.Width = Unit.Pixel(250);
+                edtSettings.ControlStyle.CssClass = "editor";
+                edtSettings.ShowModelErrors = true;
+                edtSettings.Properties.DisplayFormatString = "n";
+                edtSettings.Properties.ClientSideEvents.ValueChanged = "calculaCantidadesMensuales";
+            }).Bind(DataBinder.Eval(programaAnual, "Cant_Nov"))
+            .Render();
+
+            ViewContext.Writer.Write("</td>");
+            ViewContext.Writer.Write("<td>");
+
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Diciembre";
+                edtSettings.AssociatedControlName = "Cant_Dic";
+            }).Render();
+
+            Html.DevExpress().SpinEdit(edtSettings =>
+            {
+                edtSettings.Name = "Cant_Dic";
+                edtSettings.Properties.MinValue = 0;
+                edtSettings.Properties.MaxValue = 999999999;
+                edtSettings.Properties.DecimalPlaces = 2;
+                edtSettings.Properties.NumberType = SpinEditNumberType.Float;
+                edtSettings.Properties.Increment = 0.1M;
+                edtSettings.Properties.LargeIncrement = 1;
+                edtSettings.Properties.SpinButtons.ShowLargeIncrementButtons = true;
+                edtSettings.Width = Unit.Pixel(250);
+                edtSettings.ControlStyle.CssClass = "editor";
+                edtSettings.ShowModelErrors = true;
+                edtSettings.Properties.DisplayFormatString = "n";
+                edtSettings.Properties.ClientSideEvents.ValueChanged = "calculaCantidadesMensuales";
+            }).Bind(DataBinder.Eval(programaAnual, "Cant_Dic"))
+            .Render();
+
+            ViewContext.Writer.Write("</td>");
+            ViewContext.Writer.Write("</tr>");
+            ViewContext.Writer.Write("</table>");
+            ViewContext.Writer.Write("<tr>");
+            ViewContext.Writer.Write("<td>");
+
+            ViewContext.Writer.Write("<br />");
+
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Cantidades totales a adquirir";
+                edtSettings.AssociatedControlName = "SumaCantidadesTotales";
+            }).Render();
+
+            Html.DevExpress().TextBox(textBoxSettings =>
+            {
+                textBoxSettings.Name = "SumaCantidadesTotales";
+                textBoxSettings.Enabled = false;
+                textBoxSettings.Text = String.Format("{0}", decimal.Parse(DataBinder.Eval(programaAnual, "Cant_Ene") == null ? "0" : DataBinder.Eval(programaAnual, "Cant_Ene").ToString())
+                                                          + decimal.Parse(DataBinder.Eval(programaAnual, "Cant_Feb") == null ? "0" : DataBinder.Eval(programaAnual, "Cant_Feb").ToString())
+                                                          + decimal.Parse(DataBinder.Eval(programaAnual, "Cant_Mar") == null ? "0" : DataBinder.Eval(programaAnual, "Cant_Mar").ToString())
+                                                          + decimal.Parse(DataBinder.Eval(programaAnual, "Cant_Abr") == null ? "0" : DataBinder.Eval(programaAnual, "Cant_Abr").ToString())
+                                                          + decimal.Parse(DataBinder.Eval(programaAnual, "Cant_May") == null ? "0" : DataBinder.Eval(programaAnual, "Cant_May").ToString())
+                                                          + decimal.Parse(DataBinder.Eval(programaAnual, "Cant_Jun") == null ? "0" : DataBinder.Eval(programaAnual, "Cant_Jun").ToString())
+                                                          + decimal.Parse(DataBinder.Eval(programaAnual, "Cant_Jul") == null ? "0" : DataBinder.Eval(programaAnual, "Cant_Jul").ToString())
+                                                          + decimal.Parse(DataBinder.Eval(programaAnual, "Cant_Ago") == null ? "0" : DataBinder.Eval(programaAnual, "Cant_Ago").ToString())
+                                                          + decimal.Parse(DataBinder.Eval(programaAnual, "Cant_Sep") == null ? "0" : DataBinder.Eval(programaAnual, "Cant_Sep").ToString())
+                                                          + decimal.Parse(DataBinder.Eval(programaAnual, "Cant_Oct") == null ? "0" : DataBinder.Eval(programaAnual, "Cant_Oct").ToString())
+                                                          + decimal.Parse(DataBinder.Eval(programaAnual, "Cant_Nov") == null ? "0" : DataBinder.Eval(programaAnual, "Cant_Nov").ToString())
+                                                          + decimal.Parse(DataBinder.Eval(programaAnual, "Cant_Dic") == null ? "0" : DataBinder.Eval(programaAnual, "Cant_Dic").ToString())
+                                                          );
+                textBoxSettings.ControlStyle.CssClass = "editor";
+            }).Render();
+
+            ViewContext.Writer.Write("<br />");
+
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Justificación";
+                edtSettings.AssociatedControlName = "Justificacion";
+            }).Render();
+
+            Html.DevExpress().Memo(edtSettings =>
+            {
+                edtSettings.Name = "Justificacion";
+                edtSettings.ControlStyle.CssClass = "editor";
+                edtSettings.ShowModelErrors = true;
+                edtSettings.Width = Unit.Pixel(1100);
+                edtSettings.Height = Unit.Pixel(50);
+            }).Bind(DataBinder.Eval(programaAnual, "Justificacion"))
+            .Render();
+
+            ViewContext.Writer.Write("</td>");
+            ViewContext.Writer.Write("</tr>");
+
+            ViewContext.Writer.Write("<tr><td colspan=4><h3>Origen de los  Recursos:</h3></td></tr>");
+            ViewContext.Writer.Write("<table>");
+            ViewContext.Writer.Write("<tr>");
+            ViewContext.Writer.Write("<td>");
+
+            Html.DevExpress().RadioButtonList(edtSettings =>
+            {
+                edtSettings.Name = "TipoPresupuesto";
+                edtSettings.Properties.RepeatDirection = RepeatDirection.Horizontal;
+                edtSettings.ShowModelErrors = true;
+                edtSettings.Properties.Items.Add("Federal", 1).Selected = DataBinder.Eval(programaAnual, "RecFed") != null && DataBinder.Eval(programaAnual, "RecEst") == null && DataBinder.Eval(programaAnual, "RecProp") == null;
+                edtSettings.Properties.Items.Add("Estatal", 2).Selected = DataBinder.Eval(programaAnual, "RecFed") == null && DataBinder.Eval(programaAnual, "RecEst") != null && DataBinder.Eval(programaAnual, "RecProp") == null;
+                edtSettings.Properties.Items.Add("Propios", 3).Selected = DataBinder.Eval(programaAnual, "RecFed") == null && DataBinder.Eval(programaAnual, "RecEst") == null && DataBinder.Eval(programaAnual, "RecProp") != null;
+            }).Render();
+            ViewContext.Writer.Write("</td>");
+            ViewContext.Writer.Write("</tr>");
+
+            ViewContext.Writer.Write("<table>");
+            ViewContext.Writer.Write("<tr><td colspan=4><h3>Importes Mensuales:</h3></td></tr>");
+            ViewContext.Writer.Write("<td>");
+
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Enero:";
+                edtSettings.AssociatedControlName = "imp_Ene";
+            }).Render();
+
+            Html.DevExpress().SpinEdit(edtSettings =>
+            {
+                edtSettings.Name = "imp_Ene";
+                edtSettings.Properties.MinValue = 0;
+                edtSettings.Properties.MaxValue = 999999999;
+                edtSettings.Properties.DecimalPlaces = 2;
+                edtSettings.Properties.NumberType = SpinEditNumberType.Float;
+                edtSettings.Properties.Increment = 0.1M;
+                edtSettings.Properties.LargeIncrement = 1;
+                edtSettings.Properties.SpinButtons.ShowLargeIncrementButtons = true;
+                edtSettings.ControlStyle.CssClass = "editor";
+                edtSettings.ShowModelErrors = true;
+                edtSettings.Width = Unit.Pixel(250);
+                edtSettings.Properties.DisplayFormatString = "c";
+                edtSettings.Properties.ClientSideEvents.ValueChanged = "calculaImportesMensuales";
+            }).Bind(DataBinder.Eval(programaAnual, "imp_Ene"))
+            .Render();
+
+            ViewContext.Writer.Write("</td>");
+            ViewContext.Writer.Write("<td>");
+
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Febrero:";
+                edtSettings.AssociatedControlName = "imp_Feb";
+            }).Render();
+
+            Html.DevExpress().SpinEdit(edtSettings =>
+            {
+                edtSettings.Name = "imp_Feb";
+                edtSettings.Properties.MinValue = 0;
+                edtSettings.Properties.MaxValue = 999999999;
+                edtSettings.Properties.DecimalPlaces = 2;
+                edtSettings.Properties.NumberType = SpinEditNumberType.Float;
+                edtSettings.Properties.Increment = 0.1M;
+                edtSettings.Properties.LargeIncrement = 1;
+                edtSettings.Properties.SpinButtons.ShowLargeIncrementButtons = true;
+                edtSettings.ControlStyle.CssClass = "editor";
+                edtSettings.ShowModelErrors = true;
+                edtSettings.Width = Unit.Pixel(250);
+                edtSettings.Properties.DisplayFormatString = "c";
+                edtSettings.Properties.ClientSideEvents.ValueChanged = "calculaImportesMensuales";
+            }).Bind(DataBinder.Eval(programaAnual, "imp_Feb"))
+            .Render();
+
+            ViewContext.Writer.Write("</td>");
+            ViewContext.Writer.Write("<td>");
+
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Marzo:";
+                edtSettings.AssociatedControlName = "imp_Mar";
+            }).Render();
+
+            Html.DevExpress().SpinEdit(edtSettings =>
+            {
+                edtSettings.Name = "imp_Mar";
+                edtSettings.Properties.MinValue = 0;
+                edtSettings.Properties.MaxValue = 999999999;
+                edtSettings.Properties.DecimalPlaces = 2;
+                edtSettings.Properties.NumberType = SpinEditNumberType.Float;
+                edtSettings.Properties.Increment = 0.1M;
+                edtSettings.Properties.LargeIncrement = 1;
+                edtSettings.Properties.SpinButtons.ShowLargeIncrementButtons = true;
+                edtSettings.ControlStyle.CssClass = "editor";
+                edtSettings.ShowModelErrors = true;
+                edtSettings.Width = Unit.Pixel(250);
+                edtSettings.Properties.DisplayFormatString = "c";
+                edtSettings.Properties.ClientSideEvents.ValueChanged = "calculaImportesMensuales";
+            }).Bind(DataBinder.Eval(programaAnual, "imp_Mar"))
+            .Render();
+
+            ViewContext.Writer.Write("</td>");
+            ViewContext.Writer.Write("<td>");
+
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Abril:";
+                edtSettings.AssociatedControlName = "imp_Abr";
+            }).Render();
+
+            Html.DevExpress().SpinEdit(edtSettings =>
+            {
+                edtSettings.Name = "imp_Abr";
+                edtSettings.Properties.MinValue = 0;
+                edtSettings.Properties.MaxValue = 999999999;
+                edtSettings.Properties.DecimalPlaces = 2;
+                edtSettings.Properties.NumberType = SpinEditNumberType.Float;
+                edtSettings.Properties.Increment = 0.1M;
+                edtSettings.Properties.LargeIncrement = 1;
+                edtSettings.Properties.SpinButtons.ShowLargeIncrementButtons = true;
+                edtSettings.ControlStyle.CssClass = "editor";
+                edtSettings.ShowModelErrors = true;
+                edtSettings.Width = Unit.Pixel(250);
+                edtSettings.Properties.DisplayFormatString = "c";
+                edtSettings.Properties.ClientSideEvents.ValueChanged = "calculaImportesMensuales";
+            }).Bind(DataBinder.Eval(programaAnual, "imp_Abr"))
+            .Render();
+
+            ViewContext.Writer.Write("</td>");
+            ViewContext.Writer.Write("</tr>");
+            ViewContext.Writer.Write("<tr>");
+            ViewContext.Writer.Write("<td>");
+
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Mayo:";
+                edtSettings.AssociatedControlName = "imp_May";
+            }).Render();
+
+            Html.DevExpress().SpinEdit(edtSettings =>
+            {
+                edtSettings.Name = "imp_May";
+                edtSettings.Properties.MinValue = 0;
+                edtSettings.Properties.MaxValue = 999999999;
+                edtSettings.Properties.DecimalPlaces = 2;
+                edtSettings.Properties.NumberType = SpinEditNumberType.Float;
+                edtSettings.Properties.Increment = 0.1M;
+                edtSettings.Properties.LargeIncrement = 1;
+                edtSettings.Properties.SpinButtons.ShowLargeIncrementButtons = true;
+                edtSettings.ControlStyle.CssClass = "editor";
+                edtSettings.ShowModelErrors = true;
+                edtSettings.Width = Unit.Pixel(250);
+                edtSettings.Properties.DisplayFormatString = "c";
+                edtSettings.Properties.ClientSideEvents.ValueChanged = "calculaImportesMensuales";
+            }).Bind(DataBinder.Eval(programaAnual, "imp_May"))
+            .Render();
+
+            ViewContext.Writer.Write("</td>");
+            ViewContext.Writer.Write("<td>");
+
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Junio:";
+                edtSettings.AssociatedControlName = "imp_Jun";
+            }).Render();
+
+            Html.DevExpress().SpinEdit(edtSettings =>
+            {
+                edtSettings.Name = "imp_Jun";
+                edtSettings.Properties.MinValue = 0;
+                edtSettings.Properties.MaxValue = 999999999;
+                edtSettings.Properties.DecimalPlaces = 2;
+                edtSettings.Properties.NumberType = SpinEditNumberType.Float;
+                edtSettings.Properties.Increment = 0.1M;
+                edtSettings.Properties.LargeIncrement = 1;
+                edtSettings.Properties.SpinButtons.ShowLargeIncrementButtons = true;
+                edtSettings.ControlStyle.CssClass = "editor";
+                edtSettings.ShowModelErrors = true;
+                edtSettings.Width = Unit.Pixel(250);
+                edtSettings.Properties.DisplayFormatString = "c";
+                edtSettings.Properties.ClientSideEvents.ValueChanged = "calculaImportesMensuales";
+            }).Bind(DataBinder.Eval(programaAnual, "imp_Jun"))
+            .Render();
+
+            ViewContext.Writer.Write("</td>");
+            ViewContext.Writer.Write("<td>");
+
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Julio:";
+                edtSettings.AssociatedControlName = "imp_Jul";
+            }).Render();
+
+            Html.DevExpress().SpinEdit(edtSettings =>
+            {
+                edtSettings.Name = "imp_Jul";
+                edtSettings.Properties.MinValue = 0;
+                edtSettings.Properties.MaxValue = 999999999;
+                edtSettings.Properties.DecimalPlaces = 2;
+                edtSettings.Properties.NumberType = SpinEditNumberType.Float;
+                edtSettings.Properties.Increment = 0.1M;
+                edtSettings.Properties.LargeIncrement = 1;
+                edtSettings.Properties.SpinButtons.ShowLargeIncrementButtons = true;
+                edtSettings.ControlStyle.CssClass = "editor";
+                edtSettings.ShowModelErrors = true;
+                edtSettings.Width = Unit.Pixel(250);
+                edtSettings.Properties.DisplayFormatString = "c";
+                edtSettings.Properties.ClientSideEvents.ValueChanged = "calculaImportesMensuales";
+            }).Bind(DataBinder.Eval(programaAnual, "imp_Jul"))
+            .Render();
+
+            ViewContext.Writer.Write("</td>");
+            ViewContext.Writer.Write("<td>");
+
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Agosto:";
+                edtSettings.AssociatedControlName = "imp_Ago";
+            }).Render();
+
+            Html.DevExpress().SpinEdit(edtSettings =>
+            {
+                edtSettings.Name = "imp_Ago";
+                edtSettings.Properties.MinValue = 0;
+                edtSettings.Properties.MaxValue = 999999999;
+                edtSettings.Properties.DecimalPlaces = 2;
+                edtSettings.Properties.NumberType = SpinEditNumberType.Float;
+                edtSettings.Properties.Increment = 0.1M;
+                edtSettings.Properties.LargeIncrement = 1;
+                edtSettings.Properties.SpinButtons.ShowLargeIncrementButtons = true;
+                edtSettings.ControlStyle.CssClass = "editor";
+                edtSettings.ShowModelErrors = true;
+                edtSettings.Width = Unit.Pixel(250);
+                edtSettings.Properties.DisplayFormatString = "c";
+                edtSettings.Properties.ClientSideEvents.ValueChanged = "calculaImportesMensuales";
+            }).Bind(DataBinder.Eval(programaAnual, "imp_Ago"))
+            .Render();
+
+            ViewContext.Writer.Write("</td>");
+            ViewContext.Writer.Write("</tr>");
+            ViewContext.Writer.Write("<tr>");
+            ViewContext.Writer.Write("<td>");
+
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Septiembre:";
+                edtSettings.AssociatedControlName = "imp_Sep";
+            }).Render();
+
+            Html.DevExpress().SpinEdit(edtSettings =>
+            {
+                edtSettings.Name = "imp_Sep";
+                edtSettings.Properties.MinValue = 0;
+                edtSettings.Properties.MaxValue = 999999999;
+                edtSettings.Properties.DecimalPlaces = 2;
+                edtSettings.Properties.NumberType = SpinEditNumberType.Float;
+                edtSettings.Properties.Increment = 0.1M;
+                edtSettings.Properties.LargeIncrement = 1;
+                edtSettings.Properties.SpinButtons.ShowLargeIncrementButtons = true;
+                edtSettings.ControlStyle.CssClass = "editor";
+                edtSettings.ShowModelErrors = true;
+                edtSettings.Width = Unit.Pixel(250);
+                edtSettings.Properties.DisplayFormatString = "c";
+                edtSettings.Properties.ClientSideEvents.ValueChanged = "calculaImportesMensuales";
+            }).Bind(DataBinder.Eval(programaAnual, "imp_Sep"))
+            .Render();
+
+            ViewContext.Writer.Write("</td>");
+            ViewContext.Writer.Write("<td>");
+
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Octubre:";
+                edtSettings.AssociatedControlName = "imp_Oct";
+            }).Render();
+
+            Html.DevExpress().SpinEdit(edtSettings =>
+            {
+                edtSettings.Name = "imp_Oct";
+                edtSettings.Properties.MinValue = 0;
+                edtSettings.Properties.MaxValue = 999999999;
+                edtSettings.Properties.DecimalPlaces = 2;
+                edtSettings.Properties.NumberType = SpinEditNumberType.Float;
+                edtSettings.Properties.Increment = 0.1M;
+                edtSettings.Properties.LargeIncrement = 1;
+                edtSettings.Properties.SpinButtons.ShowLargeIncrementButtons = true;
+                edtSettings.ControlStyle.CssClass = "editor";
+                edtSettings.ShowModelErrors = true;
+                edtSettings.Width = Unit.Pixel(250);
+                edtSettings.Properties.DisplayFormatString = "c";
+                edtSettings.Properties.ClientSideEvents.ValueChanged = "calculaImportesMensuales";
+            }).Bind(DataBinder.Eval(programaAnual, "imp_Oct"))
+            .Render();
+
+            ViewContext.Writer.Write("</td>");
+            ViewContext.Writer.Write("<td>");
+
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Noviembre:";
+                edtSettings.AssociatedControlName = "imp_Nov";
+            }).Render();
+
+            Html.DevExpress().SpinEdit(edtSettings =>
+            {
+                edtSettings.Name = "imp_Nov";
+                edtSettings.Properties.MinValue = 0;
+                edtSettings.Properties.MaxValue = 999999999;
+                edtSettings.Properties.DecimalPlaces = 2;
+                edtSettings.Properties.NumberType = SpinEditNumberType.Float;
+                edtSettings.Properties.Increment = 0.1M;
+                edtSettings.Properties.LargeIncrement = 1;
+                edtSettings.Properties.SpinButtons.ShowLargeIncrementButtons = true;
+                edtSettings.ControlStyle.CssClass = "editor";
+                edtSettings.ShowModelErrors = true;
+                edtSettings.Width = Unit.Pixel(250);
+                edtSettings.Properties.DisplayFormatString = "c";
+                edtSettings.Properties.ClientSideEvents.ValueChanged = "calculaImportesMensuales";
+            }).Bind(DataBinder.Eval(programaAnual, "imp_Nov"))
+            .Render();
+
+            ViewContext.Writer.Write("</td>");
+            ViewContext.Writer.Write("<td>");
+
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Diciembre:";
+                edtSettings.AssociatedControlName = "imp_Dic";
+            }).Render();
+
+            Html.DevExpress().SpinEdit(edtSettings =>
+            {
+                edtSettings.Name = "imp_Dic";
+                edtSettings.Properties.MinValue = 0;
+                edtSettings.Properties.MaxValue = 999999999;
+                edtSettings.Properties.DecimalPlaces = 2;
+                edtSettings.Properties.NumberType = SpinEditNumberType.Float;
+                edtSettings.Properties.Increment = 0.1M;
+                edtSettings.Properties.LargeIncrement = 1;
+                edtSettings.Properties.SpinButtons.ShowLargeIncrementButtons = true;
+                edtSettings.ControlStyle.CssClass = "editor";
+                edtSettings.ShowModelErrors = true;
+                edtSettings.Width = Unit.Pixel(250);
+                edtSettings.Properties.DisplayFormatString = "c";
+                edtSettings.Properties.ClientSideEvents.ValueChanged = "calculaImportesMensuales";
+            }).Bind(DataBinder.Eval(programaAnual, "imp_Dic"))
+            .Render();
+
+            ViewContext.Writer.Write("</td>");
+            ViewContext.Writer.Write("</tr>");
+            ViewContext.Writer.Write("</table>");
+            ViewContext.Writer.Write("<br />");
+
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Presupuesto Total";
+                edtSettings.AssociatedControlName = "PresupuestoTotal";
+            }).Render();
+
+            Html.DevExpress().TextBox(textBoxSettings =>
+            {
+                textBoxSettings.Name = "PresupuestoTotal";
+                textBoxSettings.Enabled = false;
+                textBoxSettings.Text = String.Format("{0}", decimal.Parse(DataBinder.Eval(programaAnual, "imp_Ene") == null ? "0" : DataBinder.Eval(programaAnual, "imp_Ene").ToString())
+                                                          + decimal.Parse(DataBinder.Eval(programaAnual, "imp_Feb") == null ? "0" : DataBinder.Eval(programaAnual, "imp_Feb").ToString())
+                                                          + decimal.Parse(DataBinder.Eval(programaAnual, "imp_Mar") == null ? "0" : DataBinder.Eval(programaAnual, "imp_Mar").ToString())
+                                                          + decimal.Parse(DataBinder.Eval(programaAnual, "imp_Abr") == null ? "0" : DataBinder.Eval(programaAnual, "imp_Abr").ToString())
+                                                          + decimal.Parse(DataBinder.Eval(programaAnual, "imp_May") == null ? "0" : DataBinder.Eval(programaAnual, "imp_May").ToString())
+                                                          + decimal.Parse(DataBinder.Eval(programaAnual, "imp_Jun") == null ? "0" : DataBinder.Eval(programaAnual, "imp_Jun").ToString())
+                                                          + decimal.Parse(DataBinder.Eval(programaAnual, "imp_Jul") == null ? "0" : DataBinder.Eval(programaAnual, "imp_Jul").ToString())
+                                                          + decimal.Parse(DataBinder.Eval(programaAnual, "imp_Ago") == null ? "0" : DataBinder.Eval(programaAnual, "imp_Ago").ToString())
+                                                          + decimal.Parse(DataBinder.Eval(programaAnual, "imp_Sep") == null ? "0" : DataBinder.Eval(programaAnual, "imp_Sep").ToString())
+                                                          + decimal.Parse(DataBinder.Eval(programaAnual, "imp_Oct") == null ? "0" : DataBinder.Eval(programaAnual, "imp_Oct").ToString())
+                                                          + decimal.Parse(DataBinder.Eval(programaAnual, "imp_Nov") == null ? "0" : DataBinder.Eval(programaAnual, "imp_Nov").ToString())
+                                                          + decimal.Parse(DataBinder.Eval(programaAnual, "imp_Dic") == null ? "0" : DataBinder.Eval(programaAnual, "imp_Dic").ToString())
+                                                          );
+                textBoxSettings.ControlStyle.CssClass = "editor";
+            }).Render();
+
+            ViewContext.Writer.Write("<br />");
+
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+            }).Render();
+
+            Html.DevExpress().Button(btnSettings =>
+            {
+                btnSettings.Name = "btnUpdate";
+                btnSettings.Text = "Actualizar";
+                btnSettings.ControlStyle.CssClass = "button";
+                btnSettings.Images.Image.Url = "Content/Images/guardar.png";
+                btnSettings.ImagePosition = ImagePosition.Right;
+                btnSettings.Images.Image.Width = 16;
+                btnSettings.ClientSideEvents.Click = "function(s, e){ ProgramaAnualGridView.UpdateEdit(); }";
+                btnSettings.ClientVisible = Convert.ToBoolean(ViewData["Escritura"]);
+            }).Render();
+
+            Html.DevExpress().Button(btnSettings =>
+            {
+                btnSettings.Name = "btnCancel";
+                btnSettings.Text = "Cancelar";
+                btnSettings.ControlStyle.CssClass = "button";
+                btnSettings.Images.Image.Url = "Content/Images/cancelar.png";
+                btnSettings.ImagePosition = ImagePosition.Right;
+                btnSettings.Style["position"] = "relative";
+                btnSettings.Style["left"] = "5px";
+                btnSettings.ClientSideEvents.Click = "function(s, e){ ProgramaAnualGridView.CancelEdit(); }";
+            }).Render();
+
+            Html.DevExpress().Button(btnSettings =>
+            {
+                btnSettings.Name = "btnAyuda";
+                btnSettings.ControlStyle.CssClass = "button";
+                btnSettings.Text = "Ayuda";
+                btnSettings.Images.Image.Url = "/Content/Images/ayuda.png";
+                btnSettings.ImagePosition = ImagePosition.Right;
+                btnSettings.Images.Image.Width = 16;
+                btnSettings.Style["position"] = "relative";
+                btnSettings.Style["left"] = "20px";
+                btnSettings.ClientSideEvents.Click = "function(s, e){ window.open('https://docs.google.com/document/d/1ZJURCxDAT76zN4TpKa2cBHEdF3RZFUNkAv3o9iyWxG4/edit#heading=h.4du1wux','_blank'); }";
+            }).Render();
+
+            ViewContext.Writer.Write("</br>");
+            ViewContext.Writer.Write("<br >");
+
+            Html.DevExpress().PageControl(PCsettings =>
+            {
+                PCsettings.Name = "pcScrolling";
+                PCsettings.Width = Unit.Percentage(100);
+                PCsettings.Height = 300;
+                PCsettings.EnableTabScrolling = true;
+                PCsettings.TabAlign = TabAlign.Justify;
+                PCsettings.Styles.Tab.CssClass = "scrolling_Tab";
+
+                PCsettings.Name = "pcFeatures";
+                PCsettings.ClientVisible = c.KeyValue == null ? false : true;
+
+                PCsettings.TabPages.Add("Recurso Provenientes de Programas").SetContent(() =>
+                {
+                    Html.RenderAction("ProgramasGastosTransversalesGridViewPartial", "ProgramaAnualAdq", new { IdProgramaAnualAdq = DataBinder.Eval(programaAnual, "Pk_IdProgramaAnualAdq") });
+                });
+
+            }).GetHtml();
+
+        });
+    });
+
+    if (ViewData["EditError"] != null)
+    {
+        grid.SetEditErrorText((string)ViewData["EditError"]);
+    }
+}
+
+@grid.Bind(Model).GetHtml()

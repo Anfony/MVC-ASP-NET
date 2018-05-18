@@ -1,0 +1,229 @@
+@{
+    var grid = Html.DevExpress().GridView(settings => {
+        settings.Name = "FlujoCampaniaGridView";
+        settings.Style["width"] = "98%";
+        settings.Style["position"] = "relative";
+        settings.Style["left"] = "10px";
+        settings.CommandColumn.Width = 20;
+        settings.CallbackRouteValues = new { Controller = "FlujoCampania", Action = "FlujoCampaniaGridViewPartial" };
+
+        settings.SettingsEditing.AddNewRowRouteValues = new { Controller = "FlujoCampania", Action = "FlujoCampaniaGridViewPartialAddNew" };
+        settings.SettingsEditing.UpdateRowRouteValues = new { Controller = "FlujoCampania", Action = "FlujoCampaniaGridViewPartialUpdate" };
+        settings.SettingsEditing.DeleteRowRouteValues = new { Controller = "FlujoCampania", Action = "FlujoCampaniaGridViewPartialDelete" };
+        settings.SettingsEditing.Mode = GridViewEditingMode.PopupEditForm;
+        settings.SettingsText.PopupEditFormCaption = "DEFINICIÓN FLUJO DE PROYECTOS Y CAMPAÑA";
+
+        settings.SettingsPopup.EditForm.Height = 180;
+        settings.SettingsPopup.EditForm.Width = 725;
+        settings.SettingsPopup.EditForm.HorizontalAlign = DevExpress.Web.ASPxClasses.PopupHorizontalAlign.WindowCenter;
+        settings.SettingsPopup.EditForm.VerticalAlign = DevExpress.Web.ASPxClasses.PopupVerticalAlign.WindowCenter;
+        settings.SettingsPopup.EditForm.Modal = true;
+
+        settings.SettingsBehavior.ConfirmDelete = true;
+
+        settings.CommandColumn.Visible = false;  //ningún usuario podrá modificar el flujo de la campaña ya que se necesita validación
+        settings.SettingsCommandButton.NewButton.Text = "Nuevo Flujo";
+        settings.CommandColumn.ShowNewButtonInHeader = Convert.ToBoolean(ViewData["Escritura"]);
+        settings.CommandColumn.ShowDeleteButton = Convert.ToBoolean(ViewData["Escritura"]);
+        settings.CommandColumn.ShowEditButton = Convert.ToBoolean(ViewData["Escritura"]) || Convert.ToBoolean(ViewData["Lectura"]);
+        settings.CommandColumn.ShowClearFilterButton = true;  
+
+        settings.KeyFieldName = "Pk_IdFlujoCampania";
+
+        settings.SettingsPager.Visible = true;
+        settings.SettingsPager.Position = PagerPosition.Bottom;
+        settings.SettingsPager.FirstPageButton.Visible = true;
+        settings.SettingsPager.LastPageButton.Visible = true;
+        settings.SettingsPager.PageSizeItemSettings.Visible = true;
+        settings.SettingsPager.PageSize = 10;
+        settings.SettingsPager.PageSizeItemSettings.Items = new string[] { "5", "10", "15" };
+        settings.Settings.ShowFilterRowMenu = true;
+
+        settings.Settings.ShowGroupPanel = true;
+        settings.Settings.ShowFilterRow = false;
+        settings.SettingsBehavior.AllowSelectByRowClick = true;
+
+        //settings.Columns.Add("Fk_IdEstatusOrigen");
+        //settings.Columns.Add("Fk_IdEstatusDestino");
+        settings.Columns.Add("StatusCampania1.Nombre", "Status Origen");
+        settings.Columns.Add("StatusCampania.Nombre", "Status Destino");
+        settings.Columns.Add("Rol", "Encargado del proceso");
+
+
+        //*********************************************************
+        //Comienza codigo de la forma custom
+        //********************************************************
+
+        settings.SetEditFormTemplateContent(c =>
+        {
+            var flujoactividad = ViewData["dataItem"] ?? c.DataItem;
+
+            Html.DevExpress().Label(
+                 edtSettings =>
+                 {
+                     edtSettings.ControlStyle.CssClass = "label";
+                     edtSettings.Text = c.KeyValue == null ? "Ingresa un Cargo" : "Edita el Cargo";
+                     edtSettings.Style["font-size"] = "18px";
+                     edtSettings.Style["color"] = "orange";
+                 }
+             )
+             .Render();
+            ViewContext.Writer.Write("<br>");
+            ViewContext.Writer.Write("</br>");
+
+            ViewContext.Writer.Write(
+            "<table>" +
+                "<tr>" +  //Table Row
+                    "<td>");  //table Data
+
+            Html.DevExpress().Label(
+            edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Status de Origen:";
+                edtSettings.AssociatedControlName = "Fk_IdEstatusOrigen";
+            }
+        )
+        .Render();
+
+            Html.DevExpress().ComboBox(
+                edtSettings =>
+                {
+                    edtSettings.Name = "Fk_IdEstatusOrigen";
+                    edtSettings.ControlStyle.CssClass = "editor";
+                    edtSettings.Properties.TextField = "Nombre";
+                    edtSettings.Properties.NullText = "Campo Requerido";
+                    edtSettings.Properties.ValueField = "PK_IdStatusCampania";
+                    edtSettings.Properties.ValueType = typeof(int);
+                    edtSettings.ShowModelErrors = true;
+                    edtSettings.Width = Unit.Pixel(300);
+                    edtSettings.ToolTip = c.KeyValue == null ? "Seleccione el Estado de Origen para la Campaña" : "Cambiar Estado de Origen";
+                }
+            )
+            .BindList(DXMVCWebApplication1.Models.Senasica.GetStatusCampania())
+            .Bind(DataBinder.Eval(flujoactividad, "Fk_IdEstatusOrigen"))
+            .Render();
+            ViewContext.Writer.Write("</td>");
+
+            ViewContext.Writer.Write("<td>");
+            Html.DevExpress().Label(
+                  edtSettings =>
+                  {
+                      edtSettings.ControlStyle.CssClass = "label";
+                      edtSettings.Text = "Status Destino:";
+                      edtSettings.AssociatedControlName = "Fk_IdEstatusDestino";
+                  }
+              )
+              .Render();
+
+            Html.DevExpress().ComboBox(
+                edtSettings =>
+                {
+                    edtSettings.Name = "Fk_IdEstatusDestino";
+                    edtSettings.ControlStyle.CssClass = "editor";
+                    edtSettings.Properties.TextField = "Nombre";
+                    edtSettings.Properties.NullText = "Campo Requerido";
+                    edtSettings.Properties.ValueField = "PK_IdStatusCampania";
+                    edtSettings.Properties.ValueType = typeof(int);
+                    edtSettings.ShowModelErrors = true;
+                    edtSettings.Width = Unit.Pixel(300);
+                    edtSettings.ToolTip = c.KeyValue == null ? "Seleccione el Estado de Destino de la Campaña" : "Cambiar Estado de Destino";
+                }
+            )
+            .BindList(DXMVCWebApplication1.Models.Senasica.GetStatusCampania())
+            .Bind(DataBinder.Eval(flujoactividad, "Fk_IdEstatusDestino"))
+            .Render();
+            ViewContext.Writer.Write("</td>");
+
+            ViewContext.Writer.Write("<td>");
+            Html.DevExpress().Label(
+               edtSettings =>
+               {
+                   edtSettings.ControlStyle.CssClass = "label";
+                   edtSettings.Text = "Encargado del proceso:";
+                   edtSettings.AssociatedControlName = "Rol";
+               }
+           )
+           .Render();
+            Html.DevExpress().TextBox(
+                edtSettings =>
+                {
+                    edtSettings.Name = "Rol";
+                    edtSettings.ControlStyle.CssClass = "editor";
+                    edtSettings.ShowModelErrors = true;
+                    edtSettings.Width = Unit.Pixel(250);
+                    edtSettings.ToolTip = c.KeyValue == null ? "Ingresar el Rol del Encargado" : "Editar Rol";
+                }
+            )
+            .Bind(DataBinder.Eval(flujoactividad, "Rol"))
+            .Render();
+
+            ViewContext.Writer.Write("</td>");
+
+            ViewContext.Writer.Write("</tr>");
+            ViewContext.Writer.Write("</table>"); // Termina tabla de Controles
+                                                  //***************************************
+                                                  //Botones
+                                                  //ViewContext.Writer.Write("<div class=\"line\">");
+            ViewContext.Writer.Write("<hr noshade>");
+            Html.DevExpress().Label(
+                edtSettings =>
+                {
+                    edtSettings.ControlStyle.CssClass = "label";
+                }
+            )
+            .Render();
+            Html.DevExpress().Button(
+                btnSettings =>
+                {
+                    btnSettings.Name = "btnUpdat";
+                    btnSettings.Text = "Guardar";
+                    btnSettings.ControlStyle.CssClass = "button";
+                    btnSettings.Images.Image.Url = "Content/Images/guardar.png";
+                    btnSettings.ImagePosition = ImagePosition.Right;
+                    btnSettings.Images.Image.Width = 16;
+                    btnSettings.ClientSideEvents.Click = "function(s, e){ FlujoCampaniaGridView.UpdateEdit(); }";
+                    btnSettings.Width = Unit.Pixel(30);
+                    btnSettings.ClientVisible = Convert.ToBoolean(ViewData["Escritura"]);
+                }
+            )
+            .Render();
+            Html.DevExpress().Button(
+                btnSettings =>
+                {
+                    btnSettings.Name = "btnCance";
+                    btnSettings.Text = "Cancelar";
+                    btnSettings.ControlStyle.CssClass = "button";
+                    btnSettings.Images.Image.Url = "Content/Images/cancelar.png";
+                    btnSettings.ImagePosition = ImagePosition.Right;
+                    btnSettings.Style["position"] = "relative";
+                    btnSettings.Style["left"] = "5px";
+                    btnSettings.ClientSideEvents.Click = "function(s, e){ FlujoCampaniaGridView.CancelEdit(); }";
+                }
+            )
+            .Render();
+
+            Html.DevExpress().Button(btnSettings =>
+            {
+                btnSettings.Name = "btnAyuda";
+                btnSettings.ControlStyle.CssClass = "button";
+                btnSettings.Text = "Ayuda";
+                btnSettings.Images.Image.Url = "/Content/Images/ayuda.png";
+                btnSettings.ImagePosition = ImagePosition.Right;
+                btnSettings.Images.Image.Width = 16;
+                btnSettings.Style["position"] = "relative";
+                btnSettings.Style["left"] = "20px";
+                btnSettings.ClientSideEvents.Click = "function(s, e){ window.open('https://docs.google.com/document/d/1ZJURCxDAT76zN4TpKa2cBHEdF3RZFUNkAv3o9iyWxG4/edit#heading=h.4h042r0','_blank'); }";
+            }).Render();
+
+            ViewContext.Writer.Write("</div>"); // Termina Codigo de Botones
+
+        });//Termina Codigo de la CustomForm
+
+
+    });//Termina Settings
+    if (ViewData["EditError"] != null){
+        grid.SetEditErrorText((string)ViewData["EditError"]);
+    }
+}
+@grid.Bind(Model).GetHtml()

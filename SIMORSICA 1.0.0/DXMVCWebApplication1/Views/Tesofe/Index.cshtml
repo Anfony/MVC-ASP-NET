@@ -1,0 +1,17 @@
+﻿
+@{
+    ViewBag.Title = "Registro de la Tesorería de la Federación";
+}
+
+<h3 style="font-size:17px; font:bold; text-align:center">REGISTRO DE TESOFE</h3>
+<h3 style="font-size: 13px; text-align: center; position: relative; top: -10px">Registre aquí los Reintegros a la TESOFE</h3>
+<br>
+<br>
+
+@Html.Partial("~/Views/ExportExcelPDF/_ExportExcelPDF.cshtml", new ViewDataDictionary { { "Clave", DXMVCWebApplication1.Common.ListaPantallas.UE_TESOFE } })
+
+<br>
+<br>
+
+
+@Html.Action("TesoFeGridViewPartial")

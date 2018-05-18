@@ -1,0 +1,293 @@
+﻿@{
+    var grid = Html.DevExpress().GridView(settings =>
+    {
+        settings.Name = "ImportanciaProgramaMovGridview";
+        settings.CallbackRouteValues = new { Controller = "ImportanciaProgramaMov", Action = "ImportanciaProgramaMovGridViewPartial", IdCampania = ViewData["IdCampania"], IdEstado = ViewData["IdEstado"] };
+
+        settings.SettingsEditing.AddNewRowRouteValues = new { Controller = "ImportanciaProgramaMov", Action = "ImportanciaProgramaMovGridViewPartialAddNew", IdCampania = ViewData["IdCampania"], IdEstado = ViewData["IdEstado"] };
+        settings.SettingsEditing.UpdateRowRouteValues = new { Controller = "ImportanciaProgramaMov", Action = "ImportanciaProgramaMovGridViewPartialUpdate", IdCampania = ViewData["IdCampania"], IdEstado = ViewData["IdEstado"] };
+        settings.SettingsEditing.DeleteRowRouteValues = new { Controller = "ImportanciaProgramaMov", Action = "ImportanciaProgramaMovGridViewPartialDelete", IdCampania = ViewData["IdCampania"], IdEstado = ViewData["IdEstado"] };
+        settings.SettingsEditing.Mode = GridViewEditingMode.PopupEditForm;
+
+        settings.SettingsPopup.EditForm.Height = 200;
+        settings.SettingsPopup.EditForm.Width = 625;
+        settings.SettingsPopup.EditForm.HorizontalAlign = PopupHorizontalAlign.WindowCenter;
+        settings.SettingsPopup.EditForm.VerticalAlign = PopupVerticalAlign.WindowCenter;
+        settings.SettingsPopup.EditForm.Modal = true;
+
+        settings.SettingsBehavior.ConfirmDelete = true;
+        settings.Settings.ShowFilterRow = true;
+
+        settings.CommandColumn.Visible = true;
+        settings.SettingsCommandButton.NewButton.Text = "Nuevo";
+        settings.CommandColumn.ShowNewButtonInHeader = Convert.ToBoolean(ViewData["Escritura"]);
+        settings.CommandColumn.ShowDeleteButton = Convert.ToBoolean(ViewData["Escritura"]);
+        settings.CommandColumn.ShowEditButton = Convert.ToBoolean(ViewData["Escritura"]) || Convert.ToBoolean(ViewData["Lectura"]);
+        settings.CommandColumn.ShowClearFilterButton = true;
+
+        settings.KeyFieldName = "Pk_IdImportanciaProgramaMov";
+
+        settings.SettingsPager.Visible = true;
+        settings.SettingsPager.Position = PagerPosition.Bottom;
+        settings.SettingsPager.FirstPageButton.Visible = true;
+        settings.SettingsPager.LastPageButton.Visible = true;
+        settings.SettingsPager.PageSizeItemSettings.Visible = true;
+        settings.SettingsPager.PageSize = 3;
+        settings.SettingsPager.PageSizeItemSettings.Items = new string[] { "5", "10", "15" };
+        settings.Settings.ShowFilterRowMenu = true;
+
+        settings.Columns.Add("NumTotInspeccion", "Núm. Total de Inspecciones").PropertiesEdit.DisplayFormatString = "n";
+        settings.Columns.Add("NumRetenciones", "Núm. de Retenciones").PropertiesEdit.DisplayFormatString = "n";
+        settings.Columns.Add("NumRetornos", "Núm. de Retornos").PropertiesEdit.DisplayFormatString = "n";
+        settings.Columns.Add("NumDestrucciones", "Núm. de Destrucciones").PropertiesEdit.DisplayFormatString = "n";
+        settings.Columns.Add("NumGuardaCustodia", "Núm. de Guarda Custodia").PropertiesEdit.DisplayFormatString = "n";
+        settings.Columns.Add("NumTratamiento_Acon", "Núm. de Tratamientos / Acondicionamientos").PropertiesEdit.DisplayFormatString = "n";
+        settings.Columns.Add("NumCuarentenas", "Núm. de Cuarentenas").PropertiesEdit.DisplayFormatString = "n";
+
+        //Totales
+        settings.TotalSummary.Add(DevExpress.Data.SummaryItemType.Sum, "NumTotInspeccion").DisplayFormat = "n";
+        settings.TotalSummary.Add(DevExpress.Data.SummaryItemType.Sum, "NumRetenciones").DisplayFormat = "n";
+        settings.TotalSummary.Add(DevExpress.Data.SummaryItemType.Sum, "NumRetornos").DisplayFormat = "n";
+        settings.TotalSummary.Add(DevExpress.Data.SummaryItemType.Sum, "NumDestrucciones").DisplayFormat = "n";
+        settings.TotalSummary.Add(DevExpress.Data.SummaryItemType.Sum, "NumGuardaCustodia").DisplayFormat = "n";
+        settings.TotalSummary.Add(DevExpress.Data.SummaryItemType.Sum, "NumTratamiento_Acon").DisplayFormat = "n";
+        settings.TotalSummary.Add(DevExpress.Data.SummaryItemType.Sum, "NumCuarentenas").DisplayFormat = "n";
+        settings.Settings.ShowFooter = true;
+
+        //nuevo
+        settings.SetEditFormTemplateContent(c =>
+        {
+            var ImportPlagaMov = ViewData["dataItem"] ?? c.DataItem;
+            ViewContext.Writer.Write("<p>Edición de Importancia del Programa</p>");
+            ViewContext.Writer.Write("<table><tr><td>");
+
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Núm. Total de Inspecciones";
+                edtSettings.AssociatedControlName = "NumTotInspeccion";
+            }).Render();
+
+            Html.DevExpress().SpinEdit(edtSettings =>
+            {
+                edtSettings.Name = "NumTotInspeccion";
+                edtSettings.Properties.MinValue = 0;
+                edtSettings.Properties.MaxValue = 999999999;
+                edtSettings.Properties.NumberType = SpinEditNumberType.Integer;
+                edtSettings.Properties.Increment = 0.1M;
+                edtSettings.Properties.LargeIncrement = 1;
+                edtSettings.Properties.SpinButtons.ShowLargeIncrementButtons = true;
+                edtSettings.Properties.DisplayFormatString = "n";
+                edtSettings.ControlStyle.CssClass = "editor";
+                edtSettings.Properties.NullText = "Campo Requerido";
+                edtSettings.ShowModelErrors = true;
+                edtSettings.Width = Unit.Pixel(250);
+            }).Bind(DataBinder.Eval(ImportPlagaMov, "NumTotInspeccion"))
+            .Render();
+            ViewContext.Writer.Write("</td>");
+
+            ViewContext.Writer.Write("<td>");
+
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Núm. de Retenciones";
+                edtSettings.AssociatedControlName = "NumRetenciones";
+            }).Render();
+
+            Html.DevExpress().SpinEdit(edtSettings =>
+            {
+                edtSettings.Name = "NumRetenciones";
+                edtSettings.Properties.MinValue = 0;
+                edtSettings.Properties.MaxValue = 999999999;
+                edtSettings.Properties.NumberType = SpinEditNumberType.Integer;
+                edtSettings.Properties.Increment = 0.1M;
+                edtSettings.Properties.LargeIncrement = 1;
+                edtSettings.Properties.SpinButtons.ShowLargeIncrementButtons = true;
+                edtSettings.Properties.DisplayFormatString = "n";
+                edtSettings.ControlStyle.CssClass = "editor";
+                edtSettings.Properties.NullText = "Campo Requerido";
+                edtSettings.ShowModelErrors = true;
+                edtSettings.Width = Unit.Pixel(250);
+            }).Bind(DataBinder.Eval(ImportPlagaMov, "NumRetenciones"))
+            .Render();
+
+            ViewContext.Writer.Write("</td>");
+
+            ViewContext.Writer.Write("<td>");
+
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Núm. de Retornos";
+                edtSettings.AssociatedControlName = "NumRetornos";
+            }).Render();
+
+            Html.DevExpress().SpinEdit(edtSettings =>
+            {
+                edtSettings.Name = "NumRetornos";
+                edtSettings.Properties.MinValue = 0;
+                edtSettings.Properties.MaxValue = 999999999;
+                edtSettings.Properties.NumberType = SpinEditNumberType.Integer;
+                edtSettings.Properties.Increment = 0.1M;
+                edtSettings.Properties.LargeIncrement = 1;
+                edtSettings.Properties.SpinButtons.ShowLargeIncrementButtons = true;
+                edtSettings.Properties.DisplayFormatString = "n";
+                edtSettings.ControlStyle.CssClass = "editor";
+                edtSettings.Properties.NullText = "Campo Requerido";
+                edtSettings.ShowModelErrors = true;
+                edtSettings.Width = Unit.Pixel(250);
+            }).Bind(DataBinder.Eval(ImportPlagaMov, "NumRetornos"))
+            .Render();
+            ViewContext.Writer.Write("</td>");
+
+            ViewContext.Writer.Write("<td>");
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Núm. de Destrucciones";
+                edtSettings.AssociatedControlName = "NumDestrucciones";
+            }).Render();
+
+            Html.DevExpress().SpinEdit(edtSettings =>
+            {
+                edtSettings.Name = "NumDestrucciones";
+                edtSettings.Properties.MinValue = 0;
+                edtSettings.Properties.MaxValue = 999999999;
+                edtSettings.Properties.NumberType = SpinEditNumberType.Integer;
+                edtSettings.Properties.Increment = 0.1M;
+                edtSettings.Properties.LargeIncrement = 1;
+                edtSettings.Properties.SpinButtons.ShowLargeIncrementButtons = true;
+                edtSettings.Properties.DisplayFormatString = "n";
+                edtSettings.ControlStyle.CssClass = "editor";
+                edtSettings.Properties.NullText = "Campo Requerido";
+                edtSettings.ShowModelErrors = true;
+                edtSettings.Width = Unit.Pixel(250);
+            }).Bind(DataBinder.Eval(ImportPlagaMov, "NumDestrucciones"))
+            .Render();
+
+            ViewContext.Writer.Write("</td>" + "</tr>" + "</table>");
+
+            ViewContext.Writer.Write("</br>");
+
+            ViewContext.Writer.Write("<table> <tr> <td>");
+
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Núm. de Guarda Custodia";
+                edtSettings.AssociatedControlName = "NumGuardaCustodia";
+            }).Render();
+
+            Html.DevExpress().SpinEdit(edtSettings =>
+            {
+                edtSettings.Name = "NumGuardaCustodia";
+                edtSettings.Properties.MinValue = 0;
+                edtSettings.Properties.MaxValue = 999999999;
+                edtSettings.Properties.NumberType = SpinEditNumberType.Integer;
+                edtSettings.Properties.Increment = 0.1M;
+                edtSettings.Properties.LargeIncrement = 1;
+                edtSettings.Properties.SpinButtons.ShowLargeIncrementButtons = true;
+                edtSettings.Properties.DisplayFormatString = "n";
+                edtSettings.ControlStyle.CssClass = "editor";
+                edtSettings.Properties.NullText = "Campo Requerido";
+                edtSettings.ShowModelErrors = true;
+                edtSettings.Width = Unit.Pixel(250);
+            }).Bind(DataBinder.Eval(ImportPlagaMov, "NumGuardaCustodia"))
+            .Render();
+
+            ViewContext.Writer.Write("</td>");
+
+            ViewContext.Writer.Write("<td>");
+
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Núm. de Tratamientos / Acondicionamientos";
+                edtSettings.AssociatedControlName = "NumTratamiento_Acon";
+            }).Render();
+
+            Html.DevExpress().SpinEdit(edtSettings =>
+            {
+                edtSettings.Name = "NumTratamiento_Acon";
+                edtSettings.Properties.MinValue = 0;
+                edtSettings.Properties.MaxValue = 999999999;
+                edtSettings.Properties.NumberType = SpinEditNumberType.Float;
+                edtSettings.Properties.Increment = 0.1M;
+                edtSettings.Properties.LargeIncrement = 1;
+                edtSettings.Properties.SpinButtons.ShowLargeIncrementButtons = true;
+                edtSettings.Properties.DisplayFormatString = "n";
+                edtSettings.ControlStyle.CssClass = "editor";
+                edtSettings.Properties.NullText = "Campo Requerido";
+                edtSettings.ShowModelErrors = true;
+                edtSettings.Width = Unit.Pixel(250);
+            }).Bind(DataBinder.Eval(ImportPlagaMov, "NumTratamiento_Acon"))
+            .Render();
+            ViewContext.Writer.Write("</td>");
+
+            ViewContext.Writer.Write("<td>");
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Núm. de Cuarentenas";
+                edtSettings.AssociatedControlName = "NumCuarentenas";
+            }).Render();
+
+            Html.DevExpress().SpinEdit(edtSettings =>
+            {
+                edtSettings.Name = "NumCuarentenas";
+                edtSettings.Properties.MinValue = 0;
+                edtSettings.Properties.MaxValue = 999999999;
+                edtSettings.Properties.NumberType = SpinEditNumberType.Float;
+                edtSettings.Properties.Increment = 0.1M;
+                edtSettings.Properties.LargeIncrement = 1;
+                edtSettings.Properties.SpinButtons.ShowLargeIncrementButtons = true;
+                edtSettings.Properties.DisplayFormatString = "n";
+                edtSettings.ControlStyle.CssClass = "editor";
+                edtSettings.Properties.NullText = "Campo Requerido";
+                edtSettings.ShowModelErrors = true;
+                edtSettings.Width = Unit.Pixel(250);
+            }).Bind(DataBinder.Eval(ImportPlagaMov, "NumCuarentenas"))
+            .Render();
+
+            ViewContext.Writer.Write("</td>" + "</tr>" + "</table>");
+            ViewContext.Writer.Write("<br>");
+
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+            }).Render();
+
+            Html.DevExpress().Button(btnSettings =>
+            {
+                btnSettings.Name = "btnUpdat";
+                btnSettings.Text = "Guardar";
+                btnSettings.ControlStyle.CssClass = "button";
+                btnSettings.Images.Image.Url = "Content/Images/guardar.png";
+                btnSettings.ImagePosition = ImagePosition.Right;
+                btnSettings.Images.Image.Width = 16;
+                btnSettings.ClientSideEvents.Click = "function(s, e){ ImportanciaProgramaMovGridview.UpdateEdit(); }";
+                btnSettings.ClientVisible = Convert.ToBoolean(ViewData["Escritura"]);
+            }).Render();
+
+            Html.DevExpress().Button(btnSettings =>
+            {
+                btnSettings.Name = "btnCance";
+                btnSettings.Text = "Cancelar";
+                btnSettings.ControlStyle.CssClass = "button";
+                btnSettings.Images.Image.Url = "Content/Images/cancelar.png";
+                btnSettings.ImagePosition = ImagePosition.Right;
+                btnSettings.Style["position"] = "relative";
+                btnSettings.Style["left"] = "5px";
+                btnSettings.ClientSideEvents.Click = "function(s, e){ ImportanciaProgramaMovGridview.CancelEdit(); }";
+            }).Render();
+
+            ViewContext.Writer.Write("</br>");
+        });
+    });
+    if (ViewData["EditError"] != null)
+    {
+        grid.SetEditErrorText((string)ViewData["EditError"]);
+    }
+}
+@grid.Bind(Model).GetHtml()

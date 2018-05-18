@@ -1,0 +1,15 @@
+﻿@Html.DevExpress().ComboBox(edtSettings =>
+{
+    edtSettings.Name = "Fk_IdUnidadDeMedida__SIS";
+    edtSettings.ShowModelErrors = true;
+    edtSettings.Width = Unit.Pixel(350);
+    edtSettings.CallbackRouteValues = new { Controller = "ProgramaAnualAdq", Action = "ComboBoxPartialUnidadMedida" };
+
+    edtSettings.Properties.TextField = "Nombre";
+    edtSettings.Properties.NullText = "Campo Requerido";
+    edtSettings.Properties.ValueField = "Pk_IdUnidadDeMedida";
+    edtSettings.Properties.ValueType = typeof(int);
+    edtSettings.Properties.EnableSynchronization = DefaultBoolean.False;
+    edtSettings.Properties.IncrementalFilteringMode = IncrementalFilteringMode.Contains;
+    edtSettings.Properties.ClientSideEvents.BeginCallback = "UnidadMedidaCombo_BeginCallback";
+}).BindList(Model).Bind(ViewData["Fk_IdUnidadDeMedida__SIS"]).GetHtml()

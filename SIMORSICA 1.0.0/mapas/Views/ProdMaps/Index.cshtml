@@ -1,0 +1,93 @@
+﻿@model IEnumerable<DXMVCWebApplication1.Models.Productor>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.RazonSocial)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ApellidoPaterno)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ApellidoMaterno)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Nombre)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Direccion)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Colonia)
+        </th>
+        <th>
+            @*Html.DisplayNameFor(model => model.Telefono)*@
+        </th>
+        <th>
+            @*Html.DisplayNameFor(model => model.Email)*@
+        </th>
+        <th>
+            @*Html.DisplayNameFor(model => model.Ubicacion)*@
+        </th>
+        <th>
+            Estado
+        </th>
+        <th>
+            Municipio
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.RazonSocial)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ApellidoPaterno)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ApellidoMaterno)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Nombre)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Direccion)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Colonia)
+        </td>
+        <td>
+            @*Html.DisplayFor(modelItem => item.Telefono)*@
+        </td>
+        <td>
+            @*Html.DisplayFor(modelItem => item.Email)*@
+        </td>
+        <td>
+            @*Html.DisplayFor(modelItem => item.Ubicacion)*@
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Estado.Nombre)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Municipio.Nombre)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.Pk_IdProductor }) |
+            @Html.ActionLink("Details", "Details", new { id=item.Pk_IdProductor }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.Pk_IdProductor })
+        </td>
+    </tr>
+}
+
+</table>

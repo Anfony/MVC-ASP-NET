@@ -1,0 +1,15 @@
+﻿@{
+    ViewBag.Title = "Acta de Comisión";
+}
+
+<h3 style="font-size:17px; font:bold; text-align:center">VISUALIZA LAS ACTAS DE COMISIÓN</h3>
+<h3 style="font-size: 13px; text-align: center; position: relative; top: -10px">Registro de las Actas de Comisión</h3>
+<br>
+
+@Html.Partial("~/Views/ExportExcelPDF/_ExportExcelPDF.cshtml", new ViewDataDictionary { { "Clave", DXMVCWebApplication1.Common.ListaPantallas.UE_ACTA_COMISION } })
+
+<br>
+<br>
+
+
+@Html.Action("ActaComisionGridViewPartialGeneral")

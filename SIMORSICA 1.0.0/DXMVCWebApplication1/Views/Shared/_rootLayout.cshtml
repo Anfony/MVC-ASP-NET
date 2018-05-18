@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+    <title>@ViewBag.Title</title>
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+    <!--<link href="@Url.Content("~/Content/bootstrap.css")" rel="stylesheet" type="text/css" />-->
+    <link href="@Url.Content("~/Content/Site.css")" rel="stylesheet" type="text/css" />
+    
+
+    @Html.DevExpress().GetStyleSheets( 
+    new StyleSheet { ExtensionSuite = ExtensionSuite.NavigationAndLayout }, 
+    new StyleSheet { ExtensionSuite = ExtensionSuite.Editors }, 
+    new StyleSheet { ExtensionSuite = ExtensionSuite.HtmlEditor }, 
+    new StyleSheet { ExtensionSuite = ExtensionSuite.GridView }, 
+    new StyleSheet { ExtensionSuite = ExtensionSuite.PivotGrid },
+    new StyleSheet { ExtensionSuite = ExtensionSuite.Chart },
+    new StyleSheet { ExtensionSuite = ExtensionSuite.Report },
+    new StyleSheet { ExtensionSuite = ExtensionSuite.Scheduler },
+    new StyleSheet { ExtensionSuite = ExtensionSuite.TreeList },
+    new StyleSheet { ExtensionSuite = ExtensionSuite.Spreadsheet }
+)
+@Html.DevExpress().GetScripts( 
+    new Script { ExtensionSuite = ExtensionSuite.NavigationAndLayout }, 
+    new Script { ExtensionSuite = ExtensionSuite.HtmlEditor }, 
+    new Script { ExtensionSuite = ExtensionSuite.GridView }, 
+    new Script { ExtensionSuite = ExtensionSuite.PivotGrid },
+    new Script { ExtensionSuite = ExtensionSuite.Editors }, 
+    new Script { ExtensionSuite = ExtensionSuite.Chart },
+    new Script { ExtensionSuite = ExtensionSuite.Report },
+    new Script { ExtensionSuite = ExtensionSuite.Scheduler },
+    new Script { ExtensionSuite = ExtensionSuite.TreeList },
+    new Script { ExtensionSuite = ExtensionSuite.Spreadsheet }
+)
+    <meta name="description" content="The description of my page" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+</head>
+<body>
+   
+    @Html.DevExpress().Splitter(settings => {
+    settings.Name = "MainSplitter";
+    settings.AllowResize = false;
+    settings.Orientation = Orientation.Vertical;
+    settings.FullscreenMode = true;
+    settings.SeparatorVisible = false;
+    settings.Styles.Pane.Border.BorderWidth = Unit.Pixel(0);
+    settings.Styles.Pane.Paddings.Padding = Unit.Pixel(0);
+    //settings.Styles.Pane.Paddings.PaddingBottom = Unit.Pixel(10);
+    //settings.Height = Unit.Pixel(150);
+
+    settings.Panes.Add(pane => {
+        pane.Name = "Header";
+        pane.Size = ASPxWebControl.GlobalTheme == "Moderno" ? 100 : 150;
+        pane.MinSize = ASPxWebControl.GlobalTheme == "Moderno" ? 100 : 150;
+        pane.PaneStyle.BorderBottom.BorderWidth = Unit.Pixel(1);
+        pane.PaneStyle.CssClass = "headerPane";
+        pane.SetContent(() => {
+            Html.RenderPartial("HeaderPartialView");
+        });
+    });
+
+    settings.Panes.Add(pane => {
+        pane.Name = "Content";
+        pane.PaneStyle.CssClass = "mainContentPane";
+        pane.MinSize = Unit.Pixel(300);
+        pane.PaneStyle.BackColor = System.Drawing.Color.White;
+        pane.PaneStyle.BorderBottom.BorderWidth = Unit.Pixel(1);
+        pane.SetContent(RenderBody().ToHtmlString());
+    });
+
+    settings.Panes.Add(pane => {
+        pane.Name = "Footer";
+        pane.Size = Unit.Pixel(30);
+        pane.PaneStyle.CssClass = "footerPane";
+        pane.SetContent(() => {
+            Html.RenderPartial("FooterPartialView");
+        });
+    });
+}).GetHtml()
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

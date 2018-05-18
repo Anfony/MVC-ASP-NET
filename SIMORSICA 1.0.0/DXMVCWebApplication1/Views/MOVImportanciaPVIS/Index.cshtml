@@ -1,0 +1,23 @@
+﻿<script type="text/javascript">
+    function EstadoCombo_SelectedIndexChanged(s, e) {
+        Fk_IdMunicipio.PerformCallback();
+    }
+    function MunicipioCombo_BeginCallback(s, e) {
+        e.customArgs['Fk_IdEstado'] = Fk_IdEstado.GetValue();
+    }
+</script>
+@{
+    ViewBag.Title = "Registro de Importancia PVIS";
+}
+<h2>Registro de Importancia PVIS</h2>
+<h3>Registre aquí</h3>
+
+<br>
+<br>
+
+@Html.Partial("~/Views/ExportExcelPDF/_ExportExcelPDF.cshtml", new ViewDataDictionary { { "Clave", DXMVCWebApplication1.Common.ListaPantallas.UE_IMPORTANCIA_MOV } })
+
+<br>
+<br>
+
+@Html.Action("ImportanciaPIV_MOVGridViewPartial")

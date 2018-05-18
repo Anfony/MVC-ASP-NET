@@ -1,0 +1,324 @@
+﻿@{
+    var grid = Html.DevExpress().GridView(settings =>
+    {
+        settings.Name = "GridView4";
+        settings.Style["width"] = "98%";
+        settings.Style["position"] = "relative";
+        settings.Style["left"] = "10px";
+        settings.CommandColumn.Width = 20;
+        settings.CallbackRouteValues = new { Controller = "BienOServTransversales", Action = "GridViewPartial" };
+
+        settings.SettingsEditing.AddNewRowRouteValues = new { Controller = "BienOServTransversales", Action = "GridViewPartialAddNew" };
+        settings.SettingsEditing.UpdateRowRouteValues = new { Controller = "BienOServTransversales", Action = "GridViewPartialUpdate" };
+        settings.SettingsEditing.DeleteRowRouteValues = new { Controller = "BienOServTransversales", Action = "GridViewPartialDelete" };
+        settings.SettingsEditing.Mode = GridViewEditingMode.PopupEditForm;
+
+        settings.SettingsText.PopupEditFormCaption = "Bien o Servicio Transversales";
+
+        settings.SettingsPopup.EditForm.Height = 360;
+        settings.SettingsPopup.EditForm.Width = 525;
+        settings.SettingsPopup.EditForm.HorizontalAlign = DevExpress.Web.ASPxClasses.PopupHorizontalAlign.WindowCenter;
+        settings.SettingsPopup.EditForm.VerticalAlign = DevExpress.Web.ASPxClasses.PopupVerticalAlign.WindowCenter;
+        settings.SettingsPopup.EditForm.Modal = true;
+
+        settings.SettingsBehavior.ConfirmDelete = true;
+
+        settings.CommandColumn.Visible = true;
+        settings.CommandColumn.ShowNewButtonInHeader = Convert.ToBoolean(ViewData["Escritura"]);
+        settings.CommandColumn.ShowDeleteButton = Convert.ToBoolean(ViewData["Escritura"]);
+        settings.CommandColumn.ShowEditButton = Convert.ToBoolean(ViewData["Escritura"]) || Convert.ToBoolean(ViewData["Lectura"]);
+        settings.CommandColumn.ShowClearFilterButton = true;
+
+        settings.KeyFieldName = "Pk_IdBienOServ";
+
+        settings.SettingsPager.Visible = true;
+        settings.SettingsPager.Position = PagerPosition.Bottom;
+        settings.SettingsPager.FirstPageButton.Visible = true;
+        settings.SettingsPager.LastPageButton.Visible = true;
+        settings.SettingsPager.PageSizeItemSettings.Visible = true;
+        settings.SettingsPager.PageSize = 15;
+        settings.SettingsPager.PageSizeItemSettings.Items = new string[] { "5", "10", "15" };
+        settings.Settings.ShowGroupPanel = true;
+        settings.Settings.ShowFilterRow = true;
+        settings.Settings.ShowFilterRowMenu = true;
+        settings.SettingsBehavior.AllowSelectByRowClick = true;
+
+        settings.Columns.Add("TipoDeBien", "Tipo de Bien");
+        settings.Columns.Add("CABMS", "Clave");
+        settings.Columns.Add("porcentajeMaximo", "% máximo").PropertiesEdit.DisplayFormatString = "n";
+        settings.Columns.Add("precioMaximo", "Precio Máximo").PropertiesEdit.DisplayFormatString = "c";
+        settings.Columns.Add("Nombre");
+        settings.Columns.Add("Especificacion", "Espeficicación");
+
+        //COMIENZA CUSTOM
+
+        settings.SetEditFormTemplateContent(c =>
+        {
+            var bienoserv = ViewData["dataItem"] ?? c.DataItem;
+
+            ViewContext.Writer.Write("<br >");
+
+            ViewContext.Writer.Write("<table>" + "<tr>" + "<td>");
+
+            Html.DevExpress().Label(
+             edtSettings =>
+             {
+                 edtSettings.ControlStyle.CssClass = "label";
+                 edtSettings.Text = "Tipo de Bien:";
+                 edtSettings.AssociatedControlName = "Fk_IdTipoDeBien";
+             }
+         )
+         .Render();
+
+            Html.DevExpress().ComboBox(
+               edtSettings =>
+               {
+                   edtSettings.Name = "Fk_IdTipoDeBien";
+                   edtSettings.ControlStyle.CssClass = "editor";
+                   edtSettings.Properties.TextField = "Nombre";
+                   edtSettings.Properties.NullText = "Campo Requerido";
+                   edtSettings.Properties.ValueField = "Pk_IdTipoDeBien";
+                   edtSettings.Properties.ValueType = typeof(int);
+                   edtSettings.ShowModelErrors = true;
+                   edtSettings.Width = Unit.Pixel(350);
+                   edtSettings.Properties.IncrementalFilteringMode = IncrementalFilteringMode.Contains;
+                   edtSettings.Properties.IncrementalFilteringDelay = 5;
+                   edtSettings.ToolTip = c.KeyValue == null ? "Seleccione el Tipo de Bien" : "Cambiar Tipo de Bien";
+               }
+            )
+            .BindList(DXMVCWebApplication1.Models.Senasica.GetTiposDeBien())
+            .Bind(DataBinder.Eval(bienoserv, "Fk_IdTipoDeBien"))
+            .Render();
+            ViewContext.Writer.Write("</td>");
+
+            ViewContext.Writer.Write("<td>");
+            Html.DevExpress().Label(
+                edtSettings =>
+                {
+                    edtSettings.ControlStyle.CssClass = "label";
+                    edtSettings.Text = "Clave:";
+                    edtSettings.AssociatedControlName = "CABMS";
+                }
+            )
+            .Render();
+
+            Html.DevExpress().TextBox(
+                        edtSettings =>
+                        {
+                            edtSettings.Name = "CABMS";
+                            edtSettings.ControlStyle.CssClass = "editor";
+                            edtSettings.ShowModelErrors = true;
+                            edtSettings.Width = Unit.Pixel(350);
+                            edtSettings.ToolTip = c.KeyValue == null ? "Ingresar la Clave del Bien o Servicio" : "Editar Clave";
+                        }
+                    )
+                    .Bind(DataBinder.Eval(bienoserv, "CABMS"))
+                    .Render();
+            ViewContext.Writer.Write("</td></tr>");
+
+            ViewContext.Writer.Write("<tr><td>");
+            Html.DevExpress().Label(
+                edtSettings =>
+                {
+                    edtSettings.ControlStyle.CssClass = "label";
+                    edtSettings.Text = "Nombre:";
+                    edtSettings.AssociatedControlName = "Nombre";
+                }
+            )
+            .Render();
+
+            Html.DevExpress().TextBox(
+                        edtSettings =>
+                        {
+                            edtSettings.Name = "Nombre";
+                            edtSettings.ControlStyle.CssClass = "editor";
+                            edtSettings.ShowModelErrors = true;
+                            edtSettings.Width = Unit.Pixel(350);
+                            edtSettings.ToolTip = c.KeyValue == null ? "Ingresar Nombre del Bien o Servicio" : "Editar Nombre";
+                        }
+                    )
+                    .Bind(DataBinder.Eval(bienoserv, "Nombre"))
+                    .Render();
+
+            ViewContext.Writer.Write("</td>");
+            ViewContext.Writer.Write("</tr>");
+            ViewContext.Writer.Write("</table>");
+
+            ViewContext.Writer.Write("<br >");
+
+            ViewContext.Writer.Write("<table>" + "<tr>");
+
+            ViewContext.Writer.Write("<td>");
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "% máximo de gasto:";
+                edtSettings.AssociatedControlName = "porcentajeMaximo";
+            }).Render();
+
+            Html.DevExpress().SpinEdit(edtSettings =>
+            {
+                edtSettings.Name = "porcentajeMaximo";
+                edtSettings.ControlStyle.CssClass = "editor";
+                //edtSettings.Properties.NullText = "Campo Requerido";
+                edtSettings.ShowModelErrors = true;
+                edtSettings.Width = Unit.Pixel(350);
+                edtSettings.Properties.MinValue = 0;
+                edtSettings.Properties.MaxValue = 100;
+                edtSettings.Properties.NumberType = SpinEditNumberType.Float;
+                edtSettings.Properties.Increment = 1M;
+                //edtSettings.Properties.LargeIncrement = 5;
+                //edtSettings.Properties.SpinButtons.ShowLargeIncrementButtons = true;
+                edtSettings.Properties.DisplayFormatString = "n";
+                edtSettings.ToolTip = "Ingresar el % Máximo de gasto para este Bien o Servicio";
+            }).Bind(DataBinder.Eval(bienoserv, "porcentajeMaximo"))
+              .Render();
+
+            ViewContext.Writer.Write("</td>");
+
+            ViewContext.Writer.Write("<td>");
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Precio máximo:";
+                edtSettings.AssociatedControlName = "precioMaximo";
+            }).Render();
+
+            Html.DevExpress().SpinEdit(edtSettings =>
+            {
+                edtSettings.Name = "precioMaximo";
+                edtSettings.ControlStyle.CssClass = "editor";
+                //edtSettings.Properties.NullText = "Campo Requerido";
+                edtSettings.ShowModelErrors = true;
+                edtSettings.Width = Unit.Pixel(350);
+                edtSettings.Properties.MinValue = 0;
+                edtSettings.Properties.MaxValue = 999999999;
+                edtSettings.Properties.NumberType = SpinEditNumberType.Integer;
+                edtSettings.Properties.Increment = 1M;
+                edtSettings.Properties.LargeIncrement = 5;
+                edtSettings.Properties.SpinButtons.ShowLargeIncrementButtons = true;
+                edtSettings.Properties.DisplayFormatString = "n";
+                edtSettings.ToolTip = "Ingresar el precio Máximo de gasto para este Bien o Servicio";
+            }).Bind(DataBinder.Eval(bienoserv, "precioMaximo"))
+              .Render();
+
+            ViewContext.Writer.Write("</td>");
+
+            ViewContext.Writer.Write("</tr>");
+            ViewContext.Writer.Write("</table>");
+
+            ViewContext.Writer.Write("<br >");
+
+            ViewContext.Writer.Write("<table><tr><td>");
+
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Especificación:";
+                edtSettings.AssociatedControlName = "Especificacion";
+            }).Render();
+
+            Html.DevExpress().Memo(edtSettings =>
+            {
+                edtSettings.Name = "Especificacion";
+                edtSettings.ControlStyle.CssClass = "editor";
+                edtSettings.ShowModelErrors = true;
+                edtSettings.Width = Unit.Pixel(730);
+                edtSettings.Height = Unit.Pixel(100);
+                edtSettings.Properties.NullText = "Campo Requerido";
+                edtSettings.ToolTip = c.KeyValue == null ? "Ingresar Especificación del Bien o Servicio" : "Editar Especificación";
+            }).Bind(DataBinder.Eval(bienoserv, "Especificacion"))
+            .Render();
+
+            ViewContext.Writer.Write("</td>");
+            ViewContext.Writer.Write("</tr>");
+            ViewContext.Writer.Write("</table>");
+
+            //**Botones Guardar & Cancelar
+            //ViewContext.Writer.Write("<br>");
+            ViewContext.Writer.Write("<hr noshade>");
+            Html.DevExpress().Label(
+                        edtSettings =>
+                        {
+                            edtSettings.ControlStyle.CssClass = "label";
+                        }
+                    )
+                    .Render();
+            Html.DevExpress().Button(
+                btnSettings =>
+                {
+                    btnSettings.Name = "btnUpdat";
+                    btnSettings.Text = "Guardar";
+                    btnSettings.ControlStyle.CssClass = "button";
+                    btnSettings.Images.Image.Url = "Content/Images/guardar.png";
+                    btnSettings.ImagePosition = ImagePosition.Right;
+                    btnSettings.Images.Image.Width = 16;
+                    btnSettings.ClientSideEvents.Click = "function(s, e){ GridView4" + ".UpdateEdit(); }";
+                    btnSettings.ClientVisible = Convert.ToBoolean(ViewData["Escritura"]);
+                }
+            )
+            .Render();
+
+            Html.DevExpress().Button(
+                btnSettings =>
+                {
+                    btnSettings.Name = "btnCance";
+                    btnSettings.Text = "Cancelar";
+                    btnSettings.ControlStyle.CssClass = "button";
+                    btnSettings.Images.Image.Url = "Content/Images/cancelar.png";
+                    btnSettings.ImagePosition = ImagePosition.Right;
+                    btnSettings.Style["position"] = "relative";
+                    btnSettings.Style["left"] = "5px";
+                    btnSettings.ClientSideEvents.Click = "function(s, e){ GridView4" + ".CancelEdit(); }";
+                }
+            )
+            .Render();
+
+            Html.DevExpress().Button(btnSettings =>
+            {
+                btnSettings.Name = "btnAyuda";
+                btnSettings.ControlStyle.CssClass = "button";
+                btnSettings.Text = "Ayuda";
+                btnSettings.Images.Image.Url = "/Content/Images/ayuda.png";
+                btnSettings.ImagePosition = ImagePosition.Right;
+                btnSettings.Images.Image.Width = 16;
+                btnSettings.Style["position"] = "relative";
+                btnSettings.Style["left"] = "20px";
+                btnSettings.ClientSideEvents.Click = "function(s, e){ window.open('https://docs.google.com/document/d/1ZJURCxDAT76zN4TpKa2cBHEdF3RZFUNkAv3o9iyWxG4/edit#heading=h.4bvk7pj','_blank'); }";
+            }).Render();
+
+            if (c.KeyValue != null)
+            {
+                Html.DevExpress().PageControl(PCsettings =>
+                {
+                    PCsettings.Name = "pcScrolling";
+                    PCsettings.Width = Unit.Percentage(100);
+                    PCsettings.Height = 300;
+                    PCsettings.EnableTabScrolling = true;
+                    PCsettings.TabAlign = TabAlign.Justify;
+                    PCsettings.Styles.Tab.CssClass = "scrolling_Tab";
+
+                    PCsettings.Name = "pcFeatures";
+
+                    PCsettings.TabPages.Add("Unidad de Medida").SetContent(() =>
+                    {
+                        ViewContext.Writer.Write("<H3>Unidades de Medida asignadas al Bien o Servicio</H3>");
+
+                        Html.RenderAction("BienOServByUMGridViewPartial", "BienOServByUM", new { IdBienOServ = DataBinder.Eval(bienoserv, "Pk_IdBienOServ") });
+                    });
+
+                }).GetHtml();
+            }
+        });
+
+
+        //TERMINA CUSTOM
+
+
+    });
+    if (ViewData["EditError"] != null)
+    {
+        grid.SetEditErrorText((string)ViewData["EditError"]);
+    }
+}
+@grid.Bind(Model).GetHtml()

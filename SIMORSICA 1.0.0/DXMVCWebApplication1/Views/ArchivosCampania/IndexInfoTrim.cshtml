@@ -1,0 +1,438 @@
+﻿<h3>Archivos de Informes Trimestrales</h3>
+
+<br />
+
+@{
+
+    if (Convert.ToBoolean(ViewData["Escritura"]))
+    {
+        ViewContext.Writer.Write("<table><tr><td>");
+        Html.DevExpress().Label(edtSettings =>
+        {
+            edtSettings.ControlStyle.CssClass = "label";
+            edtSettings.Text = "Primer Trimestre: ";
+        }).Render();
+
+        Html.DevExpress().Label(edtSettings =>
+        {
+            edtSettings.Name = "labelPrimerTrimestre";
+            edtSettings.ClientVisible = Convert.ToBoolean(ViewData["primerTrim"]);
+            edtSettings.ControlStyle.CssClass = "label";
+            edtSettings.Text = "(ya existe un archivo en el servidor)";
+            edtSettings.Properties.EnableClientSideAPI = true;
+        }).Render();
+
+        using (Html.BeginForm("CargaArchivo", "ArchivosCampania", new { TypeFile = "PRIMER_TRIM" }, FormMethod.Post))
+        {
+            Html.DevExpress().UploadControl(CAsettings =>
+            {
+                CAsettings.Name = "UploadControlPrimerTrim";
+                CAsettings.CallbackRouteValues = new { Controller = "ArchivosCampania", Action = "CargaArchivo", TypeFile = "PRIMER_TRIM" };
+                CAsettings.ShowUploadButton = true;
+                CAsettings.UploadButton.Text = "Subir Primer Trimestre";
+                CAsettings.AddUploadButtonsHorizontalPosition = AddUploadButtonsHorizontalPosition.InputRightSide;
+                CAsettings.ShowProgressPanel = true;
+                CAsettings.ClientSideEvents.FileUploadComplete = "function(s, e) { popUpCargaFinalizadaPrimerTrimestre.Show(); }";
+            }).Render();
+        }
+        ViewContext.Writer.Write("</td>");
+
+        ViewContext.Writer.Write("<td>");
+        using (Html.BeginForm("DescargaArchivo", "ArchivosCampania", new { IdCampania = Convert.ToInt32(ViewData["IdCampania"]), TypeFile = "PRIMER_TRIM" }, FormMethod.Post))
+        {
+            Html.DevExpress().Button(btnSettings =>
+            {
+                btnSettings.Name = "btnDescargaPrimerTrimestre";
+                btnSettings.Text = "Descarga Primer Trimestre";
+                btnSettings.ClientEnabled = Convert.ToBoolean(ViewData["primerTrim"]);
+                btnSettings.ControlStyle.CssClass = "button";
+                btnSettings.Images.Image.Url = "/Content/Images/descargar.png";
+                btnSettings.ImagePosition = ImagePosition.Right;
+                btnSettings.Images.Image.Width = 16;
+                btnSettings.Style["position"] = "relative";
+                btnSettings.Style["left"] = "10px";
+                btnSettings.UseSubmitBehavior = true;
+            }).Render();
+        }
+        ViewContext.Writer.Write("</td></tr></table>");
+
+        ViewContext.Writer.Write("<br />");
+
+        ViewContext.Writer.Write("<table><tr><td>");
+        Html.DevExpress().Label(edtSettings =>
+        {
+            edtSettings.ControlStyle.CssClass = "label";
+            edtSettings.Text = "Segundo Trimestre: ";
+        }).Render();
+
+        Html.DevExpress().Label(edtSettings =>
+        {
+            edtSettings.Name = "labelSegundoTrimestre";
+            edtSettings.ClientVisible = Convert.ToBoolean(ViewData["segundoTrim"]);
+            edtSettings.ControlStyle.CssClass = "label";
+            edtSettings.Text = "(ya existe un archivo en el servidor)";
+            edtSettings.Properties.EnableClientSideAPI = true;
+        }).Render();
+
+        using (Html.BeginForm("CargaArchivo", "ArchivosCampania", new { TypeFile = "SEGUNDO_TRIM" }, FormMethod.Post))
+        {
+            Html.DevExpress().UploadControl(CAsettings =>
+            {
+                CAsettings.Name = "UploadControlSegundoTrim";
+                CAsettings.CallbackRouteValues = new { Controller = "ArchivosCampania", Action = "CargaArchivo", TypeFile = "SEGUNDO_TRIM" };
+                CAsettings.ShowUploadButton = true;
+                CAsettings.UploadButton.Text = "Subir Segundo Trimestre";
+                CAsettings.AddUploadButtonsHorizontalPosition = AddUploadButtonsHorizontalPosition.InputRightSide;
+                CAsettings.ShowProgressPanel = true;
+                CAsettings.ClientSideEvents.FileUploadComplete = "function(s, e) { popUpCargaFinalizadaSegundoTrimestre.Show(); }";
+            }).Render();
+        }
+        ViewContext.Writer.Write("</td>");
+        ViewContext.Writer.Write("<td>");
+        using (Html.BeginForm("DescargaArchivo", "ArchivosCampania", new { IdCampania = Convert.ToInt32(ViewData["IdCampania"]), TypeFile = "SEGUNDO_TRIM" }, FormMethod.Post))
+        {
+            Html.DevExpress().Button(btnSettings =>
+            {
+                btnSettings.Name = "btnDescargaSegundoTrimestre";
+                btnSettings.Text = "Descarga Segundo Trimestre";
+                btnSettings.ClientEnabled = Convert.ToBoolean(ViewData["segundoTrim"]);
+                btnSettings.ControlStyle.CssClass = "button";
+                btnSettings.Images.Image.Url = "/Content/Images/descargar.png";
+                btnSettings.ImagePosition = ImagePosition.Right;
+                btnSettings.Images.Image.Width = 16;
+                btnSettings.Style["position"] = "relative";
+                btnSettings.Style["left"] = "10px";
+                btnSettings.UseSubmitBehavior = true;
+            }).Render();
+        }
+        ViewContext.Writer.Write("</td></tr></table>");
+
+        ViewContext.Writer.Write("<br />");
+
+        ViewContext.Writer.Write("<table><tr><td>");
+        Html.DevExpress().Label(edtSettings =>
+        {
+            edtSettings.ControlStyle.CssClass = "label";
+            edtSettings.Text = "Tercer Trimestre: ";
+        }).Render();
+
+        Html.DevExpress().Label(edtSettings =>
+        {
+            edtSettings.Name = "labelTercerTrimestre";
+            edtSettings.ClientVisible = Convert.ToBoolean(ViewData["tercerTrim"]);
+            edtSettings.ControlStyle.CssClass = "label";
+            edtSettings.Text = "(ya existe un archivo en el servidor)";
+            edtSettings.Properties.EnableClientSideAPI = true;
+        }).Render();
+
+        using (Html.BeginForm("CargaArchivo", "ArchivosCampania", new { TypeFile = "TERCER_TRIM" }, FormMethod.Post))
+        {
+            Html.DevExpress().UploadControl(CAsettings =>
+            {
+                CAsettings.Name = "UploadControlTercerTrim";
+                CAsettings.CallbackRouteValues = new { Controller = "ArchivosCampania", Action = "CargaArchivo", TypeFile = "TERCER_TRIM" };
+                CAsettings.ShowUploadButton = true;
+                CAsettings.UploadButton.Text = "Subir Tercer Trimestre";
+                CAsettings.AddUploadButtonsHorizontalPosition = AddUploadButtonsHorizontalPosition.InputRightSide;
+                CAsettings.ShowProgressPanel = true;
+                CAsettings.ClientSideEvents.FileUploadComplete = "function(s, e) { popUpCargaFinalizadaTercerTrimestre.Show(); }";
+            }).Render();
+        }
+        ViewContext.Writer.Write("</td>");
+        ViewContext.Writer.Write("<td>");
+        using (Html.BeginForm("DescargaArchivo", "ArchivosCampania", new { IdCampania = Convert.ToInt32(ViewData["IdCampania"]), TypeFile = "TERCER_TRIM" }, FormMethod.Post))
+        {
+            Html.DevExpress().Button(btnSettings =>
+            {
+                btnSettings.Name = "btnDescargaTercerTrimestre";
+                btnSettings.Text = "Descarga Tercer Trimestre";
+                btnSettings.ClientEnabled = Convert.ToBoolean(ViewData["tercerTrim"]);
+                btnSettings.ControlStyle.CssClass = "button";
+                btnSettings.Images.Image.Url = "/Content/Images/descargar.png";
+                btnSettings.ImagePosition = ImagePosition.Right;
+                btnSettings.Images.Image.Width = 16;
+                btnSettings.Style["position"] = "relative";
+                btnSettings.Style["left"] = "10px";
+                btnSettings.UseSubmitBehavior = true;
+            }).Render();
+        }
+        ViewContext.Writer.Write("</td></tr></table>");
+
+        ViewContext.Writer.Write("<br />");
+
+        ViewContext.Writer.Write("<table><tr><td>");
+        Html.DevExpress().Label(edtSettings =>
+        {
+            edtSettings.ControlStyle.CssClass = "label";
+            edtSettings.Text = "Cuarto Trimestre: ";
+        }).Render();
+
+        Html.DevExpress().Label(edtSettings =>
+        {
+            edtSettings.Name = "labelCuartoTrimestre";
+            edtSettings.ClientVisible = Convert.ToBoolean(ViewData["cuartoTrim"]);
+            edtSettings.ControlStyle.CssClass = "label";
+            edtSettings.Text = "(ya existe un archivo en el servidor)";
+            edtSettings.Properties.EnableClientSideAPI = true;
+        }).Render();
+
+        using (Html.BeginForm("CargaArchivo", "ArchivosCampania", new { TypeFile = "CUARTO_TRIM" }, FormMethod.Post))
+        {
+            Html.DevExpress().UploadControl(CAsettings =>
+            {
+                CAsettings.Name = "UploadControlCuartoTrim";
+                CAsettings.CallbackRouteValues = new { Controller = "ArchivosCampania", Action = "CargaArchivo", TypeFile = "CUARTO_TRIM" };
+                CAsettings.ShowUploadButton = true;
+                CAsettings.UploadButton.Text = "Subir Cuarto Trimestre";
+                CAsettings.AddUploadButtonsHorizontalPosition = AddUploadButtonsHorizontalPosition.InputRightSide;
+                CAsettings.ShowProgressPanel = true;
+                CAsettings.ClientSideEvents.FileUploadComplete = "function(s, e) { popUpCargaFinalizadaCuartoTrimestre.Show(); }";
+            }).Render();
+        }
+        ViewContext.Writer.Write("</td>");
+        ViewContext.Writer.Write("<td>");
+        using (Html.BeginForm("DescargaArchivo", "ArchivosCampania", new { IdCampania = Convert.ToInt32(ViewData["IdCampania"]), TypeFile = "CUARTO_TRIM" }, FormMethod.Post))
+        {
+            Html.DevExpress().Button(btnSettings =>
+            {
+                btnSettings.Name = "btnDescargaCuartoTrimestre";
+                btnSettings.Text = "Descarga Cuarto Trimestre";
+                btnSettings.ClientEnabled = Convert.ToBoolean(ViewData["cuartoTrim"]);
+                btnSettings.ControlStyle.CssClass = "button";
+                btnSettings.Images.Image.Url = "/Content/Images/descargar.png";
+                btnSettings.ImagePosition = ImagePosition.Right;
+                btnSettings.Images.Image.Width = 16;
+                btnSettings.Style["position"] = "relative";
+                btnSettings.Style["left"] = "10px";
+                btnSettings.UseSubmitBehavior = true;
+            }).Render();
+        }
+        ViewContext.Writer.Write("</td></tr></table>");
+    }
+    else
+    {
+        Html.DevExpress().Label(edtSettings =>
+        {
+            edtSettings.Name = "labelSinArchivosCargados";
+            edtSettings.ClientVisible = !Convert.ToBoolean(ViewData["primerTrim"]) && !Convert.ToBoolean(ViewData["segundoTrim"]) && !Convert.ToBoolean(ViewData["tercerTrim"]) && !Convert.ToBoolean(ViewData["cuartoTrim"]);
+            edtSettings.ControlStyle.CssClass = "label";
+            edtSettings.Text = "NO SE HAN CARGADO ARCHIVOS";
+        }).Render();
+
+        ViewContext.Writer.Write("<br >");
+        ViewContext.Writer.Write("<br >");
+
+        using (Html.BeginForm("DescargaArchivo", "ArchivosCampania", new { IdCampania = Convert.ToInt32(ViewData["IdCampania"]), TypeFile = "PRIMER_TRIM" }, FormMethod.Post))
+        {
+            Html.DevExpress().Button(btnSettings =>
+            {
+                btnSettings.Name = "btnDescargaPrimerTrimestre2";
+                btnSettings.Text = "Descarga Primer Trimestre";
+                btnSettings.ClientVisible = Convert.ToBoolean(ViewData["primerTrim"]);
+                btnSettings.ControlStyle.CssClass = "button";
+                btnSettings.Images.Image.Url = "/Content/Images/descargar.png";
+                btnSettings.ImagePosition = ImagePosition.Right;
+                btnSettings.Images.Image.Width = 16;
+                btnSettings.Style["position"] = "relative";
+                btnSettings.Style["left"] = "10px";
+                btnSettings.UseSubmitBehavior = true;
+            }).Render();
+        }
+
+        ViewContext.Writer.Write("<br >");
+        ViewContext.Writer.Write("<br >");
+
+        using (Html.BeginForm("DescargaArchivo", "ArchivosCampania", new { IdCampania = Convert.ToInt32(ViewData["IdCampania"]), TypeFile = "SEGUNDO_TRIM" }, FormMethod.Post))
+        {
+            Html.DevExpress().Button(btnSettings =>
+            {
+                btnSettings.Name = "btnDescargaSegundoTrimestre2";
+                btnSettings.Text = "Descarga Segundo Trimestre";
+                btnSettings.ClientVisible = Convert.ToBoolean(ViewData["segundoTrim"]);
+                btnSettings.ControlStyle.CssClass = "button";
+                btnSettings.Images.Image.Url = "/Content/Images/descargar.png";
+                btnSettings.ImagePosition = ImagePosition.Right;
+                btnSettings.Images.Image.Width = 16;
+                btnSettings.Style["position"] = "relative";
+                btnSettings.Style["left"] = "10px";
+                btnSettings.UseSubmitBehavior = true;
+            }).Render();
+        }
+
+        ViewContext.Writer.Write("<br >");
+        ViewContext.Writer.Write("<br >");
+
+        using (Html.BeginForm("DescargaArchivo", "ArchivosCampania", new { IdCampania = Convert.ToInt32(ViewData["IdCampania"]), TypeFile = "TERCER_TRIM" }, FormMethod.Post))
+        {
+            Html.DevExpress().Button(btnSettings =>
+            {
+                btnSettings.Name = "btnDescargaTercerTrimestre2";
+                btnSettings.Text = "Descarga Tercer Trimestre";
+                btnSettings.ClientVisible = Convert.ToBoolean(ViewData["tercerTrim"]);
+                btnSettings.ControlStyle.CssClass = "button";
+                btnSettings.Images.Image.Url = "/Content/Images/descargar.png";
+                btnSettings.ImagePosition = ImagePosition.Right;
+                btnSettings.Images.Image.Width = 16;
+                btnSettings.Style["position"] = "relative";
+                btnSettings.Style["left"] = "10px";
+                btnSettings.UseSubmitBehavior = true;
+            }).Render();
+        }
+
+        ViewContext.Writer.Write("<br >");
+        ViewContext.Writer.Write("<br >");
+
+        using (Html.BeginForm("DescargaArchivo", "ArchivosCampania", new { IdCampania = Convert.ToInt32(ViewData["IdCampania"]), TypeFile = "CUARTO_TRIM" }, FormMethod.Post))
+        {
+            Html.DevExpress().Button(btnSettings =>
+            {
+                btnSettings.Name = "btnDescargaCuartoTrimestre2";
+                btnSettings.Text = "Descarga Cuarto Trimestre";
+                btnSettings.ClientVisible = Convert.ToBoolean(ViewData["cuartoTrim"]);
+                btnSettings.ControlStyle.CssClass = "button";
+                btnSettings.Images.Image.Url = "/Content/Images/descargar.png";
+                btnSettings.ImagePosition = ImagePosition.Right;
+                btnSettings.Images.Image.Width = 16;
+                btnSettings.Style["position"] = "relative";
+                btnSettings.Style["left"] = "10px";
+                btnSettings.UseSubmitBehavior = true;
+            }).Render();
+        }
+
+        ViewContext.Writer.Write("<br >");
+        ViewContext.Writer.Write("<br >");
+    }
+    <br />
+
+    ViewContext.Writer.Write("<table><tr><td>");
+    Html.DevExpress().Label(edtSettings =>
+    {
+        edtSettings.ControlStyle.CssClass = "label";
+        edtSettings.Text = "Nota:";
+    }).Render();
+    ViewContext.Writer.Write("</td></tr>");
+
+    ViewContext.Writer.Write("<tr><td>");
+    Html.DevExpress().Label(edtSettings =>
+    {
+        edtSettings.ControlStyle.CssClass = "label";
+        edtSettings.Text = "1. El formato de los archivos debe ser PDF.";
+    }).Render();
+    ViewContext.Writer.Write("</td></tr>");
+
+    ViewContext.Writer.Write("<tr><td>");
+    Html.DevExpress().Label(edtSettings =>
+    {
+        edtSettings.ControlStyle.CssClass = "label";
+        edtSettings.Text = "2. Si ya existe un archivo, este será reemplazado por el nuevo a cargar.";
+    }).Render();
+    ViewContext.Writer.Write("</td></tr></table>");
+
+    Html.DevExpress().PopupControl(settings =>
+    {
+        settings.Name = "popUpCargaFinalizadaPrimerTrimestre";
+        settings.Width = 300;
+        settings.AllowDragging = true;
+        settings.CloseAction = CloseAction.CloseButton;
+        settings.PopupAnimationType = AnimationType.None;
+        settings.HeaderText = "La carga ha finalizado";
+        settings.Modal = true;
+        settings.PopupHorizontalAlign = PopupHorizontalAlign.WindowCenter;
+        settings.PopupVerticalAlign = PopupVerticalAlign.WindowCenter;
+
+        settings.SetContent(() =>
+        {
+            Html.DevExpress().Button(btnSettings =>
+            {
+                btnSettings.Name = "btnCargaFinalizadaPrimerTrimestre";
+                btnSettings.Text = "Aceptar";
+                btnSettings.ControlStyle.CssClass = "button";
+                btnSettings.Images.Image.Url = "/Content/Images/aceptar.png";
+                btnSettings.ImagePosition = ImagePosition.Right;
+                btnSettings.Images.Image.Width = 16;
+                btnSettings.ClientSideEvents.Click = "function(s, e){ popUpCargaFinalizadaPrimerTrimestre.Hide(); btnDescargaPrimerTrimestre.SetEnabled(true); labelPrimerTrimestre.SetVisible(true); }";
+            }).Render();
+        });
+    }).Render();
+
+    Html.DevExpress().PopupControl(settings =>
+    {
+        settings.Name = "popUpCargaFinalizadaSegundoTrimestre";
+        settings.Width = 300;
+        settings.AllowDragging = true;
+        settings.CloseAction = CloseAction.CloseButton;
+        settings.PopupAnimationType = AnimationType.None;
+        settings.HeaderText = "La carga ha finalizado";
+        settings.Modal = true;
+        settings.PopupHorizontalAlign = PopupHorizontalAlign.WindowCenter;
+        settings.PopupVerticalAlign = PopupVerticalAlign.WindowCenter;
+
+        settings.SetContent(() =>
+        {
+            Html.DevExpress().Button(btnSettings =>
+            {
+                btnSettings.Name = "btnCargaFinalizadaSegundoTrimestre";
+                btnSettings.Text = "Aceptar";
+                btnSettings.ControlStyle.CssClass = "button";
+                btnSettings.Images.Image.Url = "/Content/Images/aceptar.png";
+                btnSettings.ImagePosition = ImagePosition.Right;
+                btnSettings.Images.Image.Width = 16;
+                btnSettings.ClientSideEvents.Click = "function(s, e){ popUpCargaFinalizadaSegundoTrimestre.Hide(); btnDescargaSegundoTrimestre.SetEnabled(true); labelSegundoTrimestre.SetVisible(true); }";
+            }).Render();
+        });
+    }).Render();
+
+    Html.DevExpress().PopupControl(settings =>
+    {
+        settings.Name = "popUpCargaFinalizadaTercerTrimestre";
+        settings.Width = 300;
+        settings.AllowDragging = true;
+        settings.CloseAction = CloseAction.CloseButton;
+        settings.PopupAnimationType = AnimationType.None;
+        settings.HeaderText = "La carga ha finalizado";
+        settings.Modal = true;
+        settings.PopupHorizontalAlign = PopupHorizontalAlign.WindowCenter;
+        settings.PopupVerticalAlign = PopupVerticalAlign.WindowCenter;
+
+        settings.SetContent(() =>
+        {
+            Html.DevExpress().Button(btnSettings =>
+            {
+                btnSettings.Name = "btnCargaFinalizadaTercerTrimestre";
+                btnSettings.Text = "Aceptar";
+                btnSettings.ControlStyle.CssClass = "button";
+                btnSettings.Images.Image.Url = "/Content/Images/aceptar.png";
+                btnSettings.ImagePosition = ImagePosition.Right;
+                btnSettings.Images.Image.Width = 16;
+                btnSettings.ClientSideEvents.Click = "function(s, e){ popUpCargaFinalizadaTercerTrimestre.Hide(); btnDescargaTercerTrimestre.SetEnabled(true); labelTercerTrimestre.SetVisible(true); }";
+            }).Render();
+        });
+    }).Render();
+
+    Html.DevExpress().PopupControl(settings =>
+    {
+        settings.Name = "popUpCargaFinalizadaCuartoTrimestre";
+        settings.Width = 300;
+        settings.AllowDragging = true;
+        settings.CloseAction = CloseAction.CloseButton;
+        settings.PopupAnimationType = AnimationType.None;
+        settings.HeaderText = "La carga ha finalizado";
+        settings.Modal = true;
+        settings.PopupHorizontalAlign = PopupHorizontalAlign.WindowCenter;
+        settings.PopupVerticalAlign = PopupVerticalAlign.WindowCenter;
+
+        settings.SetContent(() =>
+        {
+            Html.DevExpress().Button(btnSettings =>
+            {
+                btnSettings.Name = "btnCargaFinalizadaCuartoTrimestre";
+                btnSettings.Text = "Aceptar";
+                btnSettings.ControlStyle.CssClass = "button";
+                btnSettings.Images.Image.Url = "/Content/Images/aceptar.png";
+                btnSettings.ImagePosition = ImagePosition.Right;
+                btnSettings.Images.Image.Width = 16;
+                btnSettings.ClientSideEvents.Click = "function(s, e){ popUpCargaFinalizadaCuartoTrimestre.Hide(); btnDescargaCuartoTrimestre.SetEnabled(true); labelCuartoTrimestre.SetVisible(true); }";
+            }).Render();
+        });
+    }).Render();
+}

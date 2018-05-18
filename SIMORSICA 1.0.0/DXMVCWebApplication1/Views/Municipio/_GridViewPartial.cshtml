@@ -1,0 +1,199 @@
+@using DXMVCWebApplication1.Models
+@{
+    var grid = Html.DevExpress().GridView(settings =>
+    {
+        settings.Name = "GridView";
+        settings.Style["width"] = "98%";
+        settings.Style["position"] = "relative";
+        settings.Style["left"] = "10px";
+        settings.CommandColumn.Width = 20;
+        settings.CallbackRouteValues = new { Controller = "Municipio", Action = "GridViewPartial" };
+
+        settings.SettingsEditing.AddNewRowRouteValues = new { Controller = "Municipio", Action = "GridViewPartialAddNew" };
+        settings.SettingsEditing.UpdateRowRouteValues = new { Controller = "Municipio", Action = "GridViewPartialUpdate" };
+        settings.SettingsEditing.DeleteRowRouteValues = new { Controller = "Municipio", Action = "GridViewPartialDelete" };
+        settings.SettingsEditing.Mode = GridViewEditingMode.PopupEditForm;
+        settings.SettingsText.PopupEditFormCaption = "MUNICIPIO";
+
+        settings.SettingsPopup.EditForm.Height = 200;
+        settings.SettingsPopup.EditForm.Width = 525;
+        settings.SettingsPopup.EditForm.HorizontalAlign = DevExpress.Web.ASPxClasses.PopupHorizontalAlign.WindowCenter;
+        settings.SettingsPopup.EditForm.VerticalAlign = DevExpress.Web.ASPxClasses.PopupVerticalAlign.WindowCenter;
+        settings.SettingsPopup.EditForm.Modal = true;
+
+        settings.SettingsBehavior.ConfirmDelete = true;
+
+        settings.CommandColumn.Visible = true;
+        settings.CommandColumn.ShowDeleteButton = true;
+        settings.CommandColumn.ShowEditButton = true;
+        settings.CommandColumn.ShowNewButtonInHeader = true;
+        settings.CommandColumn.ShowClearFilterButton = true;
+
+        settings.KeyFieldName = "Pk_IdMunicipio";
+
+        settings.SettingsPager.Visible = true;
+        settings.SettingsPager.Position = PagerPosition.Bottom;
+        settings.SettingsPager.FirstPageButton.Visible = true;
+        settings.SettingsPager.LastPageButton.Visible = true;
+        settings.SettingsPager.PageSizeItemSettings.Visible = true;
+        settings.SettingsPager.PageSize = 15;
+        settings.SettingsPager.PageSizeItemSettings.Items = new string[] { "5", "10", "15" };
+        settings.Settings.ShowFilterRowMenu = true;
+        settings.Settings.ShowGroupPanel = true;
+        settings.Settings.ShowFilterRow = true;
+        settings.SettingsBehavior.AllowSelectByRowClick = true;
+
+
+        //Se inserta el combo de Estados
+        settings.Columns.Add(column =>
+        {
+            column.FieldName = "Fk_IdEstado__SIS";
+            column.Caption = "Estado";
+
+            column.ColumnType = MVCxGridViewColumnType.ComboBox;
+            var comboBoxProperties = column.PropertiesEdit as ComboBoxProperties;
+            comboBoxProperties.DataSource = DXMVCWebApplication1.Models.Senasica.GetEstados();
+            comboBoxProperties.TextField = "Nombre";
+            comboBoxProperties.ValueField = "Pk_IdEstado";
+            comboBoxProperties.ValueType = typeof(int);
+        });
+        settings.Columns.Add("Nombre","Municipio");
+        //***Custom From
+
+        settings.SetEditFormTemplateContent(c =>
+        {
+            var municipio = ViewData["dataItem"] ?? c.DataItem;
+            //ViewContext.Writer.Write("<p style='color:orange; font-size:14px; left:5px; position:relative' >Edición de  Programa</p>");
+            Html.DevExpress().Label(
+                edtSettings =>
+                {
+                    edtSettings.ControlStyle.CssClass = "label";
+                    edtSettings.Text = c.KeyValue == null ? "Ingresa un Nuevo Municipio" : "Edita el Municipio";
+                    edtSettings.Style["font-size"] = "18px";
+                    edtSettings.Style["color"] = "orange";
+                }
+            )
+            .Render();
+            ViewContext.Writer.Write("<br>");
+            ViewContext.Writer.Write("</br>");
+
+            ViewContext.Writer.Write("<table>" + "<tr>" + "<td>");
+
+            //***Estado de municipio
+            Html.DevExpress().Label(
+                edtSettings =>
+                {
+                    edtSettings.ControlStyle.CssClass = "label";
+                    edtSettings.Text = "Nombre del Estado";
+                    edtSettings.AssociatedControlName = "Fk_IdEstado__SIS";
+                }
+            )
+            .Render();
+            Html.DevExpress().ComboBox(
+               edtSettings =>
+               {
+                   edtSettings.Name = "Fk_IdEstado__SIS";
+                   edtSettings.ControlStyle.CssClass = "editor";
+                   edtSettings.Properties.TextField = "Nombre";
+                   edtSettings.Properties.ValueField = "Pk_IdEstado";
+                   edtSettings.Properties.ValueType = typeof(int);
+                   edtSettings.ShowModelErrors = true;
+                   edtSettings.Width = Unit.Pixel(350);
+                   edtSettings.Properties.IncrementalFilteringMode = IncrementalFilteringMode.Contains;
+                   edtSettings.Properties.IncrementalFilteringDelay = 5;
+                   edtSettings.ToolTip = c.KeyValue == null ? "Seleccione un Estado" : "Cambiar Estado";
+               }
+            )
+            .BindList(DXMVCWebApplication1.Models.Senasica.GetEstados())
+            .Bind(DataBinder.Eval(municipio, "Fk_IdEstado__SIS"))
+            .Render();
+
+            ViewContext.Writer.Write("</td>");
+            ViewContext.Writer.Write("<td>");
+            //***Nombre del municipio
+            Html.DevExpress().Label(
+                edtSettings =>
+                {
+                    edtSettings.ControlStyle.CssClass = "label";
+                    edtSettings.Text = "Municipio";
+                    edtSettings.AssociatedControlName = "Nombre";
+                }
+            )
+            .Render();
+            Html.DevExpress().TextBox(
+                edtSettings =>
+                {
+                    edtSettings.Name = "Nombre";
+                    edtSettings.Properties.NullText = "Campo Requerido";
+                    edtSettings.ControlStyle.CssClass = "editor";
+                    edtSettings.ShowModelErrors = true;
+                    edtSettings.Width = Unit.Pixel(350);
+                    edtSettings.ToolTip = c.KeyValue == null ? "Ingresar Nombre del Municipio" : "Editar Nombre del Municipio";
+                }
+            )
+            .Bind(DataBinder.Eval(municipio, "Nombre"))
+            .Render();
+
+            ViewContext.Writer.Write("</td>");
+            ViewContext.Writer.Write("</tr>");
+            ViewContext.Writer.Write("</table>");
+
+            //**Botones Guardar & Cancelar
+            ViewContext.Writer.Write("<hr noshade>");
+            Html.DevExpress().Label(
+                       edtSettings =>
+                       {
+                           edtSettings.ControlStyle.CssClass = "label";
+                       }
+                   )
+                   .Render();
+            Html.DevExpress().Button(
+                btnSettings =>
+                {
+                    btnSettings.Name = "btnUpdat";
+                    btnSettings.Text = "Guardar";
+                    btnSettings.ControlStyle.CssClass = "button";
+                    btnSettings.Images.Image.Url = "Content/Images/guardar.png";
+                    btnSettings.ImagePosition = ImagePosition.Right;
+                    btnSettings.Images.Image.Width = 16;
+                    btnSettings.ClientSideEvents.Click = "function(s, e){ GridView" + ".UpdateEdit(); }";
+                }
+            )
+            .Render();
+
+            Html.DevExpress().Button(
+                btnSettings =>
+                {
+                    btnSettings.Name = "btnCance";
+                    btnSettings.Text = "Cancelar";
+                    btnSettings.ControlStyle.CssClass = "button";
+                    btnSettings.Images.Image.Url = "Content/Images/cancelar.png";
+                    btnSettings.ImagePosition = ImagePosition.Right;
+                    btnSettings.Style["position"] = "relative";
+                    btnSettings.Style["left"] = "5px";
+                    btnSettings.ClientSideEvents.Click = "function(s, e){ GridView" + ".CancelEdit(); }";
+                }
+            )
+            .Render();
+
+            Html.DevExpress().Button(btnSettings =>
+            {
+                btnSettings.Name = "btnAyuda";
+                btnSettings.ControlStyle.CssClass = "button";
+                btnSettings.Text = "Ayuda";
+                btnSettings.Images.Image.Url = "/Content/Images/ayuda.png";
+                btnSettings.ImagePosition = ImagePosition.Right;
+                btnSettings.Images.Image.Width = 16;
+                btnSettings.Style["position"] = "relative";
+                btnSettings.Style["left"] = "20px";
+                btnSettings.ClientSideEvents.Click = "function(s, e){ window.open('https://docs.google.com/document/d/1ZJURCxDAT76zN4TpKa2cBHEdF3RZFUNkAv3o9iyWxG4/edit#heading=h.23ckvvd','_blank'); }";
+            }).Render();
+        });
+
+    });
+    if (ViewData["EditError"] != null)
+    {
+        grid.SetEditErrorText((string)ViewData["EditError"]);
+    }
+}
+@grid.Bind(Model).GetHtml()

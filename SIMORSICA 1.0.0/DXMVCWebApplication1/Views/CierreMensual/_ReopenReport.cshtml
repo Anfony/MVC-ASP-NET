@@ -1,0 +1,204 @@
+﻿@using (Html.BeginForm("ConfirmaSolicitudAperturaCampania", "CierreMensual", new { IdCierreMensual = Model.Pk_IdCierreMensual }, FormMethod.Post))
+{
+    Html.DevExpress().Label(edtSettings =>
+    {
+        edtSettings.ControlStyle.CssClass = "label";
+        edtSettings.Text = "¿Deseas solicitar la apertura de esta campaña?";
+        edtSettings.Style["position"] = "relative";
+        edtSettings.Style["left"] = "20px";
+        edtSettings.ControlStyle.Font.Size = 18;
+    }).Render();
+
+    ViewContext.Writer.Write("<br />");
+    ViewContext.Writer.Write("<br />");
+    ViewContext.Writer.Write("<br />");
+
+    Html.DevExpress().Label(edtSettings =>
+    {
+        edtSettings.ControlStyle.CssClass = "label";
+        edtSettings.Text = "Detalles de la campaña";
+        edtSettings.Style["position"] = "relative";
+        edtSettings.Style["left"] = "20px";
+        edtSettings.ControlStyle.Font.Size = 14;
+    }).Render();
+
+    ViewContext.Writer.Write("<hr align='left' width='30%'>");
+
+    ViewContext.Writer.Write("<table>");
+
+    ViewContext.Writer.Write("<td>");
+    Html.DevExpress().Label(edtSettings =>
+    {
+        edtSettings.ControlStyle.CssClass = "label";
+        edtSettings.Text = "Campaña";
+        edtSettings.Name = "CampaniaLbl";
+        edtSettings.Style["position"] = "relative";
+        edtSettings.Style["left"] = "40px";
+    }).Render();
+
+    Html.DevExpress().TextBox(settingsTextBox =>
+    {
+        settingsTextBox.Name = "Campania";
+        settingsTextBox.Width = Unit.Pixel(400);
+        settingsTextBox.ReadOnly = true;
+        settingsTextBox.Style["position"] = "relative";
+        settingsTextBox.Style["left"] = "40px";
+    }).Bind(Model.Campania.ProyectoPresupuesto.ProyectoAutorizado.Nombre)
+    .Render();
+    ViewContext.Writer.Write("</td>");
+
+    ViewContext.Writer.Write("<td>");
+    Html.DevExpress().Label(edtSettings =>
+    {
+        edtSettings.ControlStyle.CssClass = "label";
+        edtSettings.Text = "Mes de cierre";
+        edtSettings.Name = "MesLbl";
+        edtSettings.Style["position"] = "relative";
+        edtSettings.Style["left"] = "60px";
+    }).Render();
+
+    Html.DevExpress().TextBox(settingsTextBox =>
+    {
+        settingsTextBox.Name = "Mes";
+        settingsTextBox.Width = Unit.Pixel(180);
+        settingsTextBox.ReadOnly = true;
+        settingsTextBox.Style["position"] = "relative";
+        settingsTextBox.Style["left"] = "60px";
+    }).Bind(Model.Me.Descripcion)
+    .Render();
+
+    ViewContext.Writer.Write("</td>");
+    ViewContext.Writer.Write("</table>");
+
+    ViewContext.Writer.Write("<br />");
+
+    ViewContext.Writer.Write("<table>");
+    ViewContext.Writer.Write("<td>");
+
+    Html.DevExpress().Label(edtSettings =>
+    {
+        edtSettings.ControlStyle.CssClass = "label";
+        edtSettings.Text = "Comentarios";
+        edtSettings.Name = "ComentariosLbl";
+        edtSettings.Style["position"] = "relative";
+        edtSettings.Style["left"] = "40px";
+    }).Render();
+
+    Html.DevExpress().TextBox(settingsTextBox =>
+    {
+        settingsTextBox.Name = "Comentarios";
+        settingsTextBox.Width = Unit.Pixel(400);
+        settingsTextBox.ReadOnly = true;
+        settingsTextBox.Style["position"] = "relative";
+        settingsTextBox.Style["left"] = "40px";
+    }).Bind(Model.Comentarios)
+    .Render();
+    ViewContext.Writer.Write("</td>");
+
+    ViewContext.Writer.Write("<td>");
+    Html.DevExpress().Label(edtSettings =>
+    {
+        edtSettings.ControlStyle.CssClass = "label";
+        edtSettings.Text = "Recurso Federal Solicitado";
+        edtSettings.Name = "RF";
+        edtSettings.Style["position"] = "relative";
+        edtSettings.Style["left"] = "60px";
+    }).Render();
+
+    Html.DevExpress().TextBox(settingsTextBox =>
+    {
+        settingsTextBox.Name = "RecSol_Fed";
+        settingsTextBox.Width = Unit.Pixel(180);
+        settingsTextBox.ReadOnly = true;
+        settingsTextBox.Style["position"] = "relative";
+        settingsTextBox.Style["left"] = "60px";
+        settingsTextBox.Properties.DisplayFormatString = "c";
+    }).Bind(Model.Campania.RecSol_Fed)
+    .Render();
+
+    ViewContext.Writer.Write("</td>");
+
+    ViewContext.Writer.Write("<td>");
+    Html.DevExpress().Label(edtSettings =>
+    {
+        edtSettings.ControlStyle.CssClass = "label";
+        edtSettings.Text = "Recurso Estatal Solicitado";
+        edtSettings.Name = "RE";
+        edtSettings.Style["position"] = "relative";
+        edtSettings.Style["left"] = "80px";
+    }).Render();
+
+    Html.DevExpress().TextBox(settingsTextBox =>
+    {
+        settingsTextBox.Name = "RecSol_Est";
+        settingsTextBox.Width = Unit.Pixel(180);
+        settingsTextBox.ReadOnly = true;
+        settingsTextBox.Style["position"] = "relative";
+        settingsTextBox.Style["left"] = "80px";
+        settingsTextBox.Properties.DisplayFormatString = "c";
+    }).Bind(Model.Campania.RecSol_Est)
+    .Render();
+    ViewContext.Writer.Write("</td>");
+    ViewContext.Writer.Write("</table>");
+
+    ViewContext.Writer.Write("<br />");
+    ViewContext.Writer.Write("<hr align='left' width='30%'>");
+
+    Html.DevExpress().Label(edtSettings =>
+    {
+        edtSettings.ControlStyle.CssClass = "label";
+        edtSettings.Text = "Justificación de la Solicitud de Apertura";
+        edtSettings.Name = "JustificacionAperturaLbl";
+        edtSettings.Style["position"] = "relative";
+        edtSettings.Style["left"] = "40px";
+        edtSettings.ControlStyle.Font.Size = 14;
+        edtSettings.ControlStyle.Font.Bold = true;
+        edtSettings.ControlStyle.ForeColor = System.Drawing.Color.Green;
+    }).Render();
+
+    Html.DevExpress().Memo(edtSettings =>
+    {
+        edtSettings.Name = "JustificacionApertura";
+        edtSettings.Properties.NullText = "Justifica la apertura";
+        edtSettings.ControlStyle.CssClass = "editor";
+        edtSettings.ShowModelErrors = true;
+        edtSettings.Width = Unit.Pixel(800);
+        edtSettings.Height = Unit.Pixel(50);
+        edtSettings.ToolTip = "Justificación de la Solicitud de Apertura";
+        edtSettings.Style["position"] = "relative";
+        edtSettings.Style["left"] = "40px";
+    }).Render();
+
+    ViewContext.Writer.Write("<br />");
+    ViewContext.Writer.Write("<br />");
+
+    ViewContext.Writer.Write("<div style='float:left'>");
+    Html.DevExpress().Button(btnSettings =>
+    {
+        btnSettings.Name = "btnConfirma";
+        btnSettings.Text = "Solicita Apertura";
+        btnSettings.ToolTip = "Aceptar";
+        btnSettings.ControlStyle.CssClass = "button";
+        btnSettings.ImagePosition = ImagePosition.Right;
+        btnSettings.Images.Image.Width = 16;
+        btnSettings.Images.Image.Url = "/Content/Images/aceptar.png";
+        btnSettings.UseSubmitBehavior = true;
+        btnSettings.Style["position"] = "relative";
+        btnSettings.Style["left"] = "360px";
+    }).Render();
+
+    Html.DevExpress().Button(btnSettings =>
+    {
+        btnSettings.Name = "btnCancel";
+        btnSettings.Text = "Cancela Solicitud";
+        btnSettings.ToolTip = "Cancelar";
+        btnSettings.ControlStyle.CssClass = "button";
+        btnSettings.ImagePosition = ImagePosition.Right;
+        btnSettings.Images.Image.Width = 16;
+        btnSettings.Images.Image.Url = "/Content/Images/cancelar.png";
+        btnSettings.ClientSideEvents.Click = "function(){ window.location = 'Index'; }";
+        btnSettings.Style["position"] = "relative";
+        btnSettings.Style["left"] = "360px";
+    }).Render();
+    ViewContext.Writer.Write("</div>");
+}

@@ -1,0 +1,279 @@
+<<<<<<< Updated upstream
+﻿@Html.DevExpress().GridView(
+settings =>
+{
+    settings.Name = "detailGrid_" + ViewData["UEID"];
+    settings.SettingsDetail.MasterGridName = "UnidadEjecutoraGridView";
+    settings.CallbackRouteValues = new { Controller = "UnidadEjecutora", Action = "PersonaGridViewPartial", UEID = ViewData["UEID"], IdEstado = ViewData["IdEstado"] };
+    settings.Width = Unit.Percentage(100);
+
+    settings.SettingsEditing.AddNewRowRouteValues = new { Controller = "UnidadEjecutora", Action = "PersonaGridViewPartialAddNew", UEID = ViewData["UEID"], IdEstado = ViewData["IdEstado"] };
+    settings.SettingsEditing.UpdateRowRouteValues = new { Controller = "UnidadEjecutora", Action = "PersonaGridViewPartialUpdate", UEID = ViewData["UEID"], IdEstado = ViewData["IdEstado"] };
+    settings.SettingsEditing.DeleteRowRouteValues = new { Controller = "UnidadEjecutora", Action = "PersonaGridViewPartialDelete", UEID = ViewData["UEID"], IdEstado = ViewData["IdEstado"] };
+    settings.SettingsEditing.Mode = GridViewEditingMode.PopupEditForm;
+    settings.SettingsBehavior.ConfirmDelete = true;
+
+    settings.CommandColumn.Visible = true;
+    settings.CommandColumn.ShowDeleteButton = true;
+    settings.CommandColumn.ShowEditButton = true;
+    settings.CommandColumn.ShowNewButtonInHeader = true;
+    settings.SettingsCommandButton.NewButton.Text = "Nueva Persona";
+    settings.CommandColumn.ShowClearFilterButton = false;
+    settings.SettingsBehavior.AllowSelectByRowClick = true;
+    settings.SettingsDetail.AllowOnlyOneMasterRowExpanded = true;
+
+    settings.KeyFieldName = "Pk_IdPersona";
+    settings.Columns.Add("Ap_Paterno", "Apellido Paterno");
+    settings.Columns.Add("Ap_Materno", "Apellido Materno");
+    settings.Columns.Add("Nombre");
+    settings.Columns.Add("Direccion", "Dirección");
+    settings.Columns.Add("Colonia");
+    settings.Columns.Add("Cargo", "Puesto");
+
+    int? IdEstado = Convert.ToInt32(ViewData["IdEstado"]);
+        
+
+    settings.Columns.Add(column =>
+=======
+﻿@{ 
+    var grid = Html.DevExpress().GridView(settings =>
+>>>>>>> Stashed changes
+    {
+        settings.Name = "detailGrid_" + ViewData["UEID"];
+        settings.SettingsDetail.MasterGridName = "UnidadEjecutoraGridView";
+        settings.CallbackRouteValues = new { Controller = "UnidadEjecutora", Action = "PersonaGridViewPartial", UEID = ViewData["UEID"] };
+        settings.Width = Unit.Percentage(100);
+
+        settings.SettingsEditing.AddNewRowRouteValues = new { Controller = "UnidadEjecutora", Action = "PersonaGridViewPartialAddNew", UEID = ViewData["UEID"] };
+        settings.SettingsEditing.UpdateRowRouteValues = new { Controller = "UnidadEjecutora", Action = "PersonaGridViewPartialUpdate", UEID = ViewData["UEID"] };
+        settings.SettingsEditing.DeleteRowRouteValues = new { Controller = "UnidadEjecutora", Action = "PersonaGridViewPartialDelete", UEID = ViewData["UEID"] };
+        settings.SettingsEditing.Mode = GridViewEditingMode.PopupEditForm;
+        settings.SettingsBehavior.ConfirmDelete = true;
+
+        settings.SettingsPopup.EditForm.Height = 200;
+        settings.SettingsPopup.EditForm.Width = 600;
+        settings.SettingsPopup.EditForm.HorizontalAlign = DevExpress.Web.ASPxClasses.PopupHorizontalAlign.WindowCenter;
+        settings.SettingsPopup.EditForm.VerticalAlign = DevExpress.Web.ASPxClasses.PopupVerticalAlign.WindowCenter;
+        settings.SettingsPopup.EditForm.Modal = true;
+
+<<<<<<< Updated upstream
+    settings.Columns.Add(column =>
+    {
+        column.FieldName = "Fk_IdMunicipio__SIS";
+        column.Caption = "Municipio";
+        column.ColumnType = MVCxGridViewColumnType.ComboBox;
+        var comboBoxProperties = column.PropertiesEdit as ComboBoxProperties;
+        comboBoxProperties.DataSource = DXMVCWebApplication1.Models.Senasica.GetMunicipios(IdEstado);
+        comboBoxProperties.TextField = "Nombre";
+        comboBoxProperties.ValueField = "Pk_IdMunicipio";
+        comboBoxProperties.ValueType = typeof(int);
+        comboBoxProperties.IncrementalFilteringMode = IncrementalFilteringMode.StartsWith;
+=======
+        settings.CommandColumn.Visible = true;
+        settings.CommandColumn.ShowDeleteButton = true;
+        settings.CommandColumn.ShowEditButton = true;
+        settings.CommandColumn.ShowNewButtonInHeader = true;
+        settings.SettingsCommandButton.NewButton.Text = "Nueva Persona";
+        settings.CommandColumn.ShowClearFilterButton = false;
+        settings.SettingsBehavior.AllowSelectByRowClick = true;
+        settings.SettingsDetail.AllowOnlyOneMasterRowExpanded = true;
+
+        settings.KeyFieldName = "Pk_IdPersona";
+        settings.Columns.Add("Ap_Paterno", "Apellido Paterno");
+        settings.Columns.Add("Ap_Materno", "Apellido Materno");
+        settings.Columns.Add("Nombre");
+        settings.Columns.Add("Estado.Nombre", "Estado");
+        settings.Columns.Add("Puesto.Descripcion", "Puesto");
+        settings.Columns.Add("Profesion.Descripcion", "Profesión");
+
+        settings.SetEditFormTemplateContent(c =>
+        {
+            var persona = c.DataItem;
+            ViewContext.Writer.Write("<p>Edición de Personal</p>");
+            ViewContext.Writer.Write("<table> <tr>");
+
+            ViewContext.Writer.Write("<td>");
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Apellido Paterno";
+                edtSettings.AssociatedControlName = "Ap_Paterno";
+            }).Render();
+
+            Html.DevExpress().TextBox(edtSettings =>
+            {
+                edtSettings.Name = "Ap_Paterno";
+                edtSettings.ControlStyle.CssClass = "editor";
+                edtSettings.ShowModelErrors = true;
+                edtSettings.Width = Unit.Pixel(200);
+            }).Bind(DataBinder.Eval(persona, "Ap_Paterno")).Render();
+            ViewContext.Writer.Write("</td>");
+
+            ViewContext.Writer.Write("<td>");
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Apellido Materno";
+                edtSettings.AssociatedControlName = "Ap_Materno";
+            }).Render();
+
+            Html.DevExpress().TextBox(edtSettings =>
+            {
+                edtSettings.Name = "Ap_Materno";
+                edtSettings.ControlStyle.CssClass = "editor";
+                edtSettings.ShowModelErrors = true;
+                edtSettings.Width = Unit.Pixel(200);
+            }).Bind(DataBinder.Eval(persona, "Ap_Materno")).Render();
+            ViewContext.Writer.Write("</td>");
+
+            ViewContext.Writer.Write("<td>");
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Nombre";
+                edtSettings.AssociatedControlName = "Nombre";
+            }).Render();
+
+            Html.DevExpress().TextBox(edtSettings =>
+            {
+                edtSettings.Name = "Nombre";
+                edtSettings.ControlStyle.CssClass = "editor";
+                edtSettings.ShowModelErrors = true;
+                edtSettings.Width = Unit.Pixel(200);
+            }).Bind(DataBinder.Eval(persona, "Nombre")).Render();
+            ViewContext.Writer.Write("</td>");
+            ViewContext.Writer.Write("</tr>");
+
+            ViewContext.Writer.Write("<tr>");
+            ViewContext.Writer.Write("<td>");
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Estado";
+                edtSettings.AssociatedControlName = "Fk_IdEstado__SIS_Persona";
+            }).Render();
+
+            Html.DevExpress().ComboBox(edtSettings =>
+            {
+                edtSettings.Properties.IncrementalFilteringMode = IncrementalFilteringMode.Contains;
+                edtSettings.Properties.IncrementalFilteringDelay = 5;
+                edtSettings.Name = "Fk_IdEstado__SIS_Persona";
+                edtSettings.ControlStyle.CssClass = "editor";
+                edtSettings.Properties.TextField = "Nombre";
+                edtSettings.Properties.ValueField = "Pk_IdEstado";
+                edtSettings.Properties.ValueType = typeof(int);
+                edtSettings.ShowModelErrors = true;
+                edtSettings.Width = Unit.Pixel(200);
+
+            }).BindList(DXMVCWebApplication1.Models.Senasica.GetEstados())
+               .Bind(DataBinder.Eval(persona, "Fk_IdEstado__SIS"))
+               .Render();
+            ViewContext.Writer.Write("</td>");
+
+            ViewContext.Writer.Write("<td>");
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Municipio";
+                edtSettings.AssociatedControlName = "Fk_IdMunicipio__SIS_Persona";
+            }).Render();
+
+            Html.DevExpress().ComboBox(edtSettings =>
+            {
+                edtSettings.Properties.IncrementalFilteringMode = IncrementalFilteringMode.Contains;
+                edtSettings.Properties.IncrementalFilteringDelay = 5;
+                edtSettings.Name = "Fk_IdMunicipio__SIS_Persona";
+                edtSettings.ControlStyle.CssClass = "editor";
+                edtSettings.Properties.TextField = "Nombre";
+                edtSettings.Properties.ValueField = "Pk_IdMunicipio";
+                edtSettings.Properties.ValueType = typeof(int);
+                edtSettings.ShowModelErrors = true;
+                edtSettings.Width = Unit.Pixel(200);
+
+            }).BindList(DXMVCWebApplication1.Models.Senasica.GetMunicipios())
+               .Bind(DataBinder.Eval(persona, "Fk_IdMunicipio__SIS"))
+               .Render();
+            ViewContext.Writer.Write("</td>");
+
+            ViewContext.Writer.Write("<td>");
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Dirección";
+                edtSettings.AssociatedControlName = "Direccion";
+            }).Render();
+
+            Html.DevExpress().TextBox(edtSettings =>
+            {
+                edtSettings.Name = "Direccion";
+                edtSettings.ControlStyle.CssClass = "editor";
+                edtSettings.ShowModelErrors = true;
+                edtSettings.Width = Unit.Pixel(200);
+            }).Bind(DataBinder.Eval(persona, "Direccion")).Render();
+            ViewContext.Writer.Write("</td>");
+            ViewContext.Writer.Write("</tr>");
+
+            ViewContext.Writer.Write("<tr>");
+            ViewContext.Writer.Write("<td>");
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Colonia";
+                edtSettings.AssociatedControlName = "Colonia";
+            }).Render();
+
+            Html.DevExpress().TextBox(edtSettings =>
+            {
+                edtSettings.Name = "Colonia";
+                edtSettings.ControlStyle.CssClass = "editor";
+                edtSettings.ShowModelErrors = true;
+                edtSettings.Width = Unit.Pixel(200);
+            }).Bind(DataBinder.Eval(persona, "Colonia")).Render();
+            ViewContext.Writer.Write("</td>");
+
+            ViewContext.Writer.Write("<td>");
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Teléfono";
+                edtSettings.AssociatedControlName = "Telefono";
+            }).Render();
+
+            Html.DevExpress().TextBox(edtSettings =>
+            {
+                edtSettings.Name = "Telefono";
+                edtSettings.ControlStyle.CssClass = "editor";
+                edtSettings.ShowModelErrors = true;
+                edtSettings.Width = Unit.Pixel(200);
+            }).Bind(DataBinder.Eval(persona, "Telefono")).Render();
+            ViewContext.Writer.Write("</td>");
+
+            ViewContext.Writer.Write("<td>");
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Correo Electrónico";
+                edtSettings.AssociatedControlName = "Email";
+            }).Render();
+
+            Html.DevExpress().TextBox(edtSettings =>
+            {
+                edtSettings.Name = "Email";
+                edtSettings.ControlStyle.CssClass = "editor";
+                edtSettings.ShowModelErrors = true;
+                edtSettings.Width = Unit.Pixel(200);
+            }).Bind(DataBinder.Eval(persona, "Email")).Render();
+            ViewContext.Writer.Write("</td>");
+            ViewContext.Writer.Write("</tr>");
+
+        });
+>>>>>>> Stashed changes
+    });
+
+    if (ViewData["EditError"] != null)
+    {
+        grid.SetEditErrorText((string)ViewData["EditError"]);
+    }
+}
+
+@grid.Bind(Model).GetHtml()

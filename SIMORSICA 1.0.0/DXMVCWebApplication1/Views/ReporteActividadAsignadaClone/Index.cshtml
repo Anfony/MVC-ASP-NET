@@ -1,0 +1,63 @@
+﻿@{
+    ViewBag.Title = "Reporte de Actividades";
+}
+
+<div style="float: right; margin-right: 20px"><a href="https://docs.google.com/document/d/1ZJURCxDAT76zN4TpKa2cBHEdF3RZFUNkAv3o9iyWxG4/edit#heading=h.279ka65" target="_blank"><u>Ayuda</u></a>  |  <a href="http://soporte.simosica.com/support/solutions/articles/22000184563-preguntas-frecuentes" target="_blank"> <u>Preguntas Frecuentes</u></a></div>
+ 
+<h3 style="font-size:17px; font:bold; text-align:center">Reporte de Actividades Realizadas</h3>
+<h4 style="font-size: 13px; text-align: center; position: relative; top: -10px">Edite las Actividades de la campaña que tiene aperturada</h4>
+<br>
+<br>
+<br>
+
+@{
+    Html.DevExpress().Label(edtSettings =>
+    {
+        edtSettings.ControlStyle.CssClass = "label";
+        edtSettings.Text = "Campaña: " + ViewData["NombreCampania"].ToString();
+        edtSettings.Style["position"] = "relative";
+        edtSettings.Style["left"] = "10px";
+        edtSettings.ControlStyle.Font.Size = 14;
+        edtSettings.ControlStyle.Font.Bold = true;
+        edtSettings.ControlStyle.ForeColor = System.Drawing.Color.Green;
+    }).Render();
+
+    ViewContext.Writer.Write("<br />");
+
+    Html.DevExpress().Label(edtSettings =>
+    {
+        edtSettings.ControlStyle.CssClass = "label";
+        edtSettings.Text = "Mes: " + ViewData["Mes"].ToString();
+        edtSettings.Style["position"] = "relative";
+        edtSettings.Style["left"] = "10px";
+        edtSettings.ControlStyle.Font.Size = 14;
+        edtSettings.ControlStyle.Font.Bold = true;
+        edtSettings.ControlStyle.ForeColor = System.Drawing.Color.Green;
+    }).Render();
+
+    ViewContext.Writer.Write("<br />");
+}
+
+<br>
+<br>
+
+@using (Html.BeginForm("Index", "CierreMensual"))
+{
+    Html.DevExpress().Button(btnSettings =>
+    {
+        btnSettings.Name = "Retorno";
+        btnSettings.Text = "Regresa a Cierre Mensual";
+        btnSettings.ToolTip = "Regresa a Cierre Mensual";
+        btnSettings.ControlStyle.CssClass = "button";
+        btnSettings.ImagePosition = ImagePosition.Right;
+        btnSettings.Style["position"] = "relative";
+        btnSettings.Style["left"] = "10px";
+        btnSettings.Images.Image.Width = 16;
+        btnSettings.Images.Image.Url = "/Content/Images/regresa.png";
+        btnSettings.UseSubmitBehavior = true;
+    }).Render();
+}
+
+<br>
+
+@Html.Action("ActividadesAsignadasGridViewPartial", new { IdCierreMensual = ViewData["IdCierreMensual"].ToString() })

@@ -1,0 +1,104 @@
+﻿<script type="text/javascript">
+
+    window.onload = function ()
+    {
+        var _totalEstados = totalEstados();
+        var _presupuestoTotalOtorgado = document.getElementById('PresupuestoTotalAsignado_I').value;
+        _presupuestoTotalOtorgado = _presupuestoTotalOtorgado.replace(/,/g, "");
+
+        var _presupuestoFaltante = _presupuestoTotalOtorgado - _totalEstados;
+        document.getElementById('PresupuestoFaltante_I').value = _presupuestoFaltante;
+
+        if (_presupuestoFaltante < 0) btnGuardar.clickLocked = true;
+        if (_presupuestoFaltante > 0) btnGuardar.clickLocked = true;
+        if (_presupuestoFaltante == 0) btnGuardar.clickLocked = false;
+    }
+
+    function verificaSumaTotalEstados(s, e)
+    {
+        var _totalEstados = totalEstados();
+        var _presupuestoTotalOtorgado = document.getElementById('PresupuestoTotalAsignado_I').value;
+        _presupuestoTotalOtorgado = _presupuestoTotalOtorgado.replace(/,/g, "");
+
+        var _presupuestoFaltante = _presupuestoTotalOtorgado - _totalEstados;
+        document.getElementById('PresupuestoFaltante_I').value = _presupuestoFaltante;
+
+        if (_presupuestoFaltante < 0) {
+            popUpRecursoExcedido.Show();
+            btnGuardar.clickLocked = true;
+        }
+
+        if (_presupuestoFaltante > 0) btnGuardar.clickLocked = true;
+        if (_presupuestoFaltante == 0) btnGuardar.clickLocked = false;
+    }
+
+    function totalEstados() {
+        return ((Aguascalientes.number * 10) + (CDMX.number * 10) + (Morelos.number * 10) + (Sinaloa.number * 10)
+                            + (BajaCalifornia.number * 10) + (Durango.number * 10) + (Nayarit.number * 10) + (Sonora.number * 10)
+                            + (BajaCaliforniaSur.number * 10) + (Guanajuato.number * 10) + (NuevoLeon.number * 10) + (Tabasco.number * 10)
+                            + (Campeche.number * 10) + (Guerrero.number * 10) + (Oaxaca.number * 10) + (Tamaulipas.number * 10)
+                            + (Coahuila.number * 10) + (Hidalgo.number * 10) + (Puebla.number * 10) + (Tlaxcala.number * 10)
+                            + (Colima.number * 10) + (Jalisco.number * 10) + (Queretaro.number * 10) + (Veracruz.number * 10)
+                            + (Chiapas.number * 10) + (Mexico.number * 10) + (QuintanaRoo.number * 10) + (Yucatan.number * 10)
+                            + (Chihuahua.number * 10) + (MichoacanOcampo.number * 10) + (SanLuisPotosi.number * 10) + (Zacatecas.number * 10)) / 10;
+    }
+
+</script>
+
+@{
+    ViewBag.Title = "Presupuesto por Estado y Direcciones Generales";
+}
+
+<h3 style="font-size:17px; font:bold; text-align:center">ASIGNACIÓN DEL PRESUPUESTO A LOS ESTADOS</h3>
+<h3 style="font-size: 13px; text-align: center; position: relative; top: -10px">ASIGNE EL PRESUPUESTO REQUERIDO A CADA ESTADO</h3>
+
+<br />
+<br />
+
+@Html.DevExpress().Label(edtSettings =>
+{
+    edtSettings.Name = "PresupuestoNoCerrado";
+    edtSettings.ControlStyle.CssClass = "label";
+    edtSettings.Style["TextAlign"] = "center";
+    edtSettings.Style["color"] = "red";
+    edtSettings.Text = "EL PRESUPUESTO AÚN NO SE HA ASIGNADO A LAS DIRECCIONES GENERALES";
+    edtSettings.ClientVisible = !Convert.ToBoolean(ViewData["PresupuestoYaOtorgado"]);
+}).GetHtml()
+
+<br />
+<br />
+
+@Html.DevExpress().Button(btnSettings =>
+{
+    btnSettings.Name = "CierraDistribucion";
+    btnSettings.Text = Convert.ToBoolean(ViewData["esRecursoCerrado"]) ? "Recursos cerrados" : "Cierra la distribución";
+    btnSettings.ToolTip = Convert.ToBoolean(ViewData["esRecursoCerrado"]) ? "El recurso ha sido cerrado para este año" : "Movimiento irreversible";
+    btnSettings.ClientEnabled = Convert.ToBoolean(ViewData["recursosYaDistribuidos"]) && !Convert.ToBoolean(ViewData["esRecursoCerrado"]) ? true : false;
+    btnSettings.ClientVisible = Convert.ToBoolean(ViewData["PresupuestoYaOtorgado"]);
+    btnSettings.ControlStyle.CssClass = "button";
+    btnSettings.ImagePosition = ImagePosition.Right;
+    btnSettings.Images.Image.Url = Convert.ToBoolean(ViewData["esRecursoCerrado"]) ? "/Content/Images/candado_cerrado.png" : "/Content/Images/candado_abierto.png";
+    btnSettings.Style["position"] = "relative";
+    btnSettings.Style["left"] = "5px";
+    btnSettings.ClientSideEvents.Click = "function(s, e){ popUpCerrarDistribucion.Show(); }";
+}).GetHtml()
+
+
+@Html.DevExpress().Button(btnSettings =>
+{
+    btnSettings.Name = "DistribuyeRecurso";
+    btnSettings.Text = Convert.ToBoolean(ViewData["esRecursoCerrado"]) ? "Recurso ya distribuido" : "Distribuir recurso";
+    btnSettings.ToolTip = Convert.ToBoolean(ViewData["esRecursoCerrado"]) ? "El recurso no se puede distribuir nuevamente para este año" : "Distribuya el recurso en las diferentes Direcciones Generales";
+    btnSettings.ClientEnabled = Convert.ToBoolean(ViewData["esRecursoCerrado"]) ? false : true;
+    btnSettings.ClientVisible = Convert.ToBoolean(ViewData["PresupuestoYaOtorgado"]);
+    btnSettings.ControlStyle.CssClass = "button";
+    btnSettings.ImagePosition = ImagePosition.Right;
+    btnSettings.Style["position"] = "relative";
+    btnSettings.Style["left"] = "5px";
+    btnSettings.ClientSideEvents.Click = "function(s, e){ popUpDistribucionRecursosXEstado.Show(); }";
+}).GetHtml()
+
+<br />
+<br />
+
+@Html.Action("DGPresupuestoXEstado")

@@ -1,0 +1,222 @@
+﻿<script type="text/javascript">
+    function verificaRecurso(s, e) {
+        var montoRestante = document.getElementById('MontoRestante_I').value;
+
+        montoRestante = montoRestante.replace("$", "");
+        montoRestante = montoRestante.replace(/,/g, "");
+
+        if (montoRestante == 0) {
+            document.getElementById('MontoRestante').style.border = "1px none black";
+            popUpCerrarDistribucion.Show();
+        }
+        else {
+            document.getElementById('MontoRestante').style.border = "2px solid red";
+            popUpRecursoExcedido.Show();
+        }
+    }
+</script>
+
+@{
+    ViewBag.Title = "Presupuesto para los Proyectos Autorizados";
+}
+<div style="float: right; margin-right: 20px"><a href="https://docs.google.com/document/d/1ZJURCxDAT76zN4TpKa2cBHEdF3RZFUNkAv3o9iyWxG4/edit#heading=h.2bn6wsx" target="_blank"><u>Ayuda</u></a>  |  <a href="https://docs.google.com/document/d/1nh28WSE1G7XGoMeeauq076EH3vk3rFTcIF4EVH60bwc/edit#bookmark=id.30j0zll" target="_blank"> <u>Preguntas Frecuentes</u></a></div>
+
+<h3 style="font-size:17px; font:bold; text-align:center">PRESUPUESTO PARA LOS PROYECTOS AUTORIZADOS POR ESTADO</h3>
+<h3 style="font-size: 13px; text-align: center; position: relative; top: -10px">Registre aquí el Presupuesto Autorizado para los Proyectos Autorizados de cada Estado</h3>
+
+<br>
+
+@Html.Partial("~/Views/ExportExcelPDF/_ExportExcelPDF.cshtml", new ViewDataDictionary { { "Clave", DXMVCWebApplication1.Common.ListaPantallas.SIS_PRESUPUESTO_PROYECTO } })
+
+<br>
+
+
+@Html.DevExpress().Label(edtSettings =>
+{
+    edtSettings.Name = "ErrorGenerico";
+    edtSettings.ClientVisible = ViewData["Error"].ToString() != "";
+    edtSettings.ControlStyle.CssClass = "label";
+    edtSettings.Style["TextAlign"] = "center";
+    edtSettings.Style["color"] = "red";
+    edtSettings.Text = ViewData["Error"].ToString();
+}).GetHtml()
+
+<br />
+@*
+    @if (User.IsInRole(RolesUsuarios.UR_INOCUIDAD) ||
+                                User.IsInRole(RolesUsuarios.UR_MOVILIZACION) ||
+                                User.IsInRole(RolesUsuarios.UR_ANIMAL) ||
+                                User.IsInRole(RolesUsuarios.UR_ACUICOLA_PESQUERA) ||
+                                User.IsInRole(RolesUsuarios.UR_VEGETAL))
+    {
+        if (Convert.ToBoolean(ViewData["presupuestoYaOtorgado"]))
+        {
+            ViewContext.Writer.Write("<table><tr><td>");
+            using (Html.BeginForm("FiltraDistribucionRecurso", "ProyectoPresupuesto", FormMethod.Post))
+            {
+                Html.DevExpress().ComboBox(edtSettings =>
+                {
+                    edtSettings.Name = "Estado";
+                    edtSettings.ControlStyle.CssClass = "editor";
+                    edtSettings.ToolTip = "Seleccione un Estado";
+                    edtSettings.ShowModelErrors = true;
+                    edtSettings.Width = Unit.Pixel(260);
+                    edtSettings.Properties.IncrementalFilteringMode = IncrementalFilteringMode.Contains;
+                    edtSettings.Properties.IncrementalFilteringDelay = 5;
+                    edtSettings.Properties.ValueField = "Pk_IdEstado";
+                    edtSettings.Properties.ValueType = typeof(int);
+                    edtSettings.Properties.TextField = "Nombre";
+                    edtSettings.Properties.NullText = "Seleccione un Estado";
+                    edtSettings.Style["position"] = "relative";
+                    edtSettings.Style["left"] = "10px";
+                }).BindList(DXMVCWebApplication1.Models.Senasica.GetEstados()).GetHtml();
+                ViewContext.Writer.Write("</td>");
+
+                ViewContext.Writer.Write("<td>");
+                Html.DevExpress().Button(btnSettings =>
+                {
+                    btnSettings.Name = "btnFiltrar";
+                    btnSettings.Text = "Presupuesto por Estado";
+                    btnSettings.ControlStyle.CssClass = "button";
+                    btnSettings.Images.Image.Url = "/Content/Images/lupa.png";
+                    btnSettings.ImagePosition = ImagePosition.Right;
+                    btnSettings.Style["position"] = "relative";
+                    btnSettings.Style["left"] = "5px";
+                    btnSettings.UseSubmitBehavior = true;
+                }).GetHtml();
+                ViewContext.Writer.Write("</td>");
+            }
+            ViewContext.Writer.Write("<td>");
+            using (Html.BeginForm("MostrarTodo", "ProyectoPresupuesto"))
+            {
+                Html.DevExpress().Button(btnSettings =>
+                {
+                    btnSettings.Name = "btnMostrarTodo";
+                    btnSettings.Text = "Mostrar todo";
+                    btnSettings.ControlStyle.CssClass = "button";
+                    btnSettings.Images.Image.Url = "/Content/Images/folders.png";
+                    btnSettings.ImagePosition = ImagePosition.Right;
+                    btnSettings.Style["position"] = "relative";
+                    btnSettings.Style["left"] = "25px";
+                    btnSettings.UseSubmitBehavior = true;
+                }).GetHtml();
+            }
+            ViewContext.Writer.Write("</td>");
+
+            if (!(ViewData["Estado"] == null || ViewData["Estado"].ToString() == ""))
+            {
+                ViewContext.Writer.Write("<td>");
+                Html.DevExpress().Button(btnSettings =>
+                {
+                    btnSettings.Name = "btnCierreDistribucion";
+                    btnSettings.Text = (ViewData["esRecursoCerrado"] == null ? false : Convert.ToBoolean(ViewData["esRecursoCerrado"])) ? "Recursos cerrados" : "Cierra la distribución";
+                    btnSettings.ToolTip = (ViewData["esRecursoCerrado"] == null ? false : Convert.ToBoolean(ViewData["esRecursoCerrado"])) ? "El recurso ha sido cerrado para este año" : "Movimiento irreversible";
+                    btnSettings.ClientEnabled = !Convert.ToBoolean(ViewData["esRecursoCerrado"]);
+                    btnSettings.ControlStyle.CssClass = "button";
+                    btnSettings.Images.Image.Url = (ViewData["esRecursoCerrado"] == null ? false : Convert.ToBoolean(ViewData["esRecursoCerrado"])) ? "~/Content/Images/candado_cerrado.png" : "~/Content/Images/candado_abierto.png";
+                    btnSettings.ImagePosition = ImagePosition.Right;
+                    btnSettings.Style["position"] = "relative";
+                    btnSettings.Style["left"] = "35px";
+                    btnSettings.ClientSideEvents.Click = "verificaRecurso";
+                }).GetHtml();
+                ViewContext.Writer.Write("</td>");
+                ViewContext.Writer.Write("</tr> </table>");
+
+                ViewContext.Writer.Write("<br />");
+
+                ViewContext.Writer.Write("<table> <tr>");
+
+                ViewContext.Writer.Write("<td>");
+                Html.DevExpress().Label(edtSettings =>
+                {
+                    edtSettings.Name = "lblEstado";
+                    edtSettings.ControlStyle.CssClass = "label";
+                    edtSettings.Style["position"] = "relative";
+                    edtSettings.Style["left"] = "10px";
+                    edtSettings.Text = "Estado: ";
+                }).GetHtml();
+                ViewContext.Writer.Write("</td>");
+
+                ViewContext.Writer.Write("<td>");
+                Html.DevExpress().TextBox(edtSettings =>
+                {
+                    edtSettings.Name = "txtEstado";
+                    edtSettings.ReadOnly = true;
+                    edtSettings.Text = ViewData["Estado"] == null ? "-" : ViewData["Estado"].ToString();
+                    edtSettings.ControlStyle.CssClass = "editor";
+                    edtSettings.Style["position"] = "relative";
+                    edtSettings.Style["left"] = "20px";
+                    edtSettings.ControlStyle.Border.BorderWidth = 0;
+                }).GetHtml();
+                ViewContext.Writer.Write("</td>");
+                ViewContext.Writer.Write("</tr>");
+
+                ViewContext.Writer.Write("<tr>");
+                ViewContext.Writer.Write("<td>");
+                Html.DevExpress().Label(edtSettings =>
+                {
+                    edtSettings.Name = "PresupuestoOtorgado";
+                    edtSettings.ControlStyle.CssClass = "label";
+                    edtSettings.Style["position"] = "relative";
+                    edtSettings.Style["left"] = "10px";
+                    edtSettings.Text = "Presupuesto Orotgado: ";
+                }).GetHtml();
+                ViewContext.Writer.Write("</td>");
+
+                ViewContext.Writer.Write("<td>");
+                Html.DevExpress().TextBox(edtSettings =>
+                {
+                    edtSettings.Name = "MontoOtorgado";
+                    edtSettings.ReadOnly = true;
+                    edtSettings.Text = ViewData["MontoOtorgado"] == null ? "-" : Convert.ToDecimal(ViewData["MontoOtorgado"]).ToString("c");
+                    edtSettings.ControlStyle.CssClass = "editor";
+                    edtSettings.Style["position"] = "relative";
+                    edtSettings.Style["left"] = "20px";
+                    edtSettings.ControlStyle.Border.BorderWidth = 0;
+                }).GetHtml();
+                ViewContext.Writer.Write("</td>");
+                ViewContext.Writer.Write("</tr>");
+
+                ViewContext.Writer.Write("<tr>");
+                ViewContext.Writer.Write("<td>");
+                Html.DevExpress().Label(edtSettings =>
+                {
+                    edtSettings.Name = "TextMontoRestante";
+                    edtSettings.ControlStyle.CssClass = "label";
+                    edtSettings.Style["position"] = "relative";
+                    edtSettings.Style["left"] = "10px";
+                    edtSettings.Text = "Presupuesto Restante: ";
+                }).GetHtml();
+                ViewContext.Writer.Write("</td>");
+
+                ViewContext.Writer.Write("<td>");
+                Html.DevExpress().TextBox(edtSettings =>
+                {
+                    edtSettings.Name = "MontoRestante";
+                    edtSettings.ReadOnly = true;
+                    edtSettings.Text = ViewData["MontoRestante"] == null ? "" : Convert.ToInt64(ViewData["MontoRestante"]).ToString("#,##0");
+                    edtSettings.ControlStyle.CssClass = "editor";
+                    edtSettings.Style["position"] = "relative";
+                    edtSettings.Style["left"] = "20px";
+                    edtSettings.ControlStyle.Border.BorderWidth = 0;
+                }).GetHtml();
+                ViewContext.Writer.Write("</td>");
+            }
+
+            ViewContext.Writer.Write("</tr></table>");
+        }
+        else
+        {
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.Name = "PresupuestoYaOtorgado";
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Style["TextAlign"] = "center";
+                edtSettings.Style["color"] = "red";
+                edtSettings.Text = "AÚN NO SE HA CERRADO LA DISTRIBUCIÓN DEL PRESUPUESTO POR ESTADOS. NECESITAS CERRARLA PARA PODERLA DISTRIBUIR A LOS DISTINTOS PROYECTOS";
+            }).GetHtml();
+        }
+    }*@
+
+<br />
+@Html.Action("ProyectoPresupuestoGridViewPartial", new { Estado = ViewData["Estado"] })

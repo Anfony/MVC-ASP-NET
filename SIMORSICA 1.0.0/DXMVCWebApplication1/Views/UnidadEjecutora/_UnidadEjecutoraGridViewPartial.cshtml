@@ -1,0 +1,802 @@
+@{
+    var grid = Html.DevExpress().GridView(settings =>
+    {
+        settings.Name = "UnidadEjecutoraGridView";
+        settings.Style["width"] = "98%";
+        settings.Style["position"] = "relative";
+        settings.Style["left"] = "10px";
+        settings.CallbackRouteValues = new { Controller = "UnidadEjecutora", Action = "UnidadEjecutoraGridViewPartial" };
+
+        settings.SettingsEditing.AddNewRowRouteValues = new { Controller = "UnidadEjecutora", Action = "UnidadEjecutoraGridViewPartialAddNew" };
+        settings.SettingsEditing.UpdateRowRouteValues = new { Controller = "UnidadEjecutora", Action = "UnidadEjecutoraGridViewPartialUpdate" };
+        settings.SettingsEditing.DeleteRowRouteValues = new { Controller = "UnidadEjecutora", Action = "UnidadEjecutoraGridViewPartialDelete" };
+        settings.SettingsEditing.Mode = GridViewEditingMode.PopupEditForm;
+        settings.SettingsBehavior.ConfirmDelete = true;
+
+        settings.SettingsPopup.EditForm.Height = 400;
+        settings.SettingsPopup.EditForm.Width = 625;
+        settings.SettingsPopup.EditForm.HorizontalAlign = PopupHorizontalAlign.WindowCenter;
+        settings.SettingsPopup.EditForm.VerticalAlign = PopupVerticalAlign.WindowCenter;
+        settings.SettingsPopup.EditForm.Modal = true;
+
+        settings.SettingsBehavior.ConfirmDelete = true;
+
+        settings.CommandColumn.Visible = true;
+        settings.CommandColumn.ShowNewButtonInHeader = User.IsInRole(DXMVCWebApplication1.Common.RolesUsuarios.SUPERUSUARIO);
+        settings.CommandColumn.ShowDeleteButton = Convert.ToBoolean(ViewData["Escritura"]);
+        settings.CommandColumn.ShowEditButton = Convert.ToBoolean(ViewData["Escritura"]) || Convert.ToBoolean(ViewData["Lectura"]);
+        settings.CommandColumn.ShowClearFilterButton = true;
+
+        settings.KeyFieldName = "Pk_IdUnidadEjecutora";
+
+        settings.SettingsPager.Visible = true;
+        settings.SettingsPager.Position = PagerPosition.Bottom;
+        settings.SettingsPager.FirstPageButton.Visible = true;
+        settings.SettingsPager.LastPageButton.Visible = true;
+        settings.SettingsPager.PageSizeItemSettings.Visible = true;
+        settings.SettingsPager.PageSize = 10;
+        settings.SettingsPager.PageSizeItemSettings.Items = new string[] { "5", "10", "15" };
+        settings.Settings.ShowGroupPanel = true;
+        settings.Settings.ShowFilterRow = true;
+        settings.Settings.ShowFilterRowMenu = true;
+        settings.SettingsBehavior.AllowSelectByRowClick = true;
+
+        settings.Columns.Add(column =>
+        {
+            column.FieldName = "Fk_IdTipoDeUnidad__SIS";
+            column.Caption = "Tipo de Unidad";
+
+            column.ColumnType = MVCxGridViewColumnType.ComboBox;
+            var comboBoxProperties = column.PropertiesEdit as ComboBoxProperties;
+            comboBoxProperties.DataSource = DXMVCWebApplication1.Models.Senasica.GetTiposDeUnidad();
+            comboBoxProperties.TextField = "Nombre";
+            comboBoxProperties.ValueField = "Pk_IdTipoDeUnidad";
+            comboBoxProperties.ValueType = typeof(int);
+        });
+
+        settings.Columns.Add("Nombre", "Nombre de la Unidad");
+
+        if (FuncionesAuxiliares.GetCurrent_RolUsuario() == RolesUsuarios.UR_VEGETAL
+            || FuncionesAuxiliares.GetCurrent_RolUsuario() == RolesUsuarios.UR_INOCUIDAD
+            || FuncionesAuxiliares.GetCurrent_RolUsuario() == RolesUsuarios.UR_ANIMAL
+            || FuncionesAuxiliares.GetCurrent_RolUsuario() == RolesUsuarios.UR_ACUICOLA_PESQUERA
+            || FuncionesAuxiliares.GetCurrent_RolUsuario() == RolesUsuarios.UR_MOVILIZACION
+            || FuncionesAuxiliares.GetCurrent_RolUsuario() == RolesUsuarios.UR_UPV)
+        {
+            settings.Columns.Add("Estado", "Estado");
+            settings.Columns.Add("Municipio", "Municipio");
+        }
+        else
+        {
+            settings.Columns.Add("Estado.Nombre", "Estado");
+            settings.Columns.Add("Municipio.Nombre", "Municipio");
+        }
+        settings.Columns.Add(column =>
+        {
+            column.FieldName = "Fk_IdUnidadResponsable__UE";
+            column.Caption = "Unidad Responsable";
+            column.ColumnType = MVCxGridViewColumnType.ComboBox;
+            var comboBoxProperties = column.PropertiesEdit as ComboBoxProperties;
+            comboBoxProperties.DataSource = DXMVCWebApplication1.Models.Senasica.GetUnidadesResponsables();
+            comboBoxProperties.TextField = "Nombre";
+            comboBoxProperties.ValueField = "Pk_IdUnidadResponsable";
+            comboBoxProperties.ValueType = typeof(int);
+        });
+
+        settings.Columns.Add("CorreoElectronico", "Correo Electrónico");
+        settings.Columns.Add("Telefono", "Teléfono");
+        settings.Columns.Add("StatusKardexUE", "Estatus");
+        settings.Columns.Add("RFC");
+
+        settings.Columns.Add(column =>
+        {
+            string RolUsuario = Convert.ToString(ViewData["_rolusuario"]);
+            int Fk_IdAnio = Convert.ToInt32(ViewData["_FK_IdAnio"]);
+            column.FieldName = "Fk_IdSubComponente";
+            column.Caption = "Sub Componente";
+            column.ColumnType = MVCxGridViewColumnType.ComboBox;
+            var comboBoxProperties = column.PropertiesEdit as ComboBoxProperties;
+            comboBoxProperties.DataSource = DXMVCWebApplication1.Models.Senasica.GetSubComponentexUsuario(RolUsuario, Fk_IdAnio);
+            comboBoxProperties.TextField = "Nombre";
+            comboBoxProperties.ValueField = "Pk_IdSubComponente";
+            comboBoxProperties.ValueType = typeof(int);
+        });
+
+        //*********************************************************
+        //Comienza codigo de la forma custom
+        //********************************************************
+
+        settings.SetEditFormTemplateContent(c =>
+        {
+
+            var unidadejecutora = ViewData["dataItem"] ?? c.DataItem;
+            string RolUsuario = Convert.ToString(ViewData["_rolusuario"]);
+            int Fk_IdAnio = Convert.ToInt32(ViewData["_FK_IdAnio"]);
+
+            ViewContext.Writer.Write("<p>Edición de Instancia Ejecutora</p>");
+            ViewContext.Writer.Write("<table> <tr> <td>");
+
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Tipo de Instancia Ejecutora:";
+                edtSettings.AssociatedControlName = "Fk_IdTipoDeUnidad__SIS";
+            }).Render();
+
+            Html.DevExpress().ComboBox(edtSettings =>
+            {
+                edtSettings.Name = "Fk_IdTipoDeUnidad__SIS";
+                edtSettings.ControlStyle.CssClass = "editor";
+                edtSettings.Properties.TextField = "Nombre";
+                edtSettings.Properties.NullText = "Campo Requerido";
+                edtSettings.Properties.ValueField = "Pk_IdTipoDeUnidad";
+                edtSettings.Properties.IncrementalFilteringMode = IncrementalFilteringMode.Contains;
+                edtSettings.ToolTip = c.KeyValue == null ? "Seleccione la Instancia Ejecutora" : "Cambiar la Instancia Ejecutora";
+                edtSettings.Properties.IncrementalFilteringDelay = 5;
+                edtSettings.Properties.ValueType = typeof(int);
+                edtSettings.ShowModelErrors = true;
+                edtSettings.Width = Unit.Pixel(300);
+            }).BindList(DXMVCWebApplication1.Models.Senasica.GetTiposDeUnidad())
+            .Bind(DataBinder.Eval(unidadejecutora, "Fk_IdTipoDeUnidad__SIS"))
+            .Render();
+
+            ViewContext.Writer.Write("</td>");
+            ViewContext.Writer.Write("<td>");
+
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Nombre de la Instancia Ejecutora:";
+                edtSettings.AssociatedControlName = "Nombre";
+            }).Render();
+
+            Html.DevExpress().TextBox(edtSettings =>
+            {
+                edtSettings.Name = "Nombre";
+                edtSettings.ControlStyle.CssClass = "editor";
+                edtSettings.ShowModelErrors = true;
+                edtSettings.Width = Unit.Pixel(300);
+                edtSettings.ToolTip = c.KeyValue == null ? "Ingresar Nombre de la Instancia Ejecutora" : "Editar el Nombre de la Instancia Ejecutora";
+            }).Bind(DataBinder.Eval(unidadejecutora, "Nombre"))
+            .Render();
+
+            ViewContext.Writer.Write("</td>");
+            ViewContext.Writer.Write("<td>");
+            ViewContext.Writer.Write("<br>");
+
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Estado:";
+                edtSettings.AssociatedControlName = "Fk_IdEstado__SIS";
+            }).Render();
+
+            Html.DevExpress().ComboBox(edtSettings =>
+            {
+                edtSettings.Name = "Fk_IdEstado__SIS";
+                edtSettings.ClientEnabled = true;
+                edtSettings.ControlStyle.CssClass = "editor";
+                edtSettings.Properties.TextField = "Nombre";
+                edtSettings.Properties.NullText = "Campo Requerido";
+                edtSettings.Properties.ValueField = "Pk_IdEstado";
+                edtSettings.Properties.ValueType = typeof(int);
+                edtSettings.ShowModelErrors = true;
+                edtSettings.Width = Unit.Pixel(300);
+                edtSettings.ToolTip = c.KeyValue == null ? "Seleccione un Estado" : "Cambiar Estado";
+                edtSettings.Properties.EnableSynchronization = DefaultBoolean.False;
+                edtSettings.Properties.IncrementalFilteringMode = IncrementalFilteringMode.StartsWith;
+                edtSettings.Properties.ClientSideEvents.SelectedIndexChanged = "function(s, e){ EstadoCombo_SelectedIndexChanged(s, e); Fk_IdMunicipio.SetEnabled(true); }";
+            }).BindList(DXMVCWebApplication1.Models.Senasica.GetEstados())
+            .Bind(DataBinder.Eval(unidadejecutora, "Fk_IdEstado__SIS"))
+            .Render();
+
+            ViewContext.Writer.Write("</br>");
+            ViewContext.Writer.Write("</td>");
+            ViewContext.Writer.Write("</tr>");
+            ViewContext.Writer.Write("<tr>");
+            ViewContext.Writer.Write("<td>");
+
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Municipio:";
+                edtSettings.AssociatedControlName = "Fk_IdMunicipio";
+            }).Render();
+
+            var Pk_IdEstado = c.Grid.GetRowValues(c.Grid.EditingRowVisibleIndex, "Fk_IdEstado__SIS");
+            var Fk_IdMunicipio = DataBinder.Eval(unidadejecutora, "Fk_IdMunicipio");
+            ViewData["Fk_IdMunicipio"] = Fk_IdMunicipio;
+            var Municipios = DXMVCWebApplication1.Models.Senasica.GetMunicipiosByEstado((int?)Pk_IdEstado);
+
+            @Html.RenderPartial("_ComboBoxMunicipioPartial", Municipios);
+
+            ViewContext.Writer.Write("</td>");
+            ViewContext.Writer.Write("<td>");
+
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Colonia o Localidad:";
+                edtSettings.AssociatedControlName = "Colonia";
+            }).Render();
+
+            Html.DevExpress().TextBox(edtSettings =>
+            {
+                edtSettings.Name = "Colonia";
+                edtSettings.ControlStyle.CssClass = "editor";
+                edtSettings.ShowModelErrors = true;
+                edtSettings.Width = Unit.Pixel(300);
+                edtSettings.ToolTip = c.KeyValue == null ? "Ingresar el Nombre de la Colonia/Localidad" : "Editar el Nombre de la Colonia/Localidad";
+            }).Bind(DataBinder.Eval(unidadejecutora, "Colonia"))
+           .Render();
+
+            ViewContext.Writer.Write("<td>");
+            ViewContext.Writer.Write("<br>");
+
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Dirección Calle y Número:";
+                edtSettings.AssociatedControlName = "Direccion";
+            }).Render();
+
+            Html.DevExpress().TextBox(edtSettings =>
+            {
+                edtSettings.Name = "Direccion";
+                edtSettings.ControlStyle.CssClass = "editor";
+                edtSettings.ShowModelErrors = true;
+                edtSettings.Width = Unit.Pixel(300);
+                edtSettings.ToolTip = c.KeyValue == null ? "Ingresar Nombre de la Calle" : "Editar Nombre de la Calle";
+            }).Bind(DataBinder.Eval(unidadejecutora, "Direccion")).Render();
+
+            ViewContext.Writer.Write("</br>");
+            ViewContext.Writer.Write("</td>");
+            ViewContext.Writer.Write("</td>");
+            ViewContext.Writer.Write("</tr>");
+
+            // Nuevo renglon
+            ViewContext.Writer.Write("<tr>");
+            ViewContext.Writer.Write("<td>");
+            ViewContext.Writer.Write("<br>");
+
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Correo Electrónico:";
+                edtSettings.AssociatedControlName = "CorreoElectronico";
+            }).Render();
+
+            Html.DevExpress().TextBox(edtSettings =>
+            {
+                edtSettings.Name = "CorreoElectronico";
+                edtSettings.ControlStyle.CssClass = "editor";
+                edtSettings.ShowModelErrors = true;
+                edtSettings.Width = Unit.Pixel(300);
+                edtSettings.Properties.NullText = "Campo Requerido";
+                edtSettings.ToolTip = c.KeyValue == null ? "Ingresar Correo Electrónico, Ejemplo@ejemplo.com" : "Editar Correo Electrónico";
+            }).Bind(DataBinder.Eval(unidadejecutora, "CorreoElectronico"))
+            .Render();
+
+            ViewContext.Writer.Write("</br>");
+            ViewContext.Writer.Write("</td>");
+            ViewContext.Writer.Write("<td>");
+
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Teléfono:";
+                edtSettings.AssociatedControlName = "Telefono";
+            }).Render();
+
+            Html.DevExpress().TextBox(edtSettings =>
+            {
+                edtSettings.Name = "Telefono";
+                edtSettings.ControlStyle.CssClass = "editor";
+                edtSettings.ShowModelErrors = true;
+                edtSettings.Width = Unit.Pixel(300);
+                edtSettings.ToolTip = c.KeyValue == null ? "Ingresar Número Telefónico" : "Editar Número Telefónico";
+            }).Bind(DataBinder.Eval(unidadejecutora, "Telefono"))
+            .Render();
+
+            ViewContext.Writer.Write("</td>");
+            ViewContext.Writer.Write("<td>");
+
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Unidad Responsable:";
+                edtSettings.AssociatedControlName = "Fk_IdUnidadResponsable__UE";
+            }).Render();
+
+            Html.DevExpress().ComboBox(edtSettings =>
+            {
+                edtSettings.Name = "Fk_IdUnidadResponsable__UE";
+                edtSettings.ClientEnabled = true;
+                edtSettings.ControlStyle.CssClass = "editor";
+                edtSettings.Properties.TextField = "Nombre";
+                edtSettings.Properties.NullText = "Campo Requerido";
+                edtSettings.Properties.ValueField = "Pk_IdUnidadResponsable";
+                edtSettings.Properties.IncrementalFilteringMode = IncrementalFilteringMode.Contains;
+                edtSettings.Properties.IncrementalFilteringDelay = 5;
+                edtSettings.Properties.ValueType = typeof(int);
+                edtSettings.ShowModelErrors = true;
+                edtSettings.Width = Unit.Pixel(300);
+                edtSettings.ToolTip = c.KeyValue == null ? "Seleccione la Unidad Responsable" : "Cambiar Unidad Responsable";
+            }).BindList(DXMVCWebApplication1.Models.Senasica.GetUnidadesResponsables())
+            .Bind(DataBinder.Eval(unidadejecutora, "Fk_IdUnidadResponsable__UE"))
+            .Render();
+
+            ViewContext.Writer.Write("</td>");
+            ViewContext.Writer.Write("</tr>");
+            ViewContext.Writer.Write("<tr>");
+            ViewContext.Writer.Write("<td>");
+
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "RFC:";
+                edtSettings.AssociatedControlName = "RFC";
+            }).Render();
+
+            Html.DevExpress().TextBox(edtSettings =>
+            {
+                edtSettings.Name = "RFC";
+                edtSettings.ControlStyle.CssClass = "editor";
+                edtSettings.ShowModelErrors = true;
+                edtSettings.Width = Unit.Pixel(300);
+                edtSettings.ToolTip = c.KeyValue == null ? "Ingresar RFC" : "Editar RFC";
+            }).Bind(DataBinder.Eval(unidadejecutora, "RFC")).Render();
+
+            ViewContext.Writer.Write("</td>");
+            ViewContext.Writer.Write("<td>");
+
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Sub Componente:";
+                edtSettings.AssociatedControlName = "Fk_IdSubComponente";
+            }).Render();
+
+            Html.DevExpress().ComboBox(edtSettings =>
+            {
+                edtSettings.Name = "Fk_IdSubComponente";
+                edtSettings.ClientEnabled = true;
+                edtSettings.ControlStyle.CssClass = "editor";
+                edtSettings.Properties.TextField = "Nombre";
+                edtSettings.Properties.ValueField = "Pk_IdSubComponente";
+                edtSettings.Properties.IncrementalFilteringMode = IncrementalFilteringMode.Contains;
+                edtSettings.Properties.IncrementalFilteringDelay = 5;
+                edtSettings.Properties.ValueType = typeof(int);
+                edtSettings.ShowModelErrors = true;
+                edtSettings.Width = Unit.Pixel(300);
+                edtSettings.ToolTip = "Seleccione el Subcomponente";
+                edtSettings.ToolTip = c.KeyValue == null ? "Seleccione el SubComponente" : "Cambiar SubComponente";
+            }).BindList(DXMVCWebApplication1.Models.Senasica.GetSubComponentexUsuario(RolUsuario, Fk_IdAnio))
+            .Bind(DataBinder.Eval(unidadejecutora, "Fk_IdSubComponente"))
+            .Render();
+
+            ViewContext.Writer.Write("</td>");
+            ViewContext.Writer.Write("</tr><tr>");
+            ViewContext.Writer.Write("<td>");
+
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Nombre del Notario:";
+                edtSettings.AssociatedControlName = "NombreNotario";
+            }).Render();
+
+            Html.DevExpress().TextBox(edtSettings =>
+            {
+                edtSettings.Name = "NombreNotario";
+                edtSettings.ControlStyle.CssClass = "editor";
+                edtSettings.ShowModelErrors = true;
+                edtSettings.Width = Unit.Pixel(300);
+                edtSettings.ToolTip = c.KeyValue == null ? "Ingresar el Nombre del Notario" : "Editar el Nombre del Notario";
+            }).Bind(DataBinder.Eval(unidadejecutora, "NombreNotario"))
+            .Render();
+
+            ViewContext.Writer.Write("</td>");
+            ViewContext.Writer.Write("<td>");
+
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Lugar del Notario:";
+                edtSettings.AssociatedControlName = "LugarNotario";
+            }).Render();
+
+            Html.DevExpress().TextBox(edtSettings =>
+            {
+                edtSettings.Name = "LugarNotario";
+                edtSettings.ControlStyle.CssClass = "editor";
+                edtSettings.ShowModelErrors = true;
+                edtSettings.Width = Unit.Pixel(300);
+                edtSettings.ToolTip = c.KeyValue == null ? "Ingresar la Dirección del Notario " : "Editar la Dirección del Notario";
+            }).Bind(DataBinder.Eval(unidadejecutora, "LugarNotario"))
+            .Render();
+
+            ViewContext.Writer.Write("</td>");
+            ViewContext.Writer.Write("<td>");
+
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Notaría:";
+                edtSettings.AssociatedControlName = "Notaria";
+            }).Render();
+
+            Html.DevExpress().TextBox(edtSettings =>
+            {
+                edtSettings.Name = "Notaria";
+                edtSettings.ControlStyle.CssClass = "editor";
+                edtSettings.ShowModelErrors = true;
+                edtSettings.Width = Unit.Pixel(300);
+                edtSettings.ToolTip = c.KeyValue == null ? "Ingresar el Nombre de la Notaría" : "Editar el Nombre de la Notaría";
+            }).Bind(DataBinder.Eval(unidadejecutora, "Notaria"))
+            .Render();
+
+            ViewContext.Writer.Write("</td><tr>");
+            ViewContext.Writer.Write("<td>");
+
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Acta Constitutiva:";
+                edtSettings.AssociatedControlName = "ActaConstitutiva";
+            }).Render();
+
+            Html.DevExpress().TextBox(edtSettings =>
+            {
+                edtSettings.Name = "ActaConstitutiva";
+                edtSettings.ControlStyle.CssClass = "editor";
+                edtSettings.ShowModelErrors = true;
+                edtSettings.Width = Unit.Pixel(300);
+                edtSettings.ToolTip = c.KeyValue == null ? "Ingresar la clave del Acta Constitutiva" : "Editar la clave del Acta Constitutiva";
+            }).Bind(DataBinder.Eval(unidadejecutora, "ActaConstitutiva"))
+            .Render();
+
+            ViewContext.Writer.Write("</td>");
+
+            ViewContext.Writer.Write("<td>");
+
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Sitio Web:";
+                edtSettings.AssociatedControlName = "SitioWeb";
+            }).Render();
+
+            Html.DevExpress().TextBox(edtSettings =>
+            {
+                edtSettings.Name = "SitioWeb";
+                edtSettings.ControlStyle.CssClass = "editor";
+                edtSettings.ShowModelErrors = true;
+                edtSettings.Width = Unit.Pixel(300);
+                edtSettings.ToolTip = "Ingresar el Sitio Web";
+            }).Bind(DataBinder.Eval(unidadejecutora, "SitioWeb"))
+            .Render();
+
+            ViewContext.Writer.Write("</td>");
+
+            ViewContext.Writer.Write("</tr>");
+            ViewContext.Writer.Write("</table>");
+
+            ViewContext.Writer.Write("<hr align='left' width='100%'>");
+
+            ViewContext.Writer.Write("<table>");
+            ViewContext.Writer.Write("<tr>");
+            ViewContext.Writer.Write("<td>");
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Registro de Bancos para Recepción de Ministraciones";
+            }).Render();
+            ViewContext.Writer.Write("</td>");
+            ViewContext.Writer.Write("</tr>");
+            ViewContext.Writer.Write("</table>");
+
+            ViewContext.Writer.Write("<br />");
+
+            ViewContext.Writer.Write("<table>");
+            ViewContext.Writer.Write("<tr>");
+            ViewContext.Writer.Write("<td>");
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Federal";
+            }).Render();
+            ViewContext.Writer.Write("</td>");
+
+            ViewContext.Writer.Write("<td>");
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Banco:";
+            }).Render();
+            Html.DevExpress().ComboBox(edtSettings =>
+            {
+                edtSettings.Name = "FK_BancoCtaFederal";
+                edtSettings.ControlStyle.CssClass = "editor";
+                edtSettings.Properties.TextField = "NombreCorto";
+                edtSettings.Properties.NullText = "Campo Requerido";
+                edtSettings.Properties.ValueField = "Pk_IdBanco";
+                edtSettings.Properties.ValueType = typeof(int);
+                edtSettings.ShowModelErrors = true;
+                edtSettings.Width = Unit.Pixel(500);
+                edtSettings.ToolTip = "Seleccione un Banco";
+                edtSettings.Properties.EnableSynchronization = DefaultBoolean.False;
+                edtSettings.Properties.IncrementalFilteringMode = IncrementalFilteringMode.Contains;
+
+                edtSettings.Properties.Columns.Add("NombreCorto", "Nombre");
+                edtSettings.Properties.Columns.Add("RazonSocial", "Razón Social");
+            }).BindList(DXMVCWebApplication1.Models.Senasica.GetBancos())
+            .Bind(DataBinder.Eval(unidadejecutora, "FK_BancoCtaFederal"))
+            .Render();
+            ViewContext.Writer.Write("</td>");
+
+            ViewContext.Writer.Write("<td>");
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Núm. Cta:";
+            }).Render();
+            Html.DevExpress().TextBox(edtSettings =>
+            {
+                edtSettings.Name = "CtaFederal";
+                edtSettings.ControlStyle.CssClass = "editor";
+                edtSettings.ShowModelErrors = true;
+                edtSettings.Width = Unit.Pixel(300);
+                edtSettings.ToolTip = "Ingresa el número de cuenta";
+            }).Bind(DataBinder.Eval(unidadejecutora, "CtaFederal"))
+            .Render();
+            ViewContext.Writer.Write("</td>");
+            ViewContext.Writer.Write("</tr>");
+
+            ViewContext.Writer.Write("<tr>");
+            ViewContext.Writer.Write("<td>");
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Estatal";
+            }).Render();
+            ViewContext.Writer.Write("</td>");
+
+            ViewContext.Writer.Write("<td>");
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Banco:";
+            }).Render();
+            Html.DevExpress().ComboBox(edtSettings =>
+            {
+                edtSettings.Name = "FK_BancoCtaEstatal";
+                edtSettings.ControlStyle.CssClass = "editor";
+                edtSettings.Properties.TextField = "NombreCorto";
+                edtSettings.Properties.NullText = "Campo Requerido";
+                edtSettings.Properties.ValueField = "Pk_IdBanco";
+                edtSettings.Properties.ValueType = typeof(int);
+                edtSettings.ShowModelErrors = true;
+                edtSettings.Width = Unit.Pixel(500);
+                edtSettings.ToolTip = "Seleccione un Banco";
+                edtSettings.Properties.EnableSynchronization = DefaultBoolean.False;
+                edtSettings.Properties.IncrementalFilteringMode = IncrementalFilteringMode.Contains;
+
+                edtSettings.Properties.Columns.Add("NombreCorto", "Nombre");
+                edtSettings.Properties.Columns.Add("RazonSocial", "Razón Social");
+            }).BindList(DXMVCWebApplication1.Models.Senasica.GetBancos())
+            .Bind(DataBinder.Eval(unidadejecutora, "FK_BancoCtaEstatal"))
+            .Render();
+            ViewContext.Writer.Write("</td>");
+
+            ViewContext.Writer.Write("<td>");
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Núm. Cta:";
+            }).Render();
+            Html.DevExpress().TextBox(edtSettings =>
+            {
+                edtSettings.Name = "CtaEstatal";
+                edtSettings.ControlStyle.CssClass = "editor";
+                edtSettings.ShowModelErrors = true;
+                edtSettings.Width = Unit.Pixel(300);
+                edtSettings.ToolTip = "Ingresa el número de cuenta";
+            }).Bind(DataBinder.Eval(unidadejecutora, "CtaEstatal"))
+            .Render();
+            ViewContext.Writer.Write("</td>");
+            ViewContext.Writer.Write("</tr>");
+
+            ViewContext.Writer.Write("<tr>");
+            ViewContext.Writer.Write("<td>");
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Productores";
+            }).Render();
+            ViewContext.Writer.Write("</td>");
+
+            ViewContext.Writer.Write("<td>");
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Banco:";
+            }).Render();
+            Html.DevExpress().ComboBox(edtSettings =>
+            {
+                edtSettings.Name = "FK_BancoCtaProductores";
+                edtSettings.ControlStyle.CssClass = "editor";
+                edtSettings.Properties.TextField = "NombreCorto";
+                edtSettings.Properties.NullText = "Campo Requerido";
+                edtSettings.Properties.ValueField = "Pk_IdBanco";
+                edtSettings.Properties.ValueType = typeof(int);
+                edtSettings.ShowModelErrors = true;
+                edtSettings.Width = Unit.Pixel(500);
+                edtSettings.ToolTip = "Seleccione un Banco";
+                edtSettings.Properties.EnableSynchronization = DefaultBoolean.False;
+                edtSettings.Properties.IncrementalFilteringMode = IncrementalFilteringMode.Contains;
+
+                edtSettings.Properties.Columns.Add("NombreCorto", "Nombre");
+                edtSettings.Properties.Columns.Add("RazonSocial", "Razón Social");
+
+            }).BindList(DXMVCWebApplication1.Models.Senasica.GetBancos())
+            .Bind(DataBinder.Eval(unidadejecutora, "FK_BancoCtaProductores"))
+            .Render();
+            ViewContext.Writer.Write("</td>");
+
+            ViewContext.Writer.Write("<td>");
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Núm. Cta:";
+            }).Render();
+
+            Html.DevExpress().TextBox(edtSettings =>
+            {
+                edtSettings.Name = "CtaProductores";
+                edtSettings.ControlStyle.CssClass = "editor";
+                edtSettings.ShowModelErrors = true;
+                edtSettings.Width = Unit.Pixel(300);
+                edtSettings.ToolTip = "Ingresa el número de cuenta";
+            }).Bind(DataBinder.Eval(unidadejecutora, "CtaProductores"))
+            .Render();
+            ViewContext.Writer.Write("</td>");
+            ViewContext.Writer.Write("</tr>");
+            ViewContext.Writer.Write("</table>");
+
+
+            //***************************************
+            //Botones
+            ViewContext.Writer.Write("<div class=\"line\">");
+            ViewContext.Writer.Write("<br>");
+            ViewContext.Writer.Write("<br>");
+
+            ViewContext.Writer.Write("<table>"+"<tr>"+"<td>");
+            Html.DevExpress().Button(btnSettings =>
+            {
+                btnSettings.Name = "btnUpdate";
+                btnSettings.ControlStyle.CssClass = "button";
+                btnSettings.Text = "Actualizar";
+                btnSettings.Images.Image.Url = "Content/Images/guardar.png";
+                btnSettings.ImagePosition = ImagePosition.Right;
+                btnSettings.Images.Image.Width = 16;
+                btnSettings.ClientSideEvents.Click = "function(s, e){ UnidadEjecutoraGridView.UpdateEdit(); }";
+                btnSettings.ClientVisible = Convert.ToBoolean(ViewData["Escritura"]);
+                btnSettings.Width = Unit.Pixel(30);
+            }).Render();
+            ViewContext.Writer.Write("</td>");
+            ViewContext.Writer.Write("<td>");
+            Html.DevExpress().Button(btnSettings =>
+            {
+                ViewContext.Writer.Write("  ");
+                btnSettings.Name = "btnCancel";
+                btnSettings.ControlStyle.CssClass = "button";
+                btnSettings.Text = "Cancelar";
+                btnSettings.Images.Image.Url = "Content/Images/cancelar.png";
+                btnSettings.ImagePosition = ImagePosition.Right;
+                btnSettings.Style["position"] = "relative";
+                btnSettings.Style["left"] = "5px";
+                btnSettings.ClientSideEvents.Click = "function(s, e){ UnidadEjecutoraGridView.CancelEdit(); }";
+            }).Render();
+            ViewContext.Writer.Write("</td>");
+            ViewContext.Writer.Write("<td>");
+            //Botón Imprimir
+            using (Html.BeginForm("Index", "ReporteInstanciaEjecutora", new { PK_IdUnidadEjecutora = c.KeyValue == null ? "-1" : c.KeyValue.ToString() }, FormMethod.Post))
+            {
+                Html.DevExpress().Button(btnSettings =>
+                {
+                    btnSettings.Name = "btnImprimir";
+                    btnSettings.Text = "Imprimir";
+                    btnSettings.ControlStyle.CssClass = "button";
+                    btnSettings.Images.Image.Url = "/Content/Images/ico_print.png";
+                    btnSettings.ImagePosition = ImagePosition.Right;
+                    btnSettings.Images.Image.Width = 16;
+                    btnSettings.Style["position"] = "relative";
+                    btnSettings.Style["left"] = "10px";
+                    btnSettings.ClientVisible = c.KeyValue == null ? false : true;
+                    btnSettings.UseSubmitBehavior = true;
+                }).Render();
+            }
+            ViewContext.Writer.Write("</td>");
+            ViewContext.Writer.Write("<td>");
+            ///// boton ayuda //////////
+            Html.DevExpress().Button(btnSettings =>
+            {
+                btnSettings.Name = "btnAyuda";
+                btnSettings.ControlStyle.CssClass = "button";
+                btnSettings.Text = "Ayuda";
+                btnSettings.Images.Image.Url = "/Content/Images/ayuda.png";
+                btnSettings.ImagePosition = ImagePosition.Right;
+                btnSettings.Images.Image.Width = 16;
+                btnSettings.Style["position"] = "relative";
+                btnSettings.Style["left"] = "20px";
+                btnSettings.ClientSideEvents.Click = "function(s, e){ window.open('https://docs.google.com/document/d/1ZJURCxDAT76zN4TpKa2cBHEdF3RZFUNkAv3o9iyWxG4/edit#bookmark=id.2grqrue','_blank'); }";
+            }).Render();
+            ViewContext.Writer.Write("</td>"+"</tr>"+"</table>");
+            ViewContext.Writer.Write("<br></ br>");
+            ViewContext.Writer.Write("</div>"); // Termina Codigo de Botones
+
+            // COMIENZAN LOS TABS*****************
+            @Html.DevExpress().PageControl(PCsettings =>
+            {
+                PCsettings.Name = "pcFeatures";
+                PCsettings.ClientVisible = c.KeyValue == null ? false : true;
+
+                PCsettings.TabPages.Add("Personal").SetContent(() =>
+                {
+                    ViewContext.Writer.Write("<H3>Personal de la Instancia Ejecutora</H3>");
+
+                    Html.RenderPartial("~/Views/ExportExcelPDF/_ExportExcelPDF.cshtml", new ViewDataDictionary
+                                                                                    {
+                                                                                        { "Clave", DXMVCWebApplication1.Common.ListaPantallas.SIS_PERSONAL_INSTANCIA_EJECUTORA },
+                                                                                        { "IdUnidadEjecutora", DataBinder.Eval(unidadejecutora, "Pk_IdUnidadEjecutora") }
+                                                                                    });
+                    Html.RenderAction("PersonaGridViewPartial", "Persona", new { UEID = DataBinder.Eval(unidadejecutora, "Pk_IdUnidadEjecutora"), IdEstado = DataBinder.Eval(unidadejecutora, "Fk_IdEstado__SIS") });
+                });
+
+                PCsettings.TabPages.Add("Vigencia").SetContent(() =>
+                {
+                    ViewContext.Writer.Write("<H3>Documentos que avalan la vigencia</H3>");
+
+                    Html.RenderPartial("~/Views/ExportExcelPDF/_ExportExcelPDF.cshtml", new ViewDataDictionary
+                                                                                    {
+                                                                                        { "Clave", DXMVCWebApplication1.Common.ListaPantallas.UE_VIGENCIA },
+                                                                                        { "IdUnidadEjecutora", DataBinder.Eval(unidadejecutora, "Pk_IdUnidadEjecutora") }
+                                                                                    });
+                    Html.RenderAction("VigenciaGridViewPartial", "Vigencia", new { UEID = DataBinder.Eval(unidadejecutora, "Pk_IdUnidadEjecutora") });
+                });
+
+                PCsettings.TabPages.Add("Padrón de Instalaciones").SetContent(() =>
+                {
+                    ViewContext.Writer.Write("<H3>Instalaciones registradas</H3>");
+
+                    Html.RenderPartial("~/Views/ExportExcelPDF/_ExportExcelPDF.cshtml", new ViewDataDictionary
+                                                                                    {
+                                                                                        { "Clave", DXMVCWebApplication1.Common.ListaPantallas.UE_PADRONES_INSTALACION },
+                                                                                        { "IdUnidadEjecutora", DataBinder.Eval(unidadejecutora, "Pk_IdUnidadEjecutora") }
+                                                                                    });
+                    Html.RenderAction("InstalacionesGridViewPartial", "Instalacion", new { UEID = DataBinder.Eval(unidadejecutora, "Pk_IdUnidadEjecutora") });
+                });
+
+                PCsettings.TabPages.Add("Inventario de Bienes Muebles").SetContent(() =>
+                {
+                    ViewContext.Writer.Write("<H3>Bienes Muebles a cargo de la Instancia</H3>");
+
+                    Html.RenderPartial("~/Views/ExportExcelPDF/_ExportExcelPDF.cshtml", new ViewDataDictionary
+                                                                                    {
+                                                                                        { "Clave", DXMVCWebApplication1.Common.ListaPantallas.UE_INVENTARIO },
+                                                                                        { "IdUnidadEjecutora", DataBinder.Eval(unidadejecutora, "Pk_IdUnidadEjecutora") }
+                                                                                    });
+                    Html.RenderAction("InventarioGridViewPartial", "Inventario", new { UEID = DataBinder.Eval(unidadejecutora, "Pk_IdUnidadEjecutora") });
+                });
+
+            }).GetHtml();
+
+        });  //Termina Custom Form
+    });
+    if (ViewData["EditError"] != null)
+    {
+        grid.SetEditErrorText((string)ViewData["EditError"]);
+    }
+}
+@grid.Bind(Model).GetHtml()

@@ -1,0 +1,346 @@
+﻿@{
+    var grid = Html.DevExpress().GridView(settings =>
+    {
+        settings.Name = "MinistracionesXComiteGridView";
+        settings.Style["position"] = "relative";
+        settings.Style["left"] = "10px";
+        settings.CallbackRouteValues = new { Controller = "MinistracionesXComite", Action = "MinistracionesXComiteGridViewPartial" };
+        settings.SettingsEditing.AddNewRowRouteValues = new { Controller = "MinistracionesXComite", Action = "MinistracionesXComiteAddNew" };
+        settings.SettingsEditing.UpdateRowRouteValues = new { Controller = "MinistracionesXComite", Action = "MinistracionesXComiteUpdate" };
+        settings.SettingsEditing.DeleteRowRouteValues = new { Controller = "MinistracionesXComite", Action = "MinistracionesXComiteDelete" };
+        settings.SettingsEditing.Mode = GridViewEditingMode.PopupEditForm;
+
+        settings.SettingsBehavior.ConfirmDelete = true;
+
+        settings.SettingsPopup.EditForm.Height = 300;
+        settings.SettingsPopup.EditForm.Width = 650;
+        settings.SettingsPopup.EditForm.HorizontalAlign = PopupHorizontalAlign.WindowCenter;
+        settings.SettingsPopup.EditForm.VerticalAlign = PopupVerticalAlign.WindowCenter;
+        settings.SettingsPopup.EditForm.Modal = true;
+
+        settings.SettingsText.PopupEditFormCaption = "Creación de la Ministración";
+        settings.KeyFieldName = "Pk_IdMinistracionesXComite";
+
+        settings.CommandColumn.Visible = true;
+        settings.CommandColumn.ShowClearFilterButton = true;
+        settings.CommandColumn.ShowNewButtonInHeader = Convert.ToBoolean(ViewData["Escritura"]);
+        settings.CommandColumn.ShowDeleteButton = Convert.ToBoolean(ViewData["Escritura"]);
+        settings.CommandColumn.ShowEditButton = Convert.ToBoolean(ViewData["Escritura"]) || Convert.ToBoolean(ViewData["Lectura"]);
+
+        settings.SettingsPager.Visible = true;
+        settings.SettingsPager.Position = PagerPosition.Bottom;
+        settings.SettingsPager.FirstPageButton.Visible = true;
+        settings.SettingsPager.LastPageButton.Visible = true;
+        settings.SettingsPager.PageSizeItemSettings.Visible = true;
+        settings.SettingsPager.PageSize = 10;
+        settings.SettingsPager.PageSizeItemSettings.Items = new string[] { "5", "10", "15" };
+        settings.Settings.ShowGroupPanel = true;
+        settings.Settings.ShowFilterRow = true;
+        settings.Settings.ShowFilterRowMenu = true;
+        settings.SettingsBehavior.AllowSelectByRowClick = true;
+
+        settings.Columns.Add("UnidadEjecutora.Nombre", "Comité");
+        settings.Columns.Add("TipoDeRecurso.Nombre", "Tipo de Recurso");
+        settings.Columns.Add("Fecha", MVCxGridViewColumnType.DateEdit);
+        settings.Columns.Add("Importe", "Importe Total Ministración").PropertiesEdit.DisplayFormatString = "c";
+        settings.Columns.Add("ImporteDetalles", "Importe Reportado por Campaña en el Sistema").PropertiesEdit.DisplayFormatString = "c";
+        settings.Columns.Add(column =>
+        {
+            column.Caption = "Status Importe";
+            column.SetDataItemTemplateContent(c =>
+            {
+                if ((DataBinder.Eval(c.DataItem, "Importe") ?? "").ToString() == (DataBinder.Eval(c.DataItem, "ImporteDetalles") ?? "").ToString())
+                {
+                        Html.DevExpress().Button(btnSettings =>
+                        {
+                            btnSettings.Name = "btnVerde_" + c.KeyValue.ToString();
+                            btnSettings.Text = "";
+                            btnSettings.ToolTip = "CORRECTO";
+                            btnSettings.ControlStyle.CssClass = "button";
+                            btnSettings.ImagePosition = ImagePosition.Right;
+                            btnSettings.Images.Image.Width = 16;
+                            btnSettings.Images.Image.Url = "/Content/Images/S_verde.png";
+                            btnSettings.ControlStyle.Border.BorderWidth = Unit.Pixel(0);
+                            btnSettings.Enabled = false;
+                        }).Render();                    
+                }
+                else
+                {
+                    Html.DevExpress().Button(btnSettings =>
+                    {
+                        btnSettings.Name = "btnRojo_" + c.KeyValue.ToString();
+                        btnSettings.Text = "";
+                        btnSettings.ToolTip = "-- AJUSTAR MINISTRACIÓN --";
+                        btnSettings.ControlStyle.CssClass = "button";
+                        btnSettings.ImagePosition = ImagePosition.Right;
+                        btnSettings.Images.Image.Width = 16;
+                        btnSettings.Images.Image.Url = "/Content/Images/S_rojo.png";
+                        btnSettings.ControlStyle.Border.BorderWidth = Unit.Pixel(0);
+                        btnSettings.Enabled = false;
+                    }).Render();
+                }
+            });
+        });
+        
+        settings.Columns.Add(column =>
+        {
+            column.Caption = "Publicación de Comprobante";
+            column.SetDataItemTemplateContent(c =>
+            {
+                if ((DataBinder.Eval(c.DataItem, "Documento") ?? "").ToString() != "")
+                {
+                    Html.DevExpress().Button(btnSettings =>
+                    {
+                        btnSettings.Name = "btnVerde1_" + c.KeyValue.ToString();
+                        btnSettings.Text = "";
+                        btnSettings.ToolTip = "LISTO";
+                        btnSettings.ControlStyle.CssClass = "button";
+                        btnSettings.ImagePosition = ImagePosition.Right;
+                        btnSettings.Images.Image.Width = 16;
+                        btnSettings.Images.Image.Url = "/Content/Images/S_verde.png";
+                        btnSettings.ControlStyle.Border.BorderWidth = Unit.Pixel(0);
+                        btnSettings.Enabled = false;
+                    }).Render();
+                }
+                else
+                {
+                    Html.DevExpress().Button(btnSettings =>
+                    {
+                        btnSettings.Name = "btnRojo1_" + c.KeyValue.ToString();
+                        btnSettings.Text = "";
+                        btnSettings.ToolTip = "-- PENDIENTE --";
+                        btnSettings.ControlStyle.CssClass = "button";
+                        btnSettings.ImagePosition = ImagePosition.Right;
+                        btnSettings.Images.Image.Width = 16;
+                        btnSettings.Images.Image.Url = "/Content/Images/S_rojo.png";
+                        btnSettings.ControlStyle.Border.BorderWidth = Unit.Pixel(0);
+                        btnSettings.Enabled = false;
+                    }).Render();
+                }
+            });
+        });
+        settings.SetEditFormTemplateContent(c =>
+        {
+            var dataMinistraciones = ViewData["dataItem"] ?? c.DataItem;
+
+            ViewContext.Writer.Write("<table>");
+            ViewContext.Writer.Write("<tr>");
+            ViewContext.Writer.Write("<td>");
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Banco";
+                edtSettings.Name = "BancoLabel";
+            }).Render();
+
+            Html.DevExpress().ComboBox(edtSettings =>
+            {
+                edtSettings.Name = "Fk_IdBanco";
+                edtSettings.ControlStyle.CssClass = "editor";
+                edtSettings.Properties.TextField = "NombreCorto";
+                edtSettings.Properties.NullText = "Campo Requerido";
+                edtSettings.Properties.ValueField = "Pk_IdBanco";
+                edtSettings.Properties.ValueType = typeof(int);
+                edtSettings.Properties.IncrementalFilteringMode = IncrementalFilteringMode.Contains;
+                edtSettings.ShowModelErrors = true;
+                edtSettings.Width = Unit.Pixel(570);
+                edtSettings.ToolTip = c.KeyValue == null ? "Seleccione una Instancia Ejecutora" : "Cambiar Instancia Ejecutora";
+
+                edtSettings.Properties.Columns.Add("NombreCorto", "Nombre");
+                edtSettings.Properties.Columns.Add("RazonSocial", "Razón Social");
+
+            }).BindList(DXMVCWebApplication1.Models.Senasica.GetBancos())
+               .Bind(DataBinder.Eval(dataMinistraciones, "Fk_IdBanco"))
+               .Render();
+            ViewContext.Writer.Write("</td>");
+            ViewContext.Writer.Write("</tr>");
+            ViewContext.Writer.Write("</table>");
+
+            ViewContext.Writer.Write("<br >");
+
+            ViewContext.Writer.Write("<table>");
+            ViewContext.Writer.Write("<tr>");
+            ViewContext.Writer.Write("<td>");
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Cuenta de Cheques No.";
+                edtSettings.Name = "NumCtaChequesLabel";
+            }).Render();
+
+            Html.DevExpress().TextBox(settingsTextBox =>
+            {
+                settingsTextBox.Name = "NumCtaCheques";
+                settingsTextBox.Width = Unit.Pixel(280);
+            }).Bind(DataBinder.Eval(dataMinistraciones, "NumCtaCheques"))
+            .Render();
+            ViewContext.Writer.Write("</td>");
+
+            ViewContext.Writer.Write("<td>");
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "CLABE Interbancaria";
+                edtSettings.Name = "CLABELabel";
+            }).Render();
+
+            Html.DevExpress().TextBox(settingsTextBox =>
+            {
+                settingsTextBox.Name = "CLABE";
+                settingsTextBox.Width = Unit.Pixel(280);
+            }).Bind(DataBinder.Eval(dataMinistraciones, "CLABE"))
+            .Render();
+            ViewContext.Writer.Write("</td>");
+            ViewContext.Writer.Write("</tr>");
+            ViewContext.Writer.Write("</table>");
+
+            ViewContext.Writer.Write("<br >");
+
+            ViewContext.Writer.Write("<table>");
+            ViewContext.Writer.Write("<tr>");
+            ViewContext.Writer.Write("<td>");
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Tipo de Recurso";
+                edtSettings.Name = "Fk_IdTipoDeRecursoLabel";
+            }).Render();
+
+            Html.DevExpress().ComboBox(edtSettings =>
+            {
+                edtSettings.Name = "Fk_IdTipoDeRecurso";
+                edtSettings.ControlStyle.CssClass = "editor";
+                edtSettings.Properties.TextField = "Nombre";
+                edtSettings.Properties.NullText = "Campo Requerido";
+                edtSettings.Properties.ValueField = "Pk_IdTipoDeRecurso";
+                edtSettings.Properties.ValueType = typeof(int);
+                edtSettings.ShowModelErrors = true;
+                edtSettings.Width = Unit.Pixel(280);
+                edtSettings.ToolTip = "Seleccione el Tipo de Recurso";
+            }).BindList(DXMVCWebApplication1.Models.Senasica.GetTiposDeRecurso())
+               .Bind(DataBinder.Eval(dataMinistraciones, "Fk_IdTipoDeRecurso"))
+               .Render();
+            ViewContext.Writer.Write("</td>");
+
+            ViewContext.Writer.Write("<td>");
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Fecha";
+                edtSettings.Name = "FechaLabel";
+            }).Render();
+
+            Html.DevExpress().DateEdit(edtSettings =>
+            {
+                edtSettings.Name = "Fecha";
+                edtSettings.Properties.NullText = "Campo Requerido";
+                edtSettings.ControlStyle.CssClass = "editor";
+                edtSettings.ShowModelErrors = true;
+                edtSettings.Width = Unit.Pixel(125);
+                edtSettings.ToolTip = "Agrege una fecha";
+                edtSettings.Properties.MinDate = DateTime.Parse(ViewData["FechaIni"].ToString());
+                edtSettings.Properties.MaxDate = DateTime.Parse(ViewData["FechaFin"].ToString());
+            }).Bind(DataBinder.Eval(dataMinistraciones, "Fecha"))
+              .Render();
+            ViewContext.Writer.Write("</td>");
+            ViewContext.Writer.Write("</tr>");
+            ViewContext.Writer.Write("</table>");
+
+            ViewContext.Writer.Write("<br >");
+
+            ViewContext.Writer.Write("<table>");
+            ViewContext.Writer.Write("<tr>");
+            ViewContext.Writer.Write("<td>");
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Importe";
+                edtSettings.Name = "ImporteLAbel";
+            }).Render();
+
+            Html.DevExpress().SpinEdit(edtSettings =>
+            {
+                edtSettings.Name = "Importe";
+                edtSettings.Properties.MinValue = 0;
+                edtSettings.Properties.MaxValue = 999999999;
+                edtSettings.Properties.DecimalPlaces = 2;
+                edtSettings.Properties.NumberType = SpinEditNumberType.Float;
+                edtSettings.Properties.Increment = 0.1M;
+                edtSettings.Properties.LargeIncrement = 1;
+                edtSettings.Properties.SpinButtons.ShowLargeIncrementButtons = true;
+                edtSettings.ControlStyle.CssClass = "editor";
+                edtSettings.ShowModelErrors = true;
+                edtSettings.Width = Unit.Pixel(280);
+                edtSettings.Properties.DisplayFormatString = "n";
+            }).Bind(DataBinder.Eval(dataMinistraciones, "Importe"))
+            .Render();
+            ViewContext.Writer.Write("</td>");
+            ViewContext.Writer.Write("</tr>");
+            ViewContext.Writer.Write("</table>");
+
+            ViewContext.Writer.Write("<br >");
+            ViewContext.Writer.Write("<br >");
+            ViewContext.Writer.Write("<br >");
+
+            ViewContext.Writer.Write("<div style='float:right'>");
+            Html.DevExpress().Button(btnSettings =>
+            {
+                btnSettings.Name = "btnUpdate";
+                btnSettings.Text = "Guardar";
+                btnSettings.ClientVisible = Convert.ToBoolean(ViewData["permisoCreacion"]);
+                btnSettings.Images.Image.Url = "/Content/Images/guardar.png";
+                btnSettings.Images.Image.Width = 16;
+                btnSettings.ClientSideEvents.Click = "function(s, e){ MinistracionesXComiteGridView.UpdateEdit(); }";
+                btnSettings.ClientVisible = Convert.ToBoolean(ViewData["Escritura"]);
+            }).Render();
+
+            Html.DevExpress().Button(btnSettings =>
+            {
+                btnSettings.Name = "btnCancel";
+                btnSettings.Text = "Cancelar";
+                btnSettings.Images.Image.Url = "/Content/Images/cancelar.png";
+                btnSettings.Style[HtmlTextWriterStyle.MarginLeft] = "5px";
+                btnSettings.ClientSideEvents.Click = "function(s, e){ MinistracionesXComiteGridView.CancelEdit(); }";
+            }).Render();
+            ViewContext.Writer.Write("</div>");
+
+            Html.DevExpress().PageControl(PCsettings =>
+            {
+                PCsettings.Name = "pcScrolling";
+                PCsettings.Width = Unit.Percentage(100);
+                PCsettings.Height = 300;
+                PCsettings.EnableTabScrolling = true;
+                PCsettings.TabAlign = TabAlign.Justify;
+                PCsettings.Styles.Tab.CssClass = "scrolling_Tab";
+
+                PCsettings.Name = "pcFeatures";
+                PCsettings.ClientVisible = c.KeyValue == null ? false : true;
+
+                PCsettings.TabPages.Add("Detalles").SetContent(() =>
+                {
+                    ViewContext.Writer.Write("<br >");
+                    Html.RenderPartial("~/Views/ExportExcelPDF/_ExportExcelPDF.cshtml", new ViewDataDictionary
+                                                                                    {
+                                                                                        { "Clave", DXMVCWebApplication1.Common.ListaPantallas.UE_MINISTRACION_DETALLE },
+                                                                                        { "IdMinistracionesXComite", DataBinder.Eval(dataMinistraciones, "Pk_IdMinistracionesXComite") }
+                                                                                    });
+                    ViewContext.Writer.Write("<br >");
+
+                    Html.RenderAction("DetalleMinistracionesGridViewPartial", "MinistracionesDetalles", new { IdMinistracionesXComite = DataBinder.Eval(dataMinistraciones, "Pk_IdMinistracionesXComite") });
+                });
+
+                PCsettings.TabPages.Add("Comprobantes").SetContent(() =>
+                {
+                    Html.RenderAction("Index", "ArchivosMinistracion", new { IdMinistracionesXComite = DataBinder.Eval(dataMinistraciones, "Pk_IdMinistracionesXComite") });
+                });
+            }).GetHtml();
+        });
+    });
+
+    if (ViewData["EditError"] != null)
+    {
+        grid.SetEditErrorText((string)ViewData["EditError"]);
+    }
+}
+
+@grid.Bind(Model).GetHtml()

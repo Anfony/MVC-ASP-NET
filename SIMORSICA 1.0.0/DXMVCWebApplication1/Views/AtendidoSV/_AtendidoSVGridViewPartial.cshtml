@@ -1,0 +1,421 @@
+﻿@{
+    var grid = Html.DevExpress().GridView(settings =>
+    {
+        settings.Name = "AtendidoSVGridView";
+        settings.CallbackRouteValues = new { Controller = "AtendidoSV", Action = "AtendidoSVGridViewPartial", IdCampania = ViewData["IdCampania"], IdEstado = ViewData["IdEstado"] };
+
+        settings.SettingsEditing.AddNewRowRouteValues = new { Controller = "AtendidoSV", Action = "AtendidoSVAddNew", IdCampania = ViewData["IdCampania"], IdEstado = ViewData["IdEstado"] };
+        settings.SettingsEditing.UpdateRowRouteValues = new { Controller = "AtendidoSV", Action = "AtendidoSVUpdate", IdCampania = ViewData["IdCampania"], IdEstado = ViewData["IdEstado"] };
+        settings.SettingsEditing.DeleteRowRouteValues = new { Controller = "AtendidoSV", Action = "AtendidoSVDelete", IdCampania = ViewData["IdCampania"], IdEstado = ViewData["IdEstado"] };
+        settings.SettingsEditing.Mode = GridViewEditingMode.PopupEditForm;
+
+        settings.SettingsText.PopupEditFormCaption = "Edición de Atendido";
+
+        settings.SettingsPopup.EditForm.HorizontalAlign = PopupHorizontalAlign.WindowCenter;
+        settings.SettingsPopup.EditForm.VerticalAlign = PopupVerticalAlign.WindowCenter;
+        settings.SettingsPopup.EditForm.Modal = true;
+
+        settings.SettingsBehavior.ConfirmDelete = true;
+        settings.Settings.ShowFilterRow = true;
+
+        settings.CommandColumn.Visible = true;
+        settings.SettingsCommandButton.NewButton.Text = "Nuevo";
+        settings.CommandColumn.ShowNewButtonInHeader = Convert.ToBoolean(ViewData["Escritura"]);
+        settings.CommandColumn.ShowDeleteButton = Convert.ToBoolean(ViewData["Escritura"]);
+        settings.CommandColumn.ShowEditButton = Convert.ToBoolean(ViewData["Escritura"]) || Convert.ToBoolean(ViewData["Lectura"]);
+        settings.CommandColumn.ShowClearFilterButton = true;
+
+        settings.KeyFieldName = "Pk_IdAtendidoSV";
+
+        settings.SettingsPager.Visible = true;
+        settings.SettingsPager.Position = PagerPosition.Bottom;
+        settings.SettingsPager.FirstPageButton.Visible = true;
+        settings.SettingsPager.LastPageButton.Visible = true;
+        settings.SettingsPager.PageSizeItemSettings.Visible = true;
+        settings.SettingsPager.PageSize = 5;
+        settings.SettingsPager.PageSizeItemSettings.Items = new string[] { "5", "10", "15" };
+        settings.Settings.ShowFilterRowMenu = true;
+
+        settings.Columns.Add("Municipio.Nombre", "Municipio");
+        settings.Columns.Add("NumUnidadesProduccion", "Núm. Unidades de Producción").PropertiesEdit.DisplayFormatString = "n";
+        settings.Columns.Add("Cultivo", "Tipo Cultivo");
+        settings.Columns.Add("Superficie", "Superficie (hectáreas)").PropertiesEdit.DisplayFormatString = "n";
+        settings.Columns.AddBand(AnioAntBand =>
+        {
+            AnioAntBand.Caption = "Año Anterior";
+            AnioAntBand.HeaderStyle.HorizontalAlign = HorizontalAlign.Center;
+
+            AnioAntBand.Columns.Add("NumUnidProdAtendida_Ant", "Núm. U. Producción Atendidas").PropertiesEdit.DisplayFormatString = "n";
+            AnioAntBand.Columns.Add("SuperficieAtendida_Ant", "Superficie Atendidas (Has)").PropertiesEdit.DisplayFormatString = "n";
+            AnioAntBand.Columns.Add("Prevalencia_Ant", "Prevalencia (%)").PropertiesEdit.DisplayFormatString = "n";
+        });
+
+        settings.Columns.AddBand(AnioActBand =>
+        {
+            AnioActBand.Caption = "Año Actual (estimado)";
+            AnioActBand.HeaderStyle.HorizontalAlign = HorizontalAlign.Center;
+
+            AnioActBand.Columns.Add("NumUnidProdAtendida_Act", "Núm. U. Producción Atendidas").PropertiesEdit.DisplayFormatString = "n";
+            AnioActBand.Columns.Add("SuperficieAtendida_Act", "Superficie Atendidas (Has)").PropertiesEdit.DisplayFormatString = "n";
+            AnioActBand.Columns.Add("Prevalencia_Act", "Prevalencia (%)").PropertiesEdit.DisplayFormatString = "n";
+        });
+
+        //Totales
+        settings.TotalSummary.Add(DevExpress.Data.SummaryItemType.Sum, "NumUnidadesProduccion").DisplayFormat = "n";
+        settings.TotalSummary.Add(DevExpress.Data.SummaryItemType.Sum, "Superficie").DisplayFormat = "n";
+        settings.TotalSummary.Add(DevExpress.Data.SummaryItemType.Sum, "NumUnidProdAtendida_Ant").DisplayFormat = "n";
+        settings.TotalSummary.Add(DevExpress.Data.SummaryItemType.Sum, "SuperficieAtendida_Ant").DisplayFormat = "n";
+        settings.TotalSummary.Add(DevExpress.Data.SummaryItemType.Sum, "NumUnidProdAtendida_Act").DisplayFormat = "n";
+        settings.TotalSummary.Add(DevExpress.Data.SummaryItemType.Sum, "SuperficieAtendida_Act").DisplayFormat = "n";
+        settings.Settings.ShowFooter = true;
+
+        // Custom
+        settings.SetEditFormTemplateContent(c =>
+        {
+            var atendido = ViewData["dataItem"] ?? c.DataItem;
+            ViewContext.Writer.Write("<br >");
+
+            ViewContext.Writer.Write("<table><tr><td>");
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Municipio:";
+                edtSettings.AssociatedControlName = "Fk_IdMunicipio";
+            }).Render();
+            ViewContext.Writer.Write("</td>");
+
+            ViewContext.Writer.Write("<td>");
+            Html.DevExpress().ComboBox(edtSettings =>
+            {
+                edtSettings.Name = "Fk_IdMunicipio";
+                edtSettings.ControlStyle.CssClass = "editor";
+                edtSettings.Properties.TextField = "Nombre";
+                edtSettings.Properties.ValueField = "Pk_IdMunicipio";
+                edtSettings.Properties.NullText = "Campo Requerido";
+                edtSettings.Properties.ValueType = typeof(int);
+                edtSettings.ShowModelErrors = true;
+                edtSettings.Width = Unit.Pixel(250);
+                edtSettings.Properties.IncrementalFilteringMode = IncrementalFilteringMode.Contains;
+                edtSettings.Properties.IncrementalFilteringDelay = 5;
+                edtSettings.ToolTip = c.KeyValue == null ? "Seleccione un Municipio" : "Cambiar Municipio";
+            }).BindList(DXMVCWebApplication1.Models.Senasica.GetMunicipiosByEstado(ViewData["IdEstado"] == null ? -1 : Convert.ToInt32(ViewData["IdEstado"])))
+              .Bind(DataBinder.Eval(atendido, "Fk_IdMunicipio"))
+              .Render();
+            ViewContext.Writer.Write("</td>");
+
+            ViewContext.Writer.Write("<td>");
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Núm. U. de Producción:";
+                edtSettings.AssociatedControlName = "NumUnidadesProduccion";
+            }).Render();
+            ViewContext.Writer.Write("</td>");
+
+            ViewContext.Writer.Write("<td>");
+            Html.DevExpress().SpinEdit(edtSettings =>
+            {
+                edtSettings.Name = "NumUnidadesProduccion";
+                edtSettings.ControlStyle.CssClass = "editor";
+                edtSettings.ShowModelErrors = true;
+                edtSettings.Width = Unit.Pixel(200);
+                edtSettings.Properties.MinValue = 0;
+                edtSettings.Properties.MaxValue = 999999999;
+                edtSettings.Properties.NumberType = SpinEditNumberType.Integer;
+                edtSettings.Properties.Increment = 1M;
+                edtSettings.Properties.LargeIncrement = 5;
+                edtSettings.Properties.SpinButtons.ShowLargeIncrementButtons = true;
+                edtSettings.Properties.DisplayFormatString = "n";
+                edtSettings.ToolTip = "Ingresar el Núm. Unidades de Producción";
+                edtSettings.Properties.NullText = "Campo Requerido";
+            }).Bind(DataBinder.Eval(atendido, "NumUnidadesProduccion"))
+              .Render();
+            ViewContext.Writer.Write("</td>");
+
+            ViewContext.Writer.Write("<td>");
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Cultivo";
+                edtSettings.AssociatedControlName = "Cultivo";
+            }).Render();
+
+            ViewContext.Writer.Write("</td>");
+
+            ViewContext.Writer.Write("<td>");
+            Html.DevExpress().TextBox(edtSettings =>
+            {
+                edtSettings.Name = "Cultivo";
+                edtSettings.ControlStyle.CssClass = "editor";
+                edtSettings.Properties.NullText = "Campo Requerido";
+                edtSettings.ShowModelErrors = true;
+                edtSettings.Width = Unit.Pixel(250);
+            }).Bind(DataBinder.Eval(atendido, "Cultivo"))
+            .Render();
+            ViewContext.Writer.Write("</td>");
+
+            ViewContext.Writer.Write("<td>");
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Superficie (Hectáreas)";
+                edtSettings.AssociatedControlName = "Superficie";
+            }).Render();
+            ViewContext.Writer.Write("</td>");
+
+            ViewContext.Writer.Write("<td>");
+            Html.DevExpress().SpinEdit(edtSettings =>
+            {
+                edtSettings.Name = "Superficie";
+                edtSettings.ControlStyle.CssClass = "editor";
+                edtSettings.ShowModelErrors = true;
+                edtSettings.Width = Unit.Pixel(200);
+                edtSettings.Properties.MinValue = 0;
+                edtSettings.Properties.MaxValue = 999999999;
+                edtSettings.Properties.NumberType = SpinEditNumberType.Float;
+                edtSettings.Properties.Increment = 0.1M;
+                edtSettings.Properties.LargeIncrement = 5;
+                edtSettings.Properties.SpinButtons.ShowLargeIncrementButtons = true;
+                edtSettings.Properties.DisplayFormatString = "n";
+                edtSettings.ToolTip = "Ingresar la Superficie";
+            }).Bind(DataBinder.Eval(atendido, "Superficie"))
+              .Render();
+            ViewContext.Writer.Write("</td></tr></table>");
+
+            ViewContext.Writer.Write("<br >");
+            ViewContext.Writer.Write("<hr align='left' width='100%'>");
+
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Año Anterior:";
+            }).Render();
+
+            ViewContext.Writer.Write("<br >");
+            ViewContext.Writer.Write("<br >");
+
+            ViewContext.Writer.Write("<table><tr><td>");
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Unidades Producción Atendidas:";
+                edtSettings.AssociatedControlName = "NumUnidProdAtendida_Ant";
+            }).Render();
+            ViewContext.Writer.Write("</td>");
+
+            ViewContext.Writer.Write("<td>");
+            Html.DevExpress().SpinEdit(edtSettings =>
+            {
+                edtSettings.Name = "NumUnidProdAtendida_Ant";
+                edtSettings.ControlStyle.CssClass = "editor";
+                edtSettings.Properties.NullText = "Campo Requerido";
+                edtSettings.ShowModelErrors = true;
+                edtSettings.Width = Unit.Pixel(250);
+                edtSettings.Properties.MinValue = 0;
+                edtSettings.Properties.MaxValue = 999999999;
+                edtSettings.Properties.NumberType = SpinEditNumberType.Integer;
+                edtSettings.Properties.Increment = 1M;
+                edtSettings.Properties.LargeIncrement = 5;
+                edtSettings.Properties.SpinButtons.ShowLargeIncrementButtons = true;
+                edtSettings.Properties.DisplayFormatString = "n";
+                edtSettings.ToolTip = "Ingresar la Unidad Producción Atendida";
+            }).Bind(DataBinder.Eval(atendido, "NumUnidProdAtendida_Ant"))
+              .Render();
+            ViewContext.Writer.Write("</td>");
+
+            ViewContext.Writer.Write("<td>");
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Superficie Atendida (Hectáreas):";
+                edtSettings.AssociatedControlName = "SuperficieAtendida_Ant";
+            }).Render();
+            ViewContext.Writer.Write("</td>");
+
+            ViewContext.Writer.Write("<td>");
+            Html.DevExpress().SpinEdit(edtSettings =>
+            {
+                edtSettings.Name = "SuperficieAtendida_Ant";
+                edtSettings.ControlStyle.CssClass = "editor";
+                edtSettings.Properties.NullText = "Campo Requerido";
+                edtSettings.ShowModelErrors = true;
+                edtSettings.Width = Unit.Pixel(250);
+                edtSettings.Properties.MinValue = 0;
+                edtSettings.Properties.MaxValue = 999999999;
+                edtSettings.Properties.NumberType = SpinEditNumberType.Float;
+                edtSettings.Properties.Increment = 0.1M;
+                edtSettings.Properties.LargeIncrement = 5;
+                edtSettings.Properties.SpinButtons.ShowLargeIncrementButtons = true;
+                edtSettings.Properties.DisplayFormatString = "n";
+                edtSettings.ToolTip = "Ingresar la Superfifice Atendida";
+            }).Bind(DataBinder.Eval(atendido, "SuperficieAtendida_Ant"))
+              .Render();
+            ViewContext.Writer.Write("</td></tr>");
+
+            ViewContext.Writer.Write("<tr><td>");
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Prevalencia (%):";
+                edtSettings.AssociatedControlName = "Prevalencia_Ant";
+            }).Render();
+            ViewContext.Writer.Write("</td>");
+
+            ViewContext.Writer.Write("<td>");
+            Html.DevExpress().SpinEdit(edtSettings =>
+            {
+                edtSettings.Name = "Prevalencia_Ant";
+                edtSettings.ControlStyle.CssClass = "editor";
+                edtSettings.Properties.NullText = "Campo Requerido";
+                edtSettings.ShowModelErrors = true;
+                edtSettings.Width = Unit.Pixel(250);
+                edtSettings.Properties.MinValue = 0;
+                edtSettings.Properties.MaxValue = 100;
+                edtSettings.Properties.NumberType = SpinEditNumberType.Float;
+                edtSettings.Properties.Increment = 1M;
+                edtSettings.Properties.LargeIncrement = 5;
+                edtSettings.Properties.SpinButtons.ShowLargeIncrementButtons = true;
+                edtSettings.Properties.DisplayFormatString = "n";
+                edtSettings.ToolTip = "Ingresar la Prevalencia (%)";
+            }).Bind(DataBinder.Eval(atendido, "Prevalencia_Ant"))
+              .Render();
+            ViewContext.Writer.Write("</td></tr></table>");
+
+            ViewContext.Writer.Write("<br >");
+            ViewContext.Writer.Write("<hr align='left' width='100%'>");
+
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Año Actual (estimado):";
+            }).Render();
+
+            ViewContext.Writer.Write("<br >");
+            ViewContext.Writer.Write("<br >");
+
+            ViewContext.Writer.Write("<table><tr><td>");
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Unidades Producción Atendidas:";
+                edtSettings.AssociatedControlName = "NumUnidProdAtendida_Act";
+            }).Render();
+            ViewContext.Writer.Write("</td>");
+
+            ViewContext.Writer.Write("<td>");
+            Html.DevExpress().SpinEdit(edtSettings =>
+            {
+                edtSettings.Name = "NumUnidProdAtendida_Act";
+                edtSettings.ControlStyle.CssClass = "editor";
+                edtSettings.Properties.NullText = "Campo Requerido";
+                edtSettings.ShowModelErrors = true;
+                edtSettings.Width = Unit.Pixel(250);
+                edtSettings.Properties.MinValue = 0;
+                edtSettings.Properties.MaxValue = 999999999;
+                edtSettings.Properties.NumberType = SpinEditNumberType.Integer;
+                edtSettings.Properties.Increment = 1M;
+                edtSettings.Properties.LargeIncrement = 5;
+                edtSettings.Properties.SpinButtons.ShowLargeIncrementButtons = true;
+                edtSettings.Properties.DisplayFormatString = "n";
+                edtSettings.ToolTip = "Ingresar la Unidad Producción Atendida";
+            }).Bind(DataBinder.Eval(atendido, "NumUnidProdAtendida_Act"))
+              .Render();
+            ViewContext.Writer.Write("</td>");
+
+            ViewContext.Writer.Write("<td>");
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Superficie Atendida (Hectáreas):";
+                edtSettings.AssociatedControlName = "SuperficieAtendida_Act";
+            }).Render();
+            ViewContext.Writer.Write("</td>");
+
+            ViewContext.Writer.Write("<td>");
+            Html.DevExpress().SpinEdit(edtSettings =>
+            {
+                edtSettings.Name = "SuperficieAtendida_Act";
+                edtSettings.ControlStyle.CssClass = "editor";
+                edtSettings.Properties.NullText = "Campo Requerido";
+                edtSettings.ShowModelErrors = true;
+                edtSettings.Width = Unit.Pixel(250);
+                edtSettings.Properties.MinValue = 0;
+                edtSettings.Properties.MaxValue = 999999999;
+                edtSettings.Properties.NumberType = SpinEditNumberType.Float;
+                edtSettings.Properties.Increment = 0.1M;
+                edtSettings.Properties.LargeIncrement = 5;
+                edtSettings.Properties.SpinButtons.ShowLargeIncrementButtons = true;
+                edtSettings.Properties.DisplayFormatString = "n";
+                edtSettings.ToolTip = "Ingresar la Superficie Atendida";
+            }).Bind(DataBinder.Eval(atendido, "SuperficieAtendida_Act"))
+              .Render();
+            ViewContext.Writer.Write("</td></tr>");
+
+            ViewContext.Writer.Write("<tr><td>");
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Prevalencia (%):";
+                edtSettings.AssociatedControlName = "Prevalencia_Act";
+            }).Render();
+            ViewContext.Writer.Write("</td>");
+
+            ViewContext.Writer.Write("<td>");
+            Html.DevExpress().SpinEdit(edtSettings =>
+            {
+                edtSettings.Name = "Prevalencia_Act";
+                edtSettings.ControlStyle.CssClass = "editor";
+                edtSettings.Properties.NullText = "Campo Requerido";
+                edtSettings.ShowModelErrors = true;
+                edtSettings.Width = Unit.Pixel(250);
+                edtSettings.Properties.MinValue = 0;
+                edtSettings.Properties.MaxValue = 100;
+                edtSettings.Properties.NumberType = SpinEditNumberType.Float;
+                edtSettings.Properties.Increment = 1M;
+                edtSettings.Properties.LargeIncrement = 5;
+                edtSettings.Properties.SpinButtons.ShowLargeIncrementButtons = true;
+                edtSettings.Properties.DisplayFormatString = "n";
+                edtSettings.ToolTip = "Ingresar la Prevalencia (%)";
+            }).Bind(DataBinder.Eval(atendido, "Prevalencia_Act"))
+              .Render();
+            ViewContext.Writer.Write("</td></tr></table>");
+
+            ViewContext.Writer.Write("<br >");
+
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+            }).Render();
+
+            Html.DevExpress().Button(btnSettings =>
+            {
+                btnSettings.Name = "btnUpdat";
+                btnSettings.Text = "Guardar";
+                btnSettings.ControlStyle.CssClass = "button";
+                btnSettings.Images.Image.Url = "Content/Images/guardar.png";
+                btnSettings.ImagePosition = ImagePosition.Right;
+                btnSettings.Images.Image.Width = 16;
+                btnSettings.ClientSideEvents.Click = "function(s, e){ AtendidoSVGridView.UpdateEdit(); }";
+                btnSettings.ClientVisible = Convert.ToBoolean(ViewData["Escritura"]);
+            }).Render();
+
+            Html.DevExpress().Button(btnSettings =>
+            {
+                btnSettings.Name = "btnCance";
+                btnSettings.Text = "Cancelar";
+                btnSettings.ControlStyle.CssClass = "button";
+                btnSettings.Images.Image.Url = "Content/Images/cancelar.png";
+                btnSettings.ImagePosition = ImagePosition.Right;
+                btnSettings.Style["position"] = "relative";
+                btnSettings.Style["left"] = "5px";
+                btnSettings.ClientSideEvents.Click = "function(s, e){ AtendidoSVGridView.CancelEdit(); }";
+            }).Render();
+            ViewContext.Writer.Write("</br>");
+        });
+    });
+    if (ViewData["EditError"] != null)
+    {
+        grid.SetEditErrorText((string)ViewData["EditError"]);
+    }
+}
+@grid.Bind(Model).GetHtml()

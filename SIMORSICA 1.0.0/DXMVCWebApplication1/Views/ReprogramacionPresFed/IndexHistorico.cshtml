@@ -1,0 +1,32 @@
+﻿@{
+    ViewBag.Title = "Reprogramación - Histórico";
+}
+
+
+<h2 style="font-size:17px; font:bold; text-align:center">REPROGRAMACIÓN HITÓRICO - @ViewData["NombreEstado"].ToString()</h2>
+<h3 style="font-size: 13px; text-align: center; position: relative; top: -10px">Movimientos históricos</h3>
+
+<br>
+<br>
+
+<br>
+<br>
+<br>
+
+@using (Html.BeginForm("RegresaPantalla", "ReprogramacionPresFed", new { IdEstado = ViewData["IdEstado"] }, FormMethod.Post))
+{
+    Html.DevExpress().Button(btnSettings =>
+    {
+        btnSettings.Name = "btnMostrarHistorico";
+        btnSettings.ClientVisible = true;
+        btnSettings.EnableClientSideAPI = true;
+        btnSettings.Text = "Regresar";
+        btnSettings.ControlStyle.CssClass = "button";
+        btnSettings.Images.Image.Url = "/Content/Images/regresa.png";
+        btnSettings.ImagePosition = ImagePosition.Right;
+        btnSettings.Style["position"] = "relative";
+        btnSettings.Style["left"] = "20px";
+        btnSettings.UseSubmitBehavior = true;
+    }).GetHtml();
+}
+@Html.Action("HistoricoMovimientosReprogramacionFed", new { IdEstado = ViewData["IdEstado"] })

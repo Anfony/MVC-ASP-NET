@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<items>
+  <group Text="Catálogos de Sistema">
+    <item Text="Instancia Ejecutora" NavigateUrl="~/UnidadEjecutora"  />
+    <item Text="Registro de Usuarios" NavigateUrl="~/Account/Register"  />
+    <item Text="Registro de Proveedores" NavigateUrl="~/Proveedor"  />
+    <item Text="Bienes y Servicios Transversales" NavigateUrl="~/BienOServTransversales"  />
+  </group>
+  <group Text="Planeación">
+    <item Text="Programas de Trabajo S" NavigateUrl="~/CampaniaN" />
+    <item Text="Programas de Trabajo U" NavigateUrl="~/CampaniaU" />
+    <item Text="Gastos Fijos de Operación - Programas S" NavigateUrl="~/ProgramaAnualAdq"  />
+    <item Text="Gastos Fijos de Operación - Programas U" NavigateUrl="~/ProgramaAnualAdqU"  />
+    <item Text="Asignación de Actividades" NavigateUrl="~/ActividadXAccion"  />
+    <item Text="Actividades Programadas" NavigateUrl="~/Actividades2"  />
+  </group>
+  <group Text="Ejecución">
+    <item Text="Informe de Avances" NavigateUrl="~/ReporteActividadAsignada"  />
+  </group>
+</items>

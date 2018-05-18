@@ -1,0 +1,62 @@
+@{
+    var grid = Html.DevExpress().GridView(settings =>
+    {
+        settings.Name = "GirosGridView" + ViewData["IdProveedor"];
+        settings.SettingsDetail.MasterGridName = "ProveedorGridView";
+        settings.CallbackRouteValues = new { Controller = "Proveedor", Action = "GirosGridViewPartial", IdProveedor = ViewData["IdProveedor"] };
+
+        settings.SettingsEditing.AddNewRowRouteValues = new { Controller = "Proveedor", Action = "GirosGridViewPartialAddNew", IdProveedor = ViewData["IdProveedor"] };
+        settings.SettingsEditing.UpdateRowRouteValues = new { Controller = "Proveedor", Action = "GirosGridViewPartialUpdate", IdProveedor = ViewData["IdProveedor"] };
+        settings.SettingsEditing.DeleteRowRouteValues = new { Controller = "Proveedor", Action = "GirosGridViewPartialDelete", IdProveedor = ViewData["IdProveedor"] };
+        settings.SettingsEditing.Mode = GridViewEditingMode.PopupEditForm;
+
+        settings.SettingsPopup.EditForm.Height = 100;
+        settings.SettingsPopup.EditForm.Width = 50;
+        settings.SettingsPopup.EditForm.HorizontalAlign = DevExpress.Web.ASPxClasses.PopupHorizontalAlign.WindowCenter;
+        settings.SettingsPopup.EditForm.VerticalAlign = DevExpress.Web.ASPxClasses.PopupVerticalAlign.WindowCenter;
+        settings.SettingsPopup.EditForm.Modal = true;
+
+        settings.SettingsBehavior.ConfirmDelete = true;
+
+        settings.CommandColumn.Visible = true;
+        //settings.CommandColumn.ShowNewButton = true;
+        settings.SettingsCommandButton.NewButton.Text = "Nuevo Giro";
+        settings.CommandColumn.ShowNewButtonInHeader = true;
+        settings.CommandColumn.ShowDeleteButton = true;
+        settings.CommandColumn.ShowEditButton = true;
+
+        settings.KeyFieldName = "PK_IdGiroXProv";
+
+        settings.SettingsPager.Visible = true;
+        settings.SettingsPager.Position = PagerPosition.Bottom;
+        settings.SettingsPager.FirstPageButton.Visible = true;
+        settings.SettingsPager.LastPageButton.Visible = true;
+        settings.SettingsPager.PageSizeItemSettings.Visible = true;
+        settings.SettingsPager.PageSize = 5;
+        settings.SettingsPager.PageSizeItemSettings.Items = new string[] { "5", "10" };
+        settings.Settings.ShowFilterRowMenu = true;
+
+        //settings.Columns.Add("Fk_IdProveedor");
+        //settings.Columns.Add("Fk_IdTipoDeBien");
+        settings.Columns.Add(column =>
+        {
+            column.FieldName = "Fk_IdTipoDeBien";
+            column.Caption = "Giro";
+
+            column.ColumnType = MVCxGridViewColumnType.ComboBox;
+            var comboBoxProperties = column.PropertiesEdit as ComboBoxProperties;
+            comboBoxProperties.DataSource = DXMVCWebApplication1.Models.Senasica.GetTiposDeBien();
+            comboBoxProperties.TextField = "Nombre";
+            comboBoxProperties.NullText = "Campo Requerido";
+            comboBoxProperties.ValueField = "Pk_IdTipoDeBien";
+            comboBoxProperties.ValueType = typeof(int);
+        });
+
+
+    });
+    if (ViewData["EditError"] != null)
+    {
+        grid.SetEditErrorText((string)ViewData["EditError"]);
+    }
+}
+@grid.Bind(Model).GetHtml()

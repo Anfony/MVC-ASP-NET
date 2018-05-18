@@ -1,0 +1,240 @@
+@{
+	var grid = Html.DevExpress().GridView(settings => {
+        settings.Name = "GridView4";
+        settings.CallbackRouteValues = new { Controller = "Licitacion", Action = "GridView4Partial" };
+
+				settings.SettingsEditing.AddNewRowRouteValues = new { Controller = "Licitacion", Action = "GridView4PartialAddNew" };
+        settings.SettingsEditing.UpdateRowRouteValues = new { Controller = "Licitacion", Action = "GridView4PartialUpdate" };
+        settings.SettingsEditing.DeleteRowRouteValues = new { Controller = "Licitacion", Action = "GridView4PartialDelete" };
+        settings.SettingsEditing.Mode = GridViewEditingMode.PopupEditForm;
+
+        settings.SettingsPopup.EditForm.HorizontalAlign = PopupHorizontalAlign.WindowCenter;
+        settings.SettingsPopup.EditForm.VerticalAlign = PopupVerticalAlign.WindowCenter;
+        settings.SettingsPopup.EditForm.Modal = true;
+        settings.SettingsBehavior.ConfirmDelete = true;
+
+		settings.CommandColumn.Visible = true;
+        settings.CommandColumn.ShowNewButtonInHeader = true;
+        settings.CommandColumn.ShowDeleteButton = true;
+        settings.CommandColumn.ShowEditButton = true;
+
+        settings.KeyFieldName = "Pk_IdLicitacion";
+
+        //settings.SettingsPager.Visible = true;
+        settings.SettingsPager.Position = PagerPosition.Bottom;
+        settings.SettingsPager.FirstPageButton.Visible = true;
+        settings.SettingsPager.LastPageButton.Visible = true;
+        settings.SettingsPager.PageSizeItemSettings.Visible = true;
+        settings.SettingsPager.PageSize = 15;
+        settings.SettingsPager.PageSizeItemSettings.Items = new string[] { "5", "10", "15" };
+        //settings.Settings.ShowGroupPanel = true;
+        //settings.Settings.ShowFilterRow = true;
+        settings.Settings.ShowFilterRowMenu = true;
+        //settings.SettingsBehavior.AllowSelectByRowClick = true;
+        
+		settings.SettingsPager.Visible = true;
+		settings.Settings.ShowGroupPanel = true;
+		settings.Settings.ShowFilterRow = true;
+        settings.SettingsBehavior.AllowSelectByRowClick = true;
+        settings.Columns.Add("Estado.Nombre","Estado");
+        settings.Columns.Add("UnidadEjecutora.Nombre","Comité");
+        settings.Columns.Add("Folio");
+        settings.Columns.Add("Descripcion");
+        settings.Columns.Add("FechaJuntaAclaracion", MVCxGridViewColumnType.DateEdit);
+        settings.Columns.Add("FechaApertura", MVCxGridViewColumnType.DateEdit);
+        settings.Columns.Add("FechaFallo", MVCxGridViewColumnType.DateEdit);
+
+        settings.SetEditFormTemplateContent(c =>
+        {
+            var licitacion = ViewData["dataItem"] ?? c.DataItem;
+            ViewContext.Writer.Write("<table>");
+            ViewContext.Writer.Write("<tr>");
+            Html.DevExpress().ComboBox(edtSettings =>
+            {
+                edtSettings.Name = "Fk_IdEstado__SIS";
+                edtSettings.ControlStyle.CssClass = "editor";
+                edtSettings.Properties.TextField = "Nombre";
+                edtSettings.Properties.ValueField = "Pk_IdEstado";
+                edtSettings.Properties.NullText = "Campo Requerido";
+                edtSettings.Properties.ValueType = typeof(int);
+                edtSettings.ShowModelErrors = true;
+                edtSettings.Width = Unit.Pixel(250);
+                edtSettings.Properties.IncrementalFilteringMode = IncrementalFilteringMode.Contains;
+                //edtSettings.Properties.ClientSideEvents.SelectedIndexChanged = "function(s, e){ Fk_IdUnidadEjecutora__UE.PerformCallback(); }";
+                edtSettings.Properties.IncrementalFilteringDelay = 5;
+            }).BindList(DXMVCWebApplication1.Models.Senasica.GetEstados()).Bind(DataBinder.Eval(licitacion, "Fk_IdEstado__SIS"))
+              .Render();
+
+            ViewContext.Writer.Write("</tr>");
+            //Html.RenderPartial("_ComboBoxComitePartial");
+            Html.DevExpress().ComboBox(edtSettings =>
+            {
+                //edtSettings.CallbackRouteValues = new { Controller = "Licitacion", Action = "_ComboBoxComitePartial" };
+                edtSettings.Name = "Fk_IdUnidadEjecutora__UE";
+                
+                edtSettings.ControlStyle.CssClass = "editor";
+                edtSettings.Properties.TextField = "Nombre";
+                edtSettings.Properties.ValueField = "Pk_IdUnidadEjecutora";
+                edtSettings.Properties.NullText = "Campo Requerido";
+                edtSettings.Properties.ValueType = typeof(int);
+                edtSettings.ShowModelErrors = true;
+                edtSettings.Width = Unit.Pixel(250);
+                edtSettings.Properties.IncrementalFilteringMode = IncrementalFilteringMode.Contains;
+                edtSettings.Properties.IncrementalFilteringDelay = 5;
+                //edtSettings.Properties.ClientSideEvents.BeginCallback = "function(s, e){ e.customArgs['IdEstado'] = Fk_IdEstado__SIS.GetValue(); }";
+            }).BindList(DXMVCWebApplication1.Models.Senasica.GetUnidadEjecutoraByEstados(1)).Bind(DataBinder.Eval(licitacion, "Fk_IdUnidadEjecutora__UE"))
+              .Render();
+            ViewContext.Writer.Write("<tr>");
+
+            Html.DevExpress().Label(lblsettings =>
+            {
+                lblsettings.ControlStyle.CssClass = "label";
+                lblsettings.Text = "Folio";
+                lblsettings.Name = "lblFolio";
+            }).Render();
+            Html.DevExpress().TextBox(txtSettings =>
+            {
+                txtSettings.Name = "Folio";
+                txtSettings.ControlStyle.CssClass = "editor";
+                txtSettings.Width = Unit.Pixel(150);
+            }).Bind(DataBinder.Eval(licitacion, "Folio")).Render();
+
+            ViewContext.Writer.Write("</tr>");
+            ViewContext.Writer.Write("<tr>");
+            
+            Html.DevExpress().Label(lblsettings =>
+            {
+                lblsettings.ControlStyle.CssClass = "label";
+                lblsettings.Text = "Descripcion";
+                lblsettings.Name = "lblDescripcion";
+            }).Render();
+            Html.DevExpress().Memo(edtSettings =>
+            {
+                edtSettings.Name = "Descripcion";
+                edtSettings.Properties.NullText = "Campo Requerido";
+                edtSettings.ControlStyle.CssClass = "editor";
+                edtSettings.ShowModelErrors = true;
+                edtSettings.Width = Unit.Pixel(500);
+                edtSettings.Height = Unit.Pixel(50);
+            }).Bind(DataBinder.Eval(licitacion, "Descripcion")).Render();
+
+            ViewContext.Writer.Write("</tr>");
+            ViewContext.Writer.Write("</table>");
+            ViewContext.Writer.Write("<table>");
+            ViewContext.Writer.Write("<tr>");
+            ViewContext.Writer.Write("<td>");
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Fecha Junta Aclaración";
+                edtSettings.AssociatedControlName = "FechaJuntaAclaracion";
+            }).Render();
+            Html.DevExpress().DateEdit(edtSettings =>
+            {
+                edtSettings.Name = "FechaJuntaAclaracion";
+                edtSettings.Properties.NullText = "Campo Requerido";
+                edtSettings.ControlStyle.CssClass = "editor";
+                edtSettings.ShowModelErrors = true;
+                edtSettings.Width = Unit.Pixel(125);
+                edtSettings.ToolTip = "DD/MM/YYYY";
+            }).Bind(DataBinder.Eval(licitacion, "FechaJuntaAclaracion")).Render();
+            ViewContext.Writer.Write("</td>");
+            ViewContext.Writer.Write("<td>");
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Fecha Apertura";
+                edtSettings.AssociatedControlName = "FechaApertura";
+            }).Render();
+            Html.DevExpress().DateEdit(edtSettings =>
+            {
+                edtSettings.Name = "FechaApertura";
+                edtSettings.Properties.NullText = "Campo Requerido";
+                edtSettings.ControlStyle.CssClass = "editor";
+                edtSettings.ShowModelErrors = true;
+                edtSettings.Width = Unit.Pixel(125);
+                edtSettings.ToolTip = "DD/MM/YYYY";
+            }).Bind(DataBinder.Eval(licitacion, "FechaApertura")).Render();
+
+            ViewContext.Writer.Write("</td>");
+            ViewContext.Writer.Write("<td>");
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Fecha Fallo";
+                edtSettings.AssociatedControlName = "FechaFallo";
+            }).Render();
+            Html.DevExpress().DateEdit(edtSettings =>
+            {
+                edtSettings.Name = "FechaFallo";
+                edtSettings.Properties.NullText = "Campo Requerido";
+                edtSettings.ControlStyle.CssClass = "editor";
+                edtSettings.ShowModelErrors = true;
+                edtSettings.Width = Unit.Pixel(125);
+                edtSettings.ToolTip = "DD/MM/YYYY";
+            }).Bind(DataBinder.Eval(licitacion, "FechaFallo")).Render();
+            ViewContext.Writer.Write("</td>");
+            ViewContext.Writer.Write("</tr>");
+            ViewContext.Writer.Write("</table>");
+            
+            ViewContext.Writer.Write("<table>");
+            ViewContext.Writer.Write("<tr>");
+            Html.DevExpress().Button(btnSettings =>
+            {
+                btnSettings.Name = "btnUpdate";
+                btnSettings.Text = "Guardar";
+                btnSettings.ControlStyle.CssClass = "button";
+                btnSettings.Images.Image.Url = "/Content/Images/guardar.png";
+                btnSettings.ImagePosition = ImagePosition.Right;
+                btnSettings.Images.Image.Width = 16;
+                btnSettings.ClientSideEvents.Click = "function(s, e){ GridView4.UpdateEdit(); }";
+            }).Render();
+            Html.DevExpress().Button(btnSettings =>
+            {
+                btnSettings.Name = "btnCancel";
+                btnSettings.Text = "Cancelar";
+                btnSettings.ControlStyle.CssClass = "button";
+                btnSettings.Images.Image.Url = "/Content/Images/cancelar.png";
+                btnSettings.ImagePosition = ImagePosition.Right;
+                btnSettings.Style["position"] = "relative";
+                btnSettings.Style["left"] = "5px";
+                btnSettings.ClientSideEvents.Click = "function(s, e){ GridView4.CancelEdit(); }";
+            }).Render();
+
+            ViewContext.Writer.Write("</tr>");
+            ViewContext.Writer.Write("</table>");
+//Detalle: Se muestran los caputulos por licitacion.
+            
+            if (c.KeyValue != null)
+            {
+                Html.DevExpress().PageControl(detalleSetings=>{
+                    detalleSetings.Name = "pcScrolling";
+                    detalleSetings.Width = Unit.Percentage(100);
+                    detalleSetings.Height = 300;
+                    detalleSetings.EnableTabScrolling = true;
+                    detalleSetings.TabAlign = TabAlign.Justify;
+                    detalleSetings.Styles.Tab.CssClass = "scrolling_Tab";
+                   // detalleSetings.Name = "pcFeatures";
+                    
+                    detalleSetings.TabPages.Add("Capitulos por Licitación").SetContent(() =>
+                    {
+                        Html.RenderAction("_Licitacion_CapituloGridViewPartial", "Licitacion_Capitulo", new { Pk_IdLicitacion = DataBinder.Eval(licitacion, "Pk_IdLicitacion") });
+                    });
+
+                    detalleSetings.TabPages.Add("Documentos").SetContent(() =>
+                    {
+                        Html.RenderAction("Index", "UploadFile", new { Pk_IdLicitacion = DataBinder.Eval(licitacion, "Pk_IdLicitacion") });
+                    });
+                }).GetHtml();  
+            }
+                      
+        });
+        
+    });
+            
+    if (ViewData["EditError"] != null)
+    {
+        grid.SetEditErrorText((string)ViewData["EditError"]);
+    }
+}
+@grid.Bind(Model).GetHtml()

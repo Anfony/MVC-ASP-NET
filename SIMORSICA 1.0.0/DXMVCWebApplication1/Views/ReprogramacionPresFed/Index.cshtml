@@ -1,0 +1,100 @@
+﻿@{
+    ViewBag.Title = "Resumen Presupuesto Campañas";
+}
+<div style="float: right; margin-right: 20px"><a href="https://docs.google.com/document/d/1ZJURCxDAT76zN4TpKa2cBHEdF3RZFUNkAv3o9iyWxG4/edit#heading=h.3ep43zb" target="_blank"><u>Ayuda</u></a>  |  <a href="http://soporte.simosica.com/support/solutions/articles/22000184563-preguntas-frecuentes" target="_blank"> <u>Preguntas Frecuentes</u></a></div>
+
+<h3 style="font-size:17px; font:bold; text-align:center">RESUMEN DEL PRESUPUESTO FEDERAL POR CAMPAÑAS</h3>
+<h3 style="font-size: 13px; text-align: center; position: relative; top: -10px">Aquí se visualiza un resumen del presupuesto federal de todas las campañas</h3>
+
+<br>
+<br>
+<br>
+<br>
+
+@Html.Partial("~/Views/ExportExcelPDF/_ExportExcelPDF.cshtml", new ViewDataDictionary { { "Clave", DXMVCWebApplication1.Common.ListaPantallas.UE_REPRO_PRES_FED } })
+
+@Html.DevExpress().Button(btnSettings =>
+{
+    btnSettings.Name = "btnIniciaRepro";
+    btnSettings.Text = "Inicia Reprogramación";
+    btnSettings.ControlStyle.CssClass = "button";
+    btnSettings.Images.Image.Url = "/Content/Images/reprogramacion.png";
+    btnSettings.ImagePosition = ImagePosition.Right;
+    btnSettings.Style["position"] = "relative";
+    btnSettings.Style["left"] = "10px";
+    btnSettings.ClientSideEvents.Click = "function(s, e){ popUpRepro.Show(); }";
+}).GetHtml();
+
+
+@Html.Action("PresCampaniaGridViewPartial")
+
+@*    Popup Inicia reprogramación pidiendo el estado    *@
+@Html.DevExpress().PopupControl(settings =>
+{
+    settings.Name = "popUpRepro";
+    settings.Width = 400;
+    settings.AllowDragging = true;
+    settings.CloseAction = CloseAction.CloseButton;
+    settings.PopupAnimationType = AnimationType.None;
+    settings.HeaderText = "Inicio de Reprogramación";
+    settings.Modal = true;
+    settings.PopupHorizontalAlign = PopupHorizontalAlign.WindowCenter;
+    settings.PopupVerticalAlign = PopupVerticalAlign.WindowCenter;
+
+    settings.SetContent(() =>
+    {
+        using (Html.BeginForm("IniciaReprogramacion", "ReprogramacionPresFed", FormMethod.Post, new { id = "FormCierre" }))
+        {
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Selecciona un Estado: ";
+                edtSettings.ControlStyle.Font.Size = 12;
+            }).Render();
+
+            Html.DevExpress().ComboBox(settingsCombo =>
+            {
+                settingsCombo.Name = "IdEstado";
+                settingsCombo.Properties.TextField = "Nombre";
+                settingsCombo.Properties.NullText = "Campo Requerido";
+                settingsCombo.Properties.ValueField = "Pk_IdEstado";
+                settingsCombo.Properties.ValueType = typeof(int);
+                settingsCombo.ToolTip = "Seleccione un Estado";
+                settingsCombo.Width = Unit.Pixel(450);
+                settingsCombo.ShowModelErrors = true;
+                settingsCombo.Properties.EnableSynchronization = DefaultBoolean.True;
+                settingsCombo.Properties.IncrementalFilteringMode = IncrementalFilteringMode.Contains;
+            }).BindList(Senasica.GetEstados()).GetHtml();
+
+            ViewContext.Writer.Write("<br />");
+            ViewContext.Writer.Write("<br />");
+
+            ViewContext.Writer.Write("<div style='float:right'>");
+            Html.DevExpress().Button(btnSettings =>
+            {
+                btnSettings.Name = "btnAceptarCierre";
+                btnSettings.Text = "Aceptar";
+                btnSettings.ControlStyle.CssClass = "button";
+                btnSettings.Images.Image.Url = "/Content/Images/aceptar.png";
+                btnSettings.ImagePosition = ImagePosition.Right;
+                btnSettings.Style["position"] = "relative";
+                btnSettings.Style["left"] = "5px";
+                btnSettings.UseSubmitBehavior = true;
+            }).Render();
+
+            Html.DevExpress().Button(btnSettings =>
+            {
+                btnSettings.Name = "btnCancelarCierre";
+                btnSettings.Text = "Cancelar";
+                btnSettings.ControlStyle.CssClass = "button";
+                btnSettings.Images.Image.Url = "/Content/Images/cancelar.png";
+                btnSettings.ImagePosition = ImagePosition.Right;
+                btnSettings.Style["position"] = "relative";
+                btnSettings.Style["left"] = "5px";
+                btnSettings.ClientSideEvents.Click = "function(s, e){ popUpRepro.Hide(); }";
+            }).Render();
+            ViewContext.Writer.Write("</div>");
+        }
+    });
+}).GetHtml()
+

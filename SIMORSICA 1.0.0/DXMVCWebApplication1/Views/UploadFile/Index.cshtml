@@ -1,0 +1,66 @@
+﻿<p>Aquí subirás las licitaciones en forma de documento. Recuerda que solo se admiten documentos con extensión PDF</p>
+@{
+    Html.DevExpress().Label(edtSettings =>
+    {
+        edtSettings.ControlStyle.CssClass = "label";
+        edtSettings.Text = "Archivo: ";
+    }).Render();
+    Html.DevExpress().Label(edtSettings =>
+    {
+        edtSettings.Name = "labelArchivo";
+        edtSettings.ClientVisible = Convert.ToBoolean(ViewData["existeArchivo"]);
+        edtSettings.ControlStyle.CssClass = "label";
+        edtSettings.Text = "YA EXISTE UN ARCHIVO EN EL SERVIDOR";
+        edtSettings.Properties.EnableClientSideAPI = true;
+    }).Render();
+
+    Html.DevExpress().Label(edtSettings =>
+    {
+        edtSettings.Name = "labelNoExisteArchivo";
+        edtSettings.ClientVisible = !Convert.ToBoolean(ViewData["existeArchivo"]);
+        edtSettings.ControlStyle.CssClass = "label";
+        edtSettings.Text = "Aún no se ha subido algún archivo";
+        edtSettings.Properties.EnableClientSideAPI = true;
+    }).Render();
+
+    using (Html.BeginForm("Upload", "UploadFile", FormMethod.Post))
+    {
+        Html.DevExpress().UploadControl(CAsettings =>
+        {
+            CAsettings.Name = "UploadArchivo";
+            CAsettings.CallbackRouteValues = new { Controller = "UploadFile", Action = "Upload" };
+            CAsettings.ShowUploadButton = true;
+            CAsettings.UploadButton.Text = "Subir Archivo";
+            CAsettings.AddUploadButtonsHorizontalPosition = AddUploadButtonsHorizontalPosition.InputRightSide;
+            CAsettings.ShowProgressPanel = true;
+            CAsettings.ClientSideEvents.FileUploadComplete = "function(s, e) { popUpCargaFinalizada.Show(); }";
+        }).Render();
+    }
+
+    Html.DevExpress().PopupControl(settings =>
+    {
+        settings.Name = "popUpCargaFinalizada";
+        settings.Width = 300;
+        settings.AllowDragging = true;
+        settings.CloseAction = CloseAction.CloseButton;
+        settings.PopupAnimationType = AnimationType.None;
+        settings.HeaderText = "La carga ha finalizado";
+        settings.Modal = true;
+        settings.PopupHorizontalAlign = PopupHorizontalAlign.WindowCenter;
+        settings.PopupVerticalAlign = PopupVerticalAlign.WindowCenter;
+
+        settings.SetContent(() =>
+        {
+            Html.DevExpress().Button(btnSettings =>
+            {
+                btnSettings.Name = "btnCargaFinalizada";
+                btnSettings.Text = "Aceptar";
+                btnSettings.ControlStyle.CssClass = "button";
+                btnSettings.Images.Image.Url = "/Content/Images/aceptar.png";
+                btnSettings.ImagePosition = ImagePosition.Right;
+                btnSettings.Images.Image.Width = 16;
+                btnSettings.ClientSideEvents.Click = "function(s, e){ popUpCargaFinalizada.Hide(); btnDescargaArchivo.SetEnabled(true); labelArchivo.SetVisible(true); labelNoExisteArchivo.SetVisible(false); }";
+            }).Render();
+        });
+    }).Render();
+}

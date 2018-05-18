@@ -1,0 +1,74 @@
+﻿@{
+    ViewBag.Title = "Registro de Ministraciones";
+}
+
+<h3 style="font-size:17px; font:bold; text-align:center">REGISTRO DE MINISTRACIONES</h3>
+<h3 style="font-size: 13px; text-align: center; position: relative; top: -10px">Registre aquí las ministraciones que ha recibido</h3>
+<br>
+<br>
+
+@Html.Partial("~/Views/ExportExcelPDF/_ExportExcelPDF.cshtml", new ViewDataDictionary { { "Clave", DXMVCWebApplication1.Common.ListaPantallas.UE_MINISTRACION_COMITE } })
+
+<br>
+<br>
+
+
+@Html.Action("MinistracionesXComiteGridViewPartial")
+
+@Html.DevExpress().PopupControl(settings =>
+{
+    settings.Name = "popUpVerificaMovimiento";
+    settings.Width = 400;
+    settings.AllowDragging = true;
+    settings.CloseAction = CloseAction.CloseButton;
+    settings.PopupAnimationType = AnimationType.None;
+    settings.HeaderText = "¡Alerta!";
+    settings.Modal = true;
+    settings.PopupHorizontalAlign = PopupHorizontalAlign.WindowCenter;
+    settings.PopupVerticalAlign = PopupVerticalAlign.WindowCenter;
+
+    settings.SetContent(() =>
+    {
+        Html.DevExpress().Label(edtSettings =>
+        {
+            edtSettings.ControlStyle.CssClass = "label";
+            edtSettings.Text = "Este es un movimiento irreversible";
+            edtSettings.ControlStyle.Font.Size = 16;
+            edtSettings.ControlStyle.ForeColor = System.Drawing.Color.Red;
+        }).Render();
+
+        ViewContext.Writer.Write("<br >");
+        ViewContext.Writer.Write("<br >");
+
+        Html.DevExpress().Label(edtSettings =>
+        {
+            edtSettings.ControlStyle.CssClass = "label";
+            edtSettings.Text = "Una vez que hayas agregado el registro, no se podrá modificar";
+            edtSettings.ControlStyle.Font.Size = 12;
+            edtSettings.ControlStyle.ForeColor = System.Drawing.Color.Black;
+        }).Render();
+
+        ViewContext.Writer.Write("<br >");
+        ViewContext.Writer.Write("<br >");
+
+        ViewContext.Writer.Write("<div style='float:right'>");
+        Html.DevExpress().Button(btnSettings =>
+        {
+            btnSettings.Name = "btnAceptarAlert";
+            btnSettings.Text = "Confirmar Movimiento";
+            btnSettings.Images.Image.Url = "/Content/Images/aceptar.png";
+            btnSettings.Images.Image.Width = 16;
+            btnSettings.ClientSideEvents.Click = "function(s, e){ popUpVerificaMovimiento.Hide(); MinistracionesXComiteGridView.UpdateEdit(); }";
+        }).Render();
+
+        Html.DevExpress().Button(btnSettings =>
+        {
+            btnSettings.Name = "btnCancelAlert";
+            btnSettings.Text = "Cancelar";
+            btnSettings.Images.Image.Url = "/Content/Images/cancelar.png";
+            btnSettings.Style[HtmlTextWriterStyle.MarginLeft] = "5px";
+            btnSettings.ClientSideEvents.Click = "function(s, e){ popUpVerificaMovimiento.Hide(); }";
+        }).Render();
+        ViewContext.Writer.Write("</div>");
+    });
+}).GetHtml()

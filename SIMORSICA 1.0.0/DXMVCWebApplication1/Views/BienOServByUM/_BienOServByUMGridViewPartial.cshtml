@@ -1,0 +1,121 @@
+@{
+    var grid = Html.DevExpress().GridView(settings => {
+        settings.Name = "_GridViewBS";
+        settings.CallbackRouteValues = new { Controller = "BienOServByUM", Action = "BienOServByUMGridViewPartial", IdBienOServ = ViewData["IdBienOServ"] };
+
+        settings.SettingsEditing.AddNewRowRouteValues = new { Controller = "BienOServByUM", Action = "BienOServByUMGridViewPartialAddNew", IdBienOServ = ViewData["IdBienOServ"] };
+        settings.SettingsEditing.UpdateRowRouteValues = new { Controller = "BienOServByUM", Action = "BienOServByUMGridViewPartialUpdate", IdBienOServ = ViewData["IdBienOServ"] };
+        settings.SettingsEditing.DeleteRowRouteValues = new { Controller = "BienOServByUM", Action = "BienOServByUMGridViewPartialDelete", IdBienOServ = ViewData["IdBienOServ"] };
+        settings.SettingsEditing.Mode = GridViewEditingMode.PopupEditForm;
+
+        settings.SettingsText.PopupEditFormCaption = "UNIDAD DE MEDIDA POR BIEN O SERVICIO";
+
+        settings.SettingsPopup.EditForm.Height = 200;
+        settings.SettingsPopup.EditForm.Width = 450;
+        settings.SettingsPopup.EditForm.HorizontalAlign = PopupHorizontalAlign.WindowCenter;
+        settings.SettingsPopup.EditForm.VerticalAlign = PopupVerticalAlign.WindowCenter;
+        settings.SettingsPopup.EditForm.Modal = true;
+
+        settings.SettingsBehavior.ConfirmDelete = true;
+
+        settings.CommandColumn.Visible = true;
+        settings.CommandColumn.ShowNewButtonInHeader = Convert.ToBoolean(ViewData["Escritura"]);
+        settings.CommandColumn.ShowDeleteButton = Convert.ToBoolean(ViewData["Escritura"]);
+        settings.CommandColumn.ShowEditButton = Convert.ToBoolean(ViewData["Escritura"]) || Convert.ToBoolean(ViewData["Lectura"]);
+        settings.CommandColumn.ShowClearFilterButton = true;
+
+        settings.KeyFieldName = "Pk_IdBienOServByUnidadMedida";
+
+        settings.SettingsPager.Visible = true;
+        settings.SettingsPager.Position = PagerPosition.Bottom;
+        settings.SettingsPager.FirstPageButton.Visible = true;
+        settings.SettingsPager.LastPageButton.Visible = true;
+        settings.SettingsPager.PageSizeItemSettings.Visible = true;
+        settings.SettingsPager.PageSize = 5;
+        settings.SettingsPager.PageSizeItemSettings.Items = new string[] { "5", "10", "15" };
+        settings.Settings.ShowFilterRow = true;
+        settings.Settings.ShowFilterRowMenu = true;
+
+        settings.Columns.Add("Nombre", "Unidad de Medida");
+
+        //COMIENZA CUSTOM
+
+        settings.SetEditFormTemplateContent(c =>
+        {
+            var BienOServByUM = ViewData["dataItem"] ?? c.DataItem;
+            ViewContext.Writer.Write("<br>");
+            ViewContext.Writer.Write("</br>");
+
+            ViewContext.Writer.Write("<table>" + "<tr>" + "<td>");
+            Html.DevExpress().Label(
+                 edtSettings =>
+                 {
+                     edtSettings.ControlStyle.CssClass = "label";
+                     edtSettings.Text = "Unidad de Medida";
+                     edtSettings.AssociatedControlName = "Fk_IdUnidadDeMedida";
+                 }).Render();
+
+            Html.DevExpress().ComboBox(edtSettings =>
+            {
+                edtSettings.Name = "Fk_IdUnidadDeMedida";
+                edtSettings.ControlStyle.CssClass = "editor";
+                edtSettings.Properties.TextField = "Nombre";
+                edtSettings.Properties.NullText = "Campo Requerido";
+                edtSettings.Properties.ValueField = "Pk_IdUnidadDeMedida";
+                edtSettings.ToolTip = c.KeyValue == null ? "Seleccione la Unidad de Medida" : "Cambiar Unidad de Medida";
+                edtSettings.Properties.ValueType = typeof(int);
+                edtSettings.ShowModelErrors = true;
+                edtSettings.Width = Unit.Pixel(350);
+                edtSettings.Properties.IncrementalFilteringMode = IncrementalFilteringMode.Contains;
+                edtSettings.Properties.IncrementalFilteringDelay = 5;
+                edtSettings.Properties.EnableSynchronization = DefaultBoolean.False;
+                
+            }).BindList(Senasica.GetUnidadesDeMedida())
+            .Bind(DataBinder.Eval(BienOServByUM, "Fk_IdUnidadDeMedida")).Render();
+            ViewContext.Writer.Write("</td>");
+            ViewContext.Writer.Write("</td></tr></table>");
+
+            ViewContext.Writer.Write("<br >");
+            
+            Html.DevExpress().Label(
+                        edtSettings =>
+                        {
+                            edtSettings.ControlStyle.CssClass = "label";
+                        }
+                    )
+                    .Render();
+            Html.DevExpress().Button(
+                btnSettings =>
+                {
+                    btnSettings.Name = "_btnUpdat";
+                    btnSettings.Text = "Guardar";
+                    btnSettings.ControlStyle.CssClass = "button";
+                    btnSettings.Images.Image.Url = "Content/Images/guardar.png";
+                    btnSettings.ImagePosition = ImagePosition.Right;
+                    btnSettings.Images.Image.Width = 16;
+                    btnSettings.ClientSideEvents.Click = "function(s, e){ _GridViewBS.UpdateEdit(); }";
+                    btnSettings.ClientVisible = Convert.ToBoolean(ViewData["Escritura"]);
+                }
+            )
+            .Render();
+
+            Html.DevExpress().Button(
+                btnSettings =>
+                {
+                    btnSettings.Name = "_btnCance";
+                    btnSettings.Text = "Cancelar";
+                    btnSettings.ControlStyle.CssClass = "button";
+                    btnSettings.Images.Image.Url = "Content/Images/cancelar.png";
+                    btnSettings.ImagePosition = ImagePosition.Right;
+                    btnSettings.Style["position"] = "relative";
+                    btnSettings.Style["left"] = "5px";
+                    btnSettings.ClientSideEvents.Click = "function(s, e){ _GridViewBS.CancelEdit(); }";
+                }).Render();
+            ViewContext.Writer.Write("</br>");
+        });
+    });
+    if (ViewData["EditError"] != null){
+        grid.SetEditErrorText((string)ViewData["EditError"]);
+    }
+}
+@grid.Bind(Model).GetHtml()

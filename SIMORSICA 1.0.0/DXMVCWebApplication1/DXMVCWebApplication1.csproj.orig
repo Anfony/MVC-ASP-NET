@@ -1,0 +1,2636 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>
+    </ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{A2FA36A5-D8FC-4F84-B838-BD2A44282513}</ProjectGuid>
+    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>DXMVCWebApplication1</RootNamespace>
+    <AssemblyName>DXMVCWebApplication1</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <MvcBuildViews>false</MvcBuildViews>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <OldToolsVersion>4.0</OldToolsVersion>
+    <UseIISExpress>true</UseIISExpress>
+    <IISExpressSSLPort />
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
+    <UpgradeBackupLocation />
+    <WebGreaseLibPath>..\packages\WebGrease.1.5.2\lib</WebGreaseLibPath>
+    <TargetFrameworkProfile />
+    <UseGlobalApplicationHostFile />
+    <Use64BitIISExpress />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Antlr3.Runtime">
+      <HintPath>..\packages\Antlr.3.4.1.9004\lib\Antlr3.Runtime.dll</HintPath>
+    </Reference>
+    <Reference Include="DevExpress.Charts.v14.1.Core, Version=14.1.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="DevExpress.Dashboard.v14.1.Core, Version=14.1.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="DevExpress.Dashboard.v14.1.Web, Version=14.1.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="DevExpress.Dashboard.v14.1.Web.Mvc5, Version=14.1.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="DevExpress.Data.v14.1, Version=14.1.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="DevExpress.DataAccess.v14.1, Version=14.1.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="DevExpress.ExpressApp.v14.1, Version=14.1.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
+    <Reference Include="DevExpress.ExpressApp.Xpo.v14.1, Version=14.1.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
+    <Reference Include="DevExpress.Office.v14.1.Core, Version=14.1.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="DevExpress.Persistent.Base.v14.1, Version=14.1.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.PivotGrid.v14.1.Core, Version=14.1.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="DevExpress.Printing.v14.1.Core, Version=14.1.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="DevExpress.RichEdit.v14.1.Core, Version=14.1.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="DevExpress.Sparkline.v14.1.Core, Version=14.1.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.SpellChecker.v14.1.Core, Version=14.1.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="DevExpress.Spreadsheet.v14.1.Core, Version=14.1.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="DevExpress.Utils.v14.1, Version=14.1.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="DevExpress.Web.ASPxGauges.v14.1, Version=14.1.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="DevExpress.Web.ASPxHtmlEditor.v14.1, Version=14.1.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="DevExpress.Web.ASPxPivotGrid.v14.1, Version=14.1.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="DevExpress.Web.ASPxScheduler.v14.1, Version=14.1.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="DevExpress.Web.ASPxSpellChecker.v14.1, Version=14.1.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="DevExpress.Web.ASPxSpreadsheet.v14.1, Version=14.1.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="DevExpress.Web.ASPxThemes.v14.1, Version=14.1.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="DevExpress.Web.ASPxTreeList.v14.1, Version=14.1.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="DevExpress.Web.Mvc5.v14.1, Version=14.1.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="DevExpress.Web.v14.1, Version=14.1.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="DevExpress.Xpo.v14.1, Version=14.1.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="DevExpress.XtraCharts.v14.1, Version=14.1.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="DevExpress.XtraCharts.v14.1.Web, Version=14.1.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="DevExpress.XtraGauges.v14.1.Core, Version=14.1.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="DevExpress.XtraGauges.v14.1.Presets, Version=14.1.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="DevExpress.XtraPivotGrid.v14.1, Version=14.1.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="DevExpress.XtraReports.v14.1, Version=14.1.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="DevExpress.XtraReports.v14.1.Extensions, Version=14.1.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.XtraReports.v14.1.Service, Version=14.1.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.XtraReports.v14.1.Web, Version=14.1.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="DevExpress.XtraScheduler.v14.1.Core, Version=14.1.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.Identity.Core">
+      <HintPath>..\packages\Microsoft.AspNet.Identity.Core.2.2.1\lib\net45\Microsoft.AspNet.Identity.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.Identity.EntityFramework, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.AspNet.Identity.EntityFramework.2.2.1\lib\net45\Microsoft.AspNet.Identity.EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.Identity.Owin">
+      <HintPath>..\packages\Microsoft.AspNet.Identity.Owin.1.0.0\lib\net45\Microsoft.AspNet.Identity.Owin.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.Owin, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.Owin.3.0.1\lib\net45\Microsoft.Owin.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Host.SystemWeb">
+      <HintPath>..\packages\Microsoft.Owin.Host.SystemWeb.2.0.0\lib\net45\Microsoft.Owin.Host.SystemWeb.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.Owin.Security.3.0.1\lib\net45\Microsoft.Owin.Security.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security.Cookies">
+      <HintPath>..\packages\Microsoft.Owin.Security.Cookies.2.1.0\lib\net45\Microsoft.Owin.Security.Cookies.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security.Facebook">
+      <HintPath>..\packages\Microsoft.Owin.Security.Facebook.2.0.0\lib\net45\Microsoft.Owin.Security.Facebook.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security.Google">
+      <HintPath>..\packages\Microsoft.Owin.Security.Google.2.0.0\lib\net45\Microsoft.Owin.Security.Google.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security.MicrosoftAccount">
+      <HintPath>..\packages\Microsoft.Owin.Security.MicrosoftAccount.2.0.0\lib\net45\Microsoft.Owin.Security.MicrosoftAccount.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security.OAuth">
+      <HintPath>..\packages\Microsoft.Owin.Security.OAuth.2.0.0\lib\net45\Microsoft.Owin.Security.OAuth.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security.Twitter">
+      <HintPath>..\packages\Microsoft.Owin.Security.Twitter.2.0.0\lib\net45\Microsoft.Owin.Security.Twitter.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.5.0.6\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="Owin">
+      <HintPath>..\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Data.Linq" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Net.Http.Formatting, Version=5.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.5.0.0\lib\net45\System.Net.Http.Formatting.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http.WebRequest" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.Web.DynamicData" />
+    <Reference Include="System.Web.Entity" />
+    <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Web.Helpers, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.0.0\lib\net45\System.Web.Helpers.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Http, Version=5.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Core.5.0.0\lib\net45\System.Web.Http.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Http.WebHost, Version=5.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.WebHost.5.0.0\lib\net45\System.Web.Http.WebHost.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Mvc, Version=5.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.AspNet.Mvc.5.0.0\lib\net45\System.Web.Mvc.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.Optimization">
+      <HintPath>..\packages\Microsoft.AspNet.Web.Optimization.1.1.1\lib\net40\System.Web.Optimization.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.AspNet.Razor.3.0.0\lib\net45\System.Web.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.0.0\lib\net45\System.Web.WebPages.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Deployment, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.0.0\lib\net45\System.Web.WebPages.Deployment.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.0.0\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Abstractions" />
+    <Reference Include="System.Web.Routing" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.EnterpriseServices" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="WebGrease">
+      <HintPath>..\packages\WebGrease.1.5.2\lib\WebGrease.dll</HintPath>
+    </Reference>
+    <Reference Include="WebMatrix.Data, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.Data.3.0.0\lib\net45\WebMatrix.Data.dll</HintPath>
+    </Reference>
+    <Reference Include="WebMatrix.WebData, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.WebData.3.0.0\lib\net45\WebMatrix.WebData.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="App_Data\TopMenuAdminInstanciaEjecutoraInocuidad.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="App_Data\TopMenuAdminInstanciaEjecutoraSaludAnimal.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="App_Data\TopMenuAdminInstanciaEjecutoraSanidadAcuicolaPesquera.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="App_Data\TopMenuAdminInstanciaEjecutoraMovilizacion.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="App_Data\TopMenuAdminProgramasU.xml" />
+    <Content Include="App_Data\TopMenuAdminUnidadResponsableMovilizacion.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="App_Data\TopMenuAdminUnidadResponsableInocuidad.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="App_Data\TopMenuAdminUnidadResponsableUPV.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="App_Data\TopMenuAdminUnidadResponsableSanidadAcuicolaPesquera.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="App_Data\TopMenuAdminUnidadResponsableSaludAnimal.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="App_Data\TopMenuAdminUnidadResponsableSanidadVegetal.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="App_Data\TopMenuAdminInstanciaEjecutoraSanidadVegetal.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="App_Data\TopMenuAuditor.xml" />
+    <Content Include="App_Data\TopMenuSupNacional.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="App_Data\TopMenuEstatal.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="App_Data\TopMenuEstatal_PRES.xml" />
+    <Content Include="App_Data\TopMenuPuesto_AuxAdmin.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="App_Data\TopMenuPuesto_AuxCampo.xml" />
+    <Content Include="App_Data\TopMenuPuesto_AuxInformatica.xml" />
+    <Content Include="App_Data\TopMenuPuesto_CooAdministrativo.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="App_Data\TopMenuPuesto_CooCampania_SAcuicola.xml" />
+    <Content Include="App_Data\TopMenuPuesto_CooCampania_SAnimal.xml" />
+    <Content Include="App_Data\TopMenuPuesto_CooCampania_SVegetal.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="App_Data\TopMenuPuesto_Gerente_SAcuicola.xml" />
+    <Content Include="App_Data\TopMenuPuesto_ProResInformatica_SAcuicola.xml" />
+    <Content Include="App_Data\TopMenuPuesto_CooProyecto_SAcuicola.xml" />
+    <Content Include="App_Data\TopMenuPuesto_Gerente_SAnimal.xml" />
+    <Content Include="App_Data\TopMenuPuesto_ProResInformatica_SAnimal.xml" />
+    <Content Include="App_Data\TopMenuPuesto_CooProyecto_SAnimal.xml" />
+    <Content Include="App_Data\TopMenuPuesto_Gerente_SVegetal.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="App_Data\TopMenuPuesto_ProResInformatica_SVegetal.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="App_Data\TopMenuPuesto_CooProyecto_SVegetal.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="App_Data\TopMenuPuesto_CooRegional.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="App_Data\TopMenuPuesto_GerGerente.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="App_Data\TopMenuPuesto_ProAdministrativo.xml" />
+    <Content Include="App_Data\TopMenuPuesto_ProDivulgacion.xml" />
+    <Content Include="App_Data\TopMenuPuesto_ProInformatica.xml" />
+    <Content Include="App_Data\TopMenuPuesto_ProInformatico.xml" />
+    <Content Include="App_Data\TopMenuPuesto_ProProcesos.xml" />
+    <Content Include="App_Data\TopMenuPuesto_ProProyecto.xml" />
+    <Content Include="App_Data\TopMenuPuesto_TecOperativo.xml" />
+    <Content Include="App_Data\TopMenuPuesto_SecSecretaria.xml" />
+    <Content Include="App_Data\TopMenuRegional.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="App_Data\TopMenuAdmin.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="App_Data\Content\Images\AquaHeader.jpg" />
+    <Content Include="App_Data\Content\Images\BlackGlassHeader.jpg" />
+    <Content Include="App_Data\Content\Images\GlassHeader.jpg" />
+    <Content Include="App_Data\Content\Images\PlasticBlueHeader.jpg" />
+    <Content Include="App_Data\Content\Images\RedWineHeader.jpg" />
+    <Content Include="App_Data\Content\jquery-ui.css" />
+    <Content Include="App_Data\Content\jquery-ui.min.css" />
+    <Content Include="App_Data\Content\Site.css" />
+    <Content Include="App_Data\TopMenuRepEstatal.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Content\bootstrap-theme.css" />
+    <Content Include="Content\bootstrap-theme.min.css" />
+    <Content Include="Content\bootstrap.css" />
+    <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\Images\aceptar.png" />
+    <Content Include="Content\Images\Acta.png" />
+    <Content Include="Content\Images\AquaHeader.jpg" />
+    <Content Include="Content\Images\ayuda.png" />
+    <Content Include="Content\Images\borrar.png" />
+    <Content Include="Content\Images\descargar.png" />
+    <Content Include="Content\Images\downloadFile.png" />
+    <Content Include="Content\Images\edicion.png" />
+    <Content Include="Content\Images\loader.gif" />
+    <Content Include="Content\Images\BlackGlassHeader.jpg" />
+    <Content Include="Content\Images\cancelar.png" />
+    <Content Include="Content\Images\candado_abierto.png" />
+    <Content Include="Content\Images\candado_cerrado.png" />
+    <Content Include="Content\Images\contener_01.JPG" />
+    <Content Include="Content\Images\contener_02.JPG" />
+    <Content Include="Content\Images\ExportPDF2.png" />
+    <Content Include="Content\Images\ExporXLS2.png" />
+    <Content Include="Content\Images\folders.png" />
+    <Content Include="Content\Images\GlassHeader.jpg" />
+    <Content Include="Content\Images\guardar.png" />
+    <Content Include="Content\Images\ico_print.png" />
+    <Content Include="Content\Images\incognita.png" />
+    <Content Include="Content\Images\logoHeader01.png" />
+    <Content Include="Content\Images\logoInstitucional.png" />
+    <Content Include="Content\Images\lupa.png" />
+    <Content Include="Content\Images\male-shadow-circle-512.png" />
+    <Content Include="Content\Images\PlasticBlueHeader.jpg" />
+    <Content Include="Content\Images\precaucion.png" />
+    <Content Include="Content\Images\RedWineHeader.jpg" />
+    <Content Include="Content\Images\regresa.png" />
+    <Content Include="Content\Images\reopen.png" />
+    <Content Include="Content\Images\reprogramacion.png" />
+    <Content Include="Content\Images\ssoriginal.png" />
+    <Content Include="Content\Images\ssoriginalgris.png" />
+    <Content Include="Content\Images\uploadFile.png" />
+    <Content Include="Content\jquery-ui.css" />
+    <Content Include="Content\jquery-ui.min.css" />
+    <Content Include="Content\Site.css" />
+    <Content Include="fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="Global.asax" />
+    <Content Include="Logo_Chico.jpg" />
+    <Content Include="Logo_Senasica__2_web.jpg" />
+    <Content Include="Models\ReproRecursoFed.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>ReproRecursoFed.edmx</DependentUpon>
+      <LastGenOutput>ReproRecursoFed.Context.cs</LastGenOutput>
+    </Content>
+    <Content Include="Models\ReproRecursoFed.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>ReproRecursoFed.edmx</DependentUpon>
+      <LastGenOutput>ReproRecursoFed.cs</LastGenOutput>
+    </Content>
+    <Content Include="Scripts\bootstrap.js" />
+    <Content Include="Scripts\bootstrap.min.js" />
+    <Content Include="Scripts\globalize.cultures.js" />
+    <Content Include="Scripts\globalize.js" />
+    <Content Include="fonts\glyphicons-halflings-regular.woff" />
+    <Content Include="fonts\glyphicons-halflings-regular.ttf" />
+    <Content Include="fonts\glyphicons-halflings-regular.eot" />
+    <Content Include="Models\Model2.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Model2.cs</LastGenOutput>
+      <DependentUpon>Model1.edmx</DependentUpon>
+    </Content>
+    <Content Include="Models\Model3.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Model3.cs</LastGenOutput>
+      <DependentUpon>Model1.edmx</DependentUpon>
+    </Content>
+    <EntityDeploy Include="Models\WebServicesModel.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>WebServicesModel.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <Content Include="Models\WebServicesModel.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>WebServicesModel.edmx</DependentUpon>
+      <LastGenOutput>WebServicesModel.Context.cs</LastGenOutput>
+    </Content>
+    <Content Include="Models\WebServicesModel.edmx.diagram">
+      <DependentUpon>WebServicesModel.edmx</DependentUpon>
+    </Content>
+    <Content Include="Models\WebServicesModel.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>WebServicesModel.edmx</DependentUpon>
+      <LastGenOutput>WebServicesModel.cs</LastGenOutput>
+    </Content>
+    <EntityDeploy Include="Models\Senasica_Storeds.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>Senasica_Storeds.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <Content Include="Models\Senasica_Storeds.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>Senasica_Storeds.edmx</DependentUpon>
+      <LastGenOutput>Senasica_Storeds.Context.cs</LastGenOutput>
+    </Content>
+    <Content Include="Models\Senasica_Storeds.edmx.diagram">
+      <DependentUpon>Senasica_Storeds.edmx</DependentUpon>
+    </Content>
+    <Content Include="Models\Senasica_Storeds.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>Senasica_Storeds.edmx</DependentUpon>
+      <LastGenOutput>Senasica_Storeds.cs</LastGenOutput>
+    </Content>
+    <EntityDeploy Include="Models\ReproRecursoFed.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>ReproRecursoFed.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <Content Include="Models\ReproRecursoFed.edmx.diagram">
+      <DependentUpon>ReproRecursoFed.edmx</DependentUpon>
+    </Content>
+    <None Include="Properties\PublishProfiles\CustomProfile.pubxml" />
+    <None Include="Properties\PublishProfiles\CustomProfile2.pubxml" />
+    <None Include="Properties\PublishProfiles\Enrique.pubxml" />
+    <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
+    <None Include="Properties\PublishProfiles\GILBERTO.pubxml" />
+    <None Include="Properties\PublishProfiles\MAURILIO.pubxml" />
+    <None Include="Properties\PublishProfiles\Ruben.pubxml" />
+    <None Include="Properties\PublishProfiles\Sandia.pubxml" />
+    <None Include="Properties\PublishProfiles\Sandy.pubxml" />
+    <None Include="Properties\PublishProfiles\Sandy2.pubxml" />
+    <None Include="Scripts\jquery-1.10.2.intellisense.js" />
+    <Content Include="Scripts\jquery-1.10.2.js" />
+    <Content Include="Scripts\jquery-1.10.2.min.js" />
+    <Content Include="Scripts\jquery-ui-1.10.3.js" />
+    <Content Include="Scripts\jquery-ui-1.10.3.min.js" />
+    <Content Include="Scripts\jquery.unobtrusive-ajax.js" />
+    <Content Include="Scripts\jquery.unobtrusive-ajax.min.js" />
+    <Content Include="Scripts\jquery.validate.js" />
+    <Content Include="Scripts\jquery.validate.min.js" />
+    <Content Include="Scripts\jquery.validate.unobtrusive.js" />
+    <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
+    <Content Include="Scripts\knockout-3.0.0.debug.js" />
+    <Content Include="Scripts\knockout-3.0.0.js" />
+    <Content Include="packages.config" />
+    <EntityDeploy Include="Models\Model1.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>Model11.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <Content Include="Models\Model1.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>Model1.edmx</DependentUpon>
+      <LastGenOutput>Model1.Context.cs</LastGenOutput>
+    </Content>
+    <Content Include="Models\Model1.edmx.diagram">
+      <DependentUpon>Model1.edmx</DependentUpon>
+    </Content>
+    <Content Include="Scripts\jquery-1.10.2.min.map" />
+    <None Include="Scripts\jquery.validate-vsdoc.js" />
+    <Content Include="Scripts\modernizr-2.6.2.js" />
+    <Content Include="Scripts\NecesidadesCampanias.js" />
+    <Content Include="Scripts\PantallaMapa.js" />
+    <Content Include="Scripts\utils.js" />
+    <Content Include="Views\Shared\DisplayTemplates\Boolean.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\Boolean.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\DateTime.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\Decimal.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\MultilineText.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\Password.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\String.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\EmailAddress.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Web.config">
+      <SubType>Designer</SubType>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Views\Shared\ContentLeftPartialView.cshtml" />
+    <Content Include="Views\Shared\FooterPartialView.cshtml" />
+    <Content Include="Views\Shared\HeaderPartialView.cshtml" />
+    <Content Include="Views\Shared\LogOnPartialView.cshtml" />
+    <Content Include="Views\Shared\_lightLayout.cshtml" />
+    <Content Include="Views\Shared\_mainLayout.cshtml" />
+    <Content Include="Views\Shared\_rootLayout.cshtml" />
+    <Content Include="Views\_ViewStart.cshtml" />
+    <Content Include="Views\Home\Index.cshtml" />
+    <Content Include="Views\Home\GridViewPartialView.cshtml" />
+    <Content Include="Views\Anio\Index.cshtml" />
+    <Content Include="Views\Anio\_GridView1Partial.cshtml" />
+    <Content Include="Views\Programa\index.cshtml" />
+    <Content Include="Views\Programa\_GridView2Partial.cshtml" />
+    <Content Include="Views\UnidadDeMedida\index.cshtml" />
+    <Content Include="Views\UnidadDeMedida\_GridViewPartial.cshtml" />
+    <Content Include="Views\Estado\Index.cshtml" />
+    <Content Include="Views\Estado\_GridView2Partial.cshtml" />
+    <Content Include="Views\Construccion\Index.cshtml" />
+    <Content Include="Views\Municipio\Index.cshtml" />
+    <Content Include="Views\Municipio\_GridViewPartial.cshtml" />
+    <Content Include="Views\Componente\Index.cshtml" />
+    <Content Include="Views\Componente\_GridViewPartial.cshtml" />
+    <Content Include="Views\SubComponente\Index.cshtml" />
+    <Content Include="Views\SubComponente\_GridViewPartial.cshtml" />
+    <Content Include="Views\CapituloPartida\Index.cshtml" />
+    <Content Include="Views\CapituloPartida\_CapituloPartidaGridViewPartial.cshtml" />
+    <Content Include="Views\BienOServ\Index.cshtml" />
+    <Content Include="Views\BienOServ\_GridView4Partial.cshtml" />
+    <Content Include="Views\TipoDeUnidad\Index.cshtml" />
+    <Content Include="Views\TipoDeUnidad\_GridView5Partial.cshtml" />
+    <Content Include="Views\UnidadEjecutora\Index.cshtml" />
+    <Content Include="Views\UnidadResponsable\Index.cshtml" />
+    <Content Include="Views\UnidadEjecutora\_UnidadEjecutoraGridViewPartial.cshtml" />
+    <Content Include="Views\UnidadResponsable\_UnidadResponsableGridViewPartial.cshtml" />
+    <Content Include="Views\TipoDeRecurso\Index.cshtml" />
+    <Content Include="Views\TipoDeRecurso\_GridView8Partial.cshtml" />
+    <Content Include="Views\TipoDeAccion\Index.cshtml" />
+    <Content Include="Views\TipoDeAccion\_GridView9Partial.cshtml" />
+    <Content Include="Views\Persona\_PersonaGridViewPartial.cshtml" />
+    <Content Include="Views\Actividad\Index.cshtml" />
+    <Content Include="Views\Beneficiario\Index.cshtml" />
+    <Content Include="Views\Beneficiario\_BeneficiarioGridViewPartial.cshtml" />
+    <Content Include="Views\Productor\Index.cshtml" />
+    <Content Include="Views\Productor\_ProductorGridViewPartial.cshtml" />
+    <Content Include="Views\ProgramaAnualAdq\Index.cshtml" />
+    <Content Include="Views\ProgramaAnualAdq\_ProgramaAnualGridViewPartial.cshtml" />
+    <Content Include="Views\ConceptoPartida\Index.cshtml" />
+    <Content Include="Views\ConceptoPartida\_ConceptoPartidaGridViewPartial.cshtml" />
+    <Content Include="Views\Partida\Index.cshtml" />
+    <Content Include="Views\Partida\_PartidaGridViewPartial.cshtml" />
+    <Content Include="Views\Vigencia\Index.cshtml" />
+    <Content Include="Views\Vigencia\_VigenciaGridViewPartial.cshtml" />
+    <Content Include="Views\Account\ExternalLoginConfirmation.cshtml" />
+    <Content Include="Views\Account\ExternalLoginFailure.cshtml" />
+    <Content Include="Views\Account\Login.cshtml" />
+    <Content Include="Views\Account\Manage.cshtml" />
+    <Content Include="Views\Account\Register.cshtml" />
+    <Content Include="Views\Account\_ChangePasswordPartial.cshtml" />
+    <Content Include="Views\Account\_ExternalLoginsListPartial.cshtml" />
+    <Content Include="Views\Account\_RemoveAccountPartial.cshtml" />
+    <Content Include="Views\Account\_SetPasswordPartial.cshtml" />
+    <Content Include="Views\Home\DocumentViewerPartial.cshtml" />
+    <Content Include="Views\Role\Index.cshtml" />
+    <Content Include="Views\Role\Create.cshtml" />
+    <Content Include="Views\StatusAlcanceKardex\Index.cshtml" />
+    <Content Include="Views\StatusAlcanceKardex\_StatusAlcanceKardexGridViewPartial.cshtml" />
+    <Content Include="Views\StatusActividad\Index.cshtml" />
+    <Content Include="Views\StatusActividad\_StatusActividadGridViewPartial.cshtml" />
+    <Content Include="Views\StatusAlcance\Index.cshtml" />
+    <Content Include="Views\StatusAlcance\_StatusAlcanceGridViewPartial.cshtml" />
+    <Content Include="Views\StatusCampania\Index.cshtml" />
+    <Content Include="Views\StatusCampania\_StatusCampaniaGridViewPartial.cshtml" />
+    <Content Include="Views\Cargo\Index.cshtml" />
+    <Content Include="Views\Cargo\_CargoGridViewPartial.cshtml" />
+    <Content Include="Views\Certificacion\Index.cshtml" />
+    <Content Include="Views\Certificacion\_CertificadosGridViewPartial.cshtml" />
+    <Content Include="Views\CertificadoCargo\Index.cshtml" />
+    <Content Include="Views\CertificadoCargo\_CertificadoCargoGridViewPartial.cshtml" />
+    <Content Include="Views\FlujoActividad\Index.cshtml" />
+    <Content Include="Views\FlujoActividad\_FlujoActividadGridViewPartial.cshtml" />
+    <Content Include="Views\FlujoAlcance\Index.cshtml" />
+    <Content Include="Views\FlujoAlcance\_FlujoAlcanceGridViewPartial.cshtml" />
+    <Content Include="Views\FlujoCampania\Index.cshtml" />
+    <Content Include="Views\FlujoCampania\_FlujoCampaniaGridViewPartial.cshtml" />
+    <Content Include="Views\TipoInstalacion\Index.cshtml" />
+    <Content Include="Views\TipoInstalacion\_TipoInstalacionGridViewPartial.cshtml" />
+    <Content Include="Views\EstadoBien\Index.cshtml" />
+    <Content Include="Views\EstadoBien\_EstadoBienGridViewPartial.cshtml" />
+    <Content Include="Views\Inventario\_InventarioGridViewPartial.cshtml" />
+    <Content Include="Views\Instalacion\_InstalacionesGridViewPartial.cshtml" />
+    <Content Include="Views\ReporteDeActividades\Index.cshtml" />
+    <Content Include="Views\ReporteDeActividades\_ActividadesReportPartial.cshtml" />
+    <Content Include="Views\ReportsUE\Index.cshtml" />
+    <Content Include="Views\ReportsUE\_ReportsUEReportPartial.cshtml" />
+    <Content Include="Views\UnidadEjecutora\_ComboBoxMunicipioPartial.cshtml" />
+    <Content Include="Views\Productor\_ComboBoxMunicipioPartial.cshtml" />
+    <Content Include="Views\MOVCampania\Index.cshtml" />
+    <Content Include="Views\MOVCampania\_MOVCampaniaReport3Partial.cshtml" />
+    <Content Include="Views\TipoAccion\Index.cshtml" />
+    <Content Include="Views\TipoAccion\_GridViewPartial.cshtml" />
+    <Content Include="Views\TipoActividad\Index.cshtml" />
+    <Content Include="Views\TipoActividad\_GridViewPartial.cshtml" />
+    <Content Include="Views\Incentivo\IncentivoGridViewPartial.cshtml" />
+    <Content Include="Views\Incentivo\Index.cshtml" />
+    <Content Include="Views\ProyectoAutorizado\Index.cshtml" />
+    <Content Include="Views\ProyectoAutorizado\ProyectoAutorizadoGridViewPartial.cshtml" />
+    <Content Include="Views\MOVImportanciaPVIS\_ComboBoxMunicipioPartial.cshtml" />
+    <Content Include="Views\Actividades2\Index.cshtml" />
+    <Content Include="Views\Actividades2\_ActividadSchedulerPartial.cshtml" />
+    <Content Include="Views\TipoDeBien\Index.cshtml" />
+    <Content Include="Views\TipoDeBien\_TipoDeBienGridViewPartial.cshtml" />
+    <Content Include="Views\Actividad\_ActividadesGridViewPartial.cshtml" />
+    <Content Include="Views\ProyectoPresupuesto\Index.cshtml" />
+    <Content Include="Views\MOVImportanciaPrograma\_ImportanciaProgMovGridViewPartial.cshtml" />
+    <Content Include="Views\SAImportanciaEnfermedad\_ImportanciaSAGridViewPartial.cshtml" />
+    <Content Include="Views\SAImportanciaEconomica\_PoblacionSAGridViewPartial.cshtml" />
+    <Content Include="Views\SACImportanciaEconomica\_ImportanciaSACGridViewPartial.cshtml" />
+    <Content Include="Views\SACAtendido\_SACAtendidoGridViewPartial.cshtml" />
+    <Content Include="Views\SACImportanciaEnf\_SACImortanciaEnfGridViewPartial.cshtml" />
+    <Content Include="Views\MOVImportanciaPVIS\_ImportanciaPIV_MOVGridViewPartial.cshtml" />
+    <Content Include="Views\MOVAtendido\_AtendidoMovGridViewPartial.cshtml" />
+    <Content Include="Views\RepActividad\Index.cshtml" />
+    <Content Include="Views\RepActividad\_RepActividadGridViewPartial.cshtml" />
+    <Content Include="Views\RepAdquisicion\Index.cshtml" />
+    <Content Include="Views\RepAdquisicion\_AdquisicionGridViewPartial.cshtml" />
+    <Content Include="Views\RepActividad\RepGastosGridViewPartial.cshtml" />
+    <Content Include="Views\InoSAAtendido\_InoCompSAGridViewPartial.cshtml" />
+    <Content Include="Views\InoSAUnidadesACertificar\_InoUnidadesCertSAGridViewPartial.cshtml" />
+    <Content Include="Views\InoSAImportancia\_InoImportanciaSAGridViewPartial.cshtml" />
+    <Content Include="Views\InoSACUnidadesACertificar\_InoUnidadesCertSACGridViewPartial.cshtml" />
+    <Content Include="Views\InoSACImportancia\_InoImportanciaSACGridViewPartial.cshtml" />
+    <Content Include="Views\RepActividades\Index.cshtml" />
+    <Content Include="Views\RepActividades\_RepActividadesReportPartial.cshtml" />
+    <Content Include="Views\Proveedor\Index.cshtml" />
+    <Content Include="Views\Proveedor\_ComboBoxMunicipioPartial.cshtml" />
+    <Content Include="Views\Proveedor\_GirosGridViewPartial.cshtml" />
+    <Content Include="Views\ActividadXAccion\Index.cshtml" />
+    <Content Include="Views\ActividadXAccion\_ActividadXAccionGridViewPartial.cshtml" />
+    <Content Include="Views\ActividadXAccion\_ActividadAsignadaGridViewPartial.cshtml" />
+    <Content Include="Views\Account\_Register_CoordinadorCamp.cshtml" />
+    <Content Include="Views\Account\_Register_InstanciaEjecutora.cshtml" />
+    <Content Include="Views\Account\_Register_TecnicoOperativo.cshtml" />
+    <Content Include="Views\Account\_Register_UnidadResponsable.cshtml" />
+    <Content Include="Views\InoSVUnidadesACertificar\_InoUnidadesCertSVGridViewPartial.cshtml" />
+    <Content Include="Views\InoSVImportancia\_InoImportanciaSVGridViewPartial.cshtml" />
+    <Content Include="Views\InoSVAtendido\_InoCompSVGridViewPartial.cshtml" />
+    <Content Include="Views\ReporteDeAdquisiciones\Index.cshtml" />
+    <Content Include="Views\ReporteDeAdquisiciones\_PAAGridViewPartial.cshtml" />
+    <Content Include="Views\ReporteDeAdquisiciones\_RepGastoGridViewPartial.cshtml" />
+    <Content Include="Views\ReporteActividadAsignada\Index.cshtml" />
+    <Content Include="Views\ReporteActividadAsignada\_ActividadesAsignadasGridViewPartial.cshtml" />
+    <Content Include="Views\ReporteActividadAsignada\_RepActividadGridViewPartial.cshtml" />
+    <Content Include="Views\SVImportanciaCultivo\Index.cshtml" />
+    <Content Include="Views\SVImportanciaCultivo\_SVImportanciaCultivoGridViewPartial.cshtml" />
+    <Content Include="Views\SVAtendido\_SVAtendidoGridViewPartial.cshtml" />
+    <Content Include="Views\SVAtendido\Index.cshtml" />
+    <Content Include="Views\SVImportanciaPlaga\Index.cshtml" />
+    <Content Include="Views\SVImportanciaPlaga\_SVImportanciaPlagaGridViewPartial.cshtml" />
+    <Content Include="Views\AccionXCampania\Index.cshtml" />
+    <Content Include="Views\AccionXCampania\_AccionXCampaniaGridViewPartial.cshtml" />
+    <Content Include="Views\ActividadXAccion\_ActividadesXAccionGridViewPartial.cshtml" />
+    <Content Include="Views\ProgramaAnualAdq\_NecesidadesGridViewPartial.cshtml" />
+    <Content Include="Views\ProgramaAnualAdq\_GastosRelativosCampaniaGridViewPartial.cshtml" />
+    <Content Include="Views\StatusCampaniaKardex\Index.cshtml" />
+    <Content Include="Views\StatusCampaniaKardex\_StatusCampaniaGridViewPartial.cshtml" />
+    <Content Include="Views\SAAtendido\Index.cshtml" />
+    <Content Include="Views\SAAtendido\_AtendidoSAGridViewPartial.cshtml" />
+    <Content Include="Views\SAImportanciaEconomica\Index.cshtml" />
+    <Content Include="Views\SAImportanciaEnfermedad\Index.cshtml" />
+    <Content Include="Views\Account\RecuperaContrasenia.cshtml" />
+    <Content Include="Views\Account\_PideDatosRecuperacionContrasenia.cshtml" />
+    <Content Include="Views\PersonasRegistradas\Index.cshtml" />
+    <Content Include="Views\PersonasRegistradas\PersonasRegistradasGridViewPartial.cshtml" />
+    <Content Include="Views\Proyecto\Index.cshtml" />
+    <Content Include="Views\Proyecto\_ProyectoReport1Partial.cshtml" />
+    <Content Include="Views\ExportExcelPDF\_ExportExcelPDF.cshtml" />
+    <Content Include="Views\PEFXEstado\Index.cshtml" />
+    <Content Include="Views\PEFXEstado\_PEFXEstadoGridViewPartial.cshtml" />
+    <Content Include="Views\GastoOp\Index.cshtml" />
+    <Content Include="Views\GastoOp\_GastoOpGridViewPartial.cshtml" />
+    <Content Include="Views\GastoTransv\Index.cshtml" />
+    <Content Include="Views\GastoTransv\_GastoTransvGridViewPartial.cshtml" />
+    <Content Include="Views\AsignacionPresupuestoXEstado\Index.cshtml" />
+    <Content Include="Views\AsignacionPresupuestoXEstado\_DGPresupuestoXEstado.cshtml" />
+    <Content Include="Views\AsignacionPresupuestoXEstado\_errorDistribucion.cshtml" />
+    <Content Include="Views\PresupuestoXDireccionGeneral\_errorDistribucion.cshtml" />
+    <Content Include="Views\PresupuestoXDireccionGeneral\_ResumenXEstado_DG.cshtml" />
+    <Content Include="Views\PresupuestoXDireccionGeneral\Index.cshtml" />
+    <Content Include="Views\DetalleApendice\IndexReporte.cshtml" />
+    <Content Include="Views\DetalleApendice\_ReporteDetalleApendicePartial.cshtml" />
+    <Content Include="Views\ReporteProyectosAcuicola\Index.cshtml" />
+    <Content Include="Views\ReporteProyectosAcuicola\_ReportPartial.cshtml" />
+    <Content Include="Views\ReporteProyectosAnimal\Index.cshtml" />
+    <Content Include="Views\ReporteProyectosAnimal\_Report1Partial.cshtml" />
+    <Content Include="Views\ReporteProyectosInocuidad\Index.cshtml" />
+    <Content Include="Views\ReporteProyectosInocuidad\_Report2Partial.cshtml" />
+    <Content Include="Views\ReporteProyectosMovilizacion\Index.cshtml" />
+    <Content Include="Views\ReporteProyectosMovilizacion\_Report3Partial.cshtml" />
+    <Content Include="Views\ReporteProyectosVegetal\Index.cshtml" />
+    <Content Include="Views\ReporteProyectosVegetal\_Report4Partial.cshtml" />
+    <Content Include="Views\Loading\_Loading.cshtml" />
+    <Content Include="Views\ArchivosCampania\Index.cshtml" />
+    <Content Include="Views\Shared\FileNotFound.cshtml" />
+    <Content Include="Views\ReporteCampaniaSaludAnimal\Index.cshtml" />
+    <Content Include="Views\ReporteCampaniaSaludAnimal\_ReportPartial.cshtml" />
+    <Content Include="Views\ReporteCampaniaSanidadVegetal\Index.cshtml" />
+    <Content Include="Views\ReporteCampaniaSanidadVegetal\_ReportPartial.cshtml" />
+    <Content Include="Views\ReporteCampaniaSanidadAcuicolaPesquera\Index.cshtml" />
+    <Content Include="Views\ReporteCampaniaSanidadAcuicolaPesquera\_Report1Partial.cshtml" />
+    <Content Include="Views\ReporteAnexoTecnico1\IndexReporte.cshtml" />
+    <Content Include="Views\ReporteAnexoTecnico1\_ReporteAnexoTecnicoApendice1Partial.cshtml" />
+    <Content Include="Views\ReporteAnexoTecnico2\IndexReporte.cshtml" />
+    <Content Include="Views\ReporteAnexoTecnico2\_ReporteAnexoTecnicoApendice2Partial.cshtml" />
+    <Content Include="Views\ReporteAnexoTecnico3\IndexReporte.cshtml" />
+    <Content Include="Views\ReporteAnexoTecnico3\_ReporteAnexoTecnicoApendice3Partial.cshtml" />
+    <Content Include="Views\FirmasAutorizadas\Index.cshtml" />
+    <Content Include="Views\ReporteCampaniaInocuidadSAC\Index.cshtml" />
+    <Content Include="Views\ReporteCampaniaInocuidadSAC\_ReportPartial.cshtml" />
+    <Content Include="Views\ReporteInocuidadSaludAnimal\Index.cshtml" />
+    <Content Include="Views\ReporteInocuidadSaludAnimal\_Report1Partial.cshtml" />
+    <Content Include="Views\ReporteGastosFijosDeOperacion\Index.cshtml" />
+    <Content Include="Views\ReporteGastosFijosDeOperacion\_Report1Partial.cshtml" />
+    <Content Include="Views\EstatalPRES\Index.cshtml" />
+    <Content Include="Views\ReporteCampaniaInocuidadSanidadVegetal\Index.cshtml" />
+    <Content Include="Views\ReporteCampaniaInocuidadSanidadVegetal\_ReportPartial.cshtml" />
+    <Content Include="Views\ReporteCampaniaMovilizacion\Index.cshtml" />
+    <Content Include="Views\ReporteCampaniaMovilizacion\_Report1Partial.cshtml" />
+    <Content Include="Views\ReporteInstanciaEjecutora\Index.cshtml" />
+    <Content Include="Views\ReporteInstanciaEjecutora\_ReportPartial.cshtml" />
+    <Content Include="Views\InoSACAtendido\_InoCompSACGridViewPartial.cshtml" />
+    <Content Include="Views\InoSAAtendido\Index.cshtml" />
+    <Content Include="Views\InoSACAtendido\Index.cshtml" />
+    <Content Include="Views\InoSACImportancia\Index.cshtml" />
+    <Content Include="Views\InoSACUnidadesACertificar\Index.cshtml" />
+    <Content Include="Views\ProyectoPresupuesto\_ComboBoxProyectoAutorizado.cshtml" />
+    <Content Include="Views\ProyectoPresupuesto\_GridViewPartial.cshtml" />
+    <Content Include="Views\ProyectoPresupuesto\_GridViewPartialUR.cshtml" />
+    <Content Include="Views\ProyectoPresupuesto\_GridViewPartialEST.cshtml" />
+    <Content Include="Views\ProyectoPresupuesto\_GridViewPartialAIE.cshtml" />
+    <Content Include="Views\InoSAImportancia\Index.cshtml" />
+    <Content Include="Views\InoSAUnidadesACertificar\Index.cshtml" />
+    <Content Include="Views\InoSVAtendido\Index.cshtml" />
+    <Content Include="Views\InoSVImportancia\Index.cshtml" />
+    <Content Include="Views\InoSVUnidadesACertificar\Index.cshtml" />
+    <Content Include="Views\MOVAtendido\Index.cshtml" />
+    <Content Include="Views\MOVImportanciaPrograma\Index.cshtml" />
+    <Content Include="Views\MOVImportanciaPVIS\Index.cshtml" />
+    <Content Include="Views\SACAtendido\Index.cshtml" />
+    <Content Include="Views\SACImportanciaEconomica\Index.cshtml" />
+    <Content Include="Views\SACImportanciaEnf\Index.cshtml" />
+    <Content Include="Views\ImportanciaEconomicaSA\_ImportanciaEconomicaGridViewPartial.cshtml" />
+    <Content Include="Views\AtendidoSA\_AtendidoSAGridViewPartial.cshtml" />
+    <Content Include="Views\ImportanciaEnfermedadSA\_ImportanciaEnfermedadSAGridViewPartial.cshtml" />
+    <Content Include="Views\ImportanciaCultivoSV\_ImportanciaCultivoSVGridviewPartial.cshtml" />
+    <Content Include="Views\ImportanciaPlagaSV\_ImportanciaPlagaSVGridviewPartial.cshtml" />
+    <Content Include="Views\Proveedor\_ProveedorGridViewPartial.cshtml" />
+    <Content Include="Views\AtendidoSV\_AtendidoSVGridViewPartial.cshtml" />
+    <Content Include="Views\AtendidoMov\_AtendidoMOVGridViewPartial.cshtml" />
+    <Content Include="Views\ImportanciaPIVMov\_ImportanciaPIVMovGridviewPartial.cshtml" />
+    <Content Include="Views\ImportanciaProgramaMov\_ImportanciaProgramaMovGridviewPartial.cshtml" />
+    <Content Include="Views\SURI\Index.cshtml" />
+    <Content Include="Views\AtendidoSAC\_AtendidoSACGridViewPartial.cshtml" />
+    <Content Include="Views\ImportanciaEnfermedadSAC\_ImportanciaEnfermedadSACGridViewPartial.cshtml" />
+    <Content Include="Views\ImportanciaCultivoSAC\_ImportanciaCultivoSACGridViewPartial.cshtml" />
+    <Content Include="Views\ReporteInventarioDeBienes\IndexReporte.cshtml" />
+    <Content Include="Views\ReporteInventarioDeBienes\_ReportPartial.cshtml" />
+    <Content Include="Views\ReporteDetalleDeBienes\IndexReporte.cshtml" />
+    <Content Include="Views\ReporteDetalleDeBienes\_Report1Partial.cshtml" />
+    <Content Include="Views\AtendidoIno\_AtendidoInoGridViewPartial.cshtml" />
+    <Content Include="Views\UnidadesCertificarInoSV\_UnidadesCertificarInoSVGridViewPartial.cshtml" />
+    <Content Include="Views\UnidadesCertificarInoSA\_UnidadesCertificarInoSAGridViewPartial.cshtml" />
+    <Content Include="Views\UnidadesCertificarInoSAC\_UnidadesCertificarInoSACGridViewPartial.cshtml" />
+    <Content Include="Views\ImportanciaIno\_ImportanciaInoGridViewPartial.cshtml" />
+    <Content Include="Views\ReporteAvancesDeCaptura\Index.cshtml" />
+    <Content Include="Views\ReporteAvancesDeCaptura\_ReportPartial.cshtml" />
+    <Content Include="Views\ReportePersonalInstanciaEjecutora\Index.cshtml" />
+    <Content Include="Views\ReportePersonalInstanciaEjecutora\_ReportPartial.cshtml" />
+    <Content Include="Views\CampaniaEst\index.cshtml" />
+    <Content Include="Views\CampaniaEst\_CampaniaEstGridViewPartial.cshtml" />
+    <Content Include="Views\ReporteInformeMensualAvance\Index.cshtml" />
+    <Content Include="Views\ReporteInformeMensualAvance\_ReporteAvanceFisicoFinancieroPartial.cshtml" />
+    <Content Include="Views\ReporteInformeMensualAvance\_ComboBoxCampaniaPartial.cshtml" />
+    <Content Include="Views\ReporteInformeMensualAvance\Index2.cshtml" />
+    <Content Include="Views\ArchivosRepAdquisiciones\Index.cshtml" />
+    <Content Include="Views\StatusCampaniaKardex\_ErrorCambioStatus.cshtml" />
+    <Content Include="Views\Shared\ErrorForm.cshtml" />
+    <Content Include="Views\ProgramaAnualAdq\_ComboBoxPartialBienOServicio.cshtml" />
+    <Content Include="Views\StatusCampaniaKardex\_VerificaCampania.cshtml" />
+    <Content Include="Views\StatusCampaniaKardex\_BtnVerificaCampania.cshtml" />
+    <Content Include="Views\ReporteCampaniaEST\Index.cshtml" />
+    <Content Include="Views\ReporteCampaniaEST\_ReportPartial.cshtml" />
+    <Content Include="Views\ReporteDeAdquisiciones\_ComboBoxPartialProveedor.cshtml" />
+    <Content Include="Views\PivotMetasFinancieras\_PivotMetasFinancierasPartial.cshtml" />
+    <Content Include="Views\PivotMetasFinancieras\Index.cshtml" />
+    <Content Include="Views\PivotMetasFisicas\_PivotMetasFisicasPartial.cshtml" />
+    <Content Include="Views\PivotMetasFisicas\Index.cshtml" />
+    <Content Include="Views\AsignacionCoordinadorCampania\_CoordinadorCampaniaGridViewPartial.cshtml" />
+    <Content Include="Views\AsignacionCoordinadorCampania\Index.cshtml" />
+    <Content Include="Views\MinistracionesXComite\Index.cshtml" />
+    <Content Include="Views\MinistracionesXComite\_MinistracionesXComiteGridViewPartial.cshtml" />
+    <Content Include="Views\PivotAvanceFisico\Index.cshtml" />
+    <Content Include="Views\PivotAvanceFisico\_PivotAvanceFisicoPartial.cshtml" />
+    <Content Include="Views\ReporteEjecutivo\Index.cshtml" />
+    <Content Include="Views\ReporteEjecutivo\_ReportPartial.cshtml" />
+    <Content Include="Views\ReporteVehiculos\Index.cshtml" />
+    <Content Include="Views\ReporteVehiculos\_ReportPartial.cshtml" />
+    <Content Include="Views\ReporteCierreMensual\Index.cshtml" />
+    <Content Include="Views\ReporteCierreMensual\_ReporteCierreMesPartial.cshtml" />
+    <Content Include="Views\CierreMensual\Index.cshtml" />
+    <Content Include="Views\CierreMensual\_CierreMensualGridViewPartial.cshtml" />
+    <Content Include="Views\CierreMensual\IndexGeneral.cshtml" />
+    <Content Include="Views\CierreMensual\_CierreMensualSuperusuario.cshtml" />
+    <Content Include="Views\ReporteInformeDetalleFisicoFinanciero\Index.cshtml" />
+    <Content Include="Views\ReporteInformeDetalleFisicoFinanciero\_ReporteInformeDetalleFisicoFinancieroPartial.cshtml" />
+    <Content Include="Views\ReporteInformeDetalleFisicoFinanciero\_ComboBoxCampaniaPartial.cshtml" />
+    <Content Include="Views\ReporteInformeDetalleFisicoFinanciero\IndexFF.cshtml" />
+    <Content Include="Views\MinistracionesDetalles\_DetallesMinistracionGridViewPartial.cshtml" />
+    <Content Include="Views\CampaniaN\Index.cshtml" />
+    <Content Include="Views\CampaniaN\_CampaniaGridViewPartial.cshtml" />
+    <Content Include="Views\CancelaReprogramacion\_CancelaReprogramacion.cshtml" />
+    <Content Include="Views\CancelaReprogramacion\_Mensaje.cshtml" />
+    <Content Include="Views\RepCuadroComparativoCampania\_RepCuadroComparativoCampaniaPartial.cshtml" />
+    <Content Include="Views\RepCuadroComparativoCampania\Index.cshtml" />
+    <Content Include="Views\TipoReporte\_SelectReporte.cshtml" />
+    <Content Include="Views\TipoReporte\_TipoReporte.cshtml" />
+    <Content Include="Views\ReporteEstadoGasto\Index.cshtml" />
+    <Content Include="Views\ReporteEstadoGasto\ReporteEstadoGasto.cshtml" />
+    <Content Include="Views\PivotAvanceFisicoFinanciero_Federal\Index.cshtml" />
+    <Content Include="Views\PivotAvanceFisicoFinanciero_Federal\PivotAvanceFisicoFinancieroPartial_Federal.cshtml" />
+    <Content Include="Views\PivotAvanceFisicoFinanciero_Estatal\Index.cshtml" />
+    <Content Include="Views\PivotAvanceFisicoFinanciero_Estatal\PivotAvanceFisicoFinancieroPartial_Estatal.cshtml" />
+    <Content Include="Views\PivotAvanceFisicoFinanciero_Productor\Index.cshtml" />
+    <Content Include="Views\PivotAvanceFisicoFinanciero_Productor\PivotAvanceFisicoFinancieroPartial_Productor.cshtml" />
+    <Content Include="Views\CierreMensual\_ComboCampania.cshtml" />
+    <Content Include="Views\ProyectoPresupuestoEst\Index.cshtml" />
+    <Content Include="Views\ProyectoPresupuestoEst\_GridViewPartialUR_UCE.cshtml" />
+    <Content Include="Views\CierreMensual\_ReopenReport.cshtml" />
+    <Content Include="Views\CierreMensual\_CampaniaYaSolicitada.cshtml" />
+    <Content Include="Views\CierreMensualSolApertura\Index.cshtml" />
+    <Content Include="Views\CierreMensualSolApertura\_CierreMensualSolicitudApertura.cshtml" />
+    <Content Include="Views\CierreMensualSolApertura\_AceptaSolApertura.cshtml" />
+    <Content Include="Views\ReporteAnexoTecnico3_Nacional\_ReporteAnexoTecnicoApendice3N_Partial.cshtml" />
+    <Content Include="Views\ReporteAnexoTecnico3_Nacional\Index.cshtml" />
+    <Content Include="Views\CierreMensualSolApertura\_HistorialSolicitudesGridViewPartial.cshtml" />
+    <Content Include="Views\ReporteActividadAsignadaClone\_ActividadesAsignadasGridViewPartial.cshtml" />
+    <Content Include="Views\ReporteActividadAsignadaClone\_RepActividadGridViewPartial.cshtml" />
+    <Content Include="Views\ReporteActividadAsignadaClone\Index.cshtml" />
+    <Content Include="Views\ReporteDeAdquisicionesClone\_ComboBoxPartialProveedor.cshtml" />
+    <Content Include="Views\ReporteDeAdquisicionesClone\_PAAGridViewPartial.cshtml" />
+    <Content Include="Views\ReporteDeAdquisicionesClone\_RepGastoGridViewPartial.cshtml" />
+    <Content Include="Views\ReporteDeAdquisicionesClone\Index.cshtml" />
+    <Content Include="Views\Persona\_ResumenPersona.cshtml" />
+    <Content Include="Views\ReportePersonalInstanciaEjecutora\IndexReporte.cshtml" />
+    <Content Include="Views\DetalleApendice\Index.cshtml" />
+    <Content Include="Views\ReproPresFed\Index.cshtml" />
+    <Content Include="Views\ReproPresFed\IndexRepro.cshtml" />
+    <Content Include="Views\ReproPresFed\_PresCampaniaGridViewPartial.cshtml" />
+    <Content Include="Views\ReproPresFed\_PresEstadoDetallesGridViewPartial.cshtml" />
+    <Content Include="Views\Shared\_PopUpError.cshtml" />
+    <Content Include="Views\ReporteAnexoTecnico1\Index.cshtml" />
+    <Content Include="Views\ReporteAnexoTecnico2\Index.cshtml" />
+    <Content Include="Views\ReporteAnexoTecnico3\Index.cshtml" />
+    <Content Include="Views\ReporteInventarioDeBienes\Index.cshtml" />
+    <Content Include="Views\ReporteDetalleDeBienes\Index.cshtml" />
+    <Content Include="Views\ReporteCampaniaSaludAnimalHistorico\Index.cshtml" />
+    <Content Include="Views\ReporteCampaniaSaludAnimalHistorico\_ReportPartial.cshtml" />
+    <Content Include="Views\ReporteCampaniaSanidadAcuicolaPHistorico\Index.cshtml" />
+    <Content Include="Views\ReporteCampaniaSanidadAcuicolaPHistorico\_Report1Partial.cshtml" />
+    <Content Include="Views\ReporteCampaniaSanidadVegetalHistorico\Index.cshtml" />
+    <Content Include="Views\ReporteCampaniaSanidadVegetalHistorico\_Report2Partial.cshtml" />
+    <Content Include="Views\ReporteCampaniaMovilizacionHistorico\Index.cshtml" />
+    <Content Include="Views\ReporteCampaniaMovilizacionHistorico\_Report3Partial.cshtml" />
+    <Content Include="Views\ReporteCampaniaInocuidadSaludAnimalHistorico\Index.cshtml" />
+    <Content Include="Views\ReporteCampaniaInocuidadSanidadAcuicolaPHistorico\Index.cshtml" />
+    <Content Include="Views\ReporteCampaniaInocuidadSanidadVegetalHistorico\Index.cshtml" />
+    <Content Include="Views\ReporteCampaniaInocuidadSaludAnimalHistorico\_ReportPartial.cshtml" />
+    <Content Include="Views\ReporteCampaniaInocuidadSanidadAcuicolaPHistorico\_Report1Partial.cshtml" />
+    <Content Include="Views\ReporteCampaniaInocuidadSanidadVegetalHistorico\_Report2Partial.cshtml" />
+    <Content Include="Views\ReporteCampaniaESTHistorico\Index.cshtml" />
+    <Content Include="Views\ReporteCampaniaESTHistorico\_ReportPartial.cshtml" />
+    <Content Include="Views\ReprogramacionPresFed\Index.cshtml" />
+    <Content Include="Views\ReprogramacionPresFed\_PresCampaniaGridViewPartial.cshtml" />
+    <Content Include="Views\ReprogramacionPresFed\IndexRepro.cshtml" />
+    <Content Include="Views\ReprogramacionPresFed\_MovimientosRealizadosGridViewPartial.cshtml" />
+    <Content Include="Views\ReprogramacionPresFed\_ComboBoxCampaniaOrigen.cshtml" />
+    <Content Include="Views\ReprogramacionPresFed\_ComboBoxCampaniaDestino.cshtml" />
+    <Content Include="Views\ReprogramacionPresFed\IndexHistorico.cshtml" />
+    <Content Include="Views\ReprogramacionPresFed\_HistMovimientosRep.cshtml" />
+    <Content Include="Views\HistoricoReproPT\_HistoticoReproPT.cshtml" />
+    <Content Include="Views\HistoricoReproPT\_SelectRepro.cshtml" />
+    <Content Include="Views\CierreMensualHistorico\Index.cshtml" />
+    <Content Include="Views\CierreMensualHistorico\_CierreMensualHistGridViewPartial.cshtml" />
+    <Content Include="Views\PresupuestoXDireccionGeneral\Index2.cshtml" />
+    <Content Include="Views\PresupuestoXDireccionGeneral\_PresGridViewPartial.cshtml" />
+    <Content Include="Views\BienOServTransversales\Index.cshtml" />
+    <Content Include="Views\BienOServTransversales\_GridViewPartial.cshtml" />
+    <Content Include="Views\ProyectoPresupuesto\_GridViewPartial_soloLectura.cshtml" />
+    <Content Include="Views\ProgramaAnualAdq\_ProgramasGastosTransversalesGridViewPartial.cshtml" />
+    <Content Include="Views\ProgramaAnualAdq\_ComboBoxPartialBienOServicioTransversal.cshtml" />
+    <Content Include="Views\CampaniaU\_CampaniaGridViewPartial.cshtml" />
+    <Content Include="Views\CampaniaU\Index.cshtml" />
+    <Content Include="Views\ReporteAnexoTecnico3U\_ReporteAnexoTecnicoApendice3Partial.cshtml" />
+    <Content Include="Views\ReporteAnexoTecnico3U\Index.cshtml" />
+    <Content Include="Views\ReporteAnexoTecnico3U\IndexReporte.cshtml" />
+    <Content Include="Views\ReporteGastosFijosDeOperacion\IndexReporte.cshtml" />
+    <Content Include="Views\ReporteCierrePeriodo\Index.cshtml" />
+    <Content Include="Views\ReporteCierrePeriodo\Index2.cshtml" />
+    <Content Include="Views\ReporteCierrePeriodo\_reporteCierrePorPeriodoPartial.cshtml" />
+    <Content Include="Views\ReporteCierrePeriodo\_ComboBoxCampaniaPartial.cshtml" />
+    <Content Include="Views\ProgramaAnualAdq\_ProgramaAnualGridViewPartial2.cshtml" />
+    <Content Include="Views\ProgramaAnualAdqU\_ComboBoxPartialBienOServicioTransversal.cshtml" />
+    <Content Include="Views\ProgramaAnualAdqU\_ProgramaAnualGridViewPartial.cshtml" />
+    <Content Include="Views\ProgramaAnualAdqU\_ProgramaAnualGridViewPartial2.cshtml" />
+    <Content Include="Views\ProgramaAnualAdqU\_ProgramasGastosTransversalesGridViewPartial.cshtml" />
+    <Content Include="Views\ProgramaAnualAdqU\Index.cshtml" />
+    <Content Include="Views\ReporteGastosRelativosCampaniaEstales\Index.cshtml" />
+    <Content Include="Views\ReporteGastosRelativosCampaniaEstales\_ReportPartial.cshtml" />
+    <Content Include="Views\ReporteGastosRelativosCampaniaEstales\IndexReporte.cshtml" />
+    <Content Include="Views\ReporteGastosFijosDeOperacionEstatal\Index.cshtml" />
+    <Content Include="Views\ReporteGastosFijosDeOperacionEstatal\IndexReporte.cshtml" />
+    <Content Include="Views\ReporteGastosFijosDeOperacionEstatal\_ReportPartial1.cshtml" />
+    <Content Include="Views\ArchivosCampania\IndexInfoTrim.cshtml" />
+    <Content Include="Views\Tesofe\Index.cshtml" />
+    <Content Include="Views\Tesofe\_GridViewPartial.cshtml" />
+    <Content Include="Views\TesofeDetalle\_GridViewPartial.cshtml" />
+    <Content Include="Views\ReporteAvancesDeCaptura\IndexReporte.cshtml" />
+    <Content Include="Views\ReporteProgramaTrabajo_General\Index.cshtml" />
+    <Content Include="Views\ReporteProgramaTrabajo_General\_ReportPartial.cshtml" />
+    <Content Include="Views\ArchivosTesoFe\Index.cshtml" />
+    <Content Include="Views\ArchivosMinistracion\Index.cshtml" />
+    <Content Include="Views\ActaComision\Index.cshtml" />
+    <Content Include="Views\ActaComision\_ActaComisionGridViewPartial.cshtml" />
+    <Content Include="Views\ActaComision\IndexGeneral.cshtml" />
+    <Content Include="Views\ActaComision\_ActaComisionGridViewPartialGeneral.cshtml" />
+<<<<<<< HEAD
+    <Content Include="Views\PersonasRegistradas\PersonasRegistradasAllGridViewPartial.cshtml" />
+=======
+    <Content Include="Views\CatalogoPartidas\Index.cshtml" />
+    <Content Include="Views\CatalogoPartidas\_GridViewPartial.cshtml" />
+    <Content Include="Views\Aperturas\Index.cshtml" />
+    <Content Include="Views\Aperturas\_GridView1Partial.cshtml" />
+    <Content Include="Views\JuntaAclaracion\Index.cshtml" />
+    <Content Include="Views\JuntaAclaracion\_GridView2Partial.cshtml" />
+    <Content Include="Views\FalloLicitacion\Index.cshtml" />
+    <Content Include="Views\FalloLicitacion\_GridView3Partial.cshtml" />
+    <Content Include="Views\Licitacion\Index.cshtml" />
+    <Content Include="Views\Licitacion\_GridView4Partial.cshtml" />
+    <Content Include="Views\Licitacion_Capitulo\Index.cshtml" />
+    <Content Include="Views\Licitacion_Capitulo\__Licitacion_CapituloGridViewPartial.cshtml" />
+    <Content Include="Views\ViewLicitacion\Index.cshtml" />
+    <Content Include="Views\ViewLicitacion\_GridViewPartial.cshtml" />
+    <Content Include="Views\ViewFallo\Index.cshtml" />
+    <Content Include="Views\ViewFallo\_GridView1Partial.cshtml" />
+    <Content Include="Views\ViewApertura\Index.cshtml" />
+    <Content Include="Views\ViewApertura\_GridView2Partial.cshtml" />
+    <Content Include="Views\ViewJuntaAclaracion\Index.cshtml" />
+    <Content Include="Views\ViewJuntaAclaracion\_GridView3Partial.cshtml" />
+    <Content Include="Views\UploadFile\Index.cshtml" />
+    <Content Include="Views\UploadFileJA\Index.cshtml" />
+    <Content Include="Views\UploadFileApertura\Index.cshtml" />
+    <Content Include="Views\UploadFileFallo\Index.cshtml" />
+    <Content Include="Views\Licitacion\_ComboBoxComitePartial.cshtml" />
+>>>>>>> master
+    <None Include="Web.Debug.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </None>
+    <None Include="Web.Release.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="App_Start\BundleConfig.cs" />
+    <Compile Include="App_Start\FilterConfig.cs" />
+    <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="App_Start\Startup.Auth.cs" />
+    <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Common\ComponentesMenu.cs" />
+    <Compile Include="Common\ConstantesGlobales.cs" />
+    <Compile Include="Common\FuncionesAuxiliares.cs" />
+    <Compile Include="Common\ListaPantallas.cs" />
+    <Compile Include="Common\UtilityClass.cs" />
+    <Compile Include="Controllers\AccionXCampaniaController.cs" />
+    <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\ActaComisionController.cs" />
+    <Compile Include="Controllers\ActividadController.cs" />
+    <Compile Include="Controllers\Actividades2Controller.cs" />
+    <Compile Include="Controllers\ActividadXAccionController.cs" />
+    <Compile Include="Controllers\AnioController.cs" />
+    <Compile Include="Controllers\AperturasController.cs" />
+    <Compile Include="Controllers\ArchivosMinistracionController.cs" />
+    <Compile Include="Controllers\ArchivosTesoFeController.cs" />
+    <Compile Include="Controllers\ArchivosRepAdquisicionesController.cs" />
+    <Compile Include="Controllers\ArchivosCampaniaController.cs" />
+    <Compile Include="Controllers\AsignacionCoordinadorCampaniaController.cs" />
+    <Compile Include="Controllers\AsignacionPresupuestoXEstadoController.cs" />
+    <Compile Include="Controllers\AtendidoInoController.cs" />
+    <Compile Include="Controllers\AtendidoMovController.cs" />
+    <Compile Include="Controllers\AtendidoSACController.cs" />
+    <Compile Include="Controllers\AtendidoSVController.cs" />
+    <Compile Include="Controllers\AtendidoSAController.cs" />
+    <Compile Include="Controllers\BeneficiarioController.cs" />
+    <Compile Include="Controllers\BienOServController.cs" />
+    <Compile Include="Controllers\BienOServTransversalesController.cs" />
+    <Compile Include="Controllers\CampaniaUController.cs" />
+    <Compile Include="Controllers\CatalogoPartidasController.cs" />
+    <Compile Include="Controllers\CierreMensualHistoricoController.cs" />
+    <Compile Include="Controllers\FalloLicitacionController.cs" />
+    <Compile Include="Controllers\HistoricoReproPTController.cs" />
+    <Compile Include="Controllers\CancelaReprogramacionController.cs" />
+    <Compile Include="Controllers\CampaniaEstController.cs" />
+    <Compile Include="Controllers\CampaniaNController.cs" />
+    <Compile Include="Controllers\CapituloPartidaController.cs" />
+    <Compile Include="Controllers\CargoController.cs" />
+    <Compile Include="Controllers\CertificacionController.cs" />
+    <Compile Include="Controllers\CertificadoCargoController.cs" />
+    <Compile Include="Controllers\CertificadoPersonaController.cs" />
+    <Compile Include="Controllers\CierreMensualController.cs" />
+    <Compile Include="Controllers\CierreMensualSolAperturaController.cs" />
+    <Compile Include="Controllers\ComponenteController.cs" />
+    <Compile Include="Controllers\ConceptoPartidaController.cs" />
+    <Compile Include="Controllers\ConstruccionController.cs" />
+    <Compile Include="Controllers\Default1Controller.cs" />
+    <Compile Include="Controllers\DetalleApendiceController.cs" />
+    <Compile Include="Controllers\EstadoBienController.cs" />
+    <Compile Include="Controllers\EstatalPRESController.cs" />
+    <Compile Include="Controllers\ExportExcelPDFController.cs" />
+    <Compile Include="Controllers\FirmasAutorizadasController.cs" />
+    <Compile Include="Controllers\ImportanciaCultivoSVController.cs" />
+    <Compile Include="Controllers\ImportanciaCultivoSACController.cs" />
+    <Compile Include="Controllers\ImportanciaEconomicaSAController.cs" />
+    <Compile Include="Controllers\ImportanciaEnfermedadSACController.cs" />
+    <Compile Include="Controllers\ImportanciaEnfermedadSAController.cs" />
+    <Compile Include="Controllers\ImportanciaInoController.cs" />
+    <Compile Include="Controllers\ImportanciaPIVMovController.cs" />
+    <Compile Include="Controllers\ImportanciaPlagaSVController.cs" />
+    <Compile Include="Controllers\ImportanciaProgramaMovController.cs" />
+    <Compile Include="Controllers\InoSAAtendidoController.cs" />
+    <Compile Include="Controllers\InoSACAtendidoController.cs" />
+    <Compile Include="Controllers\InoSACImportanciaController.cs" />
+    <Compile Include="Controllers\InoSACUnidadesACertificarController.cs" />
+    <Compile Include="Controllers\InoSAImportanciaController.cs" />
+    <Compile Include="Controllers\InoSAUnidadesACertificarController.cs" />
+    <Compile Include="Controllers\InoSVAtendidoController.cs" />
+    <Compile Include="Controllers\InoSVImportanciaController.cs" />
+    <Compile Include="Controllers\InoSVUnidadesACertificarController.cs" />
+    <Compile Include="Controllers\JuntaAclaracionController.cs" />
+    <Compile Include="Controllers\LicitacionController.cs" />
+    <Compile Include="Controllers\Licitacion_CapituloController.cs" />
+    <Compile Include="Controllers\LoadingController.cs" />
+    <Compile Include="Controllers\FlujoActividadController.cs" />
+    <Compile Include="Controllers\FlujoAlcanceController.cs" />
+    <Compile Include="Controllers\FlujoCampaniaController.cs" />
+    <Compile Include="Controllers\GastoOpController.cs" />
+    <Compile Include="Controllers\GastoTransvController.cs" />
+    <Compile Include="Controllers\GirosXProvController.cs" />
+    <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\IncentivoController.cs" />
+    <Compile Include="Controllers\InstalacionController.cs" />
+    <Compile Include="Controllers\InventarioController.cs" />
+    <Compile Include="Controllers\MinistracionesDetallesController.cs" />
+    <Compile Include="Controllers\MinistracionesXComiteController.cs" />
+    <Compile Include="Controllers\MOVAtendidoController.cs" />
+    <Compile Include="Controllers\MOVCampaniaController.cs" />
+    <Compile Include="Controllers\MOVImportanciaProgramaController.cs" />
+    <Compile Include="Controllers\MOVImportanciaPVISController.cs" />
+    <Compile Include="Controllers\PartidaController.cs" />
+    <Compile Include="Controllers\PEFXEstadoController.cs" />
+    <Compile Include="Controllers\PersonaController.cs" />
+    <Compile Include="Controllers\PersonasRegistradasController.cs" />
+    <Compile Include="Controllers\PivotAvanceFisicoController.cs" />
+    <Compile Include="Controllers\PivotAvanceFisicoFinanciero_ProductorController.cs" />
+    <Compile Include="Controllers\PivotAvanceFisicoFinanciero_FederalController.cs" />
+    <Compile Include="Controllers\PivotAvanceFisicoFinanciero_EstatalController.cs" />
+    <Compile Include="Controllers\PivotMetasFinancierasController.cs" />
+    <Compile Include="Controllers\PivotMetasFisicasController.cs" />
+    <Compile Include="Controllers\PresupuestoXDireccionGeneralController.cs" />
+    <Compile Include="Controllers\PresupuestoXEstadoController.cs" />
+    <Compile Include="Controllers\ProductorController.cs" />
+    <Compile Include="Controllers\ProgramaAnualAdqUController.cs" />
+    <Compile Include="Controllers\ProgramaAnualAdqController.cs" />
+    <Compile Include="Controllers\ProgramaController.cs" />
+    <Compile Include="Controllers\ProveedorController.cs" />
+    <Compile Include="Controllers\ProyectoAutorizadoController.cs" />
+    <Compile Include="Controllers\ProyectoController.cs" />
+    <Compile Include="Controllers\ProyectoPresupuestoController.cs" />
+    <Compile Include="Controllers\ProyectoPresupuestoEstController.cs" />
+    <Compile Include="Controllers\RepCuadroComparativoCampaniaController.cs" />
+    <Compile Include="Controllers\RepActividadController.cs" />
+    <Compile Include="Controllers\RepActividadesController.cs" />
+    <Compile Include="Controllers\RepAdquisicionController.cs" />
+    <Compile Include="Controllers\ReporteActividadAsignadaCloneController.cs" />
+    <Compile Include="Controllers\ReporteActividadAsignadaController.cs" />
+    <Compile Include="Controllers\ReporteAnexoTecnico1Controller.cs" />
+    <Compile Include="Controllers\ReporteAnexoTecnico2Controller.cs" />
+    <Compile Include="Controllers\ReporteAnexoTecnico3UController.cs" />
+    <Compile Include="Controllers\ReporteAnexoTecnico3_NacionalController.cs" />
+    <Compile Include="Controllers\ReporteAnexoTecnico3Controller.cs" />
+    <Compile Include="Controllers\ReporteAvancesDeCapturaController.cs" />
+    <Compile Include="Controllers\ReporteCampaniaESTController.cs" />
+    <Compile Include="Controllers\ReporteCampaniaESTHistoricoController.cs" />
+    <Compile Include="Controllers\ReporteCampaniaInocuidadSACController.cs" />
+    <Compile Include="Controllers\ReporteCampaniaInocuidadSaludAnimalHistoricoController.cs" />
+    <Compile Include="Controllers\ReporteCampaniaInocuidadSanidadAcuicolaPHistoricoController.cs" />
+    <Compile Include="Controllers\ReporteCampaniaInocuidadSanidadVegetalController.cs" />
+    <Compile Include="Controllers\ReporteCampaniaInocuidadSanidadVegetalHistoricoController.cs" />
+    <Compile Include="Controllers\ReporteCampaniaMovilizacionController.cs" />
+    <Compile Include="Controllers\ReporteCampaniaMovilizacionHistoricoController.cs" />
+    <Compile Include="Controllers\ReporteCampaniaSaludAnimalController.cs" />
+    <Compile Include="Controllers\ReporteCampaniaSaludAnimalHistoricoController.cs" />
+    <Compile Include="Controllers\ReporteCampaniaSanidadAcuicolaPesqueraController.cs" />
+    <Compile Include="Controllers\ReporteCampaniaSanidadAcuicolaPHistoricoController.cs" />
+    <Compile Include="Controllers\ReporteCampaniaSanidadVegetalController.cs" />
+    <Compile Include="Controllers\ReporteCampaniaSanidadVegetalHistoricoController.cs" />
+    <Compile Include="Controllers\ReporteCierreMensualController.cs" />
+    <Compile Include="Controllers\ReporteCierrePeriodoController.cs" />
+    <Compile Include="Controllers\ReporteDeActividadesController.cs" />
+    <Compile Include="Controllers\ReporteDeAdquisicionesCloneController.cs" />
+    <Compile Include="Controllers\ReporteDeAdquisicionesController.cs" />
+    <Compile Include="Controllers\ReporteDetalleDeBienesController.cs" />
+    <Compile Include="Controllers\ReporteEjecutivoController.cs" />
+    <Compile Include="Controllers\ReporteEstadoGastoController.cs" />
+    <Compile Include="Controllers\ReporteGastosFijosDeOperacionController.cs" />
+    <Compile Include="Controllers\ReporteGastosFijosDeOperacionEstatalController.cs" />
+    <Compile Include="Controllers\ReporteGastosRelativosCampaniaEstalesController.cs" />
+    <Compile Include="Controllers\ReporteInformeDetalleFisicoFinancieroController.cs" />
+    <Compile Include="Controllers\ReporteInformeMensualAvanceController.cs" />
+    <Compile Include="Controllers\ReporteInocuidadSaludAnimalController.cs" />
+    <Compile Include="Controllers\ReporteInstanciaEjecutoraController.cs" />
+    <Compile Include="Controllers\ReporteInventarioDeBienesController.cs" />
+    <Compile Include="Controllers\ReportePersonalInstanciaEjecutoraController.cs" />
+    <Compile Include="Controllers\ReporteProgramaTrabajo_GeneralController.cs" />
+    <Compile Include="Controllers\ReporteProyectosAcuicolaController.cs" />
+    <Compile Include="Controllers\ReporteProyectosAnimalController.cs" />
+    <Compile Include="Controllers\ReporteProyectosInocuidadController.cs" />
+    <Compile Include="Controllers\ReporteProyectosMovilizacionController.cs" />
+    <Compile Include="Controllers\ReporteProyectosVegetalController.cs" />
+    <Compile Include="Controllers\ReporteVehiculosController.cs" />
+    <Compile Include="Controllers\ReprogramacionPresFedController.cs" />
+    <Compile Include="Controllers\ReproPresFedController.cs" />
+    <Compile Include="Controllers\RoleController.cs" />
+    <Compile Include="Controllers\SACAtendidoController.cs" />
+    <Compile Include="Controllers\SACImportanciaEconomicaController.cs" />
+    <Compile Include="Controllers\SACImportanciaEnfController.cs" />
+    <Compile Include="Controllers\SAImportanciaEconomicaController.cs" />
+    <Compile Include="Controllers\StatusAccionController.cs" />
+    <Compile Include="Controllers\StatusActividadController.cs" />
+    <Compile Include="Controllers\StatusAlcanceController.cs" />
+    <Compile Include="Controllers\StatusAlcanceKardexController.cs" />
+    <Compile Include="Controllers\StatusCampaniaController.cs" />
+    <Compile Include="Controllers\StatusCampaniaKardexController.cs" />
+    <Compile Include="Controllers\SubComponenteController.cs" />
+    <Compile Include="Controllers\SAAtendidoController.cs" />
+    <Compile Include="Controllers\SURIController.cs" />
+    <Compile Include="Controllers\SVAtendidoController.cs" />
+    <Compile Include="Controllers\SVImportanciaCultivoController.cs" />
+    <Compile Include="Controllers\SAImportanciaEnfermedadController.cs" />
+    <Compile Include="Controllers\SVImportanciaPlagaController.cs" />
+    <Compile Include="Controllers\TesofeController.cs" />
+    <Compile Include="Controllers\TesofeDetalleController.cs" />
+    <Compile Include="Controllers\TipoReporteController.cs" />
+    <Compile Include="Controllers\TestingController.cs" />
+    <Compile Include="Controllers\TipoAccionController.cs" />
+    <Compile Include="Controllers\TipoActividadController.cs" />
+    <Compile Include="Controllers\TipoDeAccionController.cs" />
+    <Compile Include="Controllers\TipoDeBienController.cs" />
+    <Compile Include="Controllers\TipoDeRecursoController.cs" />
+    <Compile Include="Controllers\TipoDeUnidadController.cs" />
+    <Compile Include="Controllers\TipoInstalacionController.cs" />
+    <Compile Include="Controllers\UnidadDeMedidaController.cs" />
+    <Compile Include="Controllers\UnidadEjecutoraController.cs" />
+    <Compile Include="Controllers\UnidadesCertificarInoSACController.cs" />
+    <Compile Include="Controllers\UnidadesCertificarInoSAController.cs" />
+    <Compile Include="Controllers\UnidadesCertificarInoSVController.cs" />
+    <Compile Include="Controllers\UnidadResponsableController.cs" />
+    <Compile Include="Controllers\UploadFileAperturaController.cs" />
+    <Compile Include="Controllers\UploadFileController.cs" />
+    <Compile Include="Controllers\UploadFileFalloController.cs" />
+    <Compile Include="Controllers\UploadFileJAController.cs" />
+    <Compile Include="Controllers\ViewAperturaController.cs" />
+    <Compile Include="Controllers\ViewFalloController.cs" />
+    <Compile Include="Controllers\ViewJuntaAclaracionController.cs" />
+    <Compile Include="Controllers\ViewLicitacionController.cs" />
+    <Compile Include="Controllers\VigenciaController.cs" />
+    <Compile Include="DTO\IEDTO.cs" />
+    <Compile Include="DTO\EstadosDTO.cs" />
+    <Compile Include="DTO\PefDTO.cs" />
+    <Compile Include="DTO\PresComitesDTO.cs" />
+    <Compile Include="DTO\ProveedoresDTO.cs" />
+    <Compile Include="DTO\ProyectosIEDTO.cs" />
+    <Compile Include="DTO\TipoActividadDTO.cs" />
+    <Compile Include="DTO\UnidadesResponsablesDTO.cs" />
+    <Compile Include="Global.asax.cs">
+      <DependentUpon>Global.asax</DependentUpon>
+    </Compile>
+    <Compile Include="Common\Correo.cs" />
+    <Compile Include="Migrations\201602020014454_Initial.cs" />
+    <Compile Include="Migrations\201602020014454_Initial.Designer.cs">
+      <DependentUpon>201602020014454_Initial.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201604182155015_PrimeraExplicitaDespuesDeInitialDB.cs" />
+    <Compile Include="Migrations\201604182155015_PrimeraExplicitaDespuesDeInitialDB.Designer.cs">
+      <DependentUpon>201604182155015_PrimeraExplicitaDespuesDeInitialDB.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201604190019314_AgregaFK_IdPersona__SIS.cs" />
+    <Compile Include="Migrations\201604190019314_AgregaFK_IdPersona__SIS.Designer.cs">
+      <DependentUpon>201604190019314_AgregaFK_IdPersona__SIS.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Models\Accion.cs">
+      <DependentUpon>Model3.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\AccionXCampania.cs">
+      <DependentUpon>Model3.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\AccionXCampania_Repro.cs">
+      <DependentUpon>Model3.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\AccountViewModels.cs" />
+    <Compile Include="Models\ActaComision.cs">
+      <DependentUpon>Model3.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Actividad.cs">
+      <DependentUpon>Model3.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\ActividadXAccion.cs">
+      <DependentUpon>Model3.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\ActividadXAccion_Repro.cs">
+      <DependentUpon>Model3.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Anio.cs">
+      <DependentUpon>Model3.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Apertura.cs">
+      <DependentUpon>Model3.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\AtendidoIno.cs">
+      <DependentUpon>Model3.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\AtendidoIno_Repro.cs">
+      <DependentUpon>Model3.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\AtendidoMov.cs">
+      <DependentUpon>Model3.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\AtendidoMov_Repro.cs">
+      <DependentUpon>Model3.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\AtendidoSA.cs">
+      <DependentUpon>Model3.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\AtendidoSAC.cs">
+      <DependentUpon>Model3.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\AtendidoSAC_Repro.cs">
+      <DependentUpon>Model3.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\AtendidoSA_Repro.cs">
+      <DependentUpon>Model3.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\AtendidoSV.cs">
+      <DependentUpon>Model3.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\AtendidoSV_Repro.cs">
+      <DependentUpon>Model3.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Banco.cs">
+      <DependentUpon>Model3.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Beneficiario.cs">
+      <DependentUpon>Model3.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\BienOServ.cs">
+      <DependentUpon>Model3.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Campania.cs">
+      <DependentUpon>Model3.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\CampaniasXEstado.cs">
+      <DependentUpon>ReproRecursoFed.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Campania_Repro.cs">
+      <DependentUpon>Model3.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\CapituloPartida.cs">
+      <DependentUpon>Model3.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\CapituloPartidaLicitacion.cs">
+      <DependentUpon>Model3.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Cargo.cs">
+      <DependentUpon>Model3.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Certificacion.cs">
+      <DependentUpon>Model3.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\CertificadoCargo.cs">
+      <DependentUpon>Model3.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\CertificadoPersona.cs">
+      <DependentUpon>Model3.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\CierreMensual.cs">
+      <DependentUpon>Model3.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\CierreMensualSolicitudApertura.cs">
+      <DependentUpon>Model3.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Componente.cs">
+      <DependentUpon>Model3.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\ConceptoPartida.cs">
+      <DependentUpon>Model3.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\CuadroCompXPantalla.cs">
+      <DependentUpon>Model3.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\CurrentUser.cs">
+      <DependentUpon>Model3.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\DataClasses1.designer.cs" />
+    <Compile Include="Models\DatosFirma.cs">
+      <DependentUpon>Model3.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\DestinoProduccion.cs">
+      <DependentUpon>Model3.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Especie.cs">
+      <DependentUpon>Model3.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Estado.cs">
+      <DependentUpon>Model3.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\EstadoBien.cs">
+      <DependentUpon>Model3.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\EstadosGeo.cs">
+      <DependentUpon>Model3.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Fallo.cs">
+      <DependentUpon>Model3.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\FILE.cs">
+      <DependentUpon>Model3.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\FirmasAutorizada.cs">
+      <DependentUpon>Model3.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\FlujoActividad.cs">
+      <DependentUpon>Model3.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\FlujoAlcance.cs">
+      <DependentUpon>Model3.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\FlujoCampania.cs">
+      <DependentUpon>Model3.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\FuncionZootecnica.cs">
+      <DependentUpon>Model3.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\GastoOp.cs">
+      <DependentUpon>Model3.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\GastoTransv.cs">
+      <DependentUpon>Model3.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\geometry_columns.cs">
+      <DependentUpon>Model3.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\GetComitesXUR_All_Result.cs">
+      <DependentUpon>WebServicesModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\GetComitesXUR_All_Result1.cs">
+      <DependentUpon>WebServicesModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\GetComitesXUR_ByComite_Result.cs">
+      <DependentUpon>WebServicesModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\GetComitesXUR_ByComite_Result1.cs">
+      <DependentUpon>WebServicesModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\GetComitesXUR_ByUR_Result.cs">
+      <DependentUpon>WebServicesModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\GetComitesXUR_ByUR_Result1.cs">
+      <DependentUpon>WebServicesModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\GetComites_All_Result.cs">
+      <DependentUpon>WebServicesModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\GetComites_All_Result1.cs">
+      <DependentUpon>WebServicesModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\GetComites_ByComite_Result.cs">
+      <DependentUpon>WebServicesModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\GetComites_ByComite_Result1.cs">
+      <DependentUpon>WebServicesModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\GetComites_ByEstado_Result.cs">
+      <DependentUpon>WebServicesModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\GetComites_ByEstado_Result1.cs">
+      <DependentUpon>WebServicesModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\GetComites_ByUR_Result.cs">
+      <DependentUpon>WebServicesModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\GetComites_ByUR_Result1.cs">
+      <DependentUpon>WebServicesModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\GetEstados_Result.cs">
+      <DependentUpon>WebServicesModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\GetEstados_Result1.cs">
+      <DependentUpon>WebServicesModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\GetPEFXEstados_Result.cs">
+      <DependentUpon>WebServicesModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\GetPEFXEstados_Result1.cs">
+      <DependentUpon>WebServicesModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\GetPresComite_All_Result.cs">
+      <DependentUpon>WebServicesModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\GetPresComite_All_Result1.cs">
+      <DependentUpon>WebServicesModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\GetPresComite_ByComite_Result.cs">
+      <DependentUpon>WebServicesModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\GetPresComite_ByComite_Result1.cs">
+      <DependentUpon>WebServicesModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\GetProveedores_All_Result.cs">
+      <DependentUpon>WebServicesModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\GetProveedores_All_Result1.cs">
+      <DependentUpon>WebServicesModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\GetProveedores_ByEstado_Result.cs">
+      <DependentUpon>WebServicesModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\GetProveedores_ByEstado_Result1.cs">
+      <DependentUpon>WebServicesModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\GetProyectosAutorizadosComitesById_Result.cs">
+      <DependentUpon>WebServicesModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\GetUnidadesResponsables_Result.cs">
+      <DependentUpon>WebServicesModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\GetUnidadesResponsables_Result1.cs">
+      <DependentUpon>WebServicesModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\GetUnidadesResponsables_Result2.cs">
+      <DependentUpon>WebServicesModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\GirosXProv.cs">
+      <DependentUpon>Model3.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\IdentityModels.cs" />
+    <Compile Include="Models\ImportanciaCultivoSAC.cs">
+      <DependentUpon>Model3.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\ImportanciaCultivoSAC_Repro.cs">
+      <DependentUpon>Model3.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\ImportanciaCultivoSV.cs">
+      <DependentUpon>Model3.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\ImportanciaCultivoSV_Repro.cs">
+      <DependentUpon>Model3.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\ImportanciaEconomicaSA.cs">
+      <DependentUpon>Model3.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\ImportanciaEconomicaSA_Repro.cs">
+      <DependentUpon>Model3.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\ImportanciaEnfermedadSA.cs">
+      <DependentUpon>Model3.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\ImportanciaEnfermedadSAC.cs">
+      <DependentUpon>Model3.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\ImportanciaEnfermedadSAC_Repro.cs">
+      <DependentUpon>Model3.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\ImportanciaEnfermedadSA_Repro.cs">
+      <DependentUpon>Model3.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\ImportanciaIno.cs">
+      <DependentUpon>Model3.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\ImportanciaIno_Repro.cs">
+      <DependentUpon>Model3.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\ImportanciaPIVMov.cs">
+      <DependentUpon>Model3.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\ImportanciaPIVMov_Repro.cs">
+      <DependentUpon>Model3.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\ImportanciaPlagaSV.cs">
+      <DependentUpon>Model3.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\ImportanciaPlagaSV_Repro.cs">
+      <DependentUpon>Model3.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\ImportanciaProgramaMov.cs">
+      <DependentUpon>Model3.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\ImportanciaProgramaMov_Repro.cs">
+      <DependentUpon>Model3.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Incentivo.cs">
+      <DependentUpon>Model3.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\InoCompSA.cs">
+      <DependentUpon>Model3.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\InoCompSAC.cs">
+      <DependentUpon>Model3.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\InoCompSV.cs">
+      <DependentUpon>Model3.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\InoImportanciaSA.cs">
+      <DependentUpon>Model3.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\InoImportanciaSAC.cs">
+      <DependentUpon>Model3.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\InoImportanciaSV.cs">
+      <DependentUpon>Model3.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\InoUnidadesCertSA.cs">
+      <DependentUpon>Model3.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\InoUnidadesCertSAC.cs">
+      <DependentUpon>Model3.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\InoUnidadesCertSV.cs">
+      <DependentUpon>Model3.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Instalacion.cs">
+      <DependentUpon>Model3.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Inventario.cs">
+      <DependentUpon>Model3.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\JuntaAclaracion.cs">
+      <DependentUpon>Model3.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Licitacion.cs">
+      <DependentUpon>Model3.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Licitacion_Capitulo.cs">
+      <DependentUpon>Model3.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Me.cs">
+      <DependentUpon>Model3.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Menu.cs">
+      <DependentUpon>Model3.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\MesByTrimestre.cs">
+      <DependentUpon>Model3.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Metadata.cs" />
+    <Compile Include="Models\MinistracionDetalle.cs">
+      <DependentUpon>Model3.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\MinistracionesXComite.cs">
+      <DependentUpon>Model3.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Model1.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Model1.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Model1.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Model1.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Model11.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Model1.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Model2.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Model2.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Model3.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Model3.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\MotivoIncremento.cs">
+      <DependentUpon>ReproRecursoFed.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\MovRepRecursoFed.cs">
+      <DependentUpon>ReproRecursoFed.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Mov_Atendido.cs">
+      <DependentUpon>Model3.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Mov_ImportanciaPIV.cs">
+      <DependentUpon>Model3.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Mov_ImportanciaProg.cs">
+      <DependentUpon>Model3.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Municipio.cs">
+      <DependentUpon>Model3.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\MunicipiosGeo.cs">
+      <DependentUpon>Model3.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\NecesidadXAccion.cs">
+      <DependentUpon>Model3.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Pantalla.cs">
+      <DependentUpon>Model3.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\PartialClasses.cs" />
+    <Compile Include="Models\Partida.cs">
+      <DependentUpon>Model3.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\PEFXEstado.cs">
+      <DependentUpon>Model3.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Persona.cs">
+      <DependentUpon>Model3.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\PorcentajeXDireccionGeneral.cs">
+      <DependentUpon>Model3.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Predio.cs">
+      <DependentUpon>Model3.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\PresByCampania_Result.cs">
+      <DependentUpon>Model3.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Presupuesto.cs">
+      <DependentUpon>Model3.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\PresupuestoXEstado.cs">
+      <DependentUpon>Model3.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\PresXAUR.cs">
+      <DependentUpon>Model3.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\PrivilegiosXRol.cs">
+      <DependentUpon>Model3.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Productor.cs">
+      <DependentUpon>Model3.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Profesion.cs">
+      <DependentUpon>Model3.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Programa.cs">
+      <DependentUpon>Model3.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\ProgramaAnualAdq.cs">
+      <DependentUpon>Model3.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\ProgramaAnualAdq_Repro.cs">
+      <DependentUpon>Model3.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\ProgramasGastosTransversale.cs">
+      <DependentUpon>Model3.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Proveedor.cs">
+      <DependentUpon>Model3.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\ProyectoAutorizado.cs">
+      <DependentUpon>Model3.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\ProyectoPresupuesto.cs">
+      <DependentUpon>Model3.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Puesto.cs">
+      <DependentUpon>Model3.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Region.cs">
+      <DependentUpon>Model3.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\RepActividad.cs">
+      <DependentUpon>Model3.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\RepAdquisicion.cs">
+      <DependentUpon>Model3.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\RepGasto.cs">
+      <DependentUpon>Model3.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Reporte.cs">
+      <DependentUpon>Model3.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Representante1.cs">
+      <DependentUpon>Model3.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\ReproRecursoFed.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ReproRecursoFed.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\ReproRecursoFed.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ReproRecursoFed.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\ReproRecursoFed.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ReproRecursoFed.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="Models\ResumenPresupuestoXDG_Result.cs">
+      <DependentUpon>Model3.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Rol.cs">
+      <DependentUpon>Model3.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\SACImportanciaCultivo.cs">
+      <DependentUpon>Model3.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\SACImportanciaEnfermedad.cs">
+      <DependentUpon>Model3.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\SAC_Atendido.cs">
+      <DependentUpon>Model3.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\SA_Atendido.cs">
+      <DependentUpon>Model3.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\SA_ImportanciaEnfermedad.cs">
+      <DependentUpon>Model3.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\SA_Poblacion.cs">
+      <DependentUpon>Model3.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\SenasicaDAL.cs" />
+    <Compile Include="Common\RolesUsuarios.cs" />
+    <Compile Include="Models\Senasica_Storeds.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Senasica_Storeds.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Senasica_Storeds.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Senasica_Storeds.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Senasica_Storeds.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Senasica_Storeds.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="Models\SistemaProduccion.cs">
+      <DependentUpon>Model3.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\spatial_ref_sys.cs">
+      <DependentUpon>Model3.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\StatusAccion.cs">
+      <DependentUpon>Model3.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\StatusActividad.cs">
+      <DependentUpon>Model3.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\StatusActividadKardex.cs">
+      <DependentUpon>Model3.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\StatusAlcance.cs">
+      <DependentUpon>Model3.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\StatusAlcanceKardex.cs">
+      <DependentUpon>Model3.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\StatusCampania.cs">
+      <DependentUpon>Model3.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\StatusCampaniaKardex.cs">
+      <DependentUpon>Model3.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\StatusCampaniaKardex_Repro.cs">
+      <DependentUpon>Model3.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\StatusUE.cs">
+      <DependentUpon>Model3.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\SubComponente.cs">
+      <DependentUpon>Model3.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\SubPredio.cs">
+      <DependentUpon>Model3.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\SVAtendido.cs">
+      <DependentUpon>Model3.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\SVImportanciaCultivo.cs">
+      <DependentUpon>Model3.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\SVImportanciaPlaga.cs">
+      <DependentUpon>Model3.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\TendenciaProduccion.cs">
+      <DependentUpon>Model3.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\TESOFE.cs">
+      <DependentUpon>Model3.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\TesofeDetalle.cs">
+      <DependentUpon>Model3.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\TipoActividad.cs">
+      <DependentUpon>Model3.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\TipoAdquisicion.cs">
+      <DependentUpon>Model3.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\TipoCampania.cs">
+      <DependentUpon>Model3.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\TipoDeAccion.cs">
+      <DependentUpon>Model3.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\TipoDeBien.cs">
+      <DependentUpon>Model3.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\TipoDeRecurso.cs">
+      <DependentUpon>Model3.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\TipoDeUnidad.cs">
+      <DependentUpon>Model3.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\TipoInstalacion.cs">
+      <DependentUpon>Model3.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\TipoProduccion.cs">
+      <DependentUpon>Model3.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\TipoReembolso.cs">
+      <DependentUpon>Model3.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\TipoUnidad_Atendido.cs">
+      <DependentUpon>Model3.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\TipoUnidad_UCAC.cs">
+      <DependentUpon>Model3.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\TipoUnidad_UCSV.cs">
+      <DependentUpon>Model3.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\UnidadDeMedida.cs">
+      <DependentUpon>Model3.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\UnidadEjecutora.cs">
+      <DependentUpon>Model3.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\UnidadesCertificarInoSA.cs">
+      <DependentUpon>Model3.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\UnidadesCertificarInoSAC.cs">
+      <DependentUpon>Model3.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\UnidadesCertificarInoSAC_Repro.cs">
+      <DependentUpon>Model3.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\UnidadesCertificarInoSA_Repro.cs">
+      <DependentUpon>Model3.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\UnidadesCertificarInoSV.cs">
+      <DependentUpon>Model3.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\UnidadesCertificarInoSV_Repro.cs">
+      <DependentUpon>Model3.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\UnidadMedidaProduccion.cs">
+      <DependentUpon>Model3.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\UnidadResponsable.cs">
+      <DependentUpon>Model3.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\UnidadResponsableXSubComponente.cs">
+      <DependentUpon>Model3.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\UnidadResponsableXSubComponentePre.cs">
+      <DependentUpon>Model3.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Vigencia.cs">
+      <DependentUpon>Model3.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\VW_CampaniasMontosTransversales.cs">
+      <DependentUpon>Model3.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\VW_HistoricoReproPT.cs">
+      <DependentUpon>Model3.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\VW_PresupuestoCampania.cs">
+      <DependentUpon>Model3.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\VW_PresupuestoXDFG.cs">
+      <DependentUpon>Model3.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\VW_ReporteAdquisiciones.cs">
+      <DependentUpon>Model3.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\VW_TipoActividad.cs">
+      <DependentUpon>WebServicesModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\VW_Users.cs">
+      <DependentUpon>Model3.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\WebServicesModel.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>WebServicesModel.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\WebServicesModel.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>WebServicesModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\WebServicesModel.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>WebServicesModel.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="Negocio\ClaveInventario.cs" />
+    <Compile Include="Negocio\PermisosFlujoCampania.cs" />
+    <Compile Include="Negocio\ValidaMontos_InforFinanciero.cs" />
+    <Compile Include="Negocio\ValidaMontos_GFO.cs" />
+    <Compile Include="Negocio\ValidaMontosCampania.cs" />
+    <Compile Include="Negocio\ValidaReintegroTesoFe.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Reports\AvancesDeCaptura.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\AvancesDeCaptura.Designer.cs">
+      <DependentUpon>AvancesDeCaptura.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Reports\MOVCampania.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\MOVCampania.Designer.cs">
+      <DependentUpon>MOVCampania.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Reports\Proyectos.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\Proyectos.Designer.cs">
+      <DependentUpon>Proyectos.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Reports\RepActividades.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\RepActividades.Designer.cs">
+      <DependentUpon>RepActividades.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Reports\ReporteAnexoTecnicoApendice1_2018.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\ReporteAnexoTecnicoApendice1_2018.Designer.cs">
+      <DependentUpon>ReporteAnexoTecnicoApendice1_2018.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Reports\ReporteAnexoTecnicoApendice2_2018.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\ReporteAnexoTecnicoApendice2_2018.Designer.cs">
+      <DependentUpon>ReporteAnexoTecnicoApendice2_2018.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Reports\ReporteAnexoTecnicoApendice32018.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\ReporteAnexoTecnicoApendice32018.Designer.cs">
+      <DependentUpon>ReporteAnexoTecnicoApendice32018.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Reports\ReporteAnexoTecnicoApendice3U2018.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\ReporteAnexoTecnicoApendice3U2018.Designer.cs">
+      <DependentUpon>ReporteAnexoTecnicoApendice3U2018.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Reports\ReporteAnexoTecnicoApendice3U.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\ReporteAnexoTecnicoApendice3U.Designer.cs">
+      <DependentUpon>ReporteAnexoTecnicoApendice3U.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Reports\ReporteAnexoTecnicoApendice3_Nacional.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\ReporteAnexoTecnicoApendice3_Nacional.Designer.cs">
+      <DependentUpon>ReporteAnexoTecnicoApendice3_Nacional.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Reports\ReporteCampaniaESTHistorico.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\ReporteCampaniaESTHistorico.Designer.cs">
+      <DependentUpon>ReporteCampaniaESTHistorico.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Reports\ReporteCampaniaInocuidadSaludAnimalHistorico.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\ReporteCampaniaInocuidadSaludAnimalHistorico.Designer.cs">
+      <DependentUpon>ReporteCampaniaInocuidadSaludAnimalHistorico.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Reports\ReporteCampaniaInocuidadSanidadAcuicolaPHistorico.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\ReporteCampaniaInocuidadSanidadAcuicolaPHistorico.Designer.cs">
+      <DependentUpon>ReporteCampaniaInocuidadSanidadAcuicolaPHistorico.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Reports\ReporteCampaniaInocuidadSanidadVegetalHistorico.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\ReporteCampaniaInocuidadSanidadVegetalHistorico.Designer.cs">
+      <DependentUpon>ReporteCampaniaInocuidadSanidadVegetalHistorico.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Reports\ReporteCampaniaMovilizacionHistorico.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\ReporteCampaniaMovilizacionHistorico.Designer.cs">
+      <DependentUpon>ReporteCampaniaMovilizacionHistorico.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Reports\ReporteCampaniaSaludAnimalHistorico.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\ReporteCampaniaSaludAnimalHistorico.Designer.cs">
+      <DependentUpon>ReporteCampaniaSaludAnimalHistorico.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Reports\ReporteCampaniaSanidadAcuicolaPHistorico.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\ReporteCampaniaSanidadAcuicolaPHistorico.Designer.cs">
+      <DependentUpon>ReporteCampaniaSanidadAcuicolaPHistorico.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Reports\ReporteCampaniaSanidadVegetalHistorico.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\ReporteCampaniaSanidadVegetalHistorico.Designer.cs">
+      <DependentUpon>ReporteCampaniaSanidadVegetalHistorico.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Reports\ReporteCierrePorPeriodo.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\ReporteCierrePorPeriodo.Designer.cs">
+      <DependentUpon>ReporteCierrePorPeriodo.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Reports\ReporteCuadroComp_General.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\ReporteCuadroComp_General.Designer.cs">
+      <DependentUpon>ReporteCuadroComp_General.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Reports\ReporteCuadroComp_AccionXCampania.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\ReporteCuadroComp_AccionXCampania.Designer.cs">
+      <DependentUpon>ReporteCuadroComp_AccionXCampania.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Reports\ReporteAnexoTecnicoApendice1.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\ReporteAnexoTecnicoApendice1.Designer.cs">
+      <DependentUpon>ReporteAnexoTecnicoApendice1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Reports\ReporteAnexoTecnicoApendice2.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\ReporteAnexoTecnicoApendice2.Designer.cs">
+      <DependentUpon>ReporteAnexoTecnicoApendice2.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Reports\ReporteAnexoTecnicoApendice3.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\ReporteAnexoTecnicoApendice3.Designer.cs">
+      <DependentUpon>ReporteAnexoTecnicoApendice3.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Reports\ReporteApendice.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\ReporteApendice.Designer.cs">
+      <DependentUpon>ReporteApendice.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Reports\ReporteAvanceFisicoFinanciero.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\ReporteAvanceFisicoFinanciero.designer.cs">
+      <DependentUpon>ReporteAvanceFisicoFinanciero.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Reports\ReporteCampaniaEST.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\ReporteCampaniaEST.Designer.cs">
+      <DependentUpon>ReporteCampaniaEST.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Reports\ReporteCampaniaInocuidadSAC.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\ReporteCampaniaInocuidadSAC.Designer.cs">
+      <DependentUpon>ReporteCampaniaInocuidadSAC.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Reports\ReporteCampaniaInocuidadSanidadVegetal.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\ReporteCampaniaInocuidadSanidadVegetal.Designer.cs">
+      <DependentUpon>ReporteCampaniaInocuidadSanidadVegetal.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Reports\ReporteCampaniaMovilizacion.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\ReporteCampaniaMovilizacion.Designer.cs">
+      <DependentUpon>ReporteCampaniaMovilizacion.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Reports\ReporteCampaniaSaludAnimal.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\ReporteCampaniaSaludAnimal.Designer.cs">
+      <DependentUpon>ReporteCampaniaSaludAnimal.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Reports\ReporteCampaniaSanidadAcuicolaPesquera.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\ReporteCampaniaSanidadAcuicolaPesquera.Designer.cs">
+      <DependentUpon>ReporteCampaniaSanidadAcuicolaPesquera.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Reports\ReporteCampaniaSanidadVegetal.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\ReporteCampaniaSanidadVegetal.Designer.cs">
+      <DependentUpon>ReporteCampaniaSanidadVegetal.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Reports\ReporteCierreMes.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\ReporteCierreMes.Designer.cs">
+      <DependentUpon>ReporteCierreMes.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Reports\ReporteCuadroComp_ActividadesXAccion_Campania.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\ReporteCuadroComp_ActividadesXAccion_Campania.Designer.cs">
+      <DependentUpon>ReporteCuadroComp_ActividadesXAccion_Campania.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Reports\ReporteCuadroComp_NecesidadesXAccion_Campania.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\ReporteCuadroComp_NecesidadesXAccion_Campania.Designer.cs">
+      <DependentUpon>ReporteCuadroComp_NecesidadesXAccion_Campania.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Reports\ReporteCuadroComparativo_GastosRelativosCampania.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\ReporteCuadroComparativo_GastosRelativosCampania.Designer.cs">
+      <DependentUpon>ReporteCuadroComparativo_GastosRelativosCampania.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Reports\ReporteDeActividades.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\ReporteDeActividades.Designer.cs">
+      <DependentUpon>ReporteDeActividades.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Reports\ReporteDetalleAvanceFinancieroXMes.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\ReporteDetalleAvanceFinancieroXMes.Designer.cs">
+      <DependentUpon>ReporteDetalleAvanceFinancieroXMes.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Reports\ReporteDetalleAvanceFisicoXMes.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\ReporteDetalleAvanceFisicoXMes.Designer.cs">
+      <DependentUpon>ReporteDetalleAvanceFisicoXMes.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Reports\ReporteDetalleDeBienes.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\ReporteDetalleDeBienes.Designer.cs">
+      <DependentUpon>ReporteDetalleDeBienes.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Reports\ReporteEjecutivo.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\ReporteEjecutivo.Designer.cs">
+      <DependentUpon>ReporteEjecutivo.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Reports\ReporteEstadoDelGasto.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\ReporteEstadoDelGasto.Designer.cs">
+      <DependentUpon>ReporteEstadoDelGasto.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Reports\ReporteGastosFijosDeOperación.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\ReporteGastosFijosDeOperación.Designer.cs">
+      <DependentUpon>ReporteGastosFijosDeOperación.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Reports\ReporteGastosRelativosCampaniaEstatales.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\ReporteGastosRelativosCampaniaEstatales.Designer.cs">
+      <DependentUpon>ReporteGastosRelativosCampaniaEstatales.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Reports\ReporteInocuidadSaludAnimal.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\ReporteInocuidadSaludAnimal.Designer.cs">
+      <DependentUpon>ReporteInocuidadSaludAnimal.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Reports\ReporteInstanciaEjecutora.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\ReporteInstanciaEjecutora.Designer.cs">
+      <DependentUpon>ReporteInstanciaEjecutora.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Reports\ReporteInventarioDeBienes.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\ReporteInventarioDeBienes.Designer.cs">
+      <DependentUpon>ReporteInventarioDeBienes.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Reports\ReportePersonalDeInstanciaEjecutora.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\ReportePersonalDeInstanciaEjecutora.Designer.cs">
+      <DependentUpon>ReportePersonalDeInstanciaEjecutora.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Reports\ReportePresupuestoXEstado.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\ReportePresupuestoXEstado.Designer.cs">
+      <DependentUpon>ReportePresupuestoXEstado.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Reports\ReporteProgramaIntegral.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\ReporteProgramaIntegral.Designer.cs">
+      <DependentUpon>ReporteProgramaIntegral.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Reports\ReporteProgramaIntegralEstatal.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\ReporteProgramaIntegralEstatal.Designer.cs">
+      <DependentUpon>ReporteProgramaIntegralEstatal.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Reports\ReporteProgramaTrabajo_General.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\ReporteProgramaTrabajo_General.Designer.cs">
+      <DependentUpon>ReporteProgramaTrabajo_General.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Reports\ReporteProyectosAcuicola.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\ReporteProyectosAcuicola.Designer.cs">
+      <DependentUpon>ReporteProyectosAcuicola.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Reports\ReporteProyectosAnimal.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\ReporteProyectosAnimal.Designer.cs">
+      <DependentUpon>ReporteProyectosAnimal.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Reports\ReporteProyectosInocuidad.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\ReporteProyectosInocuidad.Designer.cs">
+      <DependentUpon>ReporteProyectosInocuidad.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Reports\ReporteProyectosMovilizacion.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\ReporteProyectosMovilizacion.Designer.cs">
+      <DependentUpon>ReporteProyectosMovilizacion.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Reports\ReporteProyectosVegetal.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\ReporteProyectosVegetal.Designer.cs">
+      <DependentUpon>ReporteProyectosVegetal.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Reports\ReporteVehiculos.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\ReporteVehiculos.Designer.cs">
+      <DependentUpon>ReporteVehiculos.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Services\IEController.cs" />
+    <Compile Include="Services\EstadosController.cs" />
+    <Compile Include="Services\ProyectosIEController.cs" />
+    <Compile Include="Services\TipoActividadController.cs" />
+    <Compile Include="Services\URController.cs" />
+    <Compile Include="Services\PEFController.cs" />
+    <Compile Include="Services\PresIEController.cs" />
+    <Compile Include="Services\ProveedoresController.cs" />
+    <Compile Include="Startup.cs" />
+    <Compile Include="ViewModels\AperturaCampaniaVM.cs" />
+    <Compile Include="ViewModels\CierreMensualVM.cs" />
+    <Compile Include="ViewModels\CoordinadorByCampaniaVM.cs" />
+    <Compile Include="ViewModels\EstadoVM.cs" />
+    <Compile Include="ViewModels\FirmasAutorizadasVM.cs" />
+    <Compile Include="ViewModels\MinistracionDetalleVM.cs" />
+    <Compile Include="ViewModels\ParamsRepInfoFFVM.cs" />
+    <Compile Include="ViewModels\PresupuestoEstatalVM.cs" />
+    <Compile Include="ViewModels\ProductorVM.cs" />
+    <Compile Include="ViewModels\ProgramaAnualAdqVM.cs" />
+    <Compile Include="ViewModels\ProveedorVM.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{3259AA49-8AA1-44D3-9025-A0B520596A8C}" />
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\201602020014454_Initial.resx">
+      <DependentUpon>201602020014454_Initial.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201604182155015_PrimeraExplicitaDespuesDeInitialDB.resx">
+      <DependentUpon>201604182155015_PrimeraExplicitaDespuesDeInitialDB.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201604190019314_AgregaFK_IdPersona__SIS.resx">
+      <DependentUpon>201604190019314_AgregaFK_IdPersona__SIS.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\AvancesDeCaptura.resx">
+      <DependentUpon>AvancesDeCaptura.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\MOVCampania.resx">
+      <DependentUpon>MOVCampania.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\Proyectos.resx">
+      <DependentUpon>Proyectos.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\RepActividades.resx">
+      <DependentUpon>RepActividades.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\ReporteAnexoTecnicoApendice1_2018.resx">
+      <DependentUpon>ReporteAnexoTecnicoApendice1_2018.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\ReporteAnexoTecnicoApendice2_2018.resx">
+      <DependentUpon>ReporteAnexoTecnicoApendice2_2018.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\ReporteAnexoTecnicoApendice32018.resx">
+      <DependentUpon>ReporteAnexoTecnicoApendice32018.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\ReporteAnexoTecnicoApendice3U2018.resx">
+      <DependentUpon>ReporteAnexoTecnicoApendice3U2018.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\ReporteAnexoTecnicoApendice3U.resx">
+      <DependentUpon>ReporteAnexoTecnicoApendice3U.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\ReporteAnexoTecnicoApendice3_Nacional.resx">
+      <DependentUpon>ReporteAnexoTecnicoApendice3_Nacional.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\ReporteCampaniaESTHistorico.resx">
+      <DependentUpon>ReporteCampaniaESTHistorico.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\ReporteCampaniaInocuidadSaludAnimalHistorico.resx">
+      <DependentUpon>ReporteCampaniaInocuidadSaludAnimalHistorico.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\ReporteCampaniaInocuidadSanidadAcuicolaPHistorico.resx">
+      <DependentUpon>ReporteCampaniaInocuidadSanidadAcuicolaPHistorico.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\ReporteCampaniaInocuidadSanidadVegetalHistorico.resx">
+      <DependentUpon>ReporteCampaniaInocuidadSanidadVegetalHistorico.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\ReporteCampaniaMovilizacionHistorico.resx">
+      <DependentUpon>ReporteCampaniaMovilizacionHistorico.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\ReporteCampaniaSaludAnimalHistorico.resx">
+      <DependentUpon>ReporteCampaniaSaludAnimalHistorico.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\ReporteCampaniaSanidadAcuicolaPHistorico.resx">
+      <DependentUpon>ReporteCampaniaSanidadAcuicolaPHistorico.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\ReporteCampaniaSanidadVegetalHistorico.resx">
+      <DependentUpon>ReporteCampaniaSanidadVegetalHistorico.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\ReporteCierrePorPeriodo.resx">
+      <DependentUpon>ReporteCierrePorPeriodo.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\ReporteCuadroComp_General.resx">
+      <DependentUpon>ReporteCuadroComp_General.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\ReporteCuadroComp_AccionXCampania.resx">
+      <DependentUpon>ReporteCuadroComp_AccionXCampania.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\ReporteAnexoTecnicoApendice1.resx">
+      <DependentUpon>ReporteAnexoTecnicoApendice1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\ReporteAnexoTecnicoApendice2.resx">
+      <DependentUpon>ReporteAnexoTecnicoApendice2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\ReporteAnexoTecnicoApendice3.resx">
+      <DependentUpon>ReporteAnexoTecnicoApendice3.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\ReporteApendice.resx">
+      <DependentUpon>ReporteApendice.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\ReporteAvanceFisicoFinanciero.resx">
+      <DependentUpon>ReporteAvanceFisicoFinanciero.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\ReporteCampaniaEST.resx">
+      <DependentUpon>ReporteCampaniaEST.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\ReporteCampaniaInocuidadSAC.resx">
+      <DependentUpon>ReporteCampaniaInocuidadSAC.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\ReporteCampaniaInocuidadSanidadVegetal.resx">
+      <DependentUpon>ReporteCampaniaInocuidadSanidadVegetal.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\ReporteCampaniaMovilizacion.resx">
+      <DependentUpon>ReporteCampaniaMovilizacion.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\ReporteCampaniaSaludAnimal.resx">
+      <DependentUpon>ReporteCampaniaSaludAnimal.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\ReporteCampaniaSanidadAcuicolaPesquera.resx">
+      <DependentUpon>ReporteCampaniaSanidadAcuicolaPesquera.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\ReporteCampaniaSanidadVegetal.resx">
+      <DependentUpon>ReporteCampaniaSanidadVegetal.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\ReporteCierreMes.resx">
+      <DependentUpon>ReporteCierreMes.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\ReporteCuadroComp_ActividadesXAccion_Campania.resx">
+      <DependentUpon>ReporteCuadroComp_ActividadesXAccion_Campania.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\ReporteCuadroComp_NecesidadesXAccion_Campania.resx">
+      <DependentUpon>ReporteCuadroComp_NecesidadesXAccion_Campania.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\ReporteCuadroComparativo_GastosRelativosCampania.resx">
+      <DependentUpon>ReporteCuadroComparativo_GastosRelativosCampania.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\ReporteDeActividades.resx">
+      <DependentUpon>ReporteDeActividades.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\ReporteDetalleAvanceFinancieroXMes.resx">
+      <DependentUpon>ReporteDetalleAvanceFinancieroXMes.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\ReporteDetalleAvanceFisicoXMes.resx">
+      <DependentUpon>ReporteDetalleAvanceFisicoXMes.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\ReporteDetalleDeBienes.resx">
+      <DependentUpon>ReporteDetalleDeBienes.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\ReporteEjecutivo.resx">
+      <DependentUpon>ReporteEjecutivo.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\ReporteEstadoDelGasto.resx">
+      <DependentUpon>ReporteEstadoDelGasto.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\ReporteGastosFijosDeOperación.resx">
+      <DependentUpon>ReporteGastosFijosDeOperación.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\ReporteGastosRelativosCampaniaEstatales.resx">
+      <DependentUpon>ReporteGastosRelativosCampaniaEstatales.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\ReporteInocuidadSaludAnimal.resx">
+      <DependentUpon>ReporteInocuidadSaludAnimal.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\ReporteInstanciaEjecutora.resx">
+      <DependentUpon>ReporteInstanciaEjecutora.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\ReporteInventarioDeBienes.resx">
+      <DependentUpon>ReporteInventarioDeBienes.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\ReportePersonalDeInstanciaEjecutora.resx">
+      <DependentUpon>ReportePersonalDeInstanciaEjecutora.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\ReportePresupuestoXEstado.resx">
+      <DependentUpon>ReportePresupuestoXEstado.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\ReporteProgramaIntegral.resx">
+      <DependentUpon>ReporteProgramaIntegral.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\ReporteProgramaIntegralEstatal.resx">
+      <DependentUpon>ReporteProgramaIntegralEstatal.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\ReporteProgramaTrabajo_General.resx">
+      <DependentUpon>ReporteProgramaTrabajo_General.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\ReporteProyectosAcuicola.resx">
+      <DependentUpon>ReporteProyectosAcuicola.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\ReporteProyectosAnimal.resx">
+      <DependentUpon>ReporteProyectosAnimal.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\ReporteProyectosInocuidad.resx">
+      <DependentUpon>ReporteProyectosInocuidad.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\ReporteProyectosMovilizacion.resx">
+      <DependentUpon>ReporteProyectosMovilizacion.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\ReporteProyectosVegetal.resx">
+      <DependentUpon>ReporteProyectosVegetal.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\ReporteVehiculos.resx">
+      <DependentUpon>ReporteVehiculos.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Content\ReportesDeGastos\" />
+    <Folder Include="Content\Vigencias\" />
+  </ItemGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
+  <PropertyGroup />
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target> -->
+  <Target Name="MvcBuildViews" AfterTargets="AfterBuild" Condition="'$(MvcBuildViews)'=='true'">
+    <AspNetCompiler VirtualPath="temp" PhysicalPath="$(WebProjectOutputDir)" />
+  </Target>
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>True</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>7210</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>http://localhost:7211/</IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>False</UseCustomServer>
+          <CustomServerUrl>
+          </CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+</Project>

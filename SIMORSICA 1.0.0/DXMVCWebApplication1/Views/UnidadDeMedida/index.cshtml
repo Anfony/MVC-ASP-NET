@@ -1,0 +1,20 @@
+﻿
+@{
+    ViewBag.Title = "Catálogo de Unidades de Medida";
+}
+
+<div style="float: right; margin-right: 20px"><a href="https://docs.google.com/document/d/1ZJURCxDAT76zN4TpKa2cBHEdF3RZFUNkAv3o9iyWxG4/edit#bookmark=id.19c6y18" target="_blank"><u>Ayuda</u></a>  |  <a href="http://soporte.simosica.com/support/solutions/articles/22000184563-preguntas-frecuentes" target="_blank"> <u>Preguntas Frecuentes</u></a></div>
+ 
+<h3 style="font-size:17px; font:bold; text-align:center">CATÁLOGO DE UNIDADES DE MEDIDA</h3>
+<h3 style="font-size: 13px; text-align: center; position: relative; top: -10px">Registre aquí las Unidades de Medida </h3>
+
+<br>
+<br>
+
+@Html.Partial("~/Views/ExportExcelPDF/_ExportExcelPDF.cshtml", new ViewDataDictionary { { "Clave", DXMVCWebApplication1.Common.ListaPantallas.SIS_UNIDAD_MEDIDA } })
+
+<br>
+<br>
+
+
+@Html.Action("GridViewPartial")

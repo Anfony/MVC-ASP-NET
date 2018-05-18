@@ -1,0 +1,381 @@
+﻿<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+
+<script>
+    function aceptaApertura(s, e){
+        $.ajax({
+            type: "POST",
+            url: "/CierreMensualSolApertura/AperturaCampania",
+            data: {
+                RespuestaApertura: RespuestaApertura.GetValue(),
+                IdCierreMensual: IdCierreMensual.GetValue(),
+                FechaCierreAutomatico: FechaCierreAutomático.GetFormattedDate(),
+                esApertura: true
+            },
+            success: function (data) {
+                window.location = "Index";
+            }
+        });
+    }
+
+    function rechazaApertura(s, e) {
+        $.ajax({
+            type: "POST",
+            url: "/CierreMensualSolApertura/AperturaCampania",
+            data: {
+                RespuestaApertura: RespuestaApertura.GetValue(),
+                IdCierreMensual: IdCierreMensual.GetValue(),
+                FechaCierreAutomatico: FechaCierreAutomático.GetFormattedDate(),
+                esApertura: false
+            },
+            success: function (data) {
+                window.location = "Index";
+            }
+        });
+    }
+</script>
+
+@{
+    Html.DevExpress().Label(edtSettings =>
+    {
+        edtSettings.Name = "IdCierreMensual";
+        edtSettings.Text = Convert.ToString(Model.Pk_IdCierreMensual);
+        edtSettings.ControlStyle.ForeColor = System.Drawing.Color.White;
+        edtSettings.Properties.EnableClientSideAPI = true;
+    }).Render();
+
+    Html.DevExpress().Label(edtSettings =>
+    {
+        edtSettings.ControlStyle.CssClass = "label";
+        edtSettings.Text = "¿Deseas aceptar la apertura de esta campaña?";
+        edtSettings.Style["position"] = "relative";
+        edtSettings.Style["left"] = "40px";
+        edtSettings.ControlStyle.Font.Size = 18;
+    }).Render();
+
+    ViewContext.Writer.Write("<br />");
+    ViewContext.Writer.Write("<br />");
+    ViewContext.Writer.Write("<br />");
+
+    Html.DevExpress().Label(edtSettings =>
+    {
+        edtSettings.ControlStyle.CssClass = "label";
+        edtSettings.Text = "Detalles de la campaña";
+        edtSettings.Style["position"] = "relative";
+        edtSettings.Style["left"] = "40px";
+        edtSettings.ControlStyle.Font.Size = 14;
+        edtSettings.ControlStyle.Font.Bold = true;
+        edtSettings.ControlStyle.ForeColor = System.Drawing.Color.Green;
+    }).Render();
+
+    ViewContext.Writer.Write("<hr align='left' width='50%'>");
+
+    ViewContext.Writer.Write("<table>");
+
+    ViewContext.Writer.Write("<td>");
+    Html.DevExpress().Label(edtSettings =>
+    {
+        edtSettings.ControlStyle.CssClass = "label";
+        edtSettings.Text = "Campaña";
+        edtSettings.Name = "CampaniaLbl";
+        edtSettings.Style["position"] = "relative";
+        edtSettings.Style["left"] = "40px";
+    }).Render();
+
+    Html.DevExpress().TextBox(settingsTextBox =>
+    {
+        settingsTextBox.Name = "Campania";
+        settingsTextBox.Width = Unit.Pixel(400);
+        settingsTextBox.ReadOnly = true;
+        settingsTextBox.Style["position"] = "relative";
+        settingsTextBox.Style["left"] = "40px";
+    }).Bind(Model.Campania.ProyectoPresupuesto.ProyectoAutorizado.Nombre)
+    .Render();
+    ViewContext.Writer.Write("</td>");
+
+    ViewContext.Writer.Write("<td>");
+    Html.DevExpress().Label(edtSettings =>
+    {
+        edtSettings.ControlStyle.CssClass = "label";
+        edtSettings.Text = "Mes de cierre";
+        edtSettings.Name = "MesLbl";
+        edtSettings.Style["position"] = "relative";
+        edtSettings.Style["left"] = "60px";
+    }).Render();
+
+    Html.DevExpress().TextBox(settingsTextBox =>
+    {
+        settingsTextBox.Name = "Mes";
+        settingsTextBox.Width = Unit.Pixel(180);
+        settingsTextBox.ReadOnly = true;
+        settingsTextBox.Style["position"] = "relative";
+        settingsTextBox.Style["left"] = "60px";
+    }).Bind(Model.Me.Descripcion)
+    .Render();
+
+    ViewContext.Writer.Write("</td>");
+    ViewContext.Writer.Write("</table>");
+
+    ViewContext.Writer.Write("<br />");
+
+    ViewContext.Writer.Write("<table>");
+    ViewContext.Writer.Write("<td>");
+
+    Html.DevExpress().Label(edtSettings =>
+    {
+        edtSettings.ControlStyle.CssClass = "label";
+        edtSettings.Text = "Comentarios";
+        edtSettings.Name = "ComentariosLbl";
+        edtSettings.Style["position"] = "relative";
+        edtSettings.Style["left"] = "40px";
+    }).Render();
+
+    Html.DevExpress().TextBox(settingsTextBox =>
+    {
+        settingsTextBox.Name = "Comentarios";
+        settingsTextBox.Width = Unit.Pixel(400);
+        settingsTextBox.ReadOnly = true;
+        settingsTextBox.Style["position"] = "relative";
+        settingsTextBox.Style["left"] = "40px";
+    }).Bind(Model.Comentarios)
+    .Render();
+    ViewContext.Writer.Write("</td>");
+
+    ViewContext.Writer.Write("<td>");
+    Html.DevExpress().Label(edtSettings =>
+    {
+        edtSettings.ControlStyle.CssClass = "label";
+        edtSettings.Text = "Recurso Federal Solicitado";
+        edtSettings.Name = "RF";
+        edtSettings.Style["position"] = "relative";
+        edtSettings.Style["left"] = "60px";
+    }).Render();
+
+    Html.DevExpress().TextBox(settingsTextBox =>
+    {
+        settingsTextBox.Name = "RecSol_Fed";
+        settingsTextBox.Width = Unit.Pixel(180);
+        settingsTextBox.ReadOnly = true;
+        settingsTextBox.Style["position"] = "relative";
+        settingsTextBox.Style["left"] = "60px";
+        settingsTextBox.Properties.DisplayFormatString = "c";
+    }).Bind(Model.Campania.RecSol_Fed)
+    .Render();
+
+    ViewContext.Writer.Write("</td>");
+
+    ViewContext.Writer.Write("<td>");
+    Html.DevExpress().Label(edtSettings =>
+    {
+        edtSettings.ControlStyle.CssClass = "label";
+        edtSettings.Text = "Recurso Estatal Solicitado";
+        edtSettings.Name = "RE";
+        edtSettings.Style["position"] = "relative";
+        edtSettings.Style["left"] = "80px";
+    }).Render();
+
+    Html.DevExpress().TextBox(settingsTextBox =>
+    {
+        settingsTextBox.Name = "RecSol_Est";
+        settingsTextBox.Width = Unit.Pixel(180);
+        settingsTextBox.ReadOnly = true;
+        settingsTextBox.Style["position"] = "relative";
+        settingsTextBox.Style["left"] = "80px";
+        settingsTextBox.Properties.DisplayFormatString = "c";
+    }).Bind(Model.Campania.RecSol_Est)
+    .Render();
+    ViewContext.Writer.Write("</td>");
+    ViewContext.Writer.Write("</table>");
+
+    ViewContext.Writer.Write("<br />");
+
+    Html.DevExpress().Label(edtSettings =>
+    {
+        edtSettings.ControlStyle.CssClass = "label";
+        edtSettings.Text = "Motivos Solicitud apertura";
+        edtSettings.Name = "MotivosAperturaLbl";
+        edtSettings.Style["position"] = "relative";
+        edtSettings.Style["left"] = "40px";
+    }).Render();
+
+    Html.DevExpress().Memo(edtSettings =>
+    {
+        edtSettings.Name = "MotivosApertura";
+        edtSettings.Properties.NullText = "El usuario no describió los motivos de apertura";
+        edtSettings.ControlStyle.CssClass = "editor";
+        edtSettings.ShowModelErrors = true;
+        edtSettings.ReadOnly = true;
+        edtSettings.Width = Unit.Pixel(800);
+        edtSettings.Height = Unit.Pixel(50);
+        edtSettings.ToolTip = "Descripción de los motivos de la solicitud de apertura";
+        edtSettings.Style["position"] = "relative";
+        edtSettings.Style["left"] = "40px";
+    }).Bind(Model.MotivosApertura)
+    .Render();
+
+    /*ViewContext.Writer.Write("<br />");
+
+    Html.DevExpress().Button(btnSettings =>
+    {
+        btnSettings.Name = "btnObtenHistorial";
+        btnSettings.Text = "Historial de Solicitudes";
+        btnSettings.ToolTip = "Historial de Solicitudes";
+        btnSettings.ControlStyle.CssClass = "button";
+        btnSettings.ImagePosition = ImagePosition.Right;
+        btnSettings.Images.Image.Width = 16;
+        btnSettings.Images.Image.Url = "/Content/Images/aceptar.png";
+        btnSettings.ClientSideEvents.Click = "function(s, e){ popUpHistorial.Show(); }";
+        btnSettings.Style["position"] = "relative";
+        btnSettings.Style["left"] = "40px";
+    }).Render();*/
+
+    ViewContext.Writer.Write("<hr align='left' width='50%'>");
+
+    ViewContext.Writer.Write("<table>");
+    ViewContext.Writer.Write("<tr>");
+
+    ViewContext.Writer.Write("<td>");
+    Html.DevExpress().Label(edtSettings =>
+    {
+        edtSettings.ControlStyle.CssClass = "label";
+        edtSettings.Style["position"] = "relative";
+        edtSettings.Style["left"] = "40px";
+        edtSettings.Text = "Si el comité no cierra su campaña, el sistema lo hará automáticamente en la fecha que se indique aquí:";
+        edtSettings.ToolTip = "Si el comité no cierra su campaña, el sistema lo hará automáticamente en la fecha que se indique aquí:";
+        edtSettings.AssociatedControlName = "FechaCierreAutomático";
+    }).Render();
+    ViewContext.Writer.Write("</td>");
+
+    ViewContext.Writer.Write("<td>");
+    Html.DevExpress().Label(edtSettings =>
+    {
+        edtSettings.ControlStyle.CssClass = "label";
+        edtSettings.Style["position"] = "relative";
+        edtSettings.Style["left"] = "70px";
+        edtSettings.Text = "Fecha Cierre Automático";
+        edtSettings.ToolTip = "Fecha Cierre Automático";
+        edtSettings.AssociatedControlName = "FechaCierreAutomático";
+    }).Render();
+    ViewContext.Writer.Write("</td>");
+
+    ViewContext.Writer.Write("<td>");
+    Html.DevExpress().DateEdit(edtSettings =>
+    {
+        edtSettings.Name = "FechaCierreAutomático";
+        edtSettings.Style["position"] = "relative";
+        edtSettings.Style["left"] = "70px";
+        edtSettings.Properties.NullText = "dd/mm/aaaa";
+        edtSettings.ControlStyle.CssClass = "editor";
+        edtSettings.ShowModelErrors = true;
+        edtSettings.Width = Unit.Pixel(125);
+        edtSettings.ToolTip = "DD/MM/YYYY";
+        edtSettings.ToolTip = "Si el comité no cierra su campaña, el sistema lo hará a la fecha que se indique aquí";
+        edtSettings.Properties.MinDate = DateTime.Today;
+
+    }).Render();
+    ViewContext.Writer.Write("</td>");
+
+    ViewContext.Writer.Write("</tr>");
+    ViewContext.Writer.Write("</table>");
+
+    ViewContext.Writer.Write("<br />");
+
+    Html.DevExpress().Label(edtSettings =>
+    {
+        edtSettings.ControlStyle.CssClass = "label";
+        edtSettings.Text = "Justificación";
+        edtSettings.Name = "RespuestaAperturaLbl";
+        edtSettings.Style["position"] = "relative";
+        edtSettings.Style["left"] = "40px";
+        edtSettings.ControlStyle.Font.Size = 14;
+        edtSettings.ControlStyle.Font.Bold = true;
+        edtSettings.ControlStyle.ForeColor = System.Drawing.Color.Green;
+    }).Render();
+
+    Html.DevExpress().Memo(edtSettings =>
+    {
+        edtSettings.Name = "RespuestaApertura";
+        edtSettings.Properties.NullText = "Justifica el rechazo o la aceptación a la solicitud de apertura";
+        edtSettings.ControlStyle.CssClass = "editor";
+        edtSettings.ShowModelErrors = true;
+        edtSettings.Width = Unit.Pixel(800);
+        edtSettings.Height = Unit.Pixel(50);
+        edtSettings.ToolTip = "Justifica el rechazo o la aceptación a la solicitud de apertura";
+        edtSettings.Style["position"] = "relative";
+        edtSettings.Style["left"] = "40px";
+        edtSettings.Properties.EnableClientSideAPI = true;
+    }).Render();
+
+    ViewContext.Writer.Write("<br />");
+
+    ViewContext.Writer.Write("<table>");
+    ViewContext.Writer.Write("<tr><td>");
+    Html.DevExpress().Button(btnSettings =>
+    {
+        btnSettings.Name = "btnConfirma";
+        btnSettings.Text = "Aceptar Apertura";
+        btnSettings.ToolTip = "Aceptar Apertura";
+        btnSettings.ControlStyle.CssClass = "button";
+        btnSettings.ImagePosition = ImagePosition.Right;
+        btnSettings.Images.Image.Width = 16;
+        btnSettings.Images.Image.Url = "/Content/Images/aceptar.png";
+        btnSettings.ClientSideEvents.Click = "aceptaApertura";
+        btnSettings.Style["position"] = "relative";
+        btnSettings.Style["left"] = "280px";
+    }).Render();
+    ViewContext.Writer.Write("</td>");
+
+    ViewContext.Writer.Write("<td>");
+    Html.DevExpress().Button(btnSettings =>
+    {
+        btnSettings.Name = "btnCancel";
+        btnSettings.Text = "Rechazar Apertura";
+        btnSettings.ToolTip = "Rechazar Apertura";
+        btnSettings.ControlStyle.CssClass = "button";
+        btnSettings.ImagePosition = ImagePosition.Right;
+        btnSettings.Images.Image.Width = 16;
+        btnSettings.Images.Image.Url = "/Content/Images/cancelar.png";
+        btnSettings.ClientSideEvents.Click = "rechazaApertura";
+        btnSettings.Style["position"] = "relative";
+        btnSettings.Style["left"] = "280px";
+    }).Render();
+    ViewContext.Writer.Write("</td>");
+
+    ViewContext.Writer.Write("<td>");
+    using (Html.BeginForm("Index", "CierreMensualSolApertura"))
+    {
+        Html.DevExpress().Button(btnSettings =>
+        {
+            btnSettings.Name = "btnRegresa";
+            btnSettings.Text = "Regresa a página principal";
+            btnSettings.ToolTip = "Regresa a página principal";
+            btnSettings.ControlStyle.CssClass = "button";
+            btnSettings.ImagePosition = ImagePosition.Right;
+            btnSettings.Images.Image.Width = 16;
+            btnSettings.Images.Image.Url = "/Content/Images/regresa.png";
+            btnSettings.UseSubmitBehavior = true;
+            btnSettings.Style["position"] = "relative";
+            btnSettings.Style["left"] = "420px";
+        }).Render();
+    }
+    ViewContext.Writer.Write("</td></tr>");
+    ViewContext.Writer.Write("</table>");
+}
+
+@*Html.DevExpress().PopupControl(settings =>
+{
+    settings.Name = "popUpHistorial";
+    settings.Width = 800;
+    settings.Height = 400;
+    settings.AllowDragging = true;
+    settings.CloseAction = CloseAction.CloseButton;
+    settings.PopupAnimationType = AnimationType.None;
+    settings.HeaderText = "Historial de Solicitudes";
+    settings.Modal = true;
+    settings.PopupHorizontalAlign = PopupHorizontalAlign.WindowCenter;
+    settings.PopupVerticalAlign = PopupVerticalAlign.WindowCenter;
+
+    settings.SetContent(() =>
+    {
+        Html.RenderAction("HistorialSolicitudesGridViewPartial", new { IdCierreMensual = Convert.ToInt32(Model.Pk_IdCierreMensual) });
+    });
+}).GetHtml()*@

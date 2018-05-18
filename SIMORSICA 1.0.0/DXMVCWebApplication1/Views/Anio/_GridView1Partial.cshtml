@@ -1,0 +1,32 @@
+@{//Sandy Roa 
+	var grid = Html.DevExpress().GridView(settings => {
+        settings.Name = "GridView1";
+        settings.CallbackRouteValues = new { Controller = "Anio", Action = "GridView1Partial" };
+
+				settings.SettingsEditing.AddNewRowRouteValues = new { Controller = "Anio", Action = "GridView1PartialAddNew" };
+        settings.SettingsEditing.UpdateRowRouteValues = new { Controller = "Anio", Action = "GridView1PartialUpdate" };
+        settings.SettingsEditing.DeleteRowRouteValues = new { Controller = "Anio", Action = "GridView1PartialDelete" };
+        settings.SettingsEditing.Mode = GridViewEditingMode.PopupEditForm;
+        settings.SettingsBehavior.ConfirmDelete = true;
+
+        settings.CommandColumn.Visible = true;
+        //settings.CommandColumn.ShowDeleteButton = true;
+        //settings.CommandColumn.ShowEditButton = true;
+        settings.CommandColumn.ShowNewButtonInHeader = true;
+        settings.CommandColumn.ShowClearFilterButton = true;
+
+		settings.KeyFieldName = "Pk_IdAnio";
+
+		settings.SettingsPager.Visible = true;
+		settings.Settings.ShowGroupPanel = false;
+		settings.Settings.ShowFilterRow = false;
+		settings.SettingsBehavior.AllowSelectByRowClick = true;
+
+                //settings.Columns.Add("Pk_IdAnio");
+				settings.Columns.Add("Anio1", "Año",MVCxGridViewColumnType.SpinEdit);
+			});
+		if (ViewData["EditError"] != null){
+        grid.SetEditErrorText((string)ViewData["EditError"]);
+    }
+}
+@grid.Bind(Model).GetHtml()

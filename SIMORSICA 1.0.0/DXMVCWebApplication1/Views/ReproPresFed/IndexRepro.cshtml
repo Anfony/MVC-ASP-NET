@@ -1,0 +1,702 @@
+﻿@{
+    ViewBag.Title = "Reprogramación";
+}
+
+
+<h2 style="font-size:17px; font:bold; text-align:center">REPROGRAMACIÓN - @ViewData["NombreEstado"].ToString()</h2>
+<h3 style="font-size: 13px; text-align: center; position: relative; top: -10px">Inicie aquí la reprogramación del presupuesto Federal de las campañas en Ejecución</h3>
+
+<br>
+<br>
+
+<script type="text/javascript">
+
+    var IdCampaniaOri = -1;
+    var IdCampaniaDes = -1;
+
+    function SeleccionaCampaniaOrigen(s, e) {
+
+        IdCampaniaOri = IdCampaniaOrigen.GetValue();
+
+        if (IdCampaniaOri == IdCampaniaDes) {
+            _errorDistintasCampanias.Show();
+            IdCampaniaOrigen.SelectIndex(-1);
+            IdCampaniaOri = -1;
+            RecFedOrigen.SetText("-");
+            RecSol_FedOrigen.SetText("-");
+            Rec_GastadoOrigen.SetText("-");
+            SaldoDisponibleOrigen.SetText("-");
+        }
+        else {
+            $.ajax({
+                type: "GET",
+                url: "/ReproPresFed/GetPresupustoByCampania",
+                datatype: "Json",
+                data: { IdCampania: IdCampaniaOri },
+                success: function (data) {
+                    RecFedOrigen.SetText(data.RecFed);
+                    RecSol_FedOrigen.SetText(data.RecSol_Fed);
+                    Rec_GastadoOrigen.SetText(data.Rec_Gastado);
+                    SaldoDisponibleOrigen.SetText(data.SaldoDisponible);
+                }
+            });
+        }
+    }
+
+    function SeleccionaCampaniaDestino(s, e) {
+
+        IdCampaniaDes = IdCampaniaDestino.GetValue();
+
+        if (IdCampaniaOri == IdCampaniaDes) {
+            _errorDistintasCampanias.Show();
+            IdCampaniaDestino.SelectIndex(-1);
+            IdCampaniaDes = -1;
+            RecFedDestino.SetText("-");
+            RecSol_FedDestino.SetText("-");
+            Rec_GastadoDestino.SetText("-");
+            SaldoDisponibleDestino.SetText("-");
+        }
+        else {
+            $.ajax({
+                type: "GET",
+                url: "/ReproPresFed/GetPresupustoByCampania",
+                datatype: "Json",
+                data: { IdCampania: IdCampaniaDes },
+                success: function (data) {
+                    RecFedDestino.SetText(data.RecFed);
+                    RecSol_FedDestino.SetText(data.RecSol_Fed);
+                    Rec_GastadoDestino.SetText(data.Rec_Gastado);
+                    SaldoDisponibleDestino.SetText(data.SaldoDisponible);
+                }
+            });
+        }
+    }
+
+    function validaDatos() {
+
+        if (IdCampaniaDes == -1) {
+            _eligeCampaniaDestino.Show();
+            return false;
+        }
+
+        _montoAMover = CantidadAMover.GetValue();
+
+        if (_montoAMover == null || _montoAMover == "") {
+            _ingresaMonto.Show();
+            return false;
+        }
+
+        if (IdCampaniaOri != -1) {
+            _saldoDisponibleOrigen = SaldoDisponibleOrigen.GetValue();
+
+            if (_saldoDisponibleOrigen < _montoAMover) {
+                _recursoNoDisponible.Show();
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    function ValidaMovimiento(s, e) {
+
+        if (validaDatos()) {
+            IdCampaniaOrigen.SetEnabled(false);
+            IdCampaniaDestino.SetEnabled(false);
+
+            CantidadAMover.SetEnabled(false);
+            btnAceptaMovimiento.SetEnabled(false);
+
+            MensajeConfirmacion.SetVisible(true);
+            btnMovimientoConfirmado.SetVisible(true);
+            btnMovimientoCancelado.SetVisible(true);
+        }
+    }
+
+    function MovimientoAceptado(s, e) {
+        btnMovimientoConfirmado.SetVisible(false);
+        btnMovimientoCancelado.SetVisible(false);
+        MensajeConfirmacion.SetVisible(false);
+        MensajeLoader.SetVisible(true);
+
+        $("#Loader").attr("style", "visibility: visible");
+
+        $.ajax({
+            type: "POST",
+            url: "/ReproPresFed/ReprogramaRecurso",
+            datatype: "Json",
+            data: {
+                IdCampaniaOrigen: IdCampaniaOri,
+                IdCampaniaDestino: IdCampaniaDes,
+                Monto: CantidadAMover.GetValue()
+            },
+            success: function (data) {
+                MensajeLoader.SetVisible(false);
+                $("#Loader").attr("style", "visibility: hidden");
+                btnRecargaPantalla.SetVisible(true);
+                btnAceptaMovimiento.SetVisible(false);
+                ReprogramacionCorrecta.Show();
+
+            }
+        });
+    }
+
+    function MovimientoCancelado(s, e) {
+
+        IdCampaniaOrigen.SelectIndex(-1);
+        IdCampaniaDestino.SelectIndex(-1);
+
+        IdCampaniaOri = -1;
+        IdCampaniaDes = -1;
+
+        RecFedOrigen.SetText("-");
+        RecSol_FedOrigen.SetText("-");
+        Rec_GastadoOrigen.SetText("-");
+        SaldoDisponibleOrigen.SetText("-");
+
+        RecFedDestino.SetText("-");
+        RecSol_FedDestino.SetText("-");
+        Rec_GastadoDestino.SetText("-");
+        SaldoDisponibleDestino.SetText("-");
+
+        IdCampaniaOrigen.SetEnabled(true);
+        IdCampaniaDestino.SetEnabled(true);
+
+        CantidadAMover.SetText("");
+        CantidadAMover.SetEnabled(true);
+        btnAceptaMovimiento.SetEnabled(true);
+
+        MensajeConfirmacion.SetVisible(false);
+        btnMovimientoConfirmado.SetVisible(false);
+        btnMovimientoCancelado.SetVisible(false);
+    }
+</script>
+
+<!--     ESTE APARTADO TENDRÁ LAS LLAMAS A LOS DISTINTOS MENSAJES DE ERRROR     -->
+@Html.Partial("_PopUpError", new ViewDataDictionary { { "Id", "_errorDistintasCampanias" }, { "Mensaje", "No se puede tener la misma campaña de origen y destino" } })
+@Html.Partial("_PopUpError", new ViewDataDictionary { { "Id", "_recursoNoDisponible" }, { "Mensaje", "No puedes mover más recurso del disponible en tu campaña de origen" } })
+@Html.Partial("_PopUpError", new ViewDataDictionary { { "Id", "_eligeCampaniaDestino" }, { "Mensaje", "Debes de elegir al menos la campaña de destino" } })
+@Html.Partial("_PopUpError", new ViewDataDictionary { { "Id", "_ingresaMonto" }, { "Mensaje", "Debes de ingresar un monto a mover" } })
+
+@{
+    Html.DevExpress().Label(edtSettings =>
+    {
+        edtSettings.ControlStyle.CssClass = "label";
+        edtSettings.Text = "Origen";
+        edtSettings.ControlStyle.Font.Size = 14;
+        edtSettings.ControlStyle.Font.Bold = true;
+    }).GetHtml();
+
+    ViewContext.Writer.Write("<br />");
+    ViewContext.Writer.Write("<br />");
+
+    ViewContext.Writer.Write("<table>");
+    ViewContext.Writer.Write("<tr>");
+    ViewContext.Writer.Write("<td>");
+    Html.DevExpress().Label(edtSettings =>
+    {
+        edtSettings.ControlStyle.CssClass = "label";
+        edtSettings.Text = "Selecciona una Campaña: ";
+        edtSettings.ControlStyle.Font.Size = 12;
+        edtSettings.Style["position"] = "relative";
+        edtSettings.Style["left"] = "20px";
+    }).GetHtml();
+
+    Html.DevExpress().ComboBox(settingsCombo =>
+    {
+        settingsCombo.Name = "IdCampaniaOrigen";
+        settingsCombo.Style["position"] = "relative";
+        settingsCombo.Style["left"] = "20px";
+        settingsCombo.Properties.TextFormatString = "{1} - {2}";
+        settingsCombo.Properties.NullText = "Campo Requerido";
+        settingsCombo.Properties.ValueField = "Pk_IdCampania";
+        settingsCombo.Properties.ValueType = typeof(int);
+        settingsCombo.ToolTip = "Seleccione una Campaña";
+        settingsCombo.Width = Unit.Pixel(600);
+        settingsCombo.ShowModelErrors = true;
+        settingsCombo.Properties.EnableSynchronization = DefaultBoolean.True;
+        settingsCombo.Properties.IncrementalFilteringMode = IncrementalFilteringMode.Contains;
+        settingsCombo.Properties.ClientSideEvents.ValueChanged = "SeleccionaCampaniaOrigen";
+
+        settingsCombo.Properties.Columns.Add("UnidadResponsable", "Unidad Responsable").Width = Unit.Pixel(280);
+        settingsCombo.Properties.Columns.Add("UnidadEjecutora", "Instancia Ejecutora").Width = Unit.Pixel(300);
+        settingsCombo.Properties.Columns.Add("Proyecto", "Campaña").Width = Unit.Pixel(350);
+
+        settingsCombo.Properties.Columns.Add("RecFed", "Autorizado").Width = Unit.Pixel(100);
+        settingsCombo.Properties.Columns.Add("RecSol_Fed", "Programado").Width = Unit.Pixel(100);
+        settingsCombo.Properties.Columns.Add("Rec_Gastado", "Gastado").Width = Unit.Pixel(100);
+        settingsCombo.Properties.Columns.Add("SaldoDisponible", "Disponible").Width = Unit.Pixel(100);
+
+        settingsCombo.Properties.EnableClientSideAPI = true;
+    }).BindList(Senasica.GetPresupuestoCampanias(Convert.ToInt32(ViewData["IdEstado"]))).GetHtml();
+    ViewContext.Writer.Write("</td>");
+
+    ViewContext.Writer.Write("<td>");
+    Html.DevExpress().Label(edtSettings =>
+    {
+        edtSettings.ControlStyle.CssClass = "label";
+        edtSettings.Text = "Autorizado: ";
+        edtSettings.ControlStyle.Font.Size = 12;
+        edtSettings.Style["position"] = "relative";
+        edtSettings.Style["left"] = "20px";
+    }).GetHtml();
+
+    Html.DevExpress().TextBox(settingsTextBox =>
+    {
+        settingsTextBox.Name = "RecFedOrigen";
+        settingsTextBox.Text = "-";
+        settingsTextBox.Width = Unit.Pixel(150);
+        settingsTextBox.ReadOnly = true;
+        settingsTextBox.Properties.EnableClientSideAPI = true;
+        settingsTextBox.Style["position"] = "relative";
+        settingsTextBox.Style["left"] = "20px";
+    }).GetHtml();
+    ViewContext.Writer.Write("</td>");
+
+    ViewContext.Writer.Write("<td>");
+    Html.DevExpress().Label(edtSettings =>
+    {
+        edtSettings.ControlStyle.CssClass = "label";
+        edtSettings.Text = "Solicitado: ";
+        edtSettings.ControlStyle.Font.Size = 12;
+        edtSettings.Style["position"] = "relative";
+        edtSettings.Style["left"] = "40px";
+    }).GetHtml();
+
+    Html.DevExpress().TextBox(settingsTextBox =>
+    {
+        settingsTextBox.Name = "RecSol_FedOrigen";
+        settingsTextBox.Text = "-";
+        settingsTextBox.Width = Unit.Pixel(150);
+        settingsTextBox.ReadOnly = true;
+        settingsTextBox.Properties.EnableClientSideAPI = true;
+        settingsTextBox.Style["position"] = "relative";
+        settingsTextBox.Style["left"] = "40px";
+    }).GetHtml();
+    ViewContext.Writer.Write("</td>");
+
+    ViewContext.Writer.Write("<td>");
+    Html.DevExpress().Label(edtSettings =>
+    {
+        edtSettings.ControlStyle.CssClass = "label";
+        edtSettings.Text = "Gastado: ";
+        edtSettings.ControlStyle.Font.Size = 12;
+        edtSettings.Style["position"] = "relative";
+        edtSettings.Style["left"] = "60px";
+    }).GetHtml();
+
+    Html.DevExpress().TextBox(settingsTextBox =>
+    {
+        settingsTextBox.Name = "Rec_GastadoOrigen";
+        settingsTextBox.Text = "-";
+        settingsTextBox.ReadOnly = true;
+        settingsTextBox.Width = Unit.Pixel(150);
+        settingsTextBox.Properties.EnableClientSideAPI = true;
+        settingsTextBox.Style["position"] = "relative";
+        settingsTextBox.Style["left"] = "60px";
+    }).GetHtml();
+    ViewContext.Writer.Write("</td>");
+
+    ViewContext.Writer.Write("<td>");
+    Html.DevExpress().Label(edtSettings =>
+    {
+        edtSettings.ControlStyle.CssClass = "label";
+        edtSettings.Text = "Saldo Disponible: ";
+        edtSettings.ControlStyle.Font.Size = 12;
+        edtSettings.Style["position"] = "relative";
+        edtSettings.Style["left"] = "80px";
+    }).GetHtml();
+
+    Html.DevExpress().TextBox(settingsTextBox =>
+    {
+        settingsTextBox.Name = "SaldoDisponibleOrigen";
+        settingsTextBox.Text = "-";
+        settingsTextBox.Width = Unit.Pixel(150);
+        settingsTextBox.ReadOnly = true;
+        settingsTextBox.Properties.EnableClientSideAPI = true;
+        settingsTextBox.Style["position"] = "relative";
+        settingsTextBox.Style["left"] = "80px";
+    }).GetHtml();
+    ViewContext.Writer.Write("</td>");
+    ViewContext.Writer.Write("</tr>");
+    ViewContext.Writer.Write("</table>");
+}
+
+<hr />
+
+@{
+    Html.DevExpress().Label(edtSettings =>
+    {
+        edtSettings.ControlStyle.CssClass = "label";
+        edtSettings.Text = "Destino";
+        edtSettings.ControlStyle.Font.Size = 14;
+        edtSettings.ControlStyle.Font.Bold = true;
+    }).GetHtml();
+
+    ViewContext.Writer.Write("<br />");
+    ViewContext.Writer.Write("<br />");
+
+    ViewContext.Writer.Write("<table>");
+    ViewContext.Writer.Write("<tr>");
+    ViewContext.Writer.Write("<td>");
+    Html.DevExpress().Label(edtSettings =>
+    {
+        edtSettings.ControlStyle.CssClass = "label";
+        edtSettings.Text = "Selecciona una Campaña: ";
+        edtSettings.ControlStyle.Font.Size = 12;
+        edtSettings.Style["position"] = "relative";
+        edtSettings.Style["left"] = "20px";
+    }).GetHtml();
+
+    Html.DevExpress().ComboBox(settingsCombo =>
+    {
+        settingsCombo.Name = "IdCampaniaDestino";
+        settingsCombo.Style["position"] = "relative";
+        settingsCombo.Style["left"] = "20px";
+        settingsCombo.Properties.TextFormatString = "{1} - {2}";
+        settingsCombo.Properties.NullText = "Campo Requerido";
+        settingsCombo.Properties.ValueField = "Pk_IdCampania";
+        settingsCombo.Properties.ValueType = typeof(int);
+        settingsCombo.ToolTip = "Seleccione una Campaña";
+        settingsCombo.Width = Unit.Pixel(600);
+        settingsCombo.ShowModelErrors = true;
+        settingsCombo.Properties.EnableSynchronization = DefaultBoolean.True;
+        settingsCombo.Properties.IncrementalFilteringMode = IncrementalFilteringMode.Contains;
+        settingsCombo.Properties.ClientSideEvents.ValueChanged = "SeleccionaCampaniaDestino";
+
+        settingsCombo.Properties.Columns.Add("UnidadResponsable", "Unidad Responsable").Width = Unit.Pixel(280);
+        settingsCombo.Properties.Columns.Add("UnidadEjecutora", "Instancia Ejecutora").Width = Unit.Pixel(300);
+        settingsCombo.Properties.Columns.Add("Proyecto", "Campaña").Width = Unit.Pixel(350);
+
+        settingsCombo.Properties.Columns.Add("RecFed", "Autorizado").Width = Unit.Pixel(100);
+        settingsCombo.Properties.Columns.Add("RecSol_Fed", "Programado").Width = Unit.Pixel(100);
+        settingsCombo.Properties.Columns.Add("Rec_Gastado", "Gastado").Width = Unit.Pixel(100);
+        settingsCombo.Properties.Columns.Add("SaldoDisponible", "Disponible").Width = Unit.Pixel(100);
+
+        settingsCombo.Properties.EnableClientSideAPI = true;
+    }).BindList(Senasica.GetPresupuestoCampanias(Convert.ToInt32(ViewData["IdEstado"]))).GetHtml();
+    ViewContext.Writer.Write("</td>");
+
+    ViewContext.Writer.Write("<td>");
+    Html.DevExpress().Label(edtSettings =>
+    {
+        edtSettings.ControlStyle.CssClass = "label";
+        edtSettings.Text = "Autorizado: ";
+        edtSettings.ControlStyle.Font.Size = 12;
+        edtSettings.Style["position"] = "relative";
+        edtSettings.Style["left"] = "20px";
+    }).GetHtml();
+
+    Html.DevExpress().TextBox(settingsTextBox =>
+    {
+        settingsTextBox.Name = "RecFedDestino";
+        settingsTextBox.Text = "-";
+        settingsTextBox.Width = Unit.Pixel(150);
+        settingsTextBox.ReadOnly = true;
+        settingsTextBox.Properties.EnableClientSideAPI = true;
+        settingsTextBox.Style["position"] = "relative";
+        settingsTextBox.Style["left"] = "20px";
+    }).GetHtml();
+    ViewContext.Writer.Write("</td>");
+
+    ViewContext.Writer.Write("<td>");
+    Html.DevExpress().Label(edtSettings =>
+    {
+        edtSettings.ControlStyle.CssClass = "label";
+        edtSettings.Text = "Solicitado: ";
+        edtSettings.ControlStyle.Font.Size = 12;
+        edtSettings.Style["position"] = "relative";
+        edtSettings.Style["left"] = "40px";
+    }).GetHtml();
+
+    Html.DevExpress().TextBox(settingsTextBox =>
+    {
+        settingsTextBox.Name = "RecSol_FedDestino";
+        settingsTextBox.Text = "-";
+        settingsTextBox.Width = Unit.Pixel(150);
+        settingsTextBox.ReadOnly = true;
+        settingsTextBox.Properties.EnableClientSideAPI = true;
+        settingsTextBox.Style["position"] = "relative";
+        settingsTextBox.Style["left"] = "40px";
+    }).GetHtml();
+    ViewContext.Writer.Write("</td>");
+
+    ViewContext.Writer.Write("<td>");
+    Html.DevExpress().Label(edtSettings =>
+    {
+        edtSettings.ControlStyle.CssClass = "label";
+        edtSettings.Text = "Gastado: ";
+        edtSettings.ControlStyle.Font.Size = 12;
+        edtSettings.Style["position"] = "relative";
+        edtSettings.Style["left"] = "60px";
+    }).GetHtml();
+
+    Html.DevExpress().TextBox(settingsTextBox =>
+    {
+        settingsTextBox.Name = "Rec_GastadoDestino";
+        settingsTextBox.Text = "-";
+        settingsTextBox.ReadOnly = true;
+        settingsTextBox.Width = Unit.Pixel(150);
+        settingsTextBox.Properties.EnableClientSideAPI = true;
+        settingsTextBox.Style["position"] = "relative";
+        settingsTextBox.Style["left"] = "60px";
+    }).GetHtml();
+    ViewContext.Writer.Write("</td>");
+
+    ViewContext.Writer.Write("<td>");
+    Html.DevExpress().Label(edtSettings =>
+    {
+        edtSettings.ControlStyle.CssClass = "label";
+        edtSettings.Text = "Saldo Disponible: ";
+        edtSettings.ControlStyle.Font.Size = 12;
+        edtSettings.Style["position"] = "relative";
+        edtSettings.Style["left"] = "80px";
+    }).GetHtml();
+
+    Html.DevExpress().TextBox(settingsTextBox =>
+    {
+        settingsTextBox.Name = "SaldoDisponibleDestino";
+        settingsTextBox.Text = "-";
+        settingsTextBox.Width = Unit.Pixel(150);
+        settingsTextBox.ReadOnly = true;
+        settingsTextBox.Properties.EnableClientSideAPI = true;
+        settingsTextBox.Style["position"] = "relative";
+        settingsTextBox.Style["left"] = "80px";
+    }).GetHtml();
+    ViewContext.Writer.Write("</td>");
+    ViewContext.Writer.Write("</tr>");
+    ViewContext.Writer.Write("</table>");
+}
+
+<hr />
+
+@{
+    Html.DevExpress().Label(edtSettings =>
+    {
+        edtSettings.ControlStyle.CssClass = "label";
+        edtSettings.Text = "Recurso a Mover";
+        edtSettings.ControlStyle.Font.Size = 14;
+        edtSettings.ControlStyle.Font.Bold = true;
+    }).GetHtml();
+
+    ViewContext.Writer.Write("<br />");
+    ViewContext.Writer.Write("<br />");
+
+    ViewContext.Writer.Write("<table>");
+    ViewContext.Writer.Write("<tr>");
+    ViewContext.Writer.Write("<td>");
+    Html.DevExpress().Label(edtSettings =>
+    {
+        edtSettings.ControlStyle.CssClass = "label";
+        edtSettings.Text = "Ingrese la Cantidad a Mover: ";
+        edtSettings.ControlStyle.Font.Size = 12;
+        edtSettings.Style["position"] = "relative";
+        edtSettings.Style["left"] = "20px";
+    }).GetHtml();
+    ViewContext.Writer.Write("</td>");
+
+    ViewContext.Writer.Write("<td>");
+    Html.DevExpress().SpinEdit(edtSettings =>
+    {
+        edtSettings.Name = "CantidadAMover";
+        edtSettings.Style["position"] = "relative";
+        edtSettings.Style["left"] = "20px";
+        edtSettings.Properties.MinValue = 0;
+        edtSettings.Properties.MaxValue = 999999999;
+        edtSettings.Properties.DecimalPlaces = 2;
+        edtSettings.Properties.NumberType = SpinEditNumberType.Float;
+        edtSettings.Properties.Increment = 100;
+        edtSettings.Properties.LargeIncrement = 1000;
+        edtSettings.Properties.SpinButtons.ShowLargeIncrementButtons = true;
+        edtSettings.Width = Unit.Pixel(250);
+        edtSettings.ControlStyle.CssClass = "editor";
+        edtSettings.ShowModelErrors = true;
+        edtSettings.Properties.DisplayFormatString = "c";
+        edtSettings.Properties.EnableClientSideAPI = true;
+    }).GetHtml();
+    ViewContext.Writer.Write("</td>");
+
+    ViewContext.Writer.Write("<td>");
+    Html.DevExpress().Button(btnSettings =>
+    {
+        btnSettings.Name = "btnAceptaMovimiento";
+        btnSettings.Text = "Realiza Movimiento";
+        btnSettings.EnableClientSideAPI = true;
+        btnSettings.ControlStyle.CssClass = "button";
+        btnSettings.Images.Image.Url = "/Content/Images/aceptar.png";
+        btnSettings.ImagePosition = ImagePosition.Right;
+        btnSettings.Style["position"] = "relative";
+        btnSettings.Style["left"] = "10px";
+        btnSettings.ClientSideEvents.Click = "ValidaMovimiento";
+    }).GetHtml();
+    ViewContext.Writer.Write("</td>");
+    ViewContext.Writer.Write("<td>");
+    using (Html.BeginForm("Index", "ReproPresFed", FormMethod.Post))
+    {
+        Html.DevExpress().Button(btnSettings =>
+        {
+            btnSettings.Name = "btnRecargaPantalla";
+            btnSettings.ClientVisible = false;
+            btnSettings.EnableClientSideAPI = true;
+            btnSettings.Text = "NECESITAS RECARGAR PANTALLA";
+            btnSettings.ControlStyle.CssClass = "button";
+            btnSettings.Images.Image.Url = "/Content/Images/aceptar.png";
+            btnSettings.ImagePosition = ImagePosition.Right;
+            btnSettings.Style["position"] = "relative";
+            btnSettings.Style["left"] = "20px";
+            btnSettings.UseSubmitBehavior = true;
+        }).GetHtml();
+    }
+    ViewContext.Writer.Write("</td>");
+
+    ViewContext.Writer.Write("<td>");
+    Html.DevExpress().Label(edtSettings =>
+    {
+        edtSettings.Name = "MensajeLoader";
+        edtSettings.ClientVisible = false;
+        edtSettings.Properties.EnableClientSideAPI = true;
+        edtSettings.ControlStyle.CssClass = "label";
+        edtSettings.Text = "Reprogramación en Curso";
+        edtSettings.Width = Unit.Pixel(300);
+        edtSettings.ControlStyle.Font.Size = 12;
+        edtSettings.ControlStyle.Font.Bold = true;
+        edtSettings.ControlStyle.ForeColor = System.Drawing.Color.Green;
+        edtSettings.Style["position"] = "relative";
+        edtSettings.Style["left"] = "60px";
+    }).GetHtml();
+    ViewContext.Writer.Write("</td>");
+
+    ViewContext.Writer.Write("<td>");
+    ViewContext.Writer.Write("<img id='Loader' style='visibility: hidden; position:relative; left:120px' width='35px' height='35px' src='/Content/Images/loader.gif'>");
+    ViewContext.Writer.Write("</td>");
+    ViewContext.Writer.Write("</tr>");
+    ViewContext.Writer.Write("</table>");
+
+    ViewContext.Writer.Write("<br>");
+
+    ViewContext.Writer.Write("<table>");
+    ViewContext.Writer.Write("<tr>");
+    ViewContext.Writer.Write("<td>");
+    Html.DevExpress().Label(edtSettings =>
+    {
+        edtSettings.Name = "MensajeConfirmacion";
+        edtSettings.ClientVisible = false;
+        edtSettings.Properties.EnableClientSideAPI = true;
+        edtSettings.ControlStyle.CssClass = "label";
+        edtSettings.Text = "LA CANTIDAD ESPECIFICADA SE MOVERÁ DE LA CAMPAÑA DE ORIGEN A LA CAMPAÑA DESTINO. SI NO EXISTE UNA CAMPAÑA DE ORIGEN, SÓLO HABRÁ UN ABONO A LA CAMPAÑA DE DESTINO";
+        edtSettings.ControlStyle.Font.Size = 12;
+        edtSettings.ControlStyle.Font.Bold = true;
+        edtSettings.ControlStyle.ForeColor = System.Drawing.Color.Green;
+        edtSettings.Style["position"] = "relative";
+        edtSettings.Style["left"] = "20px";
+    }).GetHtml();
+    ViewContext.Writer.Write("</td>");
+    ViewContext.Writer.Write("<td>");
+    Html.DevExpress().Button(btnSettings =>
+    {
+        btnSettings.Name = "btnMovimientoConfirmado";
+        btnSettings.ClientVisible = false;
+        btnSettings.EnableClientSideAPI = true;
+        btnSettings.Text = "¡CONFIRMAR!";
+        btnSettings.ControlStyle.CssClass = "button";
+        btnSettings.Images.Image.Url = "/Content/Images/aceptar.png";
+        btnSettings.ImagePosition = ImagePosition.Right;
+        btnSettings.Style["position"] = "relative";
+        btnSettings.Style["left"] = "80px";
+        btnSettings.ClientSideEvents.Click = "MovimientoAceptado";
+    }).GetHtml();
+    ViewContext.Writer.Write("</td>");
+
+    ViewContext.Writer.Write("<td>");
+    Html.DevExpress().Button(btnSettings =>
+    {
+        btnSettings.Name = "btnMovimientoCancelado";
+        btnSettings.ClientVisible = false;
+        btnSettings.EnableClientSideAPI = true;
+        btnSettings.Text = "CANCELAR MOVIMIENTO";
+        btnSettings.ControlStyle.CssClass = "button";
+        btnSettings.Images.Image.Url = "/Content/Images/cancelar.png";
+        btnSettings.ImagePosition = ImagePosition.Right;
+        btnSettings.Style["position"] = "relative";
+        btnSettings.Style["left"] = "100px";
+        btnSettings.ClientSideEvents.Click = "MovimientoCancelado";
+    }).GetHtml();
+    ViewContext.Writer.Write("</td>");
+    ViewContext.Writer.Write("</tr>");
+    ViewContext.Writer.Write("</table>");
+}
+
+<hr />
+
+@Html.DevExpress().Label(edtSettings =>
+{
+    edtSettings.ControlStyle.CssClass = "label";
+    edtSettings.Text = "Detalles de la Distribución del Presupuesto Federal en el Estado de " + ViewData["NombreEstado"].ToString();
+    edtSettings.ControlStyle.Font.Size = 14;
+    edtSettings.ControlStyle.Font.Bold = true;
+}).GetHtml()
+
+<br />
+
+@Html.Partial("~/Views/ExportExcelPDF/_ExportExcelPDF.cshtml", new ViewDataDictionary { { "Clave", DXMVCWebApplication1.Common.ListaPantallas.UE_REPRO_PRES_FED_ESTADO }, { "IdEstado", ViewData["IdEstado"] } })
+
+
+@Html.Action("ReproPresEstadoViewPartial", new { IdEstado = ViewData["IdEstado"] })
+
+@*    Mensaje de confirmación de reprogramación    *@
+@Html.DevExpress().PopupControl(settings =>
+{
+    settings.Name = "ReprogramacionCorrecta";
+    settings.AllowDragging = false;
+    settings.ShowCloseButton = false;
+    settings.CloseAction = CloseAction.CloseButton;
+    settings.PopupAnimationType = AnimationType.None;
+    settings.HeaderText = "¡Correcto!";
+    settings.Modal = true;
+    settings.PopupHorizontalAlign = PopupHorizontalAlign.WindowCenter;
+    settings.PopupVerticalAlign = PopupVerticalAlign.WindowCenter;
+
+    settings.SetContent(() =>
+    {
+        using (Html.BeginForm("Index", "ReproPresFed", FormMethod.Post))
+        {
+            ViewContext.Writer.Write("<br />");
+
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Las campañas implicadas entraron a reprogramación, para que el comité haga las adecuaciones necesarias.";
+                edtSettings.ControlStyle.Font.Size = 11;
+                edtSettings.ControlStyle.Font.Bold = true;
+            }).Render();
+
+            ViewContext.Writer.Write("<br />");
+            ViewContext.Writer.Write("<br />");
+
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "A los respectivos Comités les llegará un correo electrónico notificando los cambios.";
+                edtSettings.ControlStyle.Font.Size = 11;
+                edtSettings.ControlStyle.Font.Bold = true;
+            }).Render();
+
+            ViewContext.Writer.Write("<br />");
+            ViewContext.Writer.Write("<br />");
+
+            ViewContext.Writer.Write("<div style='float:right'>");
+            Html.DevExpress().Button(btnSettings =>
+            {
+                btnSettings.Name = "btnCorrecto";
+                btnSettings.Text = "Aceptar";
+                btnSettings.ControlStyle.CssClass = "button";
+                btnSettings.Images.Image.Url = "/Content/Images/aceptar.png";
+                btnSettings.ImagePosition = ImagePosition.Right;
+                btnSettings.Style["position"] = "relative";
+                btnSettings.Style["left"] = "5px";
+                btnSettings.UseSubmitBehavior = true;
+            }).Render();
+            ViewContext.Writer.Write("</div>");
+        }
+    });
+}).GetHtml()

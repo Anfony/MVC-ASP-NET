@@ -1,0 +1,86 @@
+﻿@{
+    ViewBag.Title = "Reporte de Actividades";
+}
+
+<div style="float: right; margin-right: 20px"><a href="https://docs.google.com/document/d/1ZJURCxDAT76zN4TpKa2cBHEdF3RZFUNkAv3o9iyWxG4/edit#heading=h.279ka65" target="_blank"><u>Ayuda</u></a>  |  <a href="http://soporte.simosica.com/support/solutions/articles/22000184563-preguntas-frecuentes" target="_blank"> <u>Preguntas Frecuentes</u></a></div>
+ 
+<h3 style="font-size:17px; font:bold; text-align:center">Reporte de Actividades Realizadas</h3>
+<h4 style="font-size: 13px; text-align: center; position: relative; top: -10px">Registre aquí los avences realizados para cada una de las Actividades que tiene Asignadas</h4>
+<br>
+<br>
+
+@Html.Partial("~/Views/ExportExcelPDF/_ExportExcelPDF.cshtml", new ViewDataDictionary { { "Clave", DXMVCWebApplication1.Common.ListaPantallas.UE_INFORME_AVANCES },
+                                                                                        { "Estado", ViewData["Estado"] == null ? "-" : ViewData["Estado"].ToString()}
+                                                                                        })
+
+<br>
+@if (User.IsInRole(RolesUsuarios.SUP_AUDITOR)
+    || User.IsInRole( RolesUsuarios.SUPERUSUARIO))
+{
+    using (Html.BeginForm("FiltrabyEstado", "ReporteActividadAsignada", FormMethod.Post))
+    {
+        ViewContext.Writer.Write("<table><tr><td>");
+        Html.DevExpress().ComboBox(edtSettings =>
+        {
+            edtSettings.Name = "Estado";
+            edtSettings.ControlStyle.CssClass = "editor";
+            edtSettings.ToolTip = "Seleccione un Estado";
+            edtSettings.ShowModelErrors = true;
+            edtSettings.Width = Unit.Pixel(260);
+            edtSettings.Properties.IncrementalFilteringMode = IncrementalFilteringMode.Contains;
+            edtSettings.Properties.IncrementalFilteringDelay = 5;
+            edtSettings.Properties.ValueField = "Pk_IdEstado";
+            edtSettings.Properties.ValueType = typeof(int);
+            edtSettings.Properties.TextField = "Nombre";
+            edtSettings.Properties.NullText = "Seleccione un Estado";
+            edtSettings.Style["position"] = "relative";
+            edtSettings.Style["left"] = "10px";
+            edtSettings.Properties.ClientSideEvents.SelectedIndexChanged = "function(s, e){ btnFiltrar.SetEnabled(true); }";
+        }).BindList(DXMVCWebApplication1.Models.Senasica.GetEstados()).GetHtml();
+        ViewContext.Writer.Write("</td>");
+
+        ViewContext.Writer.Write("<td>");
+        Html.DevExpress().Button(btnSettings =>
+        {
+            btnSettings.Name = "btnFiltrar";
+            btnSettings.Text = "Filtrar por Estado";
+            btnSettings.ControlStyle.CssClass = "button";
+            btnSettings.Images.Image.Url = "/Content/Images/lupa.png";
+            btnSettings.ImagePosition = ImagePosition.Right;
+            btnSettings.Style["position"] = "relative";
+            btnSettings.Style["left"] = "5px";
+            btnSettings.UseSubmitBehavior = true;
+            btnSettings.ClientEnabled = false;
+        }).GetHtml();
+
+        ViewContext.Writer.Write("</td>");
+        ViewContext.Writer.Write("<td>");
+
+        Html.DevExpress().Label(edtSettings =>
+        {
+            edtSettings.Name = "lblEstado";
+            edtSettings.ControlStyle.CssClass = "label";
+            edtSettings.Style["position"] = "relative";
+            edtSettings.Style["left"] = "10px";
+            edtSettings.Text = "Estado: ";
+        }).GetHtml();
+        ViewContext.Writer.Write("</td>");
+
+        ViewContext.Writer.Write("<td>");
+        Html.DevExpress().TextBox(edtSettings =>
+        {
+            edtSettings.Name = "txtEstado";
+            edtSettings.ReadOnly = true;
+            edtSettings.Text = ViewData["Estado"] == null ? "-" : ViewData["Estado"].ToString();
+            edtSettings.ControlStyle.CssClass = "editor";
+            edtSettings.Style["position"] = "relative";
+            edtSettings.Style["left"] = "20px";
+            edtSettings.ControlStyle.Border.BorderWidth = 0;
+        }).GetHtml();
+        ViewContext.Writer.Write("</td>");
+        ViewContext.Writer.Write("</tr></table>");
+    }
+}
+<br>
+
+@Html.Action("ActividadesAsignadasGridViewPartial", new { Estado = ViewData["Estado"] })

@@ -1,0 +1,600 @@
+@{
+    var grid = Html.DevExpress().GridView(settings =>
+    {
+        settings.Name = "ActividadAsignadaGridView";
+        settings.CallbackRouteValues = new { Controller = "ActividadXAccion", Action = "ActividadAsignadaGridViewPartial", IdActividadXAccion = ViewData["IdActividadXAccion"] };
+
+        settings.SettingsEditing.AddNewRowRouteValues = new { Controller = "ActividadXAccion", Action = "ActividadAsignadaGridViewPartialAddNew", IdActividadXAccion = ViewData["IdActividadXAccion"] };
+        settings.SettingsEditing.UpdateRowRouteValues = new { Controller = "ActividadXAccion", Action = "ActividadAsignadaGridViewPartialUpdate", IdActividadXAccion = ViewData["IdActividadXAccion"] };
+        settings.SettingsEditing.DeleteRowRouteValues = new { Controller = "ActividadXAccion", Action = "ActividadAsignadaGridViewPartialDelete", IdActividadXAccion = ViewData["IdActividadXAccion"] };
+        settings.SettingsEditing.Mode = GridViewEditingMode.PopupEditForm;
+        settings.SettingsBehavior.ConfirmDelete = true;
+
+        settings.SettingsPopup.EditForm.Height = 400;
+        settings.SettingsPopup.EditForm.Width = 625;
+        settings.SettingsPopup.EditForm.HorizontalAlign = DevExpress.Web.ASPxClasses.PopupHorizontalAlign.WindowCenter + 50;
+        settings.SettingsPopup.EditForm.VerticalAlign = DevExpress.Web.ASPxClasses.PopupVerticalAlign.WindowCenter + 50;
+        settings.SettingsPopup.EditForm.Modal = true;
+
+        settings.SettingsBehavior.ConfirmDelete = true;
+
+        settings.CommandColumn.Visible = true;
+        settings.SettingsCommandButton.NewButton.Text = "Nueva Asignación";
+        settings.CommandColumn.ShowNewButtonInHeader = Convert.ToBoolean(ViewData["Escritura"]) && Convert.ToBoolean(ViewData["Status_Escritura"]);
+        settings.CommandColumn.ShowDeleteButton = Convert.ToBoolean(ViewData["Escritura"]) && Convert.ToBoolean(ViewData["Status_Escritura"]);
+        settings.CommandColumn.ShowEditButton = Convert.ToBoolean(ViewData["Escritura"]) || Convert.ToBoolean(ViewData["Lectura"]);
+        settings.CommandColumn.ShowClearFilterButton = true;
+
+        settings.KeyFieldName = "Pk_IdActividad";
+
+        settings.SettingsPager.Visible = true;
+        settings.SettingsPager.Position = PagerPosition.Bottom;
+        settings.SettingsPager.FirstPageButton.Visible = true;
+        settings.SettingsPager.LastPageButton.Visible = true;
+        settings.SettingsPager.PageSizeItemSettings.Visible = true;
+        settings.SettingsPager.PageSize = 5;
+        settings.SettingsPager.PageSizeItemSettings.Items = new string[] { "5", "10", "15" };
+
+        settings.Columns.Add("TipoActividad", "Tipo de Actividad");
+        settings.Columns.Add("UnidadDeMedida", "Unidad de Medidad");
+        settings.Columns.Add("Descripcion", "Descripción");
+        settings.Columns.Add("Asignado_Anual", "Meta Anual Asignada").PropertiesEdit.DisplayFormatString = "n";
+        settings.Columns.Add("Fecha_Inicio", "Fecha Inicio").PropertiesEdit.DisplayFormatString = "d";
+        settings.Columns.Add("FechaFin", "Fecha Fin").PropertiesEdit.DisplayFormatString = "d";
+        settings.Columns.Add("Persona", "Personal Asignado");
+        settings.Columns.Add("StatusActividad", "Status");
+
+        settings.TotalSummary.Add(DevExpress.Data.SummaryItemType.Sum, "Asignado_Anual").DisplayFormat = "n";
+        settings.Settings.ShowFooter = true;
+        //COMIENZA FORMA CUSTOM
+
+        //nuevo
+        settings.SetEditFormTemplateContent(c =>
+        {
+            int IdUnidadEjecutora = Convert.ToInt32(ViewData["IdUnidadEjecutora"]);
+
+            var ActividadAsignada = ViewData["dataItem"] ?? c.DataItem;
+
+            ViewContext.Writer.Write("<p>Asignación de Actividad </p>");
+            ViewContext.Writer.Write("<table>");
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "enRepro";
+                edtSettings.Name = "enRepro_";
+                edtSettings.Text = "No podrá asignar actividades, por una de las siguientes razones:"
+                                     + "\n1) Campaña en 'Proceso de Modificación'"
+                                     + "\n2) Campaña en estatus 'Terminado'";
+                edtSettings.ControlStyle.ForeColor = System.Drawing.Color.Red;
+                edtSettings.ClientVisible = !Convert.ToBoolean(ViewData["Status_Escritura"]);
+            }).Render();
+            ViewContext.Writer.Write("</table>");
+            ViewContext.Writer.Write("<br />");
+                
+            ViewContext.Writer.Write("<table>" + "<tr>" + "<td>");
+
+            Html.DevExpress().Label(
+                 edtSettings =>
+                 {
+                     edtSettings.ControlStyle.CssClass = "label";
+                     edtSettings.Text = "Responsable de la Actividad";
+                     edtSettings.AssociatedControlName = "FK_IdPersona";
+                 }).Render();
+
+            Html.DevExpress().ComboBox(
+                edtSettings =>
+                {
+                    edtSettings.Name = "Fk_IdPersona__SIS";
+                    edtSettings.ControlStyle.CssClass = "editor";
+                    edtSettings.Properties.TextField = "NombreCompleto";
+                    edtSettings.Properties.NullText = "Campo Requerido";
+                    edtSettings.Properties.ValueField = "Pk_IdPersona";
+                    edtSettings.Properties.ValueType = typeof(int);
+                    edtSettings.ShowModelErrors = true;
+                    edtSettings.Width = Unit.Pixel(250);
+                    edtSettings.Properties.IncrementalFilteringMode = IncrementalFilteringMode.Contains;
+                    edtSettings.Properties.IncrementalFilteringDelay = 5;
+                }).BindList(DXMVCWebApplication1.Models.Senasica.GetPersonasByUnidadEjecutora(IdUnidadEjecutora)).Bind(DataBinder.Eval(ActividadAsignada, "Fk_IdPersona__SIS")).Render();
+
+            ViewContext.Writer.Write("</td>");
+
+            ViewContext.Writer.Write("<td>");
+
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Estado de la Actividad";
+                edtSettings.AssociatedControlName = "Fk_IdStatusActividad__SIS";
+            }).Render();
+
+            Html.DevExpress().ComboBox(edtSettings =>
+            {
+                edtSettings.Name = "Fk_IdStatusActividad__SIS";
+                edtSettings.ControlStyle.CssClass = "editor";
+                edtSettings.Properties.TextField = "Nombre";
+                edtSettings.Properties.NullText = "Campo Requerido";
+                edtSettings.Properties.ValueField = "PK_IdStatusActividad";
+                edtSettings.Properties.ValueType = typeof(int);
+                edtSettings.ShowModelErrors = true;
+                edtSettings.Width = Unit.Pixel(250);
+                edtSettings.Properties.IncrementalFilteringMode = IncrementalFilteringMode.Contains;
+                edtSettings.Properties.IncrementalFilteringDelay = 5;
+            }).BindList(DXMVCWebApplication1.Models.Senasica.GetStatusActividad()).Bind(DataBinder.Eval(ActividadAsignada, "Fk_IdStatusActividad__SIS")).Render();
+
+            ViewContext.Writer.Write("</td>");
+
+            ViewContext.Writer.Write("<td>");
+            Html.DevExpress().Label(
+               edtSettings =>
+               {
+                   edtSettings.ControlStyle.CssClass = "label";
+                   edtSettings.Text = "Inicio de la Actividad";
+                   edtSettings.AssociatedControlName = "Fecha_Inicio";
+               }
+           )
+           .Render();
+            Html.DevExpress().DateEdit(
+                edtSettings =>
+                {
+                    edtSettings.Name = "Fecha_Inicio";
+                    edtSettings.Properties.NullText = "Campo Requerido";
+                    edtSettings.ControlStyle.CssClass = "editor";
+                    edtSettings.ShowModelErrors = true;
+                    edtSettings.Width = Unit.Pixel(120);
+
+                }
+            )
+            .Bind(DataBinder.Eval(ActividadAsignada, "Fecha_Inicio"))
+            .Render();
+
+            ViewContext.Writer.Write("</td>");
+
+            ViewContext.Writer.Write("<td>");
+            Html.DevExpress().Label(
+             edtSettings =>
+             {
+                 edtSettings.ControlStyle.CssClass = "label";
+                 edtSettings.Text = "Fin de la Actividad";
+                 edtSettings.AssociatedControlName = "FechaInicio";
+             }
+         )
+         .Render();
+            Html.DevExpress().DateEdit(
+                edtSettings =>
+                {
+                    edtSettings.Name = "FechaFin";
+                    edtSettings.Properties.NullText = "Campo Requerido";
+                    edtSettings.ControlStyle.CssClass = "editor";
+                    edtSettings.ShowModelErrors = true;
+                    edtSettings.Width = Unit.Pixel(120);
+                }
+            )
+            .Bind(DataBinder.Eval(ActividadAsignada, "FechaFin"))
+            .Render();
+
+            ViewContext.Writer.Write("</td>");
+
+            ViewContext.Writer.Write("<tr><td colspan=4><h3>Metas Mensuales:</h3></td></tr>");
+            ViewContext.Writer.Write("<td>");
+            Html.DevExpress().Label(
+                       edtSettings =>
+                       {
+                           edtSettings.ControlStyle.CssClass = "label";
+                           edtSettings.Text = "Meta Enero :";
+                           edtSettings.AssociatedControlName = "Asignado_Ene";
+                       }).Render();
+
+            Html.DevExpress().SpinEdit(
+                edtSettings =>
+                {
+                    edtSettings.Name = "Asignado_Ene";
+                    edtSettings.Properties.MinValue = 0;
+                    edtSettings.Properties.MaxValue = 999999999;
+                    edtSettings.Properties.DecimalPlaces = 2;
+                    edtSettings.Properties.NumberType = SpinEditNumberType.Float;
+                    edtSettings.Properties.Increment = 0.1M;
+                    edtSettings.Properties.LargeIncrement = 1;
+                    edtSettings.Properties.SpinButtons.ShowLargeIncrementButtons = true;
+                    edtSettings.ControlStyle.CssClass = "editor";
+                    edtSettings.ShowModelErrors = true;
+                    edtSettings.Width = Unit.Pixel(200);
+                    edtSettings.Properties.DisplayFormatString = "n";
+
+                    edtSettings.Number = 0;
+
+                }).Bind(DataBinder.Eval(ActividadAsignada, "Asignado_Ene")).Render();
+            ViewContext.Writer.Write("</td>");
+
+            ViewContext.Writer.Write("<td>");
+            Html.DevExpress().Label(
+                       edtSettings =>
+                       {
+                           edtSettings.ControlStyle.CssClass = "label";
+                           edtSettings.Text = "Meta Febrero :";
+                           edtSettings.AssociatedControlName = "Asignado_Feb";
+                       }).Render();
+
+            Html.DevExpress().SpinEdit(
+                edtSettings =>
+                {
+                    edtSettings.Name = "Asignado_Feb";
+                    edtSettings.Properties.MinValue = 0;
+                    edtSettings.Properties.MaxValue = 999999999;
+                    edtSettings.Properties.DecimalPlaces = 2;
+                    edtSettings.Properties.NumberType = SpinEditNumberType.Float;
+                    edtSettings.Properties.Increment = 0.1M;
+                    edtSettings.Properties.LargeIncrement = 1;
+                    edtSettings.Properties.SpinButtons.ShowLargeIncrementButtons = true;
+                    edtSettings.ControlStyle.CssClass = "editor";
+                    edtSettings.ShowModelErrors = true;
+                    edtSettings.Width = Unit.Pixel(200);
+                    edtSettings.Properties.DisplayFormatString = "n";
+                    edtSettings.Properties.AllowNull = true;
+                    edtSettings.Number = 0;
+
+                }).Bind(DataBinder.Eval(ActividadAsignada, "Asignado_Feb")).Render();
+            ViewContext.Writer.Write("</td>");
+
+            ViewContext.Writer.Write("<td>");
+            Html.DevExpress().Label(
+                       edtSettings =>
+                       {
+                           edtSettings.ControlStyle.CssClass = "label";
+                           edtSettings.Text = "Meta Marzo :";
+                           edtSettings.AssociatedControlName = "Asignado_Mar";
+                       }).Render();
+
+            Html.DevExpress().SpinEdit(
+                edtSettings =>
+                {
+                    edtSettings.Name = "Asignado_Mar";
+                    edtSettings.Properties.MinValue = 0;
+                    edtSettings.Properties.MaxValue = 999999999;
+                    edtSettings.Properties.DecimalPlaces = 2;
+                    edtSettings.Properties.NumberType = SpinEditNumberType.Float;
+                    edtSettings.Properties.Increment = 0.1M;
+                    edtSettings.Properties.LargeIncrement = 1;
+                    edtSettings.Properties.SpinButtons.ShowLargeIncrementButtons = true;
+                    edtSettings.ControlStyle.CssClass = "editor";
+                    edtSettings.ShowModelErrors = true;
+                    edtSettings.Width = Unit.Pixel(200);
+                    edtSettings.Properties.DisplayFormatString = "n";
+
+                }).Bind(DataBinder.Eval(ActividadAsignada, "Asignado_Mar")).Render();
+            ViewContext.Writer.Write("</td>");
+
+            ViewContext.Writer.Write("<td>");
+            Html.DevExpress().Label(
+                       edtSettings =>
+                       {
+                           edtSettings.ControlStyle.CssClass = "label";
+                           edtSettings.Text = "Meta Abril :";
+                           edtSettings.AssociatedControlName = "Asignado_Abr";
+                       }).Render();
+
+            Html.DevExpress().SpinEdit(
+                edtSettings =>
+                {
+                    edtSettings.Name = "Asignado_Abr";
+                    edtSettings.Properties.MinValue = 0;
+                    edtSettings.Properties.MaxValue = 999999999;
+                    edtSettings.Properties.DecimalPlaces = 2;
+                    edtSettings.Properties.NumberType = SpinEditNumberType.Float;
+                    edtSettings.Properties.Increment = 0.1M;
+                    edtSettings.Properties.LargeIncrement = 1;
+                    edtSettings.Properties.SpinButtons.ShowLargeIncrementButtons = true;
+                    edtSettings.ControlStyle.CssClass = "editor";
+                    edtSettings.ShowModelErrors = true;
+                    edtSettings.Width = Unit.Pixel(200);
+                    edtSettings.Properties.DisplayFormatString = "n";
+
+                }).Bind(DataBinder.Eval(ActividadAsignada, "Asignado_Abr")).Render();
+            ViewContext.Writer.Write("</td>");
+            ViewContext.Writer.Write("</tr>");
+
+            ViewContext.Writer.Write("<tr>");
+            ViewContext.Writer.Write("<td>");
+            Html.DevExpress().Label(
+                       edtSettings =>
+                       {
+                           edtSettings.ControlStyle.CssClass = "label";
+                           edtSettings.Text = "Meta Mayo :";
+                           edtSettings.AssociatedControlName = "Asignado_May";
+                       }).Render();
+
+            Html.DevExpress().SpinEdit(
+                edtSettings =>
+                {
+                    edtSettings.Name = "Asignado_May";
+                    edtSettings.Properties.MinValue = 0;
+                    edtSettings.Properties.MaxValue = 999999999;
+                    edtSettings.Properties.DecimalPlaces = 2;
+                    edtSettings.Properties.NumberType = SpinEditNumberType.Float;
+                    edtSettings.Properties.Increment = 0.1M;
+                    edtSettings.Properties.LargeIncrement = 1;
+                    edtSettings.Properties.SpinButtons.ShowLargeIncrementButtons = true;
+                    edtSettings.ControlStyle.CssClass = "editor";
+                    edtSettings.ShowModelErrors = true;
+                    edtSettings.Width = Unit.Pixel(200);
+                    edtSettings.Properties.DisplayFormatString = "n";
+
+                }).Bind(DataBinder.Eval(ActividadAsignada, "Asignado_May")).Render();
+            ViewContext.Writer.Write("</td>");
+
+            ViewContext.Writer.Write("<td>");
+            Html.DevExpress().Label(
+                       edtSettings =>
+                       {
+                           edtSettings.ControlStyle.CssClass = "label";
+                           edtSettings.Text = "Meta Junio :";
+                           edtSettings.AssociatedControlName = "Asignado_Jun";
+                       }).Render();
+
+            Html.DevExpress().SpinEdit(
+                edtSettings =>
+                {
+                    edtSettings.Name = "Asignado_Jun";
+                    edtSettings.Properties.MinValue = 0;
+                    edtSettings.Properties.MaxValue = 999999999;
+                    edtSettings.Properties.DecimalPlaces = 2;
+                    edtSettings.Properties.NumberType = SpinEditNumberType.Float;
+                    edtSettings.Properties.Increment = 0.1M;
+                    edtSettings.Properties.LargeIncrement = 1;
+                    edtSettings.Properties.SpinButtons.ShowLargeIncrementButtons = true;
+                    edtSettings.ControlStyle.CssClass = "editor";
+                    edtSettings.ShowModelErrors = true;
+                    edtSettings.Width = Unit.Pixel(200);
+                    edtSettings.Properties.DisplayFormatString = "n";
+
+                }).Bind(DataBinder.Eval(ActividadAsignada, "Asignado_Jun")).Render();
+            ViewContext.Writer.Write("</td>");
+
+            ViewContext.Writer.Write("<td>");
+            Html.DevExpress().Label(
+                       edtSettings =>
+                       {
+                           edtSettings.ControlStyle.CssClass = "label";
+                           edtSettings.Text = "Meta Julio :";
+                           edtSettings.AssociatedControlName = "Asignado_Jul";
+                       }).Render();
+
+            Html.DevExpress().SpinEdit(
+                edtSettings =>
+                {
+                    edtSettings.Name = "Asignado_Jul";
+                    edtSettings.Properties.MinValue = 0;
+                    edtSettings.Properties.MaxValue = 999999999;
+                    edtSettings.Properties.DecimalPlaces = 2;
+                    edtSettings.Properties.NumberType = SpinEditNumberType.Float;
+                    edtSettings.Properties.Increment = 0.1M;
+                    edtSettings.Properties.LargeIncrement = 1;
+                    edtSettings.Properties.SpinButtons.ShowLargeIncrementButtons = true;
+                    edtSettings.ControlStyle.CssClass = "editor";
+                    edtSettings.ShowModelErrors = true;
+                    edtSettings.Width = Unit.Pixel(200);
+                    edtSettings.Properties.DisplayFormatString = "n";
+
+                }).Bind(DataBinder.Eval(ActividadAsignada, "Asignado_Jul")).Render();
+            ViewContext.Writer.Write("</td>");
+
+            ViewContext.Writer.Write("<td>");
+            Html.DevExpress().Label(
+                       edtSettings =>
+                       {
+                           edtSettings.ControlStyle.CssClass = "label";
+                           edtSettings.Text = "Meta Agosto :";
+                           edtSettings.AssociatedControlName = "Asignado_Ago";
+                       }).Render();
+
+            Html.DevExpress().SpinEdit(
+                edtSettings =>
+                {
+                    edtSettings.Name = "Asignado_Ago";
+                    edtSettings.Properties.MinValue = 0;
+                    edtSettings.Properties.MaxValue = 999999999;
+                    edtSettings.Properties.DecimalPlaces = 2;
+                    edtSettings.Properties.NumberType = SpinEditNumberType.Float;
+                    edtSettings.Properties.Increment = 0.1M;
+                    edtSettings.Properties.LargeIncrement = 1;
+                    edtSettings.Properties.SpinButtons.ShowLargeIncrementButtons = true;
+                    edtSettings.ControlStyle.CssClass = "editor";
+                    edtSettings.ShowModelErrors = true;
+                    edtSettings.Width = Unit.Pixel(200);
+                    edtSettings.Properties.DisplayFormatString = "n";
+
+                }).Bind(DataBinder.Eval(ActividadAsignada, "Asignado_Ago")).Render();
+            ViewContext.Writer.Write("</td>");
+
+            ViewContext.Writer.Write("</tr>");
+
+            ViewContext.Writer.Write("<tr>");
+
+            ViewContext.Writer.Write("<td>");
+            Html.DevExpress().Label(
+                       edtSettings =>
+                       {
+                           edtSettings.ControlStyle.CssClass = "label";
+                           edtSettings.Text = "Meta Septiembre :";
+                           edtSettings.AssociatedControlName = "Asignado_Sep";
+                       }
+                   )
+                   .Render();
+            Html.DevExpress().SpinEdit(
+                edtSettings =>
+                {
+                    edtSettings.Name = "Asignado_Sep";
+                    edtSettings.Properties.MinValue = 0;
+                    edtSettings.Properties.MaxValue = 999999999;
+                    edtSettings.Properties.DecimalPlaces = 2;
+                    edtSettings.Properties.NumberType = SpinEditNumberType.Float;
+                    edtSettings.Properties.Increment = 0.1M;
+                    edtSettings.Properties.LargeIncrement = 1;
+                    edtSettings.Properties.SpinButtons.ShowLargeIncrementButtons = true;
+                    edtSettings.ControlStyle.CssClass = "editor";
+                    edtSettings.ShowModelErrors = true;
+                    edtSettings.Width = Unit.Pixel(200);
+                    edtSettings.Properties.DisplayFormatString = "n";
+
+                }).Bind(DataBinder.Eval(ActividadAsignada, "Asignado_Sep")).Render();
+            ViewContext.Writer.Write("</td>");
+            ViewContext.Writer.Write("<td>");
+            Html.DevExpress().Label(
+                       edtSettings =>
+                       {
+                           edtSettings.ControlStyle.CssClass = "label";
+                           edtSettings.Text = "Meta Octube :";
+                           edtSettings.AssociatedControlName = "Asignado_Oct";
+                       }
+                   )
+                   .Render();
+            Html.DevExpress().SpinEdit(
+                edtSettings =>
+                {
+                    edtSettings.Name = "Asignado_Oct";
+                    edtSettings.Properties.MinValue = 0;
+                    edtSettings.Properties.MaxValue = 999999999;
+                    edtSettings.Properties.DecimalPlaces = 2;
+                    edtSettings.Properties.NumberType = SpinEditNumberType.Float;
+                    edtSettings.Properties.Increment = 0.1M;
+                    edtSettings.Properties.LargeIncrement = 1;
+                    edtSettings.Properties.SpinButtons.ShowLargeIncrementButtons = true;
+                    edtSettings.ControlStyle.CssClass = "editor";
+                    edtSettings.ShowModelErrors = true;
+                    edtSettings.Width = Unit.Pixel(200);
+                    edtSettings.Properties.DisplayFormatString = "n";
+                }
+            )
+            .Bind(DataBinder.Eval(ActividadAsignada, "Asignado_Oct"))
+            .Render();
+            ViewContext.Writer.Write("</td>");
+            ViewContext.Writer.Write("<td>");
+            Html.DevExpress().Label(
+                       edtSettings =>
+                       {
+                           edtSettings.ControlStyle.CssClass = "label";
+                           edtSettings.Text = "Meta Noviembre :";
+                           edtSettings.AssociatedControlName = "Asignado_Nov";
+                       }
+                   )
+                   .Render();
+            Html.DevExpress().SpinEdit(
+                edtSettings =>
+                {
+                    edtSettings.Name = "Asignado_Nov";
+                    edtSettings.Properties.MinValue = 0;
+                    edtSettings.Properties.MaxValue = 999999999;
+                    edtSettings.Properties.DecimalPlaces = 2;
+                    edtSettings.Properties.NumberType = SpinEditNumberType.Float;
+                    edtSettings.Properties.Increment = 0.1M;
+                    edtSettings.Properties.LargeIncrement = 1;
+                    edtSettings.Properties.SpinButtons.ShowLargeIncrementButtons = true;
+                    edtSettings.ControlStyle.CssClass = "editor";
+                    edtSettings.ShowModelErrors = true;
+                    edtSettings.Width = Unit.Pixel(200);
+                    edtSettings.Properties.DisplayFormatString = "n";
+                }
+            )
+            .Bind(DataBinder.Eval(ActividadAsignada, "Asignado_Nov"))
+            .Render();
+            ViewContext.Writer.Write("</td>");
+            ViewContext.Writer.Write("<td>");
+            Html.DevExpress().Label(
+                       edtSettings =>
+                       {
+                           edtSettings.ControlStyle.CssClass = "label";
+                           edtSettings.Text = "Meta Diciembre :";
+                           edtSettings.AssociatedControlName = "Asignado_Dic";
+                       }
+                   )
+                   .Render();
+            Html.DevExpress().SpinEdit(
+                edtSettings =>
+                {
+                    edtSettings.Name = "Asignado_Dic";
+                    edtSettings.Properties.MinValue = 0;
+                    edtSettings.Properties.MaxValue = 999999999;
+                    edtSettings.Properties.DecimalPlaces = 2;
+                    edtSettings.Properties.NumberType = SpinEditNumberType.Float;
+                    edtSettings.Properties.Increment = 0.1M;
+                    edtSettings.Properties.LargeIncrement = 1;
+                    edtSettings.Properties.SpinButtons.ShowLargeIncrementButtons = true;
+                    edtSettings.ControlStyle.CssClass = "editor";
+                    edtSettings.ShowModelErrors = true;
+                    edtSettings.Width = Unit.Pixel(200);
+                    edtSettings.Properties.DisplayFormatString = "n";
+                }
+            )
+            .Bind(DataBinder.Eval(ActividadAsignada, "Asignado_Dic"))
+            .Render();
+            ViewContext.Writer.Write("</td>");
+            ViewContext.Writer.Write("</tr>");
+            ViewContext.Writer.Write("</table>");
+
+            ViewContext.Writer.Write("<br>");
+            Html.DevExpress().Label(
+                       edtSettings =>
+                       {
+                           edtSettings.ControlStyle.CssClass = "label";
+                           edtSettings.Text = "Describa la Actividad:";
+                           edtSettings.AssociatedControlName = "Descripcion";
+                       }).Render();
+
+            Html.DevExpress().Memo(
+                edtSettings =>
+                {
+                    edtSettings.Name = "Descripcion";
+                    edtSettings.Properties.NullText = "Campo Requerido";
+                    edtSettings.ControlStyle.CssClass = "editor";
+                    edtSettings.ShowModelErrors = true;
+                    edtSettings.Width = Unit.Pixel(920);
+                }).Bind(DataBinder.Eval(ActividadAsignada, "Descripcion")).Render();
+
+            ViewContext.Writer.Write("<br>");
+            Html.DevExpress().Label(
+                edtSettings =>
+                {
+                    edtSettings.ControlStyle.CssClass = "label";
+                }
+            )
+            .Render();
+            Html.DevExpress().Button(
+                btnSettings =>
+                {
+                    btnSettings.Name = "btnUpdatActividadesAsignadas";
+                    btnSettings.Text = "Guardar";
+                    btnSettings.ControlStyle.CssClass = "button";
+                    btnSettings.Images.Image.Url = "Content/Images/guardar.png";
+                    btnSettings.ImagePosition = ImagePosition.Right;
+                    btnSettings.Images.Image.Width = 16;
+                    btnSettings.ClientSideEvents.Click = "function(s, e){ ActividadAsignadaGridView.UpdateEdit(); }";
+                    btnSettings.ClientVisible = Convert.ToBoolean(ViewData["Escritura"]) && Convert.ToBoolean(ViewData["Status_Escritura"]);
+
+                }
+            )
+            .Render();
+
+            Html.DevExpress().Button(
+                btnSettings =>
+                {
+                    btnSettings.Name = "btnCanceActividadesAsignadas";
+                    btnSettings.Text = "Cancelar";
+                    btnSettings.ControlStyle.CssClass = "button";
+                    btnSettings.Images.Image.Url = "Content/Images/cancelar.png";
+                    btnSettings.ImagePosition = ImagePosition.Right;
+                    btnSettings.Style["position"] = "relative";
+                    btnSettings.Style["left"] = "5px";
+                    btnSettings.ClientSideEvents.Click = "function(s, e){ ActividadAsignadaGridView.CancelEdit(); }";
+
+                }
+            )
+            .Render();
+
+            ViewContext.Writer.Write("</br>");
+        });
+
+    });
+    if (ViewData["EditError"] != null)
+    {
+        grid.SetEditErrorText((string)ViewData["EditError"]);
+    }
+}
+@grid.Bind(Model).GetHtml()

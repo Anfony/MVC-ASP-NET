@@ -1,0 +1,131 @@
+﻿@model IEnumerable<DXMVCWebApplication1.Models.Campania>
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Index</title>
+</head>
+<body>
+    <p>
+        @Html.ActionLink("Create New", "Create")
+    </p>
+    <table class="table">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.NombreCampania)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Introduccion)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.SituacionActual)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ObjetivoEstrategico)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.MetaAnual)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FechaInicio)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FechaFin)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Anio.Pk_IdAnio)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Componente.Nombre)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Programa.Nombre)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.SubComponente.Nombre)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.UnidadEjecutora.Nombre)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.StatusCampania.Nombre)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Incentivo.Nombre)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ProyectoAutorizado.Nombre)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.SVImportanciaPlaga.Cultivo)
+            </th>
+            <th></th>
+        </tr>
+    
+    @foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.NombreCampania)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Introduccion)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.SituacionActual)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ObjetivoEstrategico)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.MetaAnual)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FechaInicio)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FechaFin)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Anio.Pk_IdAnio)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Componente.Nombre)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Programa.Nombre)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.SubComponente.Nombre)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.UnidadEjecutora.Nombre)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.StatusCampania.Nombre)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Incentivo.Nombre)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ProyectoAutorizado.Nombre)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.SVImportanciaPlaga.Cultivo)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { id=item.Pk_IdCampania }) |
+                @Html.ActionLink("Details", "Details", new { id=item.Pk_IdCampania }) |
+                @Html.ActionLink("Delete", "Delete", new { id=item.Pk_IdCampania })
+            </td>
+        </tr>
+    }
+    
+    </table>
+</body>
+</html>

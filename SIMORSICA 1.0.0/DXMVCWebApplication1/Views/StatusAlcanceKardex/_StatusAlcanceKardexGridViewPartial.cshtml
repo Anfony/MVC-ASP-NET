@@ -1,0 +1,22 @@
+@{
+	var grid = Html.DevExpress().GridView(settings => {
+        settings.Name = "StatusAlcanceKardexGridView";
+        settings.CallbackRouteValues = new { Controller = "StatusAlcanceKardex", Action = "StatusAlcanceKardexGridViewPartial" };
+
+
+		settings.KeyFieldName = "PK_IdStatusAlcanceKardex";
+
+		settings.SettingsPager.Visible = true;
+		settings.Settings.ShowGroupPanel = true;
+		settings.Settings.ShowFilterRow = true;
+		settings.SettingsBehavior.AllowSelectByRowClick = true;
+
+				settings.Columns.Add("FK_IdStatusAlcance__SIS", "Dacia");
+				settings.Columns.Add("FK_IdAlcance__UE", "Alcance");
+				settings.Columns.Add("Fecha");
+				settings.Columns.Add("Comentarios");
+				settings.Columns.Add("StatusAlcance");
+				settings.Columns.Add("Alcance");
+			});
+}
+@grid.Bind(Model).GetHtml()

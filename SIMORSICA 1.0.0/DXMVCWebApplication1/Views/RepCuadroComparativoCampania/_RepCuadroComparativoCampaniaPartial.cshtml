@@ -1,0 +1,8 @@
+@Html.DevExpress().DocumentViewer(settings =>
+{
+    settings.Name = "RepCuadroComparativoCampania";
+    settings.CallbackRouteValues = new { Controller = "RepCuadroComparativoCampania", Action = "RepCuadroComparativoCampania", NombreTipoReporte = ViewData["NombreTipoReporte"] };
+    settings.ExportRouteValues = new { Controller = "RepCuadroComparativoCampania", Action = "ReportPartialExport", NombreTipoReporte = ViewData["NombreTipoReporte"] };
+    settings.Report = (XtraReport)Model;
+    settings.ToolbarMode = DocumentViewerToolbarMode.StandardToolbar;
+}).GetHtml()

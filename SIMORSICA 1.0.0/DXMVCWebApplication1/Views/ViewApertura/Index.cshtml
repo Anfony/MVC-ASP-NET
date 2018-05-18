@@ -1,0 +1,15 @@
+﻿@{
+    ViewBag.Title = "Index";
+}
+<div style="text-align:center;
+            padding-left:20px;
+            padding-right:20px;
+            background-color:#f0f0f0;
+            height:90%;">
+    <h2 style="color:#808080">INFOSANIDAD > Aperturas </h2>
+    <p>
+        Bienvenido, aquí puedes consultar las Aperturas de licitaciones creadas a nivel nacional, así como obtener los documentos en PDF.
+    </p>
+    <hr />
+    @Html.Action("GridView2Partial")
+</div>

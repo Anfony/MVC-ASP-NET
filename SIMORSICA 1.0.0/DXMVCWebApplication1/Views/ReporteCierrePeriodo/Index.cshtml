@@ -1,0 +1,147 @@
+﻿@{
+    var popUp = Html.DevExpress().PopupControl(settings =>
+    {
+        settings.Name = "popUpRepCierrePFF";
+        settings.Width = 400;
+        settings.AllowDragging = true;
+        settings.CloseAction = CloseAction.CloseButton;
+        settings.PopupAnimationType = AnimationType.None;
+        settings.HeaderText = "Reporte Cierre Trimestral";
+        settings.Modal = true;
+        settings.ShowCloseButton = false;
+        settings.PopupHorizontalAlign = PopupHorizontalAlign.WindowCenter;
+        settings.PopupVerticalAlign = PopupVerticalAlign.WindowCenter;
+
+        settings.SetContent(() =>
+        {
+            using (Html.BeginForm("Index2", "ReporteCierrePeriodo", FormMethod.Post, new { id = "ParamsRepInforme" }))
+            {
+                ViewContext.Writer.Write("<table>");
+                ViewContext.Writer.Write("<tr><td>");
+                //---------------------------------
+                Html.DevExpress().Label(edtSettings =>
+                {
+                    edtSettings.ControlStyle.CssClass = "label";
+                    edtSettings.Text = "Comité:";
+                    edtSettings.Name = "labelComite";
+                }).Render();
+                ViewContext.Writer.Write("</td>");
+                ViewContext.Writer.Write("<td>");
+
+                Html.DevExpress().ComboBox(edtSettings =>
+                {
+                    edtSettings.Name = "ComboComites";
+                    edtSettings.ControlStyle.CssClass = "editor";
+                    edtSettings.Properties.TextField = "Nombre";
+                    edtSettings.Properties.ValueField = "Pk_IdUnidadEjecutora";
+                    edtSettings.ToolTip = "Seleccione el Comité";
+                    edtSettings.Properties.ValueType = typeof(int);
+                    edtSettings.Width = Unit.Pixel(450);
+                    edtSettings.Properties.NullText = "Campo Requerido";
+                    edtSettings.ShowModelErrors = true;
+                    edtSettings.Properties.EnableSynchronization = DefaultBoolean.True;
+                    edtSettings.Properties.IncrementalFilteringMode = IncrementalFilteringMode.Contains;
+                    edtSettings.Properties.ClientSideEvents.SelectedIndexChanged = "function(s, e){ ComboCampania.PerformCallback(); }";
+                }).BindList(DXMVCWebApplication1.Models.Senasica.GetUnidadEjecutoraByUsuario(FuncionesAuxiliares.GetCurrent_RolUsuario(), FuncionesAuxiliares.GetCurrent_IdUnidadResponsable(), FuncionesAuxiliares.GetCurrent_IdEstado(), FuncionesAuxiliares.GetCurrent_IdUnidadEjecutora()))
+                .Render();
+                //-----------------------
+                ViewContext.Writer.Write("<br />");
+                ViewContext.Writer.Write("</td></tr>");
+
+                ViewContext.Writer.Write("<tr>");
+                ViewContext.Writer.Write("<td>");
+                Html.DevExpress().Label(edtSettings =>
+                {
+                    edtSettings.ControlStyle.CssClass = "label";
+                    edtSettings.Text = "Campaña:";
+                    edtSettings.Name = "labelCampania";
+                }).Render();
+                ViewContext.Writer.Write("</td>");
+
+                ViewContext.Writer.Write("<td>");
+                Html.RenderPartial("_ComboBoxCampaniaPartial");
+                ViewContext.Writer.Write("<br />");
+                ViewContext.Writer.Write("</td></tr>");
+
+                ViewContext.Writer.Write("<tr>");
+                ViewContext.Writer.Write("<td>");
+                Html.DevExpress().Label(edtSettings =>
+                {
+                    edtSettings.ControlStyle.CssClass = "label";
+                    edtSettings.Text = "Periodo:";
+                    edtSettings.Name = "labelPeriodo";
+                }).Render();
+                ViewContext.Writer.Write("<td>");
+                
+                Html.DevExpress().ComboBox(edtSettings =>
+                {
+                    edtSettings.Name = "ComboPeriodo";
+                    edtSettings.ControlStyle.CssClass = "editor";
+                    edtSettings.Properties.TextField = "Descripcion";
+                    edtSettings.Properties.ValueField = "IdTrimestre";
+                    edtSettings.ToolTip = "Seleccione el Periodo";
+                    edtSettings.Properties.ValueType = typeof(int);
+                    edtSettings.Width = Unit.Pixel(450);
+                    edtSettings.Properties.NullText = "Campo Requerido";
+                    edtSettings.ShowModelErrors = true;
+                    edtSettings.Properties.EnableSynchronization = DefaultBoolean.False;
+                    edtSettings.Properties.IncrementalFilteringMode = IncrementalFilteringMode.StartsWith;
+                    edtSettings.Properties.ClientSideEvents.BeginCallback = "function(s, e){ e.customArgs['IdTrimestre'] = ComboComites.GetValue(); }";
+                }).BindList(DXMVCWebApplication1.Models.Senasica.GetTrimestre())
+                .Render();
+
+                
+                ViewContext.Writer.Write("</td></tr>");
+                ViewContext.Writer.Write("</table>");
+                ViewContext.Writer.Write("<br />");
+
+                ViewContext.Writer.Write("<div width=100% >");
+                Html.DevExpress().Button(btnSettings =>
+                {
+                    btnSettings.Name = "btnAceptarCierre";
+                    btnSettings.Text = "Aceptar";
+                    btnSettings.ControlStyle.CssClass = "button";
+                    btnSettings.Images.Image.Url = "/Content/Images/aceptar.png";
+                    btnSettings.ImagePosition = ImagePosition.Right;
+                    btnSettings.Style["position"] = "relative";
+                    btnSettings.Style["left"] = "5px";
+                    btnSettings.UseSubmitBehavior = true;
+                }).Render();
+                Html.DevExpress().Button(btnSettings =>
+                {
+                    btnSettings.Name = "btnCancelarCierre";
+                    btnSettings.Text = "Cancelar";
+                    btnSettings.ControlStyle.CssClass = "button";
+                    btnSettings.Images.Image.Url = "/Content/Images/cancelar.png";
+                    btnSettings.ImagePosition = ImagePosition.Right;
+                    btnSettings.Style["position"] = "relative";
+                    btnSettings.Style["left"] = "5px";
+                    btnSettings.ClientSideEvents.Click = "function(){returnHome();}";
+                }).Render();
+                Html.DevExpress().Label(ErrSettings =>
+                {
+                    ErrSettings.Name = "ErrorCampania";
+                    ErrSettings.Style["Color"] = "Red";
+                    ErrSettings.Style["padding-left"] = "200px";
+                    if (ViewData["EditError"] != null)
+                    {
+                        ErrSettings.Text = ViewData["EditError"].ToString();
+                    }
+                }).Render();
+                ViewContext.Writer.Write("</div>");
+            }
+        });
+    });
+}
+
+@popUp.GetHtml()
+
+<script type="text/javascript">
+    window.onload = function (s, e) {
+        popUpRepCierrePFF.Show();
+    }
+
+    function returnHome() {
+        window.location = "Home/Index";
+    }
+</script>

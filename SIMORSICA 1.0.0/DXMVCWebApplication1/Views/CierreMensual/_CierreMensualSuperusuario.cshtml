@@ -1,0 +1,144 @@
+﻿@{
+    var grid = Html.DevExpress().GridView(settings =>
+    {
+        settings.Name = "DGCierreMensual";
+        settings.Style["position"] = "relative";
+        settings.Style["left"] = "10px";
+
+        settings.CallbackRouteValues = new { Controller = "CierreMensual", Action = "CierreMensualGridViewPartialGeneral" };
+
+        settings.SettingsEditing.Mode = GridViewEditingMode.PopupEditForm;
+        settings.SettingsBehavior.ConfirmDelete = true;
+
+        settings.SettingsPopup.EditForm.Height = 300;
+        settings.SettingsPopup.EditForm.Width = 70;
+        settings.SettingsPopup.EditForm.HorizontalAlign = PopupHorizontalAlign.WindowCenter;
+        settings.SettingsPopup.EditForm.VerticalAlign = PopupVerticalAlign.WindowCenter;
+        settings.SettingsPopup.EditForm.Modal = true;
+
+        settings.CommandColumn.ShowClearFilterButton = true;
+
+        settings.CommandColumn.Visible = false;
+        settings.SettingsPager.Visible = true;
+        settings.SettingsPager.Position = PagerPosition.Bottom;
+        settings.SettingsPager.FirstPageButton.Visible = true;
+        settings.SettingsPager.LastPageButton.Visible = true;
+        settings.SettingsPager.PageSizeItemSettings.Visible = true;
+        settings.SettingsPager.PageSize = 10;
+        settings.SettingsPager.PageSizeItemSettings.Items = new string[] { "5", "10", "15" };
+        settings.Settings.ShowFilterRowMenu = true;
+
+        settings.KeyFieldName = "Pk_IdCierreMensual";
+
+        settings.Settings.ShowGroupPanel = true;
+        settings.Settings.ShowFilterRow = true;
+        settings.SettingsBehavior.AllowSelectByRowClick = true;
+
+        settings.Settings.ShowFooter = true;
+
+        settings.Columns.Add(column =>
+        {
+            column.Caption = "Reporte";
+
+            column.SetDataItemTemplateContent(c =>
+            {
+
+                ViewContext.Writer.Write("<table>");
+                ViewContext.Writer.Write("<tr>");
+
+                ViewContext.Writer.Write("<td>");
+                using (Html.BeginForm("Index", "CierreMensualHistorico", new { IdCierreMensual = c.KeyValue.ToString(), controlador = "CierreMensual" }, FormMethod.Post))
+                {
+                    Html.DevExpress().Button(btnSettings =>
+                    {
+                        btnSettings.Name = "btnHistorico" + c.KeyValue.ToString();
+                        btnSettings.Text = "Ver Solicitudes";
+                        btnSettings.ToolTip = "Ver Solicitudes Realizadas";
+                        btnSettings.ControlStyle.CssClass = "button";
+                        btnSettings.ImagePosition = ImagePosition.Right;
+                        btnSettings.UseSubmitBehavior = true;
+                        btnSettings.ControlStyle.Border.BorderWidth = Unit.Pixel(0);
+                    }).Render();
+                }
+                ViewContext.Writer.Write("</td>");
+
+                ViewContext.Writer.Write("<td>");
+                if ((DataBinder.Eval(c.DataItem, "NombreRepCierre") ?? "").ToString() == "")
+                {
+                    using (Html.BeginForm("Index", "ReporteCierreMensual", new { PK_IdCierreMensual = c.KeyValue.ToString() }, FormMethod.Post))
+                    {
+                        Html.DevExpress().Button(btnSettings =>
+                        {
+                            btnSettings.Name = "btnNew" + c.KeyValue.ToString();
+                            btnSettings.Text = "";
+                            btnSettings.ToolTip = "Imprimir";
+                            btnSettings.ControlStyle.CssClass = "button";
+                            btnSettings.ImagePosition = ImagePosition.Right;
+                            btnSettings.Images.Image.Width = 16;
+                            btnSettings.Images.Image.Url = "/Content/Images/ico_print.png";
+                            btnSettings.UseSubmitBehavior = true;
+                            btnSettings.ControlStyle.Border.BorderWidth = Unit.Pixel(0);
+                        }).Render();
+                    }
+                }
+                else
+                {
+                    using (Html.BeginForm("DescargaCierreMensual", "CierreMensual", new { IdCierreMensual = c.KeyValue.ToString() }, FormMethod.Post))
+                    {
+                        Html.DevExpress().Button(btnSettings =>
+                        {
+                            btnSettings.Name = "btnDescargarCierre" + c.KeyValue.ToString();
+                            btnSettings.Text = "";
+                            btnSettings.ToolTip = "Descargar";
+                            btnSettings.ControlStyle.CssClass = "button";
+                            btnSettings.ImagePosition = ImagePosition.Right;
+                            btnSettings.Images.Image.Width = 16;
+                            btnSettings.Images.Image.Url = "/Content/Images/downloadFile.png";
+                            btnSettings.UseSubmitBehavior = true;
+                            btnSettings.ControlStyle.Border.BorderWidth = Unit.Pixel(0);
+                        }).Render();
+                    }
+                }
+                ViewContext.Writer.Write("</td>");
+
+                ViewContext.Writer.Write("</tr>");
+                ViewContext.Writer.Write("</table>");
+            });
+        });
+
+        var cerrado = settings.Columns.Add("cerrado", "¿Reporte Cerrado?");
+        var solApertura = settings.Columns.Add("SolApertura", "¿Solicitud de Apertura?");
+
+        cerrado.UnboundType = DevExpress.Data.UnboundColumnType.String;
+        solApertura.UnboundType = DevExpress.Data.UnboundColumnType.String;
+
+        settings.CustomUnboundColumnData = (sender, e) =>
+        {
+            if (e.Column.FieldName == "cerrado")
+            {
+                if (Convert.ToBoolean(e.GetListSourceFieldValue("esCerrado"))) e.Value = "Sí";
+                else e.Value = "No";
+
+                e.Column.ReadOnly = true;
+            }
+
+            if (e.Column.FieldName == "SolApertura")
+            {
+                if (Convert.ToBoolean(e.GetListSourceFieldValue("esSolicitadoParaApertura"))) e.Value = "Sí, en espera de respuesta";
+                else e.Value = "No";
+
+                e.Column.ReadOnly = true;
+            }
+        };
+
+        settings.Columns.Add("Campania.ProyectoPresupuesto.UnidadEjecutora.Nombre", "Instancia Ejecutora");
+        settings.Columns.Add("Campania.ProyectoPresupuesto.ProyectoAutorizado.Nombre", "Campaña");
+        settings.Columns.Add("Campania.RecSol_Fed", "Recurso Federal Solicitado").PropertiesEdit.DisplayFormatString = "C";
+        settings.Columns.Add("Campania.RecSol_Est", "Recurso Estatal Solicitado").PropertiesEdit.DisplayFormatString = "C";
+        settings.Columns.Add("Me.Descripcion", "Mes");
+        settings.Columns.Add("Comentarios", "Comentarios");
+
+    });
+}
+
+@grid.Bind(Model).GetHtml()

@@ -1,0 +1,324 @@
+@Html.DevExpress().GridView(
+settings =>
+{
+    settings.Name = "InstalacionesGrid_" + ViewData["UEID"];
+    settings.SettingsDetail.MasterGridName = "UnidadEjecutoraGridView";
+    settings.CallbackRouteValues = new { Controller = "Instalacion", Action = "InstalacionesGridViewPartial", UEID = ViewData["UEID"] };
+    settings.Width = Unit.Percentage(100);
+
+    settings.SettingsEditing.AddNewRowRouteValues = new { Controller = "Instalacion", Action = "InstalacionesGridViewPartialAddNew", UEID = ViewData["UEID"] };
+    settings.SettingsEditing.UpdateRowRouteValues = new { Controller = "Instalacion", Action = "InstalacionesGridViewPartialUpdate", UEID = ViewData["UEID"] };
+    settings.SettingsEditing.DeleteRowRouteValues = new { Controller = "Instalacion", Action = "InstalacionesGridViewPartialDelete", UEID = ViewData["UEID"] };
+    settings.SettingsEditing.Mode = GridViewEditingMode.PopupEditForm;
+    settings.SettingsBehavior.ConfirmDelete = true;
+
+    settings.SettingsPopup.EditForm.Height = 250;
+    settings.SettingsPopup.EditForm.Width = 650;
+    settings.SettingsPopup.EditForm.HorizontalAlign = DevExpress.Web.ASPxClasses.PopupHorizontalAlign.WindowCenter;
+    settings.SettingsPopup.EditForm.VerticalAlign = DevExpress.Web.ASPxClasses.PopupVerticalAlign.WindowCenter;
+    settings.SettingsPopup.EditForm.Modal = true;
+
+    settings.CommandColumn.Visible = true;
+    settings.CommandColumn.ShowNewButtonInHeader = Convert.ToBoolean(ViewData["Escritura"]);
+    settings.CommandColumn.ShowDeleteButton = Convert.ToBoolean(ViewData["Escritura"]);
+    settings.CommandColumn.ShowEditButton = Convert.ToBoolean(ViewData["Escritura"]) || Convert.ToBoolean(ViewData["Lectura"]);
+    settings.SettingsCommandButton.NewButton.Text = "Nueva Instalación";
+
+    settings.CommandColumn.ShowClearFilterButton = false;
+    settings.SettingsBehavior.AllowSelectByRowClick = true;
+    settings.SettingsDetail.AllowOnlyOneMasterRowExpanded = true;
+
+    settings.SettingsPager.Visible = true;
+    settings.SettingsPager.Position = PagerPosition.Bottom;
+    settings.SettingsPager.FirstPageButton.Visible = true;
+    settings.SettingsPager.LastPageButton.Visible = true;
+    settings.SettingsPager.PageSizeItemSettings.Visible = true;
+    settings.SettingsPager.PageSize = 5;
+    settings.SettingsPager.PageSizeItemSettings.Items = new string[] { "5", "10" };
+    settings.Settings.ShowFilterRowMenu = true;
+
+    settings.KeyFieldName = "Pk_IdInstalacion";
+
+    settings.SettingsPager.Visible = true;
+    settings.Settings.ShowGroupPanel = true;
+    settings.Settings.ShowFilterRow = true;
+    settings.SettingsBehavior.AllowSelectByRowClick = true;
+    settings.Columns.Add(column =>
+    {
+        column.FieldName = "Fk_IdTipoDeInstalacion";
+        column.Caption = "Tipo de Instalación";
+        column.ColumnType = MVCxGridViewColumnType.ComboBox;
+        var comboBoxProperties = column.PropertiesEdit as ComboBoxProperties;
+        comboBoxProperties.DataSource = DXMVCWebApplication1.Models.Senasica.GetTipoDeInstalacion();
+        comboBoxProperties.TextField = "Nombre";
+        comboBoxProperties.ValueField = "Pk_IdTipoDeInstalacion";
+        comboBoxProperties.ValueType = typeof(int);
+    });
+    settings.Columns.Add("Nombre");
+    settings.Columns.Add("Ubicacion", "Ubicación");
+    settings.Columns.Add("Utilizacion", "Utilización");
+    settings.Columns.Add("region", "Región");
+    settings.Columns.Add("Estatus", "Estado de los bienes");
+    settings.Columns.Add("Certificado");
+    settings.Columns.Add("TipoAdquisicion.Nombre", "Tipo de Adquisición");
+
+    settings.SetEditFormTemplateContent(c =>
+    {
+        var instalacion = ViewData["dataItem"] ?? c.DataItem;
+        ViewContext.Writer.Write("<p>Edición del Padrón de Instalaciones</p>");
+        //Unidad Ejecutora
+        ViewContext.Writer.Write("<table><tr>");
+
+        ViewContext.Writer.Write("<td>");
+        Html.DevExpress().Label(
+            edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Tipo de Instalación:";
+                edtSettings.AssociatedControlName = "Fk_IdTipoDeInstalacion";
+            }
+        )
+        .Render();
+        Html.DevExpress().ComboBox(
+             edtSettings =>
+             {
+                 edtSettings.Name = "Fk_IdTipoDeInstalacion";
+                 edtSettings.ControlStyle.CssClass = "editor";
+                 edtSettings.Properties.TextField = "Nombre";
+                 edtSettings.Properties.NullText = "Campo Requerido";
+                 edtSettings.Properties.ValueField = "Pk_IdTipoDeInstalacion";
+                 edtSettings.Properties.IncrementalFilteringMode = IncrementalFilteringMode.Contains;
+                 edtSettings.Properties.IncrementalFilteringDelay = 5;
+                 edtSettings.Properties.ValueType = typeof(int);
+                 edtSettings.ShowModelErrors = true;
+                 edtSettings.Width = Unit.Pixel(300);
+                 edtSettings.ToolTip = c.KeyValue == null ? "Seleccione el Tipo de Instalación" : "Cambiar el Tipo de Instalación";
+             }
+         )
+         .BindList(DXMVCWebApplication1.Models.Senasica.GetTipoDeInstalacion())
+         .Bind(DataBinder.Eval(instalacion, "Fk_IdTipoDeInstalacion"))
+         .Render();
+        //Fin tipo de instalacion e inicio de Nombre
+        ViewContext.Writer.Write("</td><td>");
+        Html.DevExpress().Label(
+            edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Nombre:";
+                edtSettings.AssociatedControlName = "Nombre";
+            }
+        )
+        .Render();
+
+        Html.DevExpress().TextBox(
+           edtSettings =>
+           {
+               edtSettings.Name = "Nombre";
+               //            edtSettings.Properties.NullText = "Campo Requerido";
+               edtSettings.ControlStyle.CssClass = "editor";
+               edtSettings.ShowModelErrors = true;
+               edtSettings.Width = Unit.Pixel(300);
+               edtSettings.ToolTip = c.KeyValue == null ? "Ingresar Nombre de la Instalación (Campo Requerido)" : "Editar el Nombre de la Instalación";
+           }
+       )
+       .Bind(DataBinder.Eval(instalacion, "Nombre"))
+       .Render();
+        //Fin nombre e inicio de ubicacion
+        ViewContext.Writer.Write("</td></tr>");
+        ViewContext.Writer.Write("<tr><td>");
+        Html.DevExpress().Label(
+            edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Ubicación:";
+                edtSettings.AssociatedControlName = "Ubicacion";
+            }
+        )
+        .Render();
+
+        Html.DevExpress().TextBox(
+           edtSettings =>
+           {
+               edtSettings.Name = "Ubicacion";
+               edtSettings.ControlStyle.CssClass = "editor";
+               edtSettings.ShowModelErrors = true;
+               edtSettings.Width = Unit.Pixel(300);
+               edtSettings.ToolTip = c.KeyValue == null ? "Ingresar la Ubicación de la Instalación" : "Editar la Ubicación";
+           }
+       )
+       .Bind(DataBinder.Eval(instalacion, "Ubicacion"))
+       .Render();
+        //Fin de ubicación e inicio de Utilización
+        ViewContext.Writer.Write("</td>" + "<td>");
+        Html.DevExpress().Label(
+            edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Utilización:";
+                edtSettings.AssociatedControlName = "Utilizacion";
+            }
+        )
+        .Render();
+
+        Html.DevExpress().TextBox(
+           edtSettings =>
+           {
+               edtSettings.Name = "Utilizacion";
+               edtSettings.ControlStyle.CssClass = "editor";
+               edtSettings.ShowModelErrors = true;
+               edtSettings.Width = Unit.Pixel(300);
+               edtSettings.ToolTip = c.KeyValue == null ? "Ingresar la Utilización" : "Editar la Utilización";
+           }
+       )
+       .Bind(DataBinder.Eval(instalacion, "Utilizacion"))
+       .Render();
+        //Fin de la utlización e inicio de región
+        ViewContext.Writer.Write("</tr>" + "<tr>" + "</td>" + "<td>");
+
+        Html.DevExpress().Label(
+            edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Región:";
+                edtSettings.AssociatedControlName = "region";
+            }
+        )
+        .Render();
+
+        Html.DevExpress().TextBox(
+           edtSettings =>
+           {
+               edtSettings.Name = "region";
+               edtSettings.ControlStyle.CssClass = "editor";
+               edtSettings.ShowModelErrors = true;
+               edtSettings.Width = Unit.Pixel(300);
+               edtSettings.ToolTip = c.KeyValue == null ? "Ingresar la Región" : "Editar la Región";
+           }
+       )
+       .Bind(DataBinder.Eval(instalacion, "region"))
+       .Render();
+        //Fin de región e inico de estatus
+        ViewContext.Writer.Write("</td>" + "<td>");
+        Html.DevExpress().Label(
+            edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Estado de los bienes:";
+                edtSettings.AssociatedControlName = "Estatus";
+            }
+        )
+        .Render();
+
+        Html.DevExpress().TextBox(
+           edtSettings =>
+           {
+               edtSettings.Name = "Estatus";
+               edtSettings.ControlStyle.CssClass = "editor";
+               edtSettings.ShowModelErrors = true;
+               edtSettings.Width = Unit.Pixel(300);
+               edtSettings.ToolTip = c.KeyValue == null ? "Ingresar el Estado de los Bienes" : "Editar el Estado del Bien";
+           }
+       )
+       .Bind(DataBinder.Eval(instalacion, "Estatus"))
+       .Render();
+        //fin de estatus e inicio de certificado
+        ViewContext.Writer.Write("</td>" + "</tr>" + "<tr>" + "<td>");
+        Html.DevExpress().Label(
+            edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Certificado:";
+                edtSettings.AssociatedControlName = "Certificado";
+            }
+        )
+        .Render();
+
+        Html.DevExpress().TextBox(
+           edtSettings =>
+           {
+               edtSettings.Name = "Certificado";
+               edtSettings.ControlStyle.CssClass = "editor";
+               edtSettings.ShowModelErrors = true;
+               edtSettings.Width = Unit.Pixel(300);
+               edtSettings.ToolTip = c.KeyValue == null ? "Ingresar el Certificado del Bien" : "Editar el Certificado del Bien";
+           }
+       )
+       .Bind(DataBinder.Eval(instalacion, "Certificado"))
+       .Render();
+
+        ViewContext.Writer.Write("</td>" + "<td>");
+        Html.DevExpress().Label(
+            edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Tipo de Adquisición";
+                edtSettings.AssociatedControlName = "Fk_IdTipoAdquisicion_SIS";
+            }
+        )
+        .Render();
+        Html.DevExpress().ComboBox(
+             edtSettings =>
+             {
+                 edtSettings.Name = "Fk_IdTipoAdquisicion_SIS";
+                 edtSettings.ControlStyle.CssClass = "editor";
+                 edtSettings.Properties.TextField = "Nombre";
+                 edtSettings.Properties.NullText = "Campo Requerido";
+                 edtSettings.Properties.ValueField = "Pk_IdTipoAdquisicion";
+                 edtSettings.Properties.IncrementalFilteringMode = IncrementalFilteringMode.Contains;
+                 edtSettings.Properties.IncrementalFilteringDelay = 5;
+                 edtSettings.Properties.ValueType = typeof(int);
+                 edtSettings.ShowModelErrors = true;
+                 edtSettings.Width = Unit.Pixel(300);
+                 edtSettings.ToolTip = c.KeyValue == null ? "Seleccione el Tipo de Adquisición" : "Cambiar el Tipo de Adquisición";
+             }
+         )
+         .BindList(DXMVCWebApplication1.Models.Senasica.GetTipoDeAdquisicion())
+         .Bind(DataBinder.Eval(instalacion, "Fk_IdTipoAdquisicion_SIS"))
+         .Render();
+        ViewContext.Writer.Write("</td>" + "</tr>" + "</table><br>");
+        //Botones
+        ViewContext.Writer.Write("<div class=\"line\">");
+        Html.DevExpress().Label(
+            edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+            }
+        )
+        .Render();
+        Html.DevExpress().Button(
+            btnSettings =>
+            {
+                btnSettings.Name = "btnInstalacionUpdate";
+                btnSettings.ControlStyle.CssClass = "button";
+                btnSettings.Text = "Actualizar";
+                btnSettings.Images.Image.Url = "Content/Images/guardar.png";
+                btnSettings.ImagePosition = ImagePosition.Right;
+                btnSettings.Images.Image.Width = 16;
+                btnSettings.ClientSideEvents.Click = "function(s, e){ InstalacionesGrid_" + ViewData["UEID"] + ".UpdateEdit(); }";
+                btnSettings.Width = Unit.Pixel(30);
+                btnSettings.ClientVisible = Convert.ToBoolean(ViewData["Escritura"]);
+            }
+        )
+        .Render();
+        Html.DevExpress().Button(
+            btnSettings =>
+            {
+                btnSettings.Name = "btnInstalacionCancel";
+                btnSettings.ControlStyle.CssClass = "button";
+                btnSettings.Text = "Cancelar";
+                btnSettings.Images.Image.Url = "Content/Images/cancelar.png";
+                btnSettings.ImagePosition = ImagePosition.Right;
+                btnSettings.Style["position"] = "relative";
+                btnSettings.Style["left"] = "5px";
+                btnSettings.ClientSideEvents.Click = "function(s, e){ InstalacionesGrid_" + ViewData["UEID"] + ".CancelEdit(); }";
+                btnSettings.Width = Unit.Pixel(30);
+            }
+        )
+        .Render();
+
+
+        ViewContext.Writer.Write("</div>"); // Termina Codigo de Botones
+    });
+
+
+}).Bind(Model).GetHtml()

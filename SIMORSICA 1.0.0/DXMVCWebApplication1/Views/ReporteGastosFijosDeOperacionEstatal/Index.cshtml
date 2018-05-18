@@ -1,0 +1,108 @@
+﻿@{
+    var popUp = Html.DevExpress().PopupControl(settings =>
+    {
+        settings.Name = "popUpRepGFO";
+        settings.Width = 360;
+        settings.AllowDragging = true;
+        settings.CloseAction = CloseAction.CloseButton;
+        settings.PopupAnimationType = AnimationType.None;
+        settings.HeaderText = "Gastos Relacionados al Comité";
+        settings.Modal = true;
+        settings.ShowCloseButton = false;
+        settings.PopupHorizontalAlign = PopupHorizontalAlign.WindowCenter;
+        settings.PopupVerticalAlign = PopupVerticalAlign.WindowCenter;
+
+        int _Fk_IdEstado = Convert.ToInt32(ViewData["_Fk_IdEstado"]);
+        int _Fk_IdUnidadEjecutora = Convert.ToInt32(ViewData["_Fk_IdUnidadEjecutora"]);
+        string rolusuario = Convert.ToString(ViewData["rolusuario"]);
+
+        settings.SetContent(() =>
+        {
+            using (Html.BeginForm("IndexReporte", "ReporteGastosFijosDeOperacionEstatal", FormMethod.Post, new { id = "ParamsRepPersona" }))
+            {
+                ViewContext.Writer.Write("<table>");
+                ViewContext.Writer.Write("<tr><td>");
+                //---------------------------------
+                Html.DevExpress().Label(edtSettings =>
+                {
+                    edtSettings.ControlStyle.CssClass = "label";
+                    edtSettings.Text = "Seleccione el Comité:";
+                    edtSettings.Name = "labelComite";
+                }).Render();
+                ViewContext.Writer.Write("</td></tr>");
+                ViewContext.Writer.Write("<tr><td>");
+
+                int? _Fk_IdEstado_ = _Fk_IdEstado;
+                int? _Fk_IdUnidadEjecutora_ = _Fk_IdUnidadEjecutora;
+                string rolusuario_ = rolusuario;
+
+                Html.DevExpress().ComboBox(edtSettings =>
+                {
+                    edtSettings.Name = "ComboComite"; // envía al reporte como parámetro "ComboComite"
+                    edtSettings.ControlStyle.CssClass = "editor";
+                    edtSettings.Properties.TextField = "Nombre";
+                    edtSettings.Properties.ValueField = "Pk_IdUnidadEjecutora";
+                    edtSettings.ToolTip = "Seleccione el Comité";
+                    edtSettings.Properties.ValueType = typeof(int);
+                    edtSettings.Width = Unit.Pixel(350);
+                    edtSettings.Properties.NullText = "Campo Requerido";
+                    edtSettings.ShowModelErrors = true;
+                    edtSettings.Properties.EnableSynchronization = DefaultBoolean.True;
+                    edtSettings.Properties.IncrementalFilteringMode = IncrementalFilteringMode.Contains;
+                }).BindList(DXMVCWebApplication1.Models.Senasica.GetUnidadEjecutoraByUsuario(rolusuario_,FuncionesAuxiliares.GetCurrent_IdUnidadResponsable(), _Fk_IdEstado_, _Fk_IdUnidadEjecutora_))
+                .Render();
+                //-----------------------
+                ViewContext.Writer.Write("</td></tr>");
+                ViewContext.Writer.Write("</table>");
+                ViewContext.Writer.Write("<br />");
+
+                ViewContext.Writer.Write("<div width=100% >");
+                Html.DevExpress().Button(btnSettings =>
+                {
+                    btnSettings.Name = "btnAceptarReporte_GFO";
+                    btnSettings.Text = "Aceptar";
+                    btnSettings.ControlStyle.CssClass = "button";
+                    btnSettings.Images.Image.Url = "/Content/Images/aceptar.png";
+                    btnSettings.ImagePosition = ImagePosition.Right;
+                    btnSettings.Style["position"] = "relative";
+                    btnSettings.Style["left"] = "5px";
+                    btnSettings.UseSubmitBehavior = true;
+                }).Render();
+                Html.DevExpress().Button(btnSettings =>
+                {
+                    btnSettings.Name = "btnCancelarReport";
+                    btnSettings.Text = "Cancelar";
+                    btnSettings.ControlStyle.CssClass = "button";
+                    btnSettings.Images.Image.Url = "/Content/Images/cancelar.png";
+                    btnSettings.ImagePosition = ImagePosition.Right;
+                    btnSettings.Style["position"] = "relative";
+                    btnSettings.Style["left"] = "10px";
+                    btnSettings.ClientSideEvents.Click = "function(){returnHome();}";
+                }).Render();
+                Html.DevExpress().Label(ErrSettings =>
+                {
+                    ErrSettings.Name = "Errorcomite";
+                    ErrSettings.Style["Color"] = "Red";
+                    ErrSettings.Style["padding-left"] = "200px";
+                    if (ViewData["EditError"] != null)
+                    {
+                        ErrSettings.Text = ViewData["EditError"].ToString();
+                    }
+                }).Render();
+                ViewContext.Writer.Write("</div>");
+            }
+        });
+    });
+}
+
+@popUp.GetHtml()
+
+<script type="text/javascript">
+    window.onload = function (s, e) {
+        popUpRepGFO.Show();
+    }
+
+    function returnHome() {
+        window.location = "Home/Index";
+    }
+</script>

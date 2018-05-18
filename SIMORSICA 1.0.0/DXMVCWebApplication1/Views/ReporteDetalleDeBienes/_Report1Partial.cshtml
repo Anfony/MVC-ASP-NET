@@ -1,0 +1,7 @@
+@Html.DevExpress().DocumentViewer(settings => {
+    settings.Name = "Report1";
+    settings.CallbackRouteValues = new { Controller = "ReporteDetalleDeBienes", Action = "Report1Partial", ComboUR = ViewData["ComboUR"] };
+    settings.ExportRouteValues = new { Controller = "ReporteDetalleDeBienes", Action = "Report1PartialExport", ComboUR = ViewData["ComboUR"] };
+	settings.Report = (XtraReport)Model;
+	settings.ToolbarMode = DocumentViewerToolbarMode.StandardToolbar;
+}).GetHtml()

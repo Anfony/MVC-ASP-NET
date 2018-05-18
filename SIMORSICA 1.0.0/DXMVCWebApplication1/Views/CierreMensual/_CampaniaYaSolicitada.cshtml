@@ -1,0 +1,101 @@
+﻿@Html.DevExpress().PopupControl(settings =>
+{
+    settings.Name = "popUpCampaniaYaSolicitada";
+    settings.Width = 400;
+    settings.AllowDragging = true;
+    settings.ShowCloseButton = false;
+    settings.PopupAnimationType = AnimationType.None;
+    settings.HeaderText = "Campaña ya solicitada para su apertura";
+    settings.Modal = true;
+    settings.PopupHorizontalAlign = PopupHorizontalAlign.WindowCenter;
+    settings.PopupVerticalAlign = PopupVerticalAlign.WindowCenter;
+
+    settings.SetContent(() =>
+    {
+        ViewContext.Writer.Write("<br />");
+
+        Html.DevExpress().Label(edtSettings =>
+        {
+            edtSettings.ControlStyle.CssClass = "label";
+            edtSettings.Text = "Detalles de la campaña";
+            edtSettings.ControlStyle.Font.Size = 12;
+        }).Render();
+
+        ViewContext.Writer.Write("<hr align='left' width='100%'>");
+
+        Html.DevExpress().Label(edtSettings =>
+        {
+            edtSettings.ControlStyle.CssClass = "label";
+            edtSettings.Text = "Campaña";
+            edtSettings.Name = "CampaniaLbl";
+        }).Render();
+
+        Html.DevExpress().TextBox(settingsTextBox =>
+        {
+            settingsTextBox.Name = "Campania";
+            settingsTextBox.Width = Unit.Pixel(400);
+            settingsTextBox.ReadOnly = true;
+        }).Bind(Model.Campania.ProyectoPresupuesto.ProyectoAutorizado.Nombre)
+        .Render();
+
+        ViewContext.Writer.Write("<br />");
+
+        Html.DevExpress().Label(edtSettings =>
+        {
+            edtSettings.ControlStyle.CssClass = "label";
+            edtSettings.Text = "Mes de cierre";
+            edtSettings.Name = "MesLbl";
+        }).Render();
+
+        Html.DevExpress().TextBox(settingsTextBox =>
+        {
+            settingsTextBox.Name = "Mes";
+            settingsTextBox.Width = Unit.Pixel(400);
+            settingsTextBox.ReadOnly = true;
+        }).Bind(Model.Me.Descripcion)
+        .Render();
+
+        ViewContext.Writer.Write("<br />");
+
+        Html.DevExpress().Label(edtSettings =>
+        {
+            edtSettings.ControlStyle.CssClass = "label";
+            edtSettings.Text = "Comentarios";
+            edtSettings.Name = "ComentariosLbl";
+        }).Render();
+
+        Html.DevExpress().TextBox(settingsTextBox =>
+        {
+            settingsTextBox.Name = "Comentarios";
+            settingsTextBox.Width = Unit.Pixel(400);
+            settingsTextBox.ReadOnly = true;
+        }).Bind(Model.Comentarios)
+        .Render();
+
+        ViewContext.Writer.Write("<br />");
+        ViewContext.Writer.Write("<br />");
+
+        ViewContext.Writer.Write("<div style='float:right'>");
+        Html.DevExpress().Button(btnSettings =>
+        {
+            btnSettings.Name = "btnConfirma";
+            btnSettings.Text = "";
+            btnSettings.ToolTip = "Aceptar";
+            btnSettings.ControlStyle.CssClass = "button";
+            btnSettings.ImagePosition = ImagePosition.Right;
+            btnSettings.Images.Image.Width = 16;
+            btnSettings.Images.Image.Url = "/Content/Images/aceptar.png";
+            btnSettings.ClientSideEvents.Click = "function(){ window.location = 'Index'; }";
+        }).Render();
+        ViewContext.Writer.Write("</div>");
+    });
+}).GetHtml()
+
+<script type="text/javascript">
+
+    window.onload = function (s, e) {
+        popUpCampaniaYaSolicitada.Show();
+    }
+
+</script>
+

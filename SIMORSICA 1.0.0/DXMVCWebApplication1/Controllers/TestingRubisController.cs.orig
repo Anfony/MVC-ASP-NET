@@ -1,0 +1,64 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Data.Entity;
+using System.Linq;
+using System.Net;
+using System.Web;
+using System.Web.Mvc;
+using DXMVCWebApplication1.Models;
+<<<<<<< HEAD
+using DevExpress.Web.Mvc;
+
+=======
+using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.EntityFramework;
+>>>>>>> 0c932da299e7def1de8ede5462037a1dae1f52d9
+
+namespace DXMVCWebApplication1.Controllers
+{
+    [Authorize(Roles = "Admin, User")]
+    public class TestingRubisController : Controller
+    {
+        private DB_SENASICAEntities db = new DB_SENASICAEntities();
+        private UserManager<ApplicationUser> manager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(new ApplicationDbContext()));
+        // GET: /TestingRubis/
+        public ActionResult Index(int? UE)
+        {
+            ViewBag.Message = "Report Parameter Example";
+            // Add a report to a view data.
+            DXMVCWebApplication1.Reports.UnidadEjecutora_ROG report = new DXMVCWebApplication1.Reports.UnidadEjecutora_ROG();
+            ViewData["Report"] = report;
+            if (UE == null)
+                UE = 105; // default parameter value
+
+            DevExpress.XtraReports.Parameters.Parameter param = report.Parameters["UE"];
+            if (param != null)
+                param.Value = Convert.ToInt32(UE);
+            return View();
+
+        }
+
+ 
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                db.Dispose();
+            }
+            base.Dispose(disposing);
+        }
+
+        DXMVCWebApplication1.Reports.UnidadEjecutora_ROG report = new DXMVCWebApplication1.Reports.UnidadEjecutora_ROG();
+
+        public ActionResult UnidadEjecutoraReportPartial(int? UE)
+        {
+            return PartialView("_UnidadEjecutoraReportPartial", report);
+        }
+
+        public ActionResult UnidadEjecutoraReportPartialExport(int? UE)
+        {
+            return DocumentViewerExtension.ExportTo(report, Request);
+        }
+    }
+}

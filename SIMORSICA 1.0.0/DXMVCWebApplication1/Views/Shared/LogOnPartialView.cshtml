@@ -1,0 +1,73 @@
+@using Microsoft.AspNet.Identity
+
+@if (Request.IsAuthenticated)
+{
+    <table>
+        <tr>
+            <td>
+                @Html.DevExpress().Label(edtSettings =>
+       {
+           edtSettings.ControlStyle.CssClass = "label";
+           edtSettings.Text = "Año Presupuestal: ";
+           edtSettings.ToolTip = "Puedes cambiar el año presupuestal";
+           edtSettings.AssociatedControlName = "IdAnioPresupuestal";
+           edtSettings.Style[HtmlTextWriterStyle.BackgroundColor] = "#f0f0f0";
+       }).GetHtml()
+            </td>
+            <td>
+                @Html.DevExpress().Menu(settingsMenu =>
+  {
+      settingsMenu.Name = "AnioPresupuestal";
+
+      settingsMenu.Items.Add(item =>
+      {
+          item.Text = DXMVCWebApplication1.Common.FuncionesAuxiliares.AnioPresupuestal(Convert.ToInt32(Session["IdAnio"]));
+          item.ToolTip = "Puedes cambiar el año presupuestal";
+
+          item.Items.Add(itembtn =>
+          {
+              itembtn.Text = "2018";
+              itembtn.NavigateUrl = Url.Action("AsignaAnioPresupuestal", "Home", new { IdAnio = 5, Controlador = ViewContext.Controller.ValueProvider.GetValue("controller").RawValue, Accion = ViewContext.Controller.ValueProvider.GetValue("action").RawValue });
+          });
+
+          item.Items.Add(itembtn =>
+          {
+              itembtn.Text = "2017";
+              itembtn.NavigateUrl = Url.Action("AsignaAnioPresupuestal", "Home", new { IdAnio = 3, Controlador = ViewContext.Controller.ValueProvider.GetValue("controller").RawValue, Accion = ViewContext.Controller.ValueProvider.GetValue("action").RawValue });
+          });
+
+          item.Items.Add(itembtn =>
+          {
+              itembtn.Text = "2016";
+              itembtn.NavigateUrl = Url.Action("AsignaAnioPresupuestal", "Home", new { IdAnio = 2, Controlador = ViewContext.Controller.ValueProvider.GetValue("controller").RawValue, Accion = ViewContext.Controller.ValueProvider.GetValue("action").RawValue });
+          });
+      });
+  }).GetHtml()
+            </td>
+            <td>
+                @Html.DevExpress().Label(edtSettings =>
+       {
+           edtSettings.ControlStyle.CssClass = "label";
+           edtSettings.Text = "       ";
+           edtSettings.AssociatedControlName = "IdAnioPresupuestal";
+       }).GetHtml()
+            </td>
+            <th height='30'>
+                <div style="float: right; margin-right: 20px"><a href="https://docs.google.com/document/d/1f9aSW0edccwIgPhDR9MtPMNzdoWhS5IMoTTTVDS8rXs/edit?usp=sharing" style="color: green" target="_blank"> <u>Comunicados Oficiales</u></a></div>
+            </th>
+            <td>
+                @using (Html.BeginForm("Cerrar Sesion", "Account", FormMethod.Post, new { id = "logoutForm", @class = "navbar-right" }))
+        {
+            @Html.AntiForgeryToken()
+
+            <img src="@Url.Content("~/Content/Images/male-shadow-circle-512.png")" style="width:30px;" />
+            @Html.ActionLink(User.Identity.GetUserName() + " | ", "Manage", "Account", routeValues: null, htmlAttributes: new { title = "Administrar Cuenta" })
+            @Html.ActionLink("Cerrar Sesión", "LogOff", "Account", routeValues: null, htmlAttributes: new { id = "LogOffLink" })
+}
+            </td>
+        </tr>
+    </table>
+    <table>
+
+    </table>
+}

@@ -1,0 +1,9 @@
+﻿@Html.DevExpress().DocumentViewer(settings =>
+{
+    settings.Name = "ReporteInformeMensualAvance";
+    settings.CallbackRouteValues = new { Controller = "ReporteInformeDetalleFisicoFinanciero", Action = "reporteAvanceFisicoFinanciero", ComboReport = ViewData["ComboReport"] };
+    settings.ExportRouteValues = new { Controller = "ReporteInformeDetalleFisicoFinanciero", Action = "ReportPartialExport", ComboReport = ViewData["ComboReport"] };
+    settings.Report = (XtraReport)Model;
+    settings.ToolbarMode = DocumentViewerToolbarMode.StandardToolbar;
+}).GetHtml()
+

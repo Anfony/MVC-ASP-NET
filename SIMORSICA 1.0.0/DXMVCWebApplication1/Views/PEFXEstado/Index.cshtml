@@ -1,0 +1,36 @@
+﻿
+
+@{
+    ViewBag.Title = "Registro de Presupuesto por Estado";
+}
+
+<div style="float: right; margin-right: 20px"><a href="https://docs.google.com/document/d/1ZJURCxDAT76zN4TpKa2cBHEdF3RZFUNkAv3o9iyWxG4/edit#heading=h.1qoc8b1" target="_blank"><u>Ayuda</u></a>  |  <a href="http://soporte.simosica.com/support/solutions/articles/22000184563-preguntas-frecuentes" target="_blank"> <u>Preguntas Frecuentes</u></a></div>
+ 
+<h2 style="font-size:17px; font:bold; text-align:center">Distribución del Presupuesto de Egresos de la Federación por Estado</h2>
+<h3 style="font-size:17px; font:bold; text-align:center">Registre aquí El Presupuesto</h3>
+
+
+<br>
+<br>
+
+@Html.Partial("~/Views/ExportExcelPDF/_ExportExcelPDF.cshtml", new ViewDataDictionary { { "Clave", DXMVCWebApplication1.Common.ListaPantallas.UE_PEFXESTADO } })
+
+@Html.DevExpress().Button(btnSettings =>
+{
+    btnSettings.Name = "CierraDistribucion";
+    btnSettings.Text = Convert.ToBoolean(ViewData["esRecursoCerrado"]) ? "Recursos cerrados" : "Cierra la distribución";
+    btnSettings.ToolTip = Convert.ToBoolean(ViewData["esRecursoCerrado"]) ? "El recurso ha sido cerrado para este año" : "Movimiento irreversible";
+    btnSettings.ClientEnabled = !Convert.ToBoolean(ViewData["esRecursoCerrado"]);
+    btnSettings.ControlStyle.CssClass = "button";
+    btnSettings.ImagePosition = ImagePosition.Right;
+    btnSettings.Images.Image.Url = Convert.ToBoolean(ViewData["esRecursoCerrado"]) ? "/Content/Images/candado_cerrado.png" : "/Content/Images/candado_abierto.png";
+    btnSettings.Style["position"] = "relative";
+    btnSettings.Style["left"] = "15px";
+    btnSettings.ClientSideEvents.Click = "function(s, e){ popUpCerrarDistribucion.Show(); }";
+}).GetHtml()
+
+    <br>
+    <br>
+
+
+    @Html.Action("PEFXEstadoGridViewPartial")

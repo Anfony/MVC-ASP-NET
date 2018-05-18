@@ -1,0 +1,46 @@
+﻿@model DXMVCWebApplication1.Models.LoginViewModel
+
+@{
+    ViewBag.Title = "Ingreso";
+}
+
+<div style="position: absolute; margin-left: 0; margin-right: 0; width: 100%; text-align: center; ">
+    <div class="container" style="background: #F4F4F4; margin-left: 5em; margin-top: 5em; text-align: left; display: inline-block; border: solid; width: 350px; padding: 50px; border-width: 1px; border-radius: 5px; border-color: dimgrey">
+        <section id="loginForm">
+            @using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form", @Style = "width: 20em;" }))
+            {
+                @Html.AntiForgeryToken()
+                <div>
+                    <h4 style="text-align:center">Iniciar sesión en SIMOSICA</h4>
+                    <br />
+                </div>
+                <div class="form-group">
+                    @Html.TextBoxFor(m => m.UserName, new { @class = "form-control", @PlaceHolder = "Nombre de Usuario" })
+                    @Html.ValidationMessageFor(m => m.UserName)
+                    <br />
+                    @Html.PasswordFor(m => m.Password, new { @class = "form-control", @PlaceHolder = "Contraseña" })
+                    @Html.ValidationMessageFor(m => m.Password)
+                    @Html.ValidationSummary(true)
+                </div>
+                <div class="form-group" style="align-content:center">
+                    <input type="submit" value="Iniciar Sesión" class="btn btn-default" style="background: #6c8c2f; font-weight: bold; position:relative; left: 90px" />
+                    <br />
+                    <br />
+                    <label > @Html.CheckBoxFor(m => m.RememberMe) Recordarme en este equipo</label>
+                    <br />
+                    @Html.ActionLink("¿Has olvidado tu contraseña?", "PideDatosRecuperacionContrasenia", "Account")
+                </div>
+            }
+        </section>
+    </div>
+</div>
+
+    @section Scripts {
+        @Scripts.Render("~/bundles/jqueryval")
+        @Styles.Render("~/Content/css")
+        @Styles.Render("~/Content/themes/base/css")
+        @Scripts.Render("~/bundles/modernizr")
+        @Scripts.Render("~/bundles/jquery")
+        @Scripts.Render("~/bundles/bootstrap")
+        @Scripts.Render("~/bundles/jqueryui")
+    }

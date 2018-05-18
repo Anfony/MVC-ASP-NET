@@ -1,0 +1,109 @@
+﻿@{
+    var grid = Html.DevExpress().GridView(settings =>
+    {
+        settings.Name = "DGCierreMensual";
+        settings.Style["position"] = "relative";
+        settings.Style["left"] = "10px";
+
+        settings.CallbackRouteValues = new { Controller = "CierreMensualSolApertura", Action = "CierreMensualGridViewPartial" };
+
+        settings.SettingsEditing.Mode = GridViewEditingMode.PopupEditForm;
+        settings.SettingsBehavior.ConfirmDelete = true;
+
+        settings.SettingsPopup.EditForm.Height = 300;
+        settings.SettingsPopup.EditForm.Width = 70;
+        settings.SettingsPopup.EditForm.HorizontalAlign = PopupHorizontalAlign.WindowCenter;
+        settings.SettingsPopup.EditForm.VerticalAlign = PopupVerticalAlign.WindowCenter;
+        settings.SettingsPopup.EditForm.Modal = true;
+
+        settings.CommandColumn.ShowClearFilterButton = true;
+
+        settings.CommandColumn.Visible = false;
+        settings.SettingsPager.Visible = true;
+        settings.SettingsPager.Position = PagerPosition.Bottom;
+        settings.SettingsPager.FirstPageButton.Visible = true;
+        settings.SettingsPager.LastPageButton.Visible = true;
+        settings.SettingsPager.PageSizeItemSettings.Visible = true;
+        settings.SettingsPager.PageSize = 10;
+        settings.SettingsPager.PageSizeItemSettings.Items = new string[] { "5", "10", "15" };
+        settings.Settings.ShowFilterRowMenu = true;
+
+        settings.KeyFieldName = "Pk_IdCierreMensual";
+
+        settings.Settings.ShowGroupPanel = true;
+        settings.Settings.ShowFilterRow = true;
+        settings.SettingsBehavior.AllowSelectByRowClick = true;
+
+        settings.Settings.ShowFooter = true;
+
+        settings.Columns.Add(column =>
+        {
+            column.SetDataItemTemplateContent(c =>
+            {
+
+                ViewContext.Writer.Write("<table>");
+                ViewContext.Writer.Write("<tr><td>");
+
+                using (Html.BeginForm("Index", "CierreMensualHistorico", new { IdCierreMensual = c.KeyValue.ToString(), controlador = "CierreMensualSolApertura" }, FormMethod.Post))
+                {
+                    Html.DevExpress().Button(btnSettings =>
+                    {
+                        btnSettings.Name = "btnHistorico" + c.KeyValue.ToString();
+                        btnSettings.Text = "Ver Solicitudes";
+                        btnSettings.ToolTip = "Ver Solicitudes Realizadas";
+                        btnSettings.ControlStyle.CssClass = "button";
+                        btnSettings.ImagePosition = ImagePosition.Right;
+                        btnSettings.UseSubmitBehavior = true;
+                        btnSettings.ControlStyle.Border.BorderWidth = Unit.Pixel(0);
+                        btnSettings.ControlStyle.ForeColor = System.Drawing.Color.DarkOliveGreen;
+                        btnSettings.ControlStyle.Font.Bold = true;
+                    }).Render();
+                }
+                ViewContext.Writer.Write("</td>");
+
+                ViewContext.Writer.Write("<td>");
+                using (Html.BeginForm("ValidaCampaniaApertura", "CierreMensualSolApertura", new { IdCierreMensual = c.KeyValue.ToString() }, FormMethod.Post))
+                {
+                    Html.DevExpress().Button(btnSettings =>
+                    {
+                        btnSettings.Name = "btnNew" + c.KeyValue.ToString();
+                        btnSettings.Text = "Atender Petición";
+                        btnSettings.ToolTip = "Atendiende la petición aceptando o rechanzado la apertura";
+                        btnSettings.ControlStyle.CssClass = "button";
+                        btnSettings.ImagePosition = ImagePosition.Right;
+                        btnSettings.Images.Image.Width = 16;
+                        btnSettings.UseSubmitBehavior = true;
+                        btnSettings.ControlStyle.ForeColor = System.Drawing.Color.DarkOliveGreen;
+                        btnSettings.ControlStyle.Font.Bold = true;
+                        btnSettings.ControlStyle.Border.BorderWidth = Unit.Pixel(0);
+                    }).Render();
+                }
+
+                ViewContext.Writer.Write("</td></tr>");
+                ViewContext.Writer.Write("</table>");
+            });
+        });
+
+        settings.CustomUnboundColumnData = (sender, e) =>
+        {
+            if (e.Column.FieldName == "cerrado")
+            {
+                if (Convert.ToBoolean(e.GetListSourceFieldValue("esCerrado"))) e.Value = "Sí";
+                else e.Value = "No";
+
+                e.Column.ReadOnly = true;
+            }
+        };
+
+        settings.Columns.Add("Campania.ProyectoPresupuesto.UnidadEjecutora.Nombre", "Instancia Ejecutora");
+        settings.Columns.Add("Campania.ProyectoPresupuesto.ProyectoAutorizado.Nombre", "Campaña");
+        settings.Columns.Add("Campania.RecSol_Fed", "Recurso Federal Solicitado").PropertiesEdit.DisplayFormatString = "C";
+        settings.Columns.Add("Campania.RecSol_Est", "Recurso Estatal Solicitado").PropertiesEdit.DisplayFormatString = "C";
+        settings.Columns.Add("Me.Descripcion", "Mes");
+        settings.Columns.Add("Comentarios", "Comentarios");
+
+    });
+}
+
+@grid.Bind(Model).GetHtml()
+

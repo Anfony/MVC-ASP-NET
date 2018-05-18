@@ -1,0 +1,37 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Web.Mvc;
+<<<<<<< HEAD
+using DXMVCWebApplication1.Reports;
+=======
+using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.EntityFramework;
+>>>>>>> 0c932da299e7def1de8ede5462037a1dae1f52d9
+
+namespace DXMVCWebApplication1.Controllers
+{
+    [Authorize(Roles = "Admin, User")]
+    public class ReporteUEController : Controller
+    {
+        //
+        // GET: /ReporteUE/
+        public ActionResult Index()
+        {
+            return View();
+        }
+
+        //public ActionResult DocumentViewerPartial()
+        //{
+        //    ViewData["Report"] = new DXMVCWebApplication1.Reports.UnidadEjecutora();
+        //    return PartialView("DocumentViewerPartial");
+        //}
+
+        //public ActionResult ExportDocumentViewer()
+        //{
+        //    return DevExpress.Web.Mvc.DocumentViewerExtension.ExportTo(
+        //        new DXMVCWebApplication1.Reports.TestingReports());
+        //}
+	}
+}

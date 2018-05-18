@@ -1,0 +1,43 @@
+﻿@*    Este es un mensaje de error que podrá ser utilizado en todo el sistema    *@
+@Html.DevExpress().PopupControl(settings =>
+{
+    settings.Name = ViewData["Id"].ToString();
+    settings.AllowDragging = true;
+    settings.CloseAction = CloseAction.CloseButton;
+    settings.PopupAnimationType = AnimationType.None;
+    settings.HeaderText = "¡ERROR!";
+    settings.Styles.Header.ForeColor = System.Drawing.Color.Red;
+    settings.Styles.Header.Font.Bold = true;
+    settings.Styles.Header.Font.Size = 16;
+    settings.Modal = true;
+    settings.PopupHorizontalAlign = PopupHorizontalAlign.WindowCenter;
+    settings.PopupVerticalAlign = PopupVerticalAlign.WindowCenter;
+
+    settings.SetContent(() =>
+    {
+        Html.DevExpress().Label(edtSettings =>
+        {
+            edtSettings.ControlStyle.CssClass = "label";
+            edtSettings.Text = ViewData["Mensaje"].ToString().ToUpper();
+            edtSettings.ControlStyle.Font.Size = 11;
+            edtSettings.ControlStyle.Font.Bold = true;
+        }).Render();
+
+        ViewContext.Writer.Write("<br />");
+        ViewContext.Writer.Write("<br />");
+
+        ViewContext.Writer.Write("<div style='float:right'>");
+        Html.DevExpress().Button(btnSettings =>
+        {
+            btnSettings.Name = "btn" + ViewData["Id"].ToString();
+            btnSettings.Text = "Aceptar";
+            btnSettings.ControlStyle.CssClass = "button";
+            btnSettings.Images.Image.Url = "/Content/Images/aceptar.png";
+            btnSettings.ImagePosition = ImagePosition.Right;
+            btnSettings.Style["position"] = "relative";
+            btnSettings.Style["left"] = "5px";
+            btnSettings.ClientSideEvents.Click = "function(s, e){ " + ViewData["Id"].ToString() + ".Hide(); }";
+        }).Render();
+        ViewContext.Writer.Write("</div>");
+    });
+}).GetHtml()

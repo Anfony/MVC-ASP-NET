@@ -1,0 +1,225 @@
+﻿@{
+    ViewBag.Title = "Presupuesto Estatal";
+}
+
+<h3 style="font-size:17px; font:bold; text-align:center">PRESUPUESTO ESTATAL</h3>
+<h3 style="font-size: 13px; text-align: center; position: relative; top: -10px">Agrege el presupuesto estatal para los siguientes rubros</h3>
+
+
+<br />
+<br />
+<br />
+@Html.DevExpress().Label(edtSettings =>
+{
+    edtSettings.Name = "GuardadoCorrecto";
+    edtSettings.ControlStyle.CssClass = "label";
+    edtSettings.Text = "SE HA GUARDADO LA INFORMACIÓN CORRECTAMENTE";
+    edtSettings.ClientVisible = Convert.ToBoolean(ViewData["esGuardado"]);
+    edtSettings.Style["left"] = "90px";
+    edtSettings.Style["position"] = "relative";
+}).GetHtml();
+<br />
+<br />
+
+
+@{
+
+    using (Html.BeginForm("GuardaPresupuesto", "EstatalPRES", FormMethod.Post, new { id = "guardaRecursoEstatal" }))
+    {
+        ViewContext.Writer.Write("<table><tr><td>");
+        Html.DevExpress().Label(edtSettings =>
+        {
+            edtSettings.ControlStyle.CssClass = "label";
+            edtSettings.Text = "Sistema Informático";
+            edtSettings.Style["left"] = "90px";
+            edtSettings.Style["position"] = "relative";
+        }).GetHtml();
+        ViewContext.Writer.Write("</td>");
+
+        ViewContext.Writer.Write("<td>");
+        Html.DevExpress().SpinEdit(edtSettings =>
+        {
+            edtSettings.Name = "SistemaInformatico";
+            edtSettings.Properties.MinValue = 0;
+            edtSettings.Properties.MaxValue = 999999999;
+            edtSettings.Properties.NumberType = SpinEditNumberType.Float;
+            edtSettings.Properties.Increment = 0.1M;
+            edtSettings.Properties.LargeIncrement = 1;
+            edtSettings.Properties.SpinButtons.ShowLargeIncrementButtons = true;
+            edtSettings.ControlStyle.CssClass = "editor";
+            edtSettings.ShowModelErrors = true;
+            edtSettings.Width = Unit.Pixel(250);
+            edtSettings.Properties.DisplayFormatString = "c";
+            edtSettings.Style["position"] = "relative";
+            edtSettings.Style["left"] = "100px";
+        }).Bind(DataBinder.Eval(Model, "SistemaInformatico")).GetHtml();
+        ViewContext.Writer.Write("</td>");
+
+        ViewContext.Writer.Write("<td>");
+        Html.DevExpress().Label(edtSettings =>
+        {
+            edtSettings.ControlStyle.CssClass = "label";
+            edtSettings.Text = "Capacitación";
+            edtSettings.Style["left"] = "150px";
+            edtSettings.Style["position"] = "relative";
+        }).GetHtml();
+        ViewContext.Writer.Write("</td>");
+
+        ViewContext.Writer.Write("<td>");
+
+        Html.DevExpress().SpinEdit(edtSettings =>
+        {
+            edtSettings.Name = "Capacitacion";
+            edtSettings.Properties.MinValue = 0;
+            edtSettings.Properties.MaxValue = 999999999;
+            edtSettings.Properties.NumberType = SpinEditNumberType.Float;
+            edtSettings.Properties.Increment = 0.1M;
+            edtSettings.Properties.LargeIncrement = 1;
+            edtSettings.Properties.SpinButtons.ShowLargeIncrementButtons = true;
+            edtSettings.ControlStyle.CssClass = "editor";
+            edtSettings.ShowModelErrors = true;
+            edtSettings.Width = Unit.Pixel(250);
+            edtSettings.Properties.DisplayFormatString = "c";
+            edtSettings.Style["position"] = "relative";
+            edtSettings.Style["left"] = "170px";
+        }).Bind(DataBinder.Eval(Model, "Capacitacion")).GetHtml();
+        ViewContext.Writer.Write("</td>");
+
+        ViewContext.Writer.Write("<td>");
+        Html.DevExpress().Label(edtSettings =>
+        {
+            edtSettings.ControlStyle.CssClass = "label";
+            edtSettings.Text = "Divulgación";
+            edtSettings.Style["left"] = "220px";
+            edtSettings.Style["position"] = "relative";
+        }).GetHtml();
+        ViewContext.Writer.Write("</td>");
+
+        ViewContext.Writer.Write("<td>");
+        Html.DevExpress().SpinEdit(edtSettings =>
+        {
+            edtSettings.Name = "Divulgacion";
+            edtSettings.Properties.MinValue = 0;
+            edtSettings.Properties.MaxValue = 999999999;
+            edtSettings.Properties.NumberType = SpinEditNumberType.Float;
+            edtSettings.Properties.Increment = 0.1M;
+            edtSettings.Properties.LargeIncrement = 1;
+            edtSettings.Properties.SpinButtons.ShowLargeIncrementButtons = true;
+            edtSettings.ControlStyle.CssClass = "editor";
+            edtSettings.ShowModelErrors = true;
+            edtSettings.Width = Unit.Pixel(250);
+            edtSettings.Properties.DisplayFormatString = "c";
+            edtSettings.Style["position"] = "relative";
+            edtSettings.Style["left"] = "240px";
+        }).Bind(DataBinder.Eval(Model, "Divulgacion")).GetHtml();
+        ViewContext.Writer.Write("</td>");
+        ViewContext.Writer.Write("</tr></table>");
+
+        ViewContext.Writer.Write("<br >");
+        ViewContext.Writer.Write("<br >");
+
+        ViewContext.Writer.Write("<table><tr>");
+        ViewContext.Writer.Write("<td>");
+        Html.DevExpress().Label(edtSettings =>
+        {
+            edtSettings.ControlStyle.CssClass = "label";
+            edtSettings.Text = "Emergencias Sanitarias";
+            edtSettings.Name = "lblPuesto1";
+            edtSettings.Style["left"] = "70px";
+            edtSettings.Style["position"] = "relative";
+        }).GetHtml();
+        ViewContext.Writer.Write("</td>");
+
+        ViewContext.Writer.Write("<td>");
+        Html.DevExpress().SpinEdit(edtSettings =>
+        {
+            edtSettings.Name = "EmergenciaSanitaria";
+            edtSettings.Properties.MinValue = 0;
+            edtSettings.Properties.MaxValue = 999999999;
+            edtSettings.Properties.NumberType = SpinEditNumberType.Float;
+            edtSettings.Properties.Increment = 0.1M;
+            edtSettings.Properties.LargeIncrement = 1;
+            edtSettings.Properties.SpinButtons.ShowLargeIncrementButtons = true;
+            edtSettings.ControlStyle.CssClass = "editor";
+            edtSettings.ShowModelErrors = true;
+            edtSettings.Width = Unit.Pixel(250);
+            edtSettings.Properties.DisplayFormatString = "c";
+            edtSettings.Style["position"] = "relative";
+            edtSettings.Style["left"] = "85px";
+        }).Bind(DataBinder.Eval(Model, "EmergenciaSanitaria")).GetHtml();
+        ViewContext.Writer.Write("</td>");
+
+        ViewContext.Writer.Write("<td>");
+        Html.DevExpress().Label(edtSettings =>
+        {
+            edtSettings.ControlStyle.CssClass = "label";
+            edtSettings.Text = "Gastos de Operación";
+            edtSettings.Style["left"] = "110px";
+            edtSettings.Style["position"] = "relative";
+        }).GetHtml();
+        ViewContext.Writer.Write("</td>");
+
+        ViewContext.Writer.Write("<td>");
+        Html.DevExpress().SpinEdit(edtSettings =>
+        {
+            edtSettings.Name = "GastosOperacion";
+            edtSettings.Properties.MinValue = 0;
+            edtSettings.Properties.MaxValue = 999999999;
+            edtSettings.Properties.NumberType = SpinEditNumberType.Float;
+            edtSettings.Properties.Increment = 0.1M;
+            edtSettings.Properties.LargeIncrement = 1;
+            edtSettings.Properties.SpinButtons.ShowLargeIncrementButtons = true;
+            edtSettings.ControlStyle.CssClass = "editor";
+            edtSettings.ShowModelErrors = true;
+            edtSettings.Width = Unit.Pixel(250);
+            edtSettings.Properties.DisplayFormatString = "c";
+            edtSettings.Style["position"] = "relative";
+            edtSettings.Style["left"] = "120px";
+        }).Bind(DataBinder.Eval(Model, "GastosOperacion")).GetHtml();
+        ViewContext.Writer.Write("</td>");
+
+        ViewContext.Writer.Write("<td>");
+        Html.DevExpress().Label(edtSettings =>
+        {
+            edtSettings.ControlStyle.CssClass = "label";
+            edtSettings.Text = "Inteligencia Sanitaria";
+            edtSettings.Style["left"] = "120px";
+            edtSettings.Style["position"] = "relative";
+        }).GetHtml();
+        ViewContext.Writer.Write("</td>");
+
+        ViewContext.Writer.Write("<td>");
+        Html.DevExpress().SpinEdit(edtSettings =>
+        {
+            edtSettings.Name = "InteligenciaSanitaria";
+            edtSettings.Properties.MinValue = 0;
+            edtSettings.Properties.MaxValue = 999999999;
+            edtSettings.Properties.NumberType = SpinEditNumberType.Float;
+            edtSettings.Properties.Increment = 0.1M;
+            edtSettings.Properties.LargeIncrement = 1;
+            edtSettings.Properties.SpinButtons.ShowLargeIncrementButtons = true;
+            edtSettings.ControlStyle.CssClass = "editor";
+            edtSettings.ShowModelErrors = true;
+            edtSettings.Width = Unit.Pixel(250);
+            edtSettings.Properties.DisplayFormatString = "c";
+            edtSettings.Style["position"] = "relative";
+            edtSettings.Style["left"] = "140px";
+        }).Bind(DataBinder.Eval(Model, "InteligenciaSanitaria")).GetHtml();
+        ViewContext.Writer.Write("</td>");
+
+        ViewContext.Writer.Write("<td>");
+        Html.DevExpress().Button(btnSettings =>
+        {
+            btnSettings.Name = "GuardaRecurso";
+            btnSettings.Text = "Guarda el recurso";
+            btnSettings.ControlStyle.CssClass = "button";
+            btnSettings.Images.Image.Url = "/Content/Images/guardar.png";
+            btnSettings.ImagePosition = ImagePosition.Right;
+            btnSettings.Images.Image.Width = 16;
+            btnSettings.Style["left"] = "170px";
+            btnSettings.Style["position"] = "relative";
+            btnSettings.UseSubmitBehavior = true;
+        }).Render();
+        ViewContext.Writer.Write("</td></tr></table>");
+    }
+}

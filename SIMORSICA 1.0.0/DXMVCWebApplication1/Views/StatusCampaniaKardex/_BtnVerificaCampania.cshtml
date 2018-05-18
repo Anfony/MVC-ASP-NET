@@ -1,0 +1,18 @@
+﻿@Html.DevExpress().Button(btnSettings =>
+{
+    btnSettings.Name = "btnVerificaCampania";
+    btnSettings.ControlStyle.CssClass = "button";
+    btnSettings.Text = "Verifica Campaña";
+    btnSettings.Images.Image.Url = "/Content/Images/aceptar.png";
+    btnSettings.ImagePosition = ImagePosition.Right;
+    btnSettings.Images.Image.Width = 16;
+    btnSettings.Style["position"] = "relative";
+    btnSettings.Style["left"] = "10px";
+    btnSettings.ClientSideEvents.Click = "function(s, e) { popUpValidaCampania.Show(); popUpValidaCampania.PerformCallback(); }";
+}).GetHtml();
+
+@Html.Partial("_VerificaCampania")
+
+<br />
+
+@Html.Action("StatusCampaniaGridViewPartial", new { IdCampania = ViewData["IdCampania"] })

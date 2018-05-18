@@ -1,0 +1,304 @@
+@{
+	var grid = Html.DevExpress().GridView(settings => {
+        settings.Name = "RepActividadGridView";
+        settings.CallbackRouteValues = new { Controller = "RepActividad", Action = "RepActividadGridViewPartial" };
+
+		settings.SettingsEditing.AddNewRowRouteValues = new { Controller = "RepActividad", Action = "RepActividadGridViewPartialAddNew" };
+        settings.SettingsEditing.UpdateRowRouteValues = new { Controller = "RepActividad", Action = "RepActividadGridViewPartialUpdate" };
+        settings.SettingsEditing.DeleteRowRouteValues = new { Controller = "RepActividad", Action = "RepActividadGridViewPartialDelete" };
+        settings.SettingsEditing.Mode = GridViewEditingMode.PopupEditForm;
+        settings.SettingsBehavior.ConfirmDelete = true;
+
+        settings.CommandColumn.Visible = true;       
+        settings.SettingsCommandButton.NewButton.Text = "Nueva Actividad";
+        settings.CommandColumn.ShowNewButtonInHeader = true;
+        settings.CommandColumn.ShowDeleteButton = true;
+        settings.CommandColumn.ShowEditButton = true;
+
+		settings.KeyFieldName = "Pk_IdRepActividad";
+
+		settings.SettingsPager.Visible = true;
+		settings.Settings.ShowGroupPanel = true;
+		settings.Settings.ShowFilterRow = true;
+        settings.SettingsBehavior.AllowSelectByRowClick = true;
+
+        settings.Columns.Add("Actividad.ActividadXAccion.Justificacion","Actividad");
+        settings.Columns.Add("Actividad.Persona.NombreCompleto", "Realizó");
+        settings.Columns.Add("FechaInforme", "Fecha Informe");
+        settings.Columns.Add("FechaInicio", "Inicio de la Actividad");
+        settings.Columns.Add("FechaFin", "Fin de la Actividad");
+        settings.Columns.Add("CantidadMetas", "Metas Logradas");
+
+        //**************************************Comienza Custom Form*************************
+        //***********************************************************************************
+
+        settings.SetEditFormTemplateContent(c =>
+        {
+            var repactividad = ViewData["dataItem"] ?? c.DataItem;
+
+            ViewContext.Writer.Write("<p>Edición de Reporte de Actividades</p>");
+            ViewContext.Writer.Write(
+   "<table>" +
+     "<tr>" +
+         "<td>");
+
+            Html.DevExpress().Label(
+                   edtSettings =>
+                   {
+                       edtSettings.ControlStyle.CssClass = "label";
+                       edtSettings.Text = "Actividad";
+                       edtSettings.AssociatedControlName = "Fk_IdActividad";
+                   }
+               )
+               .Render();
+            Html.DevExpress().ComboBox(
+                edtSettings =>
+                {
+                    edtSettings.Name = "Fk_IdActividad";
+                    edtSettings.ControlStyle.CssClass = "editor";
+                    edtSettings.Properties.TextField = "Descripcion";
+                    edtSettings.Properties.NullText = "Campo Requerido";
+                    edtSettings.Properties.ValueField = "Pk_IdActividad";
+                    edtSettings.Properties.ValueType = typeof(int);
+                    edtSettings.ShowModelErrors = true;
+                    edtSettings.Width = Unit.Pixel(250);
+                }
+            )
+            .BindList(DXMVCWebApplication1.Models.Senasica.GetActividadesByUnidadEjecutora(ViewBag.UEID))
+               .Bind(DataBinder.Eval(repactividad, "Fk_IdActividad"))
+               .Render();
+            ViewContext.Writer.Write("</td>");
+
+            //COMBOBOX PERSONAS
+            ViewContext.Writer.Write("<td>");
+            Html.DevExpress().Label(
+                      edtSettings =>
+                      {
+                          edtSettings.ControlStyle.CssClass = "label";
+                          edtSettings.Text = "Persona";
+                          edtSettings.AssociatedControlName = "Fk_IdPersona";
+                      }
+                  )
+                  .Render();
+            Html.DevExpress().ComboBox(
+                edtSettings =>
+                {
+                    edtSettings.Name = "Fk_IdPersona";
+                    edtSettings.ControlStyle.CssClass = "editor";
+                    edtSettings.Properties.TextField = "NombreCompleto";
+                    edtSettings.Properties.NullText = "Campo Requerido";
+                    edtSettings.Properties.ValueField = "Pk_IdPersona";
+                    edtSettings.Properties.ValueType = typeof(int);
+                    edtSettings.ShowModelErrors = true;
+                    edtSettings.Width = Unit.Pixel(250);
+                }
+            )
+
+            .BindList(DXMVCWebApplication1.Models.Senasica.GetPersonasByUnidadEjecutora(ViewBag.UEID))
+               .Bind(DataBinder.Eval(repactividad, "Fk_IdPersona"))
+               .Render();
+            ViewContext.Writer.Write("</td>");
+
+            //Fecha Informe
+            ViewContext.Writer.Write("<td>");
+            Html.DevExpress().Label(
+                       edtSettings =>
+                       {
+                           edtSettings.ControlStyle.CssClass = "label";
+                           edtSettings.Text = "Fecha Informe";
+                           edtSettings.AssociatedControlName = "FechaInforme";
+                       }
+                   )
+                   .Render();
+            Html.DevExpress().DateEdit(
+                edtSettings =>
+                {
+                    edtSettings.Name = "FechaInforme";
+                    edtSettings.Properties.NullText = "Campo Requerido";
+                    edtSettings.ControlStyle.CssClass = "editor";
+                    edtSettings.ShowModelErrors = true;
+                    edtSettings.Width = Unit.Pixel(250);
+                    edtSettings.Date = DateTime.Now;
+                    edtSettings.Properties.NullText = "mm/dd/yyyy";
+                }
+            )
+            .Bind(DataBinder.Eval(repactividad, "FechaInforme"))
+            .Render();
+            ViewContext.Writer.Write("</td>");
+
+            //Fecha Inicio
+            ViewContext.Writer.Write("<td>");
+            Html.DevExpress().Label(
+                       edtSettings =>
+                       {
+                           edtSettings.ControlStyle.CssClass = "label";
+                           edtSettings.Text = "Fecha Inicio";
+                           edtSettings.AssociatedControlName = "FechaInicio";
+                       }
+                   )
+                   .Render();
+            Html.DevExpress().DateEdit(
+                edtSettings =>
+                {
+                    edtSettings.Name = "FechaInicio";
+                    edtSettings.Properties.NullText = "Campo Requerido";
+                    edtSettings.ControlStyle.CssClass = "editor";
+                    edtSettings.ShowModelErrors = true;
+                    edtSettings.Width = Unit.Pixel(250);
+
+                }
+            )
+            .Bind(DataBinder.Eval(repactividad, "FechaInicio"))
+            .Render();
+
+            ViewContext.Writer.Write("</td>");
+            ViewContext.Writer.Write("</tr>");
+
+            //Fecha Fin
+            ViewContext.Writer.Write("<tr>");
+            ViewContext.Writer.Write("<td>");
+            ViewContext.Writer.Write("<br>");
+            Html.DevExpress().Label(
+                       edtSettings =>
+                       {
+                           edtSettings.ControlStyle.CssClass = "label";
+                           edtSettings.Text = "Fecha Fin";
+                           edtSettings.AssociatedControlName = "FechaFin";
+                       }
+                   )
+                   .Render();
+            Html.DevExpress().DateEdit(
+                edtSettings =>
+                {
+                    edtSettings.Name = "FechaFin";
+                    edtSettings.Properties.NullText = "Campo Requerido";
+                    edtSettings.ControlStyle.CssClass = "editor";
+                    edtSettings.ShowModelErrors = true;
+                    edtSettings.Width = Unit.Pixel(250);
+
+                }
+            )
+            .Bind(DataBinder.Eval(repactividad, "FechaFin"))
+            .Render();
+
+            ViewContext.Writer.Write("</br>");
+            ViewContext.Writer.Write("</td>");
+
+            //Cantidad Metas
+            ViewContext.Writer.Write("<td>");
+            Html.DevExpress().Label(
+                edtSettings =>
+                {
+                    edtSettings.ControlStyle.CssClass = "label";
+                    edtSettings.Text = "Cantidad Metas";
+                    edtSettings.AssociatedControlName = "CantidadMetas";
+                }
+            )
+            .Render();
+
+            Html.DevExpress().SpinEdit(
+               edtSettings =>
+               {
+                   edtSettings.Name = "CantidadMetas";
+                   edtSettings.Properties.NullText = "Campo Requerido";
+                   edtSettings.ControlStyle.CssClass = "editor";
+                   edtSettings.ShowModelErrors = true;
+                   edtSettings.Width = Unit.Pixel(250);
+               }
+           )
+           .Bind(DataBinder.Eval(repactividad, "CantidadMetas"))
+           .Render();
+
+            ViewContext.Writer.Write("</td>");
+
+            //Ubicacion
+           //TODO Este reporte eventualmente será georeferenciado
+
+            ViewContext.Writer.Write("</td>");
+            ViewContext.Writer.Write("</tr>");
+            ViewContext.Writer.Write("</table>");
+
+
+            //TextBox Informe
+
+            ViewContext.Writer.Write("<br>");
+            Html.DevExpress().Label(
+                       edtSettings =>
+                       {
+                           edtSettings.ControlStyle.CssClass = "label";
+                           edtSettings.Text = "Infrome";
+                           edtSettings.AssociatedControlName = "Informe";
+                       }
+                   )
+                   .Render();
+            Html.DevExpress().Memo(
+                edtSettings =>
+                {
+                    edtSettings.Name = "Informe";
+                    edtSettings.ControlStyle.CssClass = "editor";
+                    edtSettings.ShowModelErrors = true;
+                    edtSettings.Width = Unit.Pixel(1010);
+                    edtSettings.Height = Unit.Pixel(50);
+
+                }
+            )
+            .Bind(DataBinder.Eval(repactividad, "Informe"))
+            .Render();
+            ViewContext.Writer.Write("</br>");
+
+            //Botones
+            ViewContext.Writer.Write("<div class=\"line\">");
+            Html.DevExpress().Label(
+                edtSettings =>
+                {
+                    edtSettings.ControlStyle.CssClass = "label";
+                }
+            )
+            .Render();
+            Html.DevExpress().Button(
+                btnSettings =>
+                {
+                    btnSettings.Name = "btnUpdate";
+                    btnSettings.ControlStyle.CssClass = "button";
+                    btnSettings.Text = "Actualizar";
+                    btnSettings.ClientSideEvents.Click = "function(s, e){ RepActividadGridView.UpdateEdit(); }";
+                    btnSettings.Width = Unit.Pixel(30);
+                }
+            )
+            .Render();
+            Html.DevExpress().Button(
+                btnSettings =>
+                {
+                    btnSettings.Name = "btnCancel";
+                    btnSettings.ControlStyle.CssClass = "button";
+                    btnSettings.Text = "Cancelar";
+                    btnSettings.ClientSideEvents.Click = "function(s, e){ RepActividadGridView.CancelEdit(); }";
+                }
+            )
+            .Render();
+
+            // COMIENZAN TAB DE REPORTE DE GASTOS****************
+            ViewContext.Writer.Write("<br>");
+            @Html.DevExpress().PageControl(PCsettings =>
+            {
+                PCsettings.Name = "pcFeatures";
+                PCsettings.ClientVisible = c.KeyValue == null ? false : true;
+
+                PCsettings.TabPages.Add("Reporte de Gastos").SetContent(() =>
+                {
+                    //llama al dg de SVImportanciaCultivo
+                    ViewContext.Writer.Write("<H3>Reporte de Gastos</H3>");
+                    @Html.RenderAction("RepGastosGridViewPartial", new { IdActividad = DataBinder.Eval(repactividad, "Pk_IdRepActividad") });
+
+
+                });
+            }).GetHtml();
+            ViewContext.Writer.Write("</br>");
+
+        });
+			});
+		if (ViewData["EditError"] != null){
+        grid.SetEditErrorText((string)ViewData["EditError"]);
+    }
+}
+@grid.Bind(Model).GetHtml()

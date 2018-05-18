@@ -1,0 +1,7 @@
+@Html.DevExpress().DocumentViewer(settings => {
+    settings.Name = "Report";
+    settings.CallbackRouteValues = new { Controller = "ReporteCampaniaInocuidadSaludAnimalHistorico", Action = "ReportPartial", Consecutivo_Repro = ViewData["Consecutivo_Repro"] };
+    settings.ExportRouteValues = new { Controller = "ReporteCampaniaInocuidadSaludAnimalHistorico", Action = "ReportPartialExport", Consecutivo_Repro = ViewData["Consecutivo_Repro"] };
+	settings.Report = (XtraReport)Model;
+	settings.ToolbarMode = DocumentViewerToolbarMode.StandardToolbar;
+}).GetHtml()

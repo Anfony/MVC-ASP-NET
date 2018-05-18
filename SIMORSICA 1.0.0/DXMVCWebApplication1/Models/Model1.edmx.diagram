@@ -1,0 +1,534 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="91575159f8634093a0d6896cc961f6b0" Name="Diagram1" ZoomLevel="86">
+        <EntityTypeShape EntityType="DB_SENASICAModel.Predio" Width="1.5" PointX="17.5" PointY="21.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="DB_SENASICAModel.SubPredio" Width="1.5" PointX="17.5" PointY="25.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="DB_SENASICAModel.Anio" Width="1.5" PointX="16.25" PointY="18.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="DB_SENASICAModel.ConceptoPartida" Width="1.875" PointX="8.625" PointY="3.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="DB_SENASICAModel.Municipio" Width="1.5" PointX="50.375" PointY="14" IsExpanded="true" />
+        <EntityTypeShape EntityType="DB_SENASICAModel.Partida" Width="1.5" PointX="11.125" PointY="3.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="DB_SENASICAModel.Programa" Width="1.5" PointX="30" PointY="12.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="DB_SENASICAModel.SubComponente" Width="1.5" PointX="24" PointY="15.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="DB_SENASICAModel.TipoDeRecurso" Width="1.5" PointX="31.125" PointY="39.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="DB_SENASICAModel.TipoDeUnidad" Width="1.5" PointX="42" PointY="1.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="DB_SENASICAModel.UnidadDeMedida" Width="1.5" PointX="36.75" PointY="34.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="DB_SENASICAModel.Beneficiario" Width="1.5" PointX="19.375" PointY="25.5" IsExpanded="true" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_SubPredio_Predio" ManuallyRouted="false" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_Partida_ConceptoPartida" ManuallyRouted="false" />
+        <EntityTypeShape EntityType="DB_SENASICAModel.CapituloPartida" Width="1.5" PointX="6.25" PointY="3.875" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_ConceptoPartida_CapituloPartida1" />
+        <EntityTypeShape EntityType="DB_SENASICAModel.Vigencia" Width="2.25" PointX="41.875" PointY="6.75" />
+        <EntityTypeShape EntityType="DB_SENASICAModel.TipoInstalacion" Width="1.5" PointX="32.25" PointY="6.75" />
+        <EntityTypeShape EntityType="DB_SENASICAModel.Inventario" Width="1.5" PointX="18" PointY="5.25" />
+        <EntityTypeShape EntityType="DB_SENASICAModel.EstadoBien" Width="1.5" PointX="20.625" PointY="6.875" />
+        <EntityTypeShape EntityType="DB_SENASICAModel.Instalacion" Width="1.5" PointX="34.75" PointY="5.25" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_Inventario_Anio" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_Inventario_EstadoBien" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_Instalacion_Instalacion" />
+        <EntityTypeShape EntityType="DB_SENASICAModel.StatusActividad" Width="2.5" PointX="46" PointY="45.5" />
+        <EntityTypeShape EntityType="DB_SENASICAModel.StatusAlcance" Width="1.5" PointX="28" PointY="32.125" />
+        <EntityTypeShape EntityType="DB_SENASICAModel.StatusUE" Width="1.5" PointX="42.125" PointY="4.875" />
+        <EntityTypeShape EntityType="DB_SENASICAModel.StatusActividadKardex" Width="3" PointX="49.75" PointY="45.5" />
+        <EntityTypeShape EntityType="DB_SENASICAModel.StatusAlcanceKardex" Width="1.5" PointX="29.625" PointY="30.125" />
+        <EntityTypeShape EntityType="DB_SENASICAModel.StatusCampaniaKardex" Width="1.875" PointX="29.625" PointY="18.875" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_StatusActividadKardex_StatusActividad" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_StatusAlcanceKardex_StatusAlcance" />
+        <EntityTypeShape EntityType="DB_SENASICAModel.Cargo" Width="1.5" PointX="62" PointY="36.625" />
+        <EntityTypeShape EntityType="DB_SENASICAModel.Certificacion" Width="1.5" PointX="60.875" PointY="43" />
+        <EntityTypeShape EntityType="DB_SENASICAModel.CertificadoCargo" Width="1.5" PointX="62.5" PointY="39.875" />
+        <EntityTypeShape EntityType="DB_SENASICAModel.CertificadoPersona" Width="1.5" PointX="59.25" PointY="39.875" />
+        <EntityTypeShape EntityType="DB_SENASICAModel.FlujoActividad" Width="3" PointX="41.875" PointY="47.25" />
+        <EntityTypeShape EntityType="DB_SENASICAModel.FlujoAlcance" Width="1.5" PointX="26.125" PointY="32.375" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_CertificadoCargo_Cargo" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_CertificadoCargo_Certificacion" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_FlujoActividad_StatusActividad_Origen" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_FlujoActividad_StatusActividadDestino" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_FlujoAlcance_StatusAlcance" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_FlujoAlcance_StatusAlcance_Origen" />
+        <EntityTypeShape EntityType="DB_SENASICAModel.Mov_Atendido" Width="1.5" PointX="38.25" PointY="10.125" />
+        <EntityTypeShape EntityType="DB_SENASICAModel.Mov_ImportanciaPIV" Width="1.5" PointX="42.5" PointY="10.125" />
+        <EntityTypeShape EntityType="DB_SENASICAModel.SA_Atendido" Width="1.5" PointX="38.625" PointY="13.625" />
+        <EntityTypeShape EntityType="DB_SENASICAModel.SA_ImportanciaEnfermedad" Width="1.5" PointX="40.5" PointY="13.625" />
+        <EntityTypeShape EntityType="DB_SENASICAModel.SA_Poblacion" Width="1.5" PointX="42.5" PointY="13.625" />
+        <EntityTypeShape EntityType="DB_SENASICAModel.SACImportanciaCultivo" Width="1.5" PointX="42.5" PointY="21.75" />
+        <EntityTypeShape EntityType="DB_SENASICAModel.SACImportanciaEnfermedad" Width="1.5" PointX="40.5" PointY="21.75" />
+        <EntityTypeShape EntityType="DB_SENASICAModel.SVAtendido" Width="1.5" PointX="38.5" PointY="17.375" />
+        <EntityTypeShape EntityType="DB_SENASICAModel.SVImportanciaCultivo" Width="1.5" PointX="42.375" PointY="17.375" />
+        <EntityTypeShape EntityType="DB_SENASICAModel.SVImportanciaPlaga" Width="1.5" PointX="40.5" PointY="17.375" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_Mov_ImportanciaPIV_Municipio" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_SA_Atendido_Municipio" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_SA_ImportanciaEnfermedad_Municipio" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_SACImportanciaEnfermedad_Municipio" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_SAPoblacion_Municipio" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_SVAtendido_Municipio" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_SVImportanciaCultivo_Municipio" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_Actividad_Alcance" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_CertificadoPersona_Certificacion" />
+        <EntityTypeShape EntityType="DB_SENASICAModel.Representante" Width="1.5" PointX="39.75" PointY="5.75" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_Representantes_Cargo" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_Representantes_Estado" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_Representantes_Municipio" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_Representantes_UnidadEjecutora" />
+        <AssociationConnector Association="DB_SENASICAModel.FK__SACImport__Fk_Id__05F8DC4F" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_SVImportanciaPlaga_Municipio" />
+        <EntityTypeShape EntityType="DB_SENASICAModel.Representante1" Width="1.5" PointX="59.5" PointY="33.875" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_Representante_Cargo" />
+        <EntityTypeShape EntityType="DB_SENASICAModel.RepGasto" Width="1.5" PointX="66" PointY="47.625" />
+        <EntityTypeShape EntityType="DB_SENASICAModel.InoCompSA" Width="1.5" PointX="61.125" PointY="10.75" />
+        <EntityTypeShape EntityType="DB_SENASICAModel.InoCompSAC" Width="1.5" PointX="63.625" PointY="10.75" />
+        <EntityTypeShape EntityType="DB_SENASICAModel.InoCompSV" Width="1.5" PointX="66.25" PointY="10.75" />
+        <EntityTypeShape EntityType="DB_SENASICAModel.InoImportanciaSA" Width="1.5" PointX="61.125" PointY="18.25" />
+        <EntityTypeShape EntityType="DB_SENASICAModel.InoImportanciaSAC" Width="1.5" PointX="63.5" PointY="18.25" />
+        <EntityTypeShape EntityType="DB_SENASICAModel.InoImportanciaSV" Width="1.5" PointX="66.25" PointY="18.375" />
+        <EntityTypeShape EntityType="DB_SENASICAModel.InoUnidadesCertSA" Width="1.5" PointX="61.125" PointY="14.875" />
+        <EntityTypeShape EntityType="DB_SENASICAModel.InoUnidadesCertSAC" Width="1.5" PointX="63.875" PointY="14.875" />
+        <EntityTypeShape EntityType="DB_SENASICAModel.InoUnidadesCertSV" Width="1.5" PointX="66.25" PointY="14.875" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_InoCompSA_Municipio" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_InoCompSAC_Municipio" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_InoCompSV_Municipio" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_InoImportanciaSA_Municipio" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_InoInoImportanciaSAC_Municipio" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_InoInoImportanciaSV_Municipio" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_InoUnidadesCertSA_Municipio" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_InoUnidadesCertSAC_Municipio" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_InoUnidadesCertSV_Municipio" />
+        <EntityTypeShape EntityType="DB_SENASICAModel.StatusAccion" Width="1.5" PointX="36.875" PointY="18" />
+        <EntityTypeShape EntityType="DB_SENASICAModel.AccionXCampania" Width="1.5" PointX="45.875" PointY="29.625" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_SACImportanciaCultivo_Municipio" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_AccionXCampania_StatusAccion" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_Campania_StatusCampania" />
+        <EntityTypeShape EntityType="DB_SENASICAModel.Proveedor" Width="1.5" PointX="23.5" PointY="6.75" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_Proveedor_Municipio" />
+        <EntityTypeShape EntityType="DB_SENASICAModel.TipoActividad" Width="1.5" PointX="23.625" PointY="37.875" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_TipoActividad_UnidadDeMedida" />
+        <EntityTypeShape EntityType="DB_SENASICAModel.Profesion" Width="1.5" PointX="54.125" PointY="39.5" />
+        <EntityTypeShape EntityType="DB_SENASICAModel.Puesto" Width="1.5" PointX="22" PointY="1.125" />
+        <EntityTypeShape EntityType="DB_SENASICAModel.Me" Width="1.5" PointX="25.125" PointY="0.875" />
+        <EntityTypeShape EntityType="DB_SENASICAModel.Presupuesto" Width="1.5" PointX="18.625" PointY="0.75" />
+        <EntityTypeShape EntityType="DB_SENASICAModel.Accion" Width="1.5" PointX="34.625" PointY="25.375" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_Alcance_StatusAlcance" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_Alcance_TipoDeRecurso" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_Alcance_UnidadDeMedida" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_StatusAlcanceKardex_Alcance" />
+        <AssociationConnector Association="DB_SENASICAModel.Fk_SubComponente" />
+        <EntityTypeShape EntityType="DB_SENASICAModel.EstadosGeo" Width="1.5" PointX="0.75" PointY="0.75" />
+        <EntityTypeShape EntityType="DB_SENASICAModel.geometry_columns" Width="1.5" PointX="3.75" PointY="0.75" />
+        <EntityTypeShape EntityType="DB_SENASICAModel.MunicipiosGeo" Width="1.5" PointX="0.875" PointY="2.875" />
+        <EntityTypeShape EntityType="DB_SENASICAModel.spatial_ref_sys" Width="1.5" PointX="3.25" PointY="3.5" />
+        <EntityTypeShape EntityType="DB_SENASICAModel.GirosXProv" Width="1.5" PointX="28.75" PointY="6.875" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_GiroXProv_Proveedor" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_GiroXProv_Proveedor1" />
+        <AssociationConnector Association="DB_SENASICAModel.Fk_SubComponente" />
+        <EntityTypeShape EntityType="DB_SENASICAModel.SAC_Atendido" Width="1.5" PointX="55.625" PointY="15" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_SAC_Atendido_Municipio" />
+        <EntityTypeShape EntityType="DB_SENASICAModel.NecesidadXAccion" Width="1.5" PointX="40.875" PointY="33.625" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_NecesidadXAccion_UnidadDeMedida" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_NecesidadXAccion_Accion" />
+        <EntityTypeShape EntityType="DB_SENASICAModel.TipoDeBien" Width="1.5" PointX="13.375" PointY="3.375" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_GiroXProv_TipoDeBien" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_TipoDeBien_Partida" />
+        <EntityTypeShape EntityType="DB_SENASICAModel.Productor" Width="1.5" PointX="52.625" PointY="15.625" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_Predio_Productor" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_Productor_Municipio" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_Beneficiario_Productor" />
+        <EntityTypeShape EntityType="DB_SENASICAModel.Mov_ImportanciaProg" Width="1.5" PointX="55.625" PointY="11.625" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_Mov_ImportanciaProg_Municipio" />
+        <EntityTypeShape EntityType="DB_SENASICAModel.Region" Width="1.5" PointX="18.125" PointY="12.125" />
+        <EntityTypeShape EntityType="DB_SENASICAModel.Estado" Width="1.5" PointX="20.375" PointY="11" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_Estado_Region" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_Mov_Atendido_Estado" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_Mov_ImportanciaPIV_Estado" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_Municipio_Estado" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_Productor_Estado" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_Proveedor_Estado" />
+        <EntityTypeShape EntityType="DB_SENASICAModel.Menu" Width="1.5" PointX="3" PointY="8.625" />
+        <EntityTypeShape EntityType="DB_SENASICAModel.Rol" Width="1.5" PointX="3.75" PointY="12" />
+        <EntityTypeShape EntityType="DB_SENASICAModel.TipoDeAccion" Width="1.5" PointX="39.375" PointY="26.625" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_Menu_Menu" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_TipoActividad_TipoDeAccion" />
+        <AssociationConnector Association="DB_SENASICAModel.FK__TipoDeAcc_UnidadDeMedida" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_AccionXCampania_TipoDeAccion" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_Alcance_TipoDeAccion" />
+        <EntityTypeShape EntityType="DB_SENASICAModel.GastoOp" Width="1.5" PointX="18.5" PointY="17.5" />
+        <EntityTypeShape EntityType="DB_SENASICAModel.GastoTransv" Width="1.5" PointX="18.5" PointY="28.75" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_GastoOp_Anio" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_GastoTransv_Anio" />
+        <EntityTypeShape EntityType="DB_SENASICAModel.UnidadResponsableXSubComponente" Width="1.5" PointX="36.375" PointY="13.75" />
+        <AssociationConnector Association="DB_SENASICAModel.UnidadResponsableXSubComponente_Anio" />
+        <AssociationConnector Association="DB_SENASICAModel.UnidadResponsableXSubComponente_SubComponente" />
+        <EntityTypeShape EntityType="DB_SENASICAModel.VW_PresupuestoXDFG" Width="1.5" PointX="8.375" PointY="6.75" />
+        <EntityTypeShape EntityType="DB_SENASICAModel.PorcentajeXDireccionGeneral" Width="1.5" PointX="35.375" PointY="9.875" />
+        <EntityTypeShape EntityType="DB_SENASICAModel.UnidadResponsable" Width="1.5" PointX="32.125" PointY="2.25" />
+        <AssociationConnector Association="DB_SENASICAModel.PorcentajeXDireccionGeneral_Anio" />
+        <AssociationConnector Association="DB_SENASICAModel.PorcentajeXDireccionGeneral_UnidadResponsable" />
+        <AssociationConnector Association="DB_SENASICAModel.UnidadResponsableXSubComponente_UnidadResponsable" />
+        <EntityTypeShape EntityType="DB_SENASICAModel.PresupuestoXEstado" Width="1.5" PointX="37.625" PointY="6.375" />
+        <AssociationConnector Association="DB_SENASICAModel.PresupuestoXEstado_PorcentajeXDireccionGeneral" />
+        <AssociationConnector Association="DB_SENASICAModel.PresupuestoXEstado_Estado" />
+        <EntityTypeShape EntityType="DB_SENASICAModel.FirmasAutorizada" Width="1.5" PointX="26.625" PointY="10.25" />
+        <EntityTypeShape EntityType="DB_SENASICAModel.Reporte" Width="1.5" PointX="24.375" PointY="3.5" />
+        <AssociationConnector Association="DB_SENASICAModel.Fk_IdFirmasAutorizadas_Fk_IdEstado" />
+        <AssociationConnector Association="DB_SENASICAModel.Fk_IdFirmasAutorizadas_Fk_IdReportes" />
+        <EntityTypeShape EntityType="DB_SENASICAModel.DatosFirma" Width="1.5" PointX="28.875" PointY="3.25" />
+        <AssociationConnector Association="DB_SENASICAModel.Fk_IdFirmas_Fk_IdFirmasAutorizadas" />
+        <EntityTypeShape EntityType="DB_SENASICAModel.Pantalla" Width="1.5" PointX="0.75" PointY="8.75" />
+        <EntityTypeShape EntityType="DB_SENASICAModel.PrivilegiosXRol" Width="1.5" PointX="6" PointY="9.875" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_Menu_Pantallas" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_PrivilegiosXRol_Pantalla" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_PrivilegiosXRol_Rol" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_UnidadDeMedida_Anio" />
+        <EntityTypeShape EntityType="DB_SENASICAModel.AtendidoSA" Width="1.5" PointX="66.125" PointY="6.125" />
+        <EntityTypeShape EntityType="DB_SENASICAModel.DestinoProduccion" Width="1.5" PointX="60.875" PointY="3.375" />
+        <EntityTypeShape EntityType="DB_SENASICAModel.Especie" Width="1.5" PointX="63.875" PointY="3.25" />
+        <EntityTypeShape EntityType="DB_SENASICAModel.FuncionZootecnica" Width="1.5" PointX="57.875" PointY="0.75" />
+        <EntityTypeShape EntityType="DB_SENASICAModel.ImportanciaCultivoSV" Width="1.5" PointX="63.125" PointY="6.5" />
+        <EntityTypeShape EntityType="DB_SENASICAModel.ImportanciaEconomicaSA" Width="1.5" PointX="60.125" PointY="6" />
+        <EntityTypeShape EntityType="DB_SENASICAModel.ImportanciaPlagaSV" Width="1.5" PointX="69.125" PointY="12.75" />
+        <EntityTypeShape EntityType="DB_SENASICAModel.UnidadMedidaProduccion" Width="1.5" PointX="57.875" PointY="3.25" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_AtendidoSA_Municipio" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_ImportanciaCultivoSV_Municipio" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_ImportanciaEconomicaSA_Municipio" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_ImportanciaPlagaSV_Municipio" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_AtendidoSA_Especie" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_ImportanciaCultivoSV_DestinoProduccion" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_ImportanciaEconomicaSA_DestinoProduccion" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_ImportanciaEconomicaSA_Especie" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_ImportanciaEconomicaSA_FuncionZootecnica" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_ImportanciaEconomicaSA_UnidadMedidaProduccion" />
+        <EntityTypeShape EntityType="DB_SENASICAModel.AtendidoMov" Width="1.5" PointX="60.125" PointY="23.875" />
+        <EntityTypeShape EntityType="DB_SENASICAModel.ImportanciaPIVMov" Width="1.5" PointX="60.125" PointY="27.375" />
+        <EntityTypeShape EntityType="DB_SENASICAModel.ImportanciaProgramaMov" Width="1.5" PointX="60.125" PointY="0.75" />
+        <EntityTypeShape EntityType="DB_SENASICAModel.AtendidoSAC" Width="1.5" PointX="72.125" PointY="12.875" />
+        <EntityTypeShape EntityType="DB_SENASICAModel.ImportanciaCultivoSAC" Width="1.5" PointX="72.125" PointY="7.5" />
+        <EntityTypeShape EntityType="DB_SENASICAModel.ImportanciaEnfermedadSAC" Width="1.5" PointX="71.125" PointY="17.875" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_AtendidoSAC_Municipio" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_ImportanciaCultivoSAC_Municipio" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_ImportanciaEnfermedadSAC_Municipio" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_AtendidoSAC_Especie" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_ImportanciaCultivoSAC_Especie" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_ImportanciaEnfermedadSAC_Especie" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_ImportanciaCultivoSAC_FuncionZootecnica" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_ImportanciaCultivoSAC_UnidadMedidaProduccion" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_ImportanciaEnfermedadSAC_UnidadMedidaProduccion" />
+        <EntityTypeShape EntityType="DB_SENASICAModel.SistemaProduccion" Width="1.5" PointX="6.375" PointY="0.875" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_ImportanciaCultivoSAC_SistemaProduccion" />
+        <EntityTypeShape EntityType="DB_SENASICAModel.TendenciaProduccion" Width="1.5" PointX="69.875" PointY="31.875" />
+        <EntityTypeShape EntityType="DB_SENASICAModel.TipoProduccion" Width="1.5" PointX="69.875" PointY="34.25" />
+        <EntityTypeShape EntityType="DB_SENASICAModel.TipoUnidad_Atendido" Width="1.5" PointX="66.875" PointY="43.25" />
+        <EntityTypeShape EntityType="DB_SENASICAModel.TipoUnidad_UCAC" Width="1.5" PointX="63.875" PointY="2.375" />
+        <EntityTypeShape EntityType="DB_SENASICAModel.TipoUnidad_UCSV" Width="1.5" PointX="68.875" PointY="37.375" />
+        <EntityTypeShape EntityType="DB_SENASICAModel.UnidadesCertificarInoSA" Width="1.5" PointX="75.125" PointY="7.75" />
+        <EntityTypeShape EntityType="DB_SENASICAModel.UnidadesCertificarInoSAC" Width="1.5" PointX="66.125" PointY="3.5" />
+        <EntityTypeShape EntityType="DB_SENASICAModel.UnidadesCertificarInoSV" Width="1.5" PointX="71.125" PointY="24.5" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_UnidadesCertificarInoSA_Especie" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_UnidadesCertificarInoSA_FuncionZootecnica" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_UnidadesCertificarInoSAC_TipoUnidad_UCAC" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_UnidadesCertificarInoSV_TipoUnidad_UCSV" />
+        <EntityTypeShape EntityType="DB_SENASICAModel.AtendidoIno" Width="1.5" PointX="69.125" PointY="28.25" />
+        <EntityTypeShape EntityType="DB_SENASICAModel.ImportanciaEnfermedadSA" Width="1.5" PointX="69.125" PointY="8.25" />
+        <EntityTypeShape EntityType="DB_SENASICAModel.ImportanciaIno" Width="1.5" PointX="74.125" PointY="19" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_ImportanciaEnfermedadSA_Municipio" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_AtendidoIno_TipoUnidadAtendido" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_ImportanciaIno_DestinoProduccion" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_ImportanciaEnfermedadSA_Especie" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_ImportanciaEnfermedadSA_UnidadMedidaProduccion" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_ImportanciaIno_TendenciaProduccion" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_ImportanciaIno_TipoProduccion" />
+        <EntityTypeShape EntityType="DB_SENASICAModel.Persona" Width="1.5" PointX="64.25" PointY="22.5" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_Persona_Cargo" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_CertificadoPersona_Persona" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_Persona_Municipio" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_AccionXCampania_Persona" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_Alcance_Persona" />
+        <EntityTypeShape EntityType="DB_SENASICAModel.AtendidoSV" Width="1.5" PointX="78.75" PointY="18.5" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_AtendidoSV_Municipio" />
+        <EntityTypeShape EntityType="DB_SENASICAModel.Banco" Width="1.5" PointX="10.375" PointY="8" />
+        <EntityTypeShape EntityType="DB_SENASICAModel.ProyectoPresupuesto" Width="1.5" PointX="57.875" PointY="7.25" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_ProyectoPresupuesto_Anio" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_ProyectoPresupuesto_Estado" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_ProyectoPresupuesto_UnidadResponsable" />
+        <EntityTypeShape EntityType="DB_SENASICAModel.UnidadEjecutora" Width="1.5" PointX="52.625" PointY="5.25" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_BancoCtaEstatal_Banco" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_BancoCtaFederal_Banco" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_BancoCtaProductores_Banco" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_UnidadEjecutora_Estado" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_UnidadEjecutora_Municipio" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_Persona_UnidadEjecutora" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_ProyectoPresupuesto_UnidadEjecutora" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_UnidadEjecutora_SubComponente" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_UnidadEjecutora_TipoDeUnidad" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_Instalacion_UnidadEjecutora" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_Inventario_UnidadEjecutora" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_Representante_UnidadEjecutora" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_UnidadEjecutora_UnidadResponsable" />
+        <AssociationConnector Association="DB_SENASICAModel.Fk_Vigencia_Fk_IdUnidadEjecutora" />
+        <EntityTypeShape EntityType="DB_SENASICAModel.TipoCampania" Width="1.5" PointX="5.375" PointY="6.875" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_ProyectoPresupuesto_TipoCampania" />
+        <EntityTypeShape EntityType="DB_SENASICAModel.AccionXCampania_Repro" Width="1.5" PointX="76.75" PointY="28" />
+        <EntityTypeShape EntityType="DB_SENASICAModel.AtendidoIno_Repro" Width="1.5" PointX="74.75" PointY="36.5" />
+        <EntityTypeShape EntityType="DB_SENASICAModel.AtendidoMov_Repro" Width="1.5" PointX="70.75" PointY="94.25" />
+        <EntityTypeShape EntityType="DB_SENASICAModel.AtendidoSA_Repro" Width="1.5" PointX="80.75" PointY="6.75" />
+        <EntityTypeShape EntityType="DB_SENASICAModel.AtendidoSAC_Repro" Width="1.5" PointX="79.75" PointY="1.25" />
+        <EntityTypeShape EntityType="DB_SENASICAModel.AtendidoSV_Repro" Width="1.5" PointX="84.75" PointY="18.375" />
+        <EntityTypeShape EntityType="DB_SENASICAModel.Campania_Repro" Width="1.5" PointX="68.5" PointY="17" />
+        <EntityTypeShape EntityType="DB_SENASICAModel.ImportanciaCultivoSAC_Repro" Width="1.5" PointX="77.75" PointY="6.75" />
+        <EntityTypeShape EntityType="DB_SENASICAModel.ImportanciaCultivoSV_Repro" Width="1.5" PointX="82.75" PointY="1.125" />
+        <EntityTypeShape EntityType="DB_SENASICAModel.ImportanciaEconomicaSA_Repro" Width="1.5" PointX="73.75" PointY="1.375" />
+        <EntityTypeShape EntityType="DB_SENASICAModel.ImportanciaEnfermedadSA_Repro" Width="1.5" PointX="81.75" PointY="12.875" />
+        <EntityTypeShape EntityType="DB_SENASICAModel.ImportanciaEnfermedadSAC_Repro" Width="1.5" PointX="81.75" PointY="22.25" />
+        <EntityTypeShape EntityType="DB_SENASICAModel.ImportanciaIno_Repro" Width="1.5" PointX="83.125" PointY="7.875" />
+        <EntityTypeShape EntityType="DB_SENASICAModel.ImportanciaPIVMov_Repro" Width="1.5" PointX="70.75" PointY="90.375" />
+        <EntityTypeShape EntityType="DB_SENASICAModel.ImportanciaPlagaSV_Repro" Width="1.5" PointX="81.75" PointY="27.625" />
+        <EntityTypeShape EntityType="DB_SENASICAModel.ImportanciaProgramaMov_Repro" Width="1.5" PointX="70.75" PointY="86.5" />
+        <EntityTypeShape EntityType="DB_SENASICAModel.StatusCampaniaKardex_Repro" Width="1.5" PointX="76.75" PointY="32.75" />
+        <EntityTypeShape EntityType="DB_SENASICAModel.UnidadesCertificarInoSA_Repro" Width="1.5" PointX="70.75" PointY="3" />
+        <EntityTypeShape EntityType="DB_SENASICAModel.UnidadesCertificarInoSAC_Repro" Width="1.5" PointX="76.75" PointY="2" />
+        <EntityTypeShape EntityType="DB_SENASICAModel.UnidadesCertificarInoSV_Repro" Width="1.5" PointX="72.125" PointY="36.375" />
+        <EntityTypeShape EntityType="DB_SENASICAModel.CuadroCompXPantalla" Width="1.5" PointX="34.375" PointY="2.25" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_AccionXCampania_Repro_Campania" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_AccionXCampania_Repro_Persona" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_AccionXCampania_Repro_StatusAccion" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_AccionXCampania_Repro_TipoDeAccion" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_AtendidoIno_Repro_Campania" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_AtendidoIno_Repro_TipoUnidadAtendido" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_AtendidoMov_Repro_Campania" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_AtendidoSA_Repro_Campania" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_AtendidoSA_Repro_Especie" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_AtendidoSA_Repro_Municipio" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_AtendidoSAC_Repro_Campania" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_AtendidoSAC_Repro_Especie" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_AtendidoSAC_Repro_Municipio" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_AtendidoSV_Repro_Campania" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_AtendidoSV_Repro_Municipio" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_Campania_Coordinador1" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_ImportanciaCultivoSAC_Repro_Campania" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_ImportanciaCultivoSV_Repro_Campania" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_ImportanciaEconomicaSA_Repro_Campania" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_ImportanciaEnfermedadSA_Repro_Campania" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_ImportanciaEnfermedadSAC_Repro_Campania" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_ImportanciaIno_Repro_Campania" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_ImportanciaPIVMov_Repro_Campania" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_ImportanciaPlagaSV_Repro_Campania" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_ImportanciaProgramaMov_Repro_Campania" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_ProyectoPresupuesto_ProyectoPresupuesto1" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_StatusCampaniaKardex_Repro_Campania" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_UnidadesCertificarInoSA_Repro_Campania" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_UnidadesCertificarInoSAC_Repro_Campania" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_UnidadesCertificarInoSV_Repro_Campania" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_ImportanciaCultivoSAC_Repro_Especie" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_ImportanciaCultivoSAC_Repro_FuncionZootecnica" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_ImportanciaCultivoSAC_Repro_Municipio" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_ImportanciaCultivoSAC_Repro_SistemaProduccion" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_ImportanciaCultivoSAC_Repro_UnidadMedidaProduccion" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_ImportanciaCultivoSV_Repro_DestinoProduccion" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_ImportanciaCultivoSV_Repro_Municipio" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_ImportanciaEconomicaSA_Repro_DestinoProduccion" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_ImportanciaEconomicaSA_Repro_Especie" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_ImportanciaEconomicaSA_Repro_FuncionZootecnica" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_ImportanciaEconomicaSA_Repro_Municipio" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_ImportanciaEconomicaSA_Repro_UnidadMedidaProduccion" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_ImportanciaEnfermedadSA_Repro_Especie" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_ImportanciaEnfermedadSA_Repro_Municipio" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_ImportanciaEnfermedadSA_Repro_UnidadMedidaProduccion" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_ImportanciaEnfermedadSAC_Repro_Especie" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_ImportanciaEnfermedadSAC_Repro_Municipio" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_ImportanciaEnfermedadSAC_Repro_UnidadMedidaProduccion" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_ImportanciaIno_Repro_DestinoProduccion" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_ImportanciaIno_Repro_TendenciaProduccion" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_ImportanciaIno_Repro_TipoProduccion" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_ImportanciaPlagaSV_Repro_Municipio" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_UnidadesCertificarInoSA_Repro_Especie" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_UnidadesCertificarInoSA_Repro_FuncionZootecnica" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_UnidadesCertificarInoSAC_Repro_TipoUnidad_UCAC" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_UnidadesCertificarInoSV_Repro_TipoUnidad_UCSV" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_CuadroCompXPantalla_UnidadResponsable" />
+        <EntityTypeShape EntityType="DB_SENASICAModel.CierreMensualSolicitudApertura" Width="1.5" PointX="81" PointY="41.75" />
+        <EntityTypeShape EntityType="DB_SENASICAModel.RepActividad" Width="1.5" PointX="69.5" PointY="40.5" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_RepActividad_Persona" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_RepGasto_RepActividad" />
+        <EntityTypeShape EntityType="DB_SENASICAModel.CurrentUser" Width="1.5" PointX="0.75" PointY="12.25" />
+        <EntityTypeShape EntityType="DB_SENASICAModel.CierreMensual" Width="1.5" PointX="78.75" PointY="13" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_CierreMensual_Mes" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_CierreMensualSolicitudApertura_CierreMensual" />
+        <EntityTypeShape EntityType="DB_SENASICAModel.TipoAdquisicion" Width="1.5" PointX="8.375" PointY="11.875" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_Instalacion_TipoAdquisicion" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_Inventario_TipodeRecurso" />
+        <EntityTypeShape EntityType="DB_SENASICAModel.RepAdquisicion" Width="1.5" PointX="79" PointY="24" />
+        <EntityTypeShape EntityType="DB_SENASICAModel.VW_PresupuestoCampania" Width="1.5" PointX="10.375" PointY="11.75" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_RepAdquisicion_Proveedor" />
+        <EntityTypeShape EntityType="DB_SENASICAModel.ProgramaAnualAdq_Repro" Width="1.5" PointX="84.25" PointY="23.625" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_ProgramaAnualAdq_Repro_AccionXCampania" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_ProgramaAnualAdq_Repro_Campania" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_ProgramaAnualAdq_Repro_Anio" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_ProgramaAnualAdq_Repro_UnidadDeMedida" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_ProgramaAnualAdq_Repro_UnidadEjecutora" />
+        <EntityTypeShape EntityType="DB_SENASICAModel.ActividadXAccion_Repro" Width="1.5" PointX="79" PointY="30.375" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_ActividadXAccion_Accion1" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_ActividadXAccion_Persona1" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_ActividadXAccion_StatusAccion1" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_ActividadXAccion_TipoDeActividad1" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_ActividadXAccion_TipoDeRecurso1" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_ActividadXAccion_UnidadDeMedida1" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_ProgramaAnualAdq_Repro_ActividadXAccion" />
+        <EntityTypeShape EntityType="DB_SENASICAModel.VW_HistoricoReproPT" Width="1.5" PointX="0.75" PointY="5.75" />
+        <EntityTypeShape EntityType="DB_SENASICAModel.Incentivo" Width="1.5" PointX="21.75" PointY="16.875" />
+        <EntityTypeShape EntityType="DB_SENASICAModel.ProyectoAutorizado" Width="1.5" PointX="26.25" PointY="22.625" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_Concepto_Anio" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_SubComponente_Incentivo" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_Concepto_SubComponente" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_ProyectoPresupuesto_ProyectoAutorizado" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_TipoDeAccion_ProyectoAutorizado" />
+        <EntityTypeShape EntityType="DB_SENASICAModel.PresXAUR" Width="1.5" PointX="28.625" PointY="22.375" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_PresXAUR_Anio" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_PresXAUR_Estado" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_CapituloPartida_Anio" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_ConceptoPartida_Anio" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_Partida_Anio" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_TipoDeBien_Anio" />
+        <EntityTypeShape EntityType="DB_SENASICAModel.BienOServ" Width="1.5" PointX="31.5" PointY="22.25" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_ProgramaAnualAdq_Repro_BienOServ" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_BienOServ_Anio" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_BienOServ_TipoDeBien" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_Inventario_BienOServ" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_NecesidadXAccionXAccion_BienOServ" />
+        <EntityTypeShape EntityType="DB_SENASICAModel.ProgramasGastosTransversale" Width="1.5" PointX="84" PointY="15" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_ProgramasGastosTransversales_ProyectoPresupuesto" />
+        <EntityTypeShape EntityType="DB_SENASICAModel.Componente" Width="1.5" PointX="32.25" PointY="17" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_Componente_Anio" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_Componente_Programa" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_Incentivo_Componente" />
+        <EntityTypeShape EntityType="DB_SENASICAModel.PEFXEstado" Width="1.5" PointX="22.625" PointY="22.25" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_Pk_IdPEFXEstado_Anio" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_IdPEFXEstado_Estado" />
+        <EntityTypeShape EntityType="DB_SENASICAModel.ProgramaAnualAdq" Width="1.5" PointX="86.75" PointY="24.375" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_ProgramaAnualAdq_Anio" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_ProgramaAnualAdq_BienOServ" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_ProgramasGastosTransversales_ProgramaAnualAdq" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_ProgramaAnualAdq_UnidadDeMedida" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_ProgramaAnualAdq_AccionXCampania" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_ProgramaAnualAdq_UnidadEjecutora" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_RepAdquisicion_ProgramaAnualAdq" />
+        <EntityTypeShape EntityType="DB_SENASICAModel.Campania" Width="1.5" PointX="85.5" PointY="0.75" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_Campania_Coordinador11" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_ProyectoPresupuesto_ProyectoPresupuesto11" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_Alcance_Campania" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_AccionXCampania_Campania" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_AtendidoIno_Campania" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_AtendidoMov_Campania" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_AtendidoSA_Campania" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_AtendidoSAC_Campania" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_AtendidoSV_Campania" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_CierreMensual_Campania" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_ImportanciaCultivoSAC_Campania" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_ImportanciaCultivoSV_Campania" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_ImportanciaEconomicaSA_Campania" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_ImportanciaEnfermedadSA_Campania" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_ImportanciaEnfermedadSAC_Campania" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_ImportanciaIno_Campania" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_ImportanciaPIVMov_Campania" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_ImportanciaPlagaSV_Campania" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_ImportanciaProgramaMov_Campania" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_InoCompSA_Campania" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_InoCompSAC_Campania" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_InoCompSV_Campania" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_InoImportanciaSA_Campania" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_InoImportanciaSAC_Campania" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_InoImportanciaSV_Campania" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_InoUnidadesCertSA_Campania" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_InoUnidadesCertSAC_Campania" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_InoUnidadesCertSV_Campania" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_Mov_Atendido_Campania" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_Mov_ImportanciaPIV_Campania" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_Mov_ImportanciaProg_Campania" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_ProgramaAnualAdq_Campania" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_SA_Atendido_Campania" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_SA_ImportanciaPlaga_SA_ImportanciaPlaga" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_SAC_Atendido_Campania" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_SACImportanciaCultivo_Campania" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_SACImportanciaEnfermedad_Campania" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_SAPoblacion_Campania" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_StatusCampaniaKardex_Campania" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_SVAtendido_Campania" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_SVImportanciaCultivo_Campania" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_SVImportanciaPlaga_Campania" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_UnidadesCertificarInoSA_Campania" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_UnidadesCertificarInoSAC_Campania" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_UnidadesCertificarInoSV_Campania" />
+        <EntityTypeShape EntityType="DB_SENASICAModel.VW_CampaniasMontosTransversales" Width="1.5" PointX="12.375" PointY="12.75" />
+        <EntityTypeShape EntityType="DB_SENASICAModel.TipoReembolso" Width="1.5" PointX="59.875" PointY="55.75" />
+        <EntityTypeShape EntityType="DB_SENASICAModel.TesofeDetalle" Width="1.5" PointX="66.125" PointY="0.75" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_TesofeDetalle_ProyectoPresupuesto" />
+        <EntityTypeShape EntityType="DB_SENASICAModel.TESOFE" Width="1.5" PointX="72.125" PointY="31.5" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_TESOFE_TipoDeRecurso" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_TESOFE_TipoReembolso" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_TESOFE_UnidadEjecutora" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_TesofeDetalle_TESOFE" />
+        <EntityTypeShape EntityType="DB_SENASICAModel.MinistracionDetalle" Width="1.5" PointX="87.75" PointY="8.25" />
+        <EntityTypeShape EntityType="DB_SENASICAModel.MinistracionesXComite" Width="1.5" PointX="54.875" PointY="22.625" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_MinistracionesXComite_Anio" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_MinistracionesXComite_TipoDeRecurso" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_MinistracionDetalle_Campania" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_MinistracionDetalle_MinistracionesXComite" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_MinistracionesXComite_Banco" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_MinistracionesXComite_UnidadEjecutora" />
+        <EntityTypeShape EntityType="DB_SENASICAModel.ActaComision" Width="1.5" PointX="32.375" PointY="9.875" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_ActaComision_Estado" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_ActaComision_Mes" />
+        <EntityTypeShape EntityType="DB_SENASICAModel.MesByTrimestre" Width="1.5" PointX="8.375" PointY="0.875" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_ActaComision_MesByTrimestre" />
+        <EntityTypeShape EntityType="DB_SENASICAModel.VW_Users" Width="1.5" PointX="3.375" PointY="14.75" />
+        <EntityTypeShape EntityType="DB_SENASICAModel.Apertura" Width="1.5" PointX="63.125" PointY="1.875" />
+        <EntityTypeShape EntityType="DB_SENASICAModel.Fallo" Width="1.5" PointX="57.125" PointY="0.875" />
+        <EntityTypeShape EntityType="DB_SENASICAModel.FILE" Width="1.5" PointX="52.625" PointY="4.875" />
+        <EntityTypeShape EntityType="DB_SENASICAModel.JuntaAclaracion" Width="1.5" PointX="66.125" PointY="0.75" />
+        <EntityTypeShape EntityType="DB_SENASICAModel.Licitacion" Width="1.5" PointX="54.875" PointY="9.875" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_Aperturas_Licitacion" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_JAperturas_File" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_Fallo_File" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_Fallo_Licitacion" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_JuntaAclaracion_File" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_Licitacion_Files" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_JuntaAclaracion_Licitacion" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_Licitacion_Estado" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_Licitacion_UnidadEjecutora" />
+        <EntityTypeShape EntityType="DB_SENASICAModel.CapituloPartidaLicitacion" Width="1.5" PointX="54.875" PointY="28.75" />
+        <EntityTypeShape EntityType="DB_SENASICAModel.Licitacion_Capitulo" Width="1.5" PointX="57.125" PointY="21.625" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_Licitacion_Capitulo_CapituloPartida" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_Licitacion_Capitulo_Licitacion" />
+        <EntityTypeShape EntityType="DB_SENASICAModel.Actividad" Width="1.5" PointX="74.75" PointY="40.5" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_Actividad_Persona" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_Actividad_StatusActividad" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_Actividad_TipoActividad" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_Actividad_UnidadDeMedida" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_Beneficiario_Actividad" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_RepActividad_Actividad" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_StatusActividadKardex_Actividad" />
+        <EntityTypeShape EntityType="DB_SENASICAModel.ActividadXAccion" Width="1.5" PointX="66.5" PointY="30.875" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_ActividadXAccion_Persona11" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_ActividadXAccion_StatusAccion11" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_ActividadXAccion_TipoDeActividad11" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_ActividadXAccion_TipoDeRecurso11" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_ActividadXAccion_UnidadDeMedida11" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_ActividadXAccion_Accion11" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_Actividad_ActividadXAccion" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_ProgramaAnualAdq_ActividadXAccion" />
+        <EntityTypeShape EntityType="DB_SENASICAModel.FlujoCampania" Width="1.5" PointX="7.625" PointY="17.5" />
+        <EntityTypeShape EntityType="DB_SENASICAModel.StatusCampania" Width="1.5" PointX="5.375" PointY="17.5" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_StatusCampaniaKardex_Repro_StatusCampania" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_FlujoCampania_StatusCampania_Destino" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_FlujoCampania_StatusCampania_Origen" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_StatusCampaniaKardex_StatusCampania" />
+        <EntityTypeShape EntityType="DB_SENASICAModel.BienOservByUnidadMedida" Width="1.5" PointX="42" PointY="29.125" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_BienOservByUnidadMedida_BienOServ" />
+        <AssociationConnector Association="DB_SENASICAModel.FK_BienOservByUnidadMedida_UnidadDeMedida" />
+        <EntityTypeShape EntityType="DB_SENASICAModel.VW_ReporteAdquisiciones" Width="1.5" PointX="14.375" PointY="7.875" />
+        <EntityTypeShape EntityType="DB_SENASICAModel.BienServN" Width="1.5" PointX="10.375" PointY="1.375" />
+        <AssociationConnector Association="DB_SENASICAModel.FK__BienOServ__Fk_id__5ED4ED8D" />
+        </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

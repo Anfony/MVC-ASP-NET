@@ -1,0 +1,6 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<items>
+  <group Text="Catálogos de Sistema">
+    <item Text="Instancia Ejecutora" NavigateUrl="~/UnidadEjecutora"  />
+  </group>
+</items>

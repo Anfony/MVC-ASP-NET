@@ -1,0 +1,273 @@
+﻿@{
+    var popUp = Html.DevExpress().PopupControl(settings =>
+    {
+        settings.Name = "popUpValidaCampania";
+        settings.HeaderText = "Verificación de la Campaña";
+        settings.CallbackRouteValues = new { Controller = "StatusCampaniaKardex", Action = "ValidaCampania", IdCampania = ViewData["IdCampania"] };
+        settings.LoadContentViaCallback = LoadContentViaCallback.None;
+        settings.PopupVerticalAlign = PopupVerticalAlign.WindowCenter;
+        settings.PopupHorizontalAlign = PopupHorizontalAlign.WindowCenter;
+        settings.Height = Unit.Pixel(230);
+        settings.Width = Unit.Pixel(500);
+
+        settings.SetContent(() =>
+        {
+            ViewContext.Writer.Write("<br >");
+
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.Name = "CampaniaValida";
+                edtSettings.Text = Convert.ToBoolean(ViewData["esValidaCampania"]) ? "¡Campaña válida!" : "¡Campaña NO válida!";
+                edtSettings.ControlStyle.Font.Size = 16;
+                edtSettings.ControlStyle.ForeColor = Convert.ToBoolean(ViewData["esValidaCampania"]) ? System.Drawing.Color.Green : System.Drawing.Color.Red;
+            }).GetHtml();
+
+            ViewContext.Writer.Write("<br >");
+            ViewContext.Writer.Write("<br >");
+            ViewContext.Writer.Write("<br >");
+
+            ViewContext.Writer.Write("<table>");
+            ViewContext.Writer.Write("<tr>");
+
+            ViewContext.Writer.Write("<td>");
+            ViewContext.Writer.Write("</td>");
+
+            ViewContext.Writer.Write("<td>");
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Presupuesto Asignado";
+                edtSettings.ControlStyle.Font.Size = 12;
+                edtSettings.ControlStyle.ForeColor = System.Drawing.Color.DarkOrange;
+            }).Render();
+            ViewContext.Writer.Write("</td>");
+
+            ViewContext.Writer.Write("<td>");
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Registrado como GRC*";
+                edtSettings.ControlStyle.Font.Size = 12;
+                edtSettings.ControlStyle.ForeColor = System.Drawing.Color.DarkOrange;
+            }).Render();
+            ViewContext.Writer.Write("</td>");
+
+            ViewContext.Writer.Write("<td>");
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Registrado como GFO*";
+                edtSettings.ControlStyle.Font.Size = 12;
+                edtSettings.ControlStyle.ForeColor = System.Drawing.Color.DarkOrange;
+            }).Render();
+            ViewContext.Writer.Write("</td>");
+
+            ViewContext.Writer.Write("<td>");
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Presupuesto por Registrar";
+                edtSettings.ControlStyle.Font.Size = 12;
+                edtSettings.ControlStyle.ForeColor = System.Drawing.Color.DarkOrange;
+            }).Render();
+            ViewContext.Writer.Write("</td>");
+
+            ViewContext.Writer.Write("<td>");
+            ViewContext.Writer.Write("</td>");
+
+            ViewContext.Writer.Write("</tr>");
+
+            ViewContext.Writer.Write("<tr><td>");
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Federal";
+            }).Render();
+            ViewContext.Writer.Write("</td>");
+
+            ViewContext.Writer.Write("<td>");
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = ViewData["presFedAsignado"] == null ? "-" : Convert.ToDecimal(ViewData["presFedAsignado"]).ToString("c");
+            }).Render();
+            ViewContext.Writer.Write("</td>");
+
+            ViewContext.Writer.Write("<td>");
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = ViewData["presFedReportado"] == null ? "-" : Convert.ToDecimal(ViewData["presFedReportado"]).ToString("c");
+                edtSettings.ControlStyle.ForeColor = ViewData["StatusRecFed"] != null && ViewData["StatusRecFed"].ToString() == "NO VÁLIDO" ? System.Drawing.Color.Red : System.Drawing.Color.Black;
+            }).Render();
+            ViewContext.Writer.Write("</td>");
+
+            ViewContext.Writer.Write("<td>");
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = ViewData["presFedGFO"] == null ? "-" : Convert.ToDecimal(ViewData["presFedGFO"]).ToString("c");
+                edtSettings.ControlStyle.ForeColor = ViewData["StatusRecFed"] != null && ViewData["StatusRecFed"].ToString() == "NO VÁLIDO" ? System.Drawing.Color.Red : System.Drawing.Color.Black;
+            }).Render();
+            ViewContext.Writer.Write("</td>");
+
+            ViewContext.Writer.Write("<td>");
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = (Convert.ToDecimal((ViewData["presFedReportado"] ?? 0)) + Convert.ToDecimal((ViewData["presFedGFO"] ?? 0)) == 0 ? 0 : (Convert.ToDecimal((ViewData["presFedAsignado"] ?? 0)) - (Convert.ToDecimal((ViewData["presFedReportado"] ?? 0)) + Convert.ToDecimal((ViewData["presFedGFO"] ?? 0))))).ToString("c");
+                edtSettings.ControlStyle.ForeColor = ViewData["StatusRecFed"] != null && ViewData["StatusRecFed"].ToString() == "NO VÁLIDO" ? System.Drawing.Color.Red : System.Drawing.Color.Black;
+            }).Render();
+            ViewContext.Writer.Write("</td>");
+
+            ViewContext.Writer.Write("<td>");
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = ViewData["StatusRecFed"] == null ? "-" : ViewData["StatusRecFed"].ToString();
+                edtSettings.ControlStyle.ForeColor = ViewData["StatusRecFed"] != null && ViewData["StatusRecFed"].ToString() == "NO VÁLIDO" ? System.Drawing.Color.Red : System.Drawing.Color.Black;
+            }).Render();
+            ViewContext.Writer.Write("</td></tr>");
+
+            ViewContext.Writer.Write("<tr><td>");
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Estatal";
+            }).Render();
+            ViewContext.Writer.Write("</td>");
+
+            ViewContext.Writer.Write("<td>");
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = ViewData["presEstAsignado"] == null ? "-" : Convert.ToDecimal(ViewData["presEstAsignado"]).ToString("c");
+            }).Render();
+            ViewContext.Writer.Write("</td>");
+
+            ViewContext.Writer.Write("<td>");
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = ViewData["presEstReportado"] == null ? "-" : Convert.ToDecimal(ViewData["presEstReportado"]).ToString("c");
+                edtSettings.ControlStyle.ForeColor = ViewData["StatusRecEst"] != null && ViewData["StatusRecEst"].ToString() == "NO VÁLIDO" ? System.Drawing.Color.Red : System.Drawing.Color.Black;
+            }).Render();
+            ViewContext.Writer.Write("</td>");
+
+            ViewContext.Writer.Write("<td>");
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = ViewData["presEstGFO"] == null ? "-" : Convert.ToDecimal(ViewData["presEstGFO"]).ToString("c");
+                edtSettings.ControlStyle.ForeColor = ViewData["StatusRecEst"] != null && ViewData["StatusRecEst"].ToString() == "NO VÁLIDO" ? System.Drawing.Color.Red : System.Drawing.Color.Black;
+            }).Render();
+            ViewContext.Writer.Write("</td>");
+
+            ViewContext.Writer.Write("<td>");
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = (Convert.ToDecimal((ViewData["presEstReportado"] ?? 0)) + Convert.ToDecimal((ViewData["presEstGFO"] ?? 0)) == 0 ? 0 : (Convert.ToDecimal((ViewData["presEstAsignado"] ?? 0)) - (Convert.ToDecimal((ViewData["presEstReportado"] ?? 0)) + Convert.ToDecimal((ViewData["presEstGFO"] ?? 0))))).ToString("c");
+                edtSettings.ControlStyle.ForeColor = ViewData["StatusRecEst"] != null && ViewData["StatusRecEst"].ToString() == "NO VÁLIDO" ? System.Drawing.Color.Red : System.Drawing.Color.Black;
+            }).Render();
+            ViewContext.Writer.Write("</td>");
+
+            ViewContext.Writer.Write("<td>");
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = ViewData["StatusRecEst"] == null ? "" : ViewData["StatusRecEst"].ToString();
+                edtSettings.ControlStyle.ForeColor = ViewData["StatusRecEst"] != null && ViewData["StatusRecEst"].ToString() == "NO VÁLIDO" ? System.Drawing.Color.Red : System.Drawing.Color.Black;
+            }).Render();
+            ViewContext.Writer.Write("</td></tr>");
+
+            ViewContext.Writer.Write("<tr><td>");
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Productores";
+            }).Render();
+            ViewContext.Writer.Write("</td>");
+
+            ViewContext.Writer.Write("<td>");
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = ViewData["presProAsignado"] == null ? "-" : Convert.ToDecimal(ViewData["presProAsignado"]).ToString("c");
+            }).Render();
+            ViewContext.Writer.Write("</td>");
+
+            ViewContext.Writer.Write("<td>");
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = ViewData["presProReportado"] == null ? "-" : Convert.ToDecimal(ViewData["presProReportado"]).ToString("c");
+                edtSettings.ControlStyle.ForeColor = ViewData["StatusRecPro"] != null && ViewData["StatusRecPro"].ToString() == "NO VÁLIDO" ? System.Drawing.Color.Red : System.Drawing.Color.Black;
+            }).Render();
+            ViewContext.Writer.Write("</td>");
+
+            ViewContext.Writer.Write("<td>");
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = ViewData["presProGFO"] == null ? "-" : Convert.ToDecimal(ViewData["presProGFO"]).ToString("c");
+                edtSettings.ControlStyle.ForeColor = ViewData["StatusRecPro"] != null && ViewData["StatusRecPro"].ToString() == "NO VÁLIDO" ? System.Drawing.Color.Red : System.Drawing.Color.Black;
+            }).Render();
+            ViewContext.Writer.Write("</td>");
+
+            ViewContext.Writer.Write("<td>");
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = (Convert.ToDecimal((ViewData["presProReportado"] ?? 0)) + Convert.ToDecimal((ViewData["presProGFO"] ?? 0)) == 0 ? 0 : (Convert.ToDecimal((ViewData["presProAsignado"] ?? 0)) - (Convert.ToDecimal((ViewData["presProReportado"] ?? 0)) + Convert.ToDecimal((ViewData["presProGFO"] ?? 0))))).ToString("c");
+                edtSettings.ControlStyle.ForeColor = ViewData["StatusRecPro"] != null && ViewData["StatusRecPro"].ToString() == "NO VÁLIDO" ? System.Drawing.Color.Red : System.Drawing.Color.Black;
+            }).Render();
+            ViewContext.Writer.Write("</td>");
+
+            ViewContext.Writer.Write("<td>");
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = ViewData["StatusRecPro"] == null ? "-" : ViewData["StatusRecPro"].ToString();
+                edtSettings.ControlStyle.ForeColor = ViewData["StatusRecPro"] != null && ViewData["StatusRecPro"].ToString() == "NO VÁLIDO" ? System.Drawing.Color.Red : System.Drawing.Color.Black;
+            }).Render();
+            ViewContext.Writer.Write("</td></tr>");
+
+            ViewContext.Writer.Write("</table>");
+
+            ViewContext.Writer.Write("<br >");
+            ViewContext.Writer.Write("<br >");
+            ViewContext.Writer.Write("<br >");
+
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "GRC*: Gastos Relativos a la Campaña";
+            }).Render();
+
+            ViewContext.Writer.Write("<br >");
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "GFO*: Gastos Fijos de Operación";
+            }).Render();
+
+            ViewContext.Writer.Write("<div style='float:right'>");
+            Html.DevExpress().Button(btnSettings =>
+            {
+                btnSettings.Name = "btnCierra";
+                btnSettings.Text = "Aceptar";
+                btnSettings.ControlStyle.CssClass = "button";
+                btnSettings.Images.Image.Url = "/Content/Images/aceptar.png";
+                btnSettings.ImagePosition = ImagePosition.Right;
+                btnSettings.Style["position"] = "relative";
+                btnSettings.Style["left"] = "5px";
+                btnSettings.ClientSideEvents.Click = "function(s, e){ popUpValidaCampania.Hide(); }";
+            }).Render();
+            ViewContext.Writer.Write("</div>");
+
+        });
+    });
+}
+
+@popUp.GetHtml()

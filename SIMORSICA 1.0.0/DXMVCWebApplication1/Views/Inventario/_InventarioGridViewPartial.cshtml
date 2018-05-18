@@ -1,0 +1,518 @@
+@Html.DevExpress().GridView(settings =>
+{
+    settings.Name = "InventarioGrid";
+    settings.CallbackRouteValues = new { Controller = "Inventario", Action = "InventarioGridViewPartial", UEID = ViewData["UEID"] };
+    settings.Width = Unit.Percentage(100);
+
+    settings.SettingsEditing.AddNewRowRouteValues = new { Controller = "Inventario", Action = "InventarioGridViewPartialAddNew", UEID = ViewData["UEID"] };
+    settings.SettingsEditing.UpdateRowRouteValues = new { Controller = "Inventario", Action = "InventarioGridViewPartialUpdate", UEID = ViewData["UEID"] };
+    settings.SettingsEditing.DeleteRowRouteValues = new { Controller = "Inventario", Action = "InventarioGridViewPartialDelete", UEID = ViewData["UEID"] };
+    settings.SettingsEditing.Mode = GridViewEditingMode.PopupEditForm;
+    settings.SettingsBehavior.ConfirmDelete = true;
+
+    settings.SettingsPopup.EditForm.Height = 270;
+    settings.SettingsPopup.EditForm.Width = 700;
+    settings.SettingsPopup.EditForm.HorizontalAlign = PopupHorizontalAlign.WindowCenter;
+    settings.SettingsPopup.EditForm.VerticalAlign = PopupVerticalAlign.WindowCenter;
+    settings.SettingsPopup.EditForm.Modal = true;
+
+    settings.CommandColumn.Visible = true;
+    settings.CommandColumn.ShowNewButtonInHeader = Convert.ToBoolean(ViewData["Escritura"]);
+    settings.CommandColumn.ShowDeleteButton = Convert.ToBoolean(ViewData["Escritura"]);
+    settings.CommandColumn.ShowEditButton = Convert.ToBoolean(ViewData["Escritura"]) || Convert.ToBoolean(ViewData["Lectura"]);
+    settings.SettingsCommandButton.NewButton.Text = "Nuevo Bien";
+
+    settings.CommandColumn.ShowClearFilterButton = false;
+    settings.SettingsBehavior.AllowSelectByRowClick = true;
+    settings.SettingsDetail.AllowOnlyOneMasterRowExpanded = true;
+
+    settings.SettingsPager.Visible = true;
+    settings.SettingsPager.Position = PagerPosition.Bottom;
+    settings.SettingsPager.FirstPageButton.Visible = true;
+    settings.SettingsPager.LastPageButton.Visible = true;
+    settings.SettingsPager.PageSizeItemSettings.Visible = true;
+    settings.SettingsPager.PageSize = 5;
+    settings.SettingsPager.PageSizeItemSettings.Items = new string[] { "5", "10" };
+    settings.Settings.ShowFilterRowMenu = true;
+
+    settings.KeyFieldName = "PK_IdInventario";
+
+    settings.SettingsPager.Visible = true;
+    settings.Settings.ShowGroupPanel = true;
+    settings.Settings.ShowFilterRow = true;
+    settings.SettingsBehavior.AllowSelectByRowClick = true;
+
+    settings.Columns.Add("Clave", "No. de Inventario Simosica");
+    settings.Columns.Add("ClaveAnt", "Clave Aterior");
+    settings.Columns.Add("Marca");
+    settings.Columns.Add("Modelo");
+    settings.Columns.Add("Serie", "No. de Serie");
+
+    settings.Columns.Add("BienOServ.Anio.Anio1", "Año Reg. Sistema");
+    settings.Columns.Add("BienOServ.Nombre", "Bien o Servicio");
+
+    settings.Columns.Add("Factura", "No. de Factura");
+    settings.Columns.Add("Costo", "Valor Factura").PropertiesEdit.DisplayFormatString = "c";
+    settings.Columns.Add(column =>
+    {
+        column.FieldName = "FK_IdEstadoBien__SIS";
+        column.Caption = "Estado del Bien";
+        column.ColumnType = MVCxGridViewColumnType.ComboBox;
+        var comboBoxProperties = column.PropertiesEdit as ComboBoxProperties;
+        comboBoxProperties.DataSource = DXMVCWebApplication1.Models.Senasica.GetEstadoBien();
+        comboBoxProperties.TextField = "Nombre";
+        comboBoxProperties.ValueField = "Pk_IdEstadoBien";
+        comboBoxProperties.ValueType = typeof(int);
+    });
+    settings.Columns.Add("TipoDeRecurso.Nombre", "Recurso");
+    settings.Columns.Add("Descripcion", "Actividades/Descripción");
+    settings.SettingsBehavior.AllowSelectByRowClick = true;
+
+    //custom form
+    settings.SetEditFormTemplateContent(c =>
+    {
+        var inventario = ViewData["dataItem"] ?? c.DataItem;
+        ViewContext.Writer.Write("<p>Edición de Inventario de la Unidad Administrativa</p>");
+        ViewContext.Writer.Write("<table>" + "<tr>");
+        ViewContext.Writer.Write("<td>");
+        Html.DevExpress().Label(
+            edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Año de Adquisición:";
+                edtSettings.AssociatedControlName = "FK_IdAnio";
+            }
+        )
+        .Render();
+
+        Html.DevExpress().ComboBox(
+            edtSettings =>
+            {
+                edtSettings.Name = "FK_IdAnio";
+                edtSettings.ControlStyle.CssClass = "editor";
+                edtSettings.Properties.TextField = "Anio1";
+                edtSettings.Properties.NullText = "Campo Requerido";
+                edtSettings.Properties.ValueField = "Pk_IdAnio";
+                edtSettings.Properties.ValueType = typeof(int);
+                edtSettings.ShowModelErrors = true;
+                edtSettings.Width = Unit.Pixel(300);
+                edtSettings.ToolTip = c.KeyValue == null ? "Seleccione un Año" : "Cambiar Año";
+            }
+        )
+        .BindList(DXMVCWebApplication1.Models.Senasica.GetAnios())
+        .Bind(DataBinder.Eval(inventario, "FK_IdAnio"))
+        .Render();
+        //fin de id año e inicio de id estado bien
+        ViewContext.Writer.Write("</td>" + "<td>");
+        Html.DevExpress().Label(
+            edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Estado del Bien:";
+                edtSettings.AssociatedControlName = "FK_IdEstadoBien__SIS";
+            }
+        )
+        .Render();
+
+        Html.DevExpress().ComboBox(
+            edtSettings =>
+            {
+                edtSettings.Name = "FK_IdEstadoBien__SIS";
+                edtSettings.ControlStyle.CssClass = "editor";
+                edtSettings.Properties.TextField = "Nombre";
+                edtSettings.Properties.NullText = "Campo Requerido";
+                edtSettings.Properties.ValueField = "Pk_IdEstadoBien";
+                edtSettings.Properties.IncrementalFilteringMode = IncrementalFilteringMode.Contains;
+                edtSettings.Properties.IncrementalFilteringDelay = 5;
+                edtSettings.Properties.ValueType = typeof(int);
+                edtSettings.ShowModelErrors = true;
+                edtSettings.Width = Unit.Pixel(300);
+                edtSettings.ToolTip = c.KeyValue == null ? "Seleccione el Estado del Bien" : "Cambiar el Estado del Bien";
+            }
+        )
+        .BindList(DXMVCWebApplication1.Models.Senasica.GetEstadoBien())
+        .Bind(DataBinder.Eval(inventario, "FK_IdEstadoBien__SIS"))
+        .Render();
+        //fin de id estado bien e inicio de bien serv
+        ViewContext.Writer.Write("</td><td>");
+        Html.DevExpress().Label(
+            edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Bien/Servicio:";
+                edtSettings.ToolTip = "Si no visualizas el Bien/Servicio, será necesario cambiar el año presupuestal";
+                edtSettings.AssociatedControlName = "FK_IdBienOServ";
+            }
+        )
+        .Render();
+
+        Html.DevExpress().ComboBox(
+            edtSettings =>
+            {
+                edtSettings.Name = "Fk_IdBienOServ";
+                edtSettings.ControlStyle.CssClass = "editor";
+                edtSettings.Properties.TextField = "Nombre";
+                edtSettings.Properties.NullText = "Campo Requerido";
+                edtSettings.Properties.ValueField = "Pk_IdBienOServ";
+                edtSettings.Properties.IncrementalFilteringMode = IncrementalFilteringMode.Contains;
+                edtSettings.Properties.IncrementalFilteringDelay = 5;
+                edtSettings.Properties.ValueType = typeof(int);
+                edtSettings.ShowModelErrors = true;
+                edtSettings.Width = Unit.Pixel(300);
+                edtSettings.ToolTip = c.KeyValue == null ? "Seleccione el Bien/Servicio" : "Cambiar el Bien/Servicio";
+            }
+        )
+        .BindList(DXMVCWebApplication1.Models.Senasica.GetBienesInventariables())
+        .Bind(DataBinder.Eval(inventario, "FK_IdBienOServ"))
+        .Render();
+        //fin de bien serv e inicio de clave
+        ViewContext.Writer.Write("</td></tr><tr><td>");
+        Html.DevExpress().Label(
+            edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "No. De Inventario Simosica:";
+                edtSettings.AssociatedControlName = "Clave";
+            }
+        )
+        .Render();
+
+        Html.DevExpress().TextBox(
+           edtSettings =>
+           {
+               edtSettings.Name = "Clave1";
+               edtSettings.ControlStyle.ForeColor = System.Drawing.Color.Red;
+               edtSettings.ClientEnabled = false;
+               edtSettings.ControlStyle.CssClass = "editor";
+               edtSettings.ShowModelErrors = true;
+               edtSettings.Width = Unit.Pixel(300);
+               edtSettings.ToolTip = "La clave se genera de forma automática por el sistema";
+           }
+       )
+       .Bind(DataBinder.Eval(inventario, "Clave"))
+       .Render();
+        //fin de clave inicio de clave anterior
+        ViewContext.Writer.Write("</td>" + "<td>");
+        Html.DevExpress().Label(
+            edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Clave anterior:";
+                edtSettings.AssociatedControlName = "ClaveAnt";
+            }
+        )
+        .Render();
+
+        Html.DevExpress().TextBox(
+           edtSettings =>
+           {
+               edtSettings.Name = "ClaveAnt";
+               edtSettings.ControlStyle.CssClass = "editor";
+               edtSettings.ShowModelErrors = true;
+               edtSettings.Width = Unit.Pixel(300);
+               edtSettings.ToolTip = c.KeyValue == null ? "Ingresar la Clave de Inventario Aterior" : "Editar la Clave Aterior";
+           }
+       )
+       .Bind(DataBinder.Eval(inventario, "ClaveAnt"))
+       .Render();
+        //fin de clave anterior e inicio de Descripcion
+        ViewContext.Writer.Write("</td><td>");
+
+        Html.DevExpress().Label(
+            edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Marca:";
+                edtSettings.AssociatedControlName = "Marca";
+            }
+        )
+        .Render();
+
+        Html.DevExpress().TextBox(
+           edtSettings =>
+           {
+               edtSettings.Name = "Marca";
+               edtSettings.ControlStyle.CssClass = "editor";
+               edtSettings.ShowModelErrors = true;
+               edtSettings.Width = Unit.Pixel(300);
+               edtSettings.ToolTip = c.KeyValue == null ? "Ingresar la Marca del Bien" : "Editar la Marca";
+           }
+       )
+       .Bind(DataBinder.Eval(inventario, "Marca"))
+       .Render();
+        //fin de Marca e inicio de Modelo
+        ViewContext.Writer.Write("</td></tr><tr><td>");
+        Html.DevExpress().Label(
+            edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Modelo:";
+                edtSettings.AssociatedControlName = "Modelo";
+            }
+        )
+        .Render();
+
+        Html.DevExpress().TextBox(
+           edtSettings =>
+           {
+               edtSettings.Name = "Modelo";
+               edtSettings.ControlStyle.CssClass = "editor";
+               edtSettings.ShowModelErrors = true;
+               edtSettings.Width = Unit.Pixel(300);
+               edtSettings.ToolTip = c.KeyValue == null ? "Ingresar el Modelo" : "Editar el Modelo";
+           }
+       )
+       .Bind(DataBinder.Eval(inventario, "Modelo"))
+       .Render();
+        //fin de Modelo e incio de  Serie
+        ViewContext.Writer.Write("</td><td>");
+        Html.DevExpress().Label(
+            edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "No. De Serie:";
+                edtSettings.AssociatedControlName = "Serie";
+            }
+        )
+        .Render();
+
+        Html.DevExpress().TextBox(
+           edtSettings =>
+           {
+               edtSettings.Name = "Serie";
+               edtSettings.ControlStyle.CssClass = "editor";
+               edtSettings.ShowModelErrors = true;
+               edtSettings.Width = Unit.Pixel(300);
+               edtSettings.ToolTip = c.KeyValue == null ? "Ingresar el Número de Serie" : "Editar el Número de Serie";
+           }
+       )
+       .Bind(DataBinder.Eval(inventario, "Serie"))
+       .Render();
+        //fin de Serie e inicio de Factura
+        ViewContext.Writer.Write("</td><td>");
+        Html.DevExpress().Label(
+            edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "No. De Factura:";
+                edtSettings.AssociatedControlName = "Factura";
+            }
+        )
+        .Render();
+
+        Html.DevExpress().TextBox(
+           edtSettings =>
+           {
+               edtSettings.Name = "Factura";
+               edtSettings.ControlStyle.CssClass = "editor";
+               edtSettings.ShowModelErrors = true;
+               edtSettings.Width = Unit.Pixel(300);
+               edtSettings.ToolTip = c.KeyValue == null ? "Ingresar la Factura" : "Editar la Factura";
+           }
+       )
+       .Bind(DataBinder.Eval(inventario, "Factura"))
+       .Render();
+
+        ViewContext.Writer.Write("</td></tr><tr><td>");
+
+        Html.DevExpress().Label(
+            edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Valor Factura:";
+                edtSettings.AssociatedControlName = "Costo";
+            }
+        )
+        .Render();
+
+        Html.DevExpress().SpinEdit(
+           edtSettings =>
+           {
+               edtSettings.Name = "Costo";
+               edtSettings.ControlStyle.CssClass = "editor";
+               edtSettings.ShowModelErrors = true;
+               edtSettings.Width = Unit.Pixel(300);
+               edtSettings.ToolTip = "Solo puede introducir números decimales";
+               edtSettings.ToolTip = c.KeyValue == null ? "Ingresar el Valor de la Factura" : "Editar el Valor de la Factura";
+           }
+       )
+       .Bind(DataBinder.Eval(inventario, "Costo"))
+       .Render();
+        //fin de Costo e inicio de  FechaAdq
+        ViewContext.Writer.Write("</td><td>");
+
+        Html.DevExpress().Label(
+             edtSettings =>
+             {
+                 edtSettings.ControlStyle.CssClass = "label";
+                 edtSettings.Text = "Cilindros del Vehículo:";
+                 edtSettings.AssociatedControlName = "Cilindros";
+             }
+         )
+         .Render();
+
+        Html.DevExpress().SpinEdit(
+           edtSettings =>
+           {
+               edtSettings.Name = "Cilindros";
+               edtSettings.ControlStyle.CssClass = "editor";
+               edtSettings.ShowModelErrors = true;
+               edtSettings.Width = Unit.Pixel(300);
+               edtSettings.ToolTip = c.KeyValue == null ? "Ingresar el Número de Cilindros del Vehículo" : "Editar el Número de Cilindros del Vehículo";
+           }
+       )
+       .Bind(DataBinder.Eval(inventario, "Cilindros"))
+       .Render();
+        ViewContext.Writer.Write("</td><td>");
+        Html.DevExpress().Label(
+            edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Condición Operativa del Vehículo:";
+                edtSettings.AssociatedControlName = "CondicionOperativa";
+            }
+        )
+        .Render();
+
+        Html.DevExpress().TextBox(
+           edtSettings =>
+           {
+               edtSettings.Name = "CondicionOperativa";
+               edtSettings.ControlStyle.CssClass = "editor";
+               edtSettings.ShowModelErrors = true;
+               edtSettings.Width = Unit.Pixel(300);
+               edtSettings.ToolTip = c.KeyValue == null ? "Ingresar la Condición Operativa del Vehículo" : "Editar la Condición Operativa";
+           }
+       )
+       .Bind(DataBinder.Eval(inventario, "CondicionOperativa"))
+       .Render();
+        ViewContext.Writer.Write("</td></tr>");
+        ViewContext.Writer.Write("<tr><td>");
+        Html.DevExpress().Label(
+            edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Ubicación Física del Vehículo:";
+                edtSettings.AssociatedControlName = "UbicacionFisica";
+            }
+        )
+        .Render();
+
+        Html.DevExpress().TextBox(
+           edtSettings =>
+           {
+               edtSettings.Name = "UbicacionFisica";
+               edtSettings.ControlStyle.CssClass = "editor";
+               edtSettings.ShowModelErrors = true;
+               edtSettings.Width = Unit.Pixel(300);
+               edtSettings.ToolTip = c.KeyValue == null ? "Ingresar la Ubicación Física del Vehículo" : "Editar la Ubicación Física del Vehículo";
+           }
+       )
+       .Bind(DataBinder.Eval(inventario, "UbicacionFisica"))
+       .Render();
+        ViewContext.Writer.Write("</td><td>");
+        Html.DevExpress().Label(
+            edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Tipo de Recurso";
+                edtSettings.AssociatedControlName = "Fk_TipodeRecurso_SIS";
+            }
+        )
+        .Render();
+
+        Html.DevExpress().ComboBox(
+            edtSettings =>
+            {
+                edtSettings.Name = "Fk_TipodeRecurso_SIS";
+                edtSettings.ControlStyle.CssClass = "editor";
+                edtSettings.Properties.TextField = "Nombre";
+                edtSettings.Properties.NullText = "Campo Requerido";
+                edtSettings.Properties.ValueField = "Pk_IdTipoDeRecurso";
+                edtSettings.Properties.IncrementalFilteringMode = IncrementalFilteringMode.Contains;
+                edtSettings.Properties.IncrementalFilteringDelay = 5;
+                edtSettings.Properties.ValueType = typeof(int);
+                edtSettings.ShowModelErrors = true;
+                edtSettings.Width = Unit.Pixel(300);
+                edtSettings.ToolTip = c.KeyValue == null ? "Seleccione el Tipo de Recurso" : "Cambiar el tipo de Recurso";
+            }
+        )
+        .BindList(DXMVCWebApplication1.Models.Senasica.GetTiposDeRecurso())
+        .Bind(DataBinder.Eval(inventario, "Fk_TipodeRecurso_SIS"))
+        .Render();
+
+        ViewContext.Writer.Write("</td><td>");
+        Html.DevExpress().Label(
+         edtSettings =>
+         {
+             edtSettings.ControlStyle.CssClass = "label";
+             edtSettings.Text = "Actividades/Descripción:";
+             edtSettings.AssociatedControlName = "Descripcion";
+         }
+     )
+     .Render();
+
+        Html.DevExpress().Memo(
+           edtSettings =>
+           {
+               edtSettings.Name = "Descripcion";
+               edtSettings.ControlStyle.CssClass = "editor";
+               edtSettings.ShowModelErrors = true;
+               edtSettings.Width = Unit.Pixel(300);
+               edtSettings.Height = Unit.Pixel(40);
+               edtSettings.ToolTip = c.KeyValue == null ? "Descripción del Inventario de Bienes" : "Editar la Descripción del Inventario";
+           }
+       )
+       .Bind(DataBinder.Eval(inventario, "Descripcion"))
+       .Render();
+
+        ViewContext.Writer.Write("</td>" + "</tr>" + "</table><br>");
+        //Botones
+        ViewContext.Writer.Write("<div class=\"line\">");
+        Html.DevExpress().Label(
+            edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+            }
+        )
+        .Render();
+        Html.DevExpress().Button(
+            btnSettings =>
+            {
+                btnSettings.Name = "btnInventarioUpdate";
+                btnSettings.ControlStyle.CssClass = "button";
+                btnSettings.Text = "Actualizar";
+                btnSettings.Images.Image.Url = "Content/Images/guardar.png";
+                btnSettings.ImagePosition = ImagePosition.Right;
+                btnSettings.Images.Image.Width = 16;
+                btnSettings.ClientSideEvents.Click = "function(s, e){ InventarioGrid.UpdateEdit(); }";
+                btnSettings.Width = Unit.Pixel(30);
+                btnSettings.ClientVisible = Convert.ToBoolean(ViewData["Escritura"]);
+            }
+        )
+        .Render();
+        Html.DevExpress().Button(
+            btnSettings =>
+            {
+                btnSettings.Name = "btnInventarioCancel";
+                btnSettings.ControlStyle.CssClass = "button";
+                btnSettings.Text = "Cancelar";
+                btnSettings.Images.Image.Url = "Content/Images/cancelar.png";
+                btnSettings.ImagePosition = ImagePosition.Right;
+                btnSettings.Style["position"] = "relative";
+                btnSettings.Style["left"] = "5px";
+                btnSettings.ClientSideEvents.Click = "function(s, e){ InventarioGrid.CancelEdit(); }";
+                btnSettings.Width = Unit.Pixel(30);
+            }
+        )
+        .Render();
+
+
+        ViewContext.Writer.Write("</div>"); // Termina Codigo de Botones
+        //Botones fin
+    });
+}).Bind(Model).GetHtml()
+
+
+
+

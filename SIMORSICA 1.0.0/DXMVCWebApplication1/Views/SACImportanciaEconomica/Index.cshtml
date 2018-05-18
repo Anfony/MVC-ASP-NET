@@ -1,0 +1,15 @@
+﻿@{
+    ViewBag.Title = "Registro de Importancia Económica";
+}
+
+<h2>Registro de Importancia Económica</h2>
+<h3>Registre aquí la Importancia Económica</h3>
+<br>
+<br>
+
+@Html.Partial("~/Views/ExportExcelPDF/_ExportExcelPDF.cshtml", new ViewDataDictionary { { "Clave", DXMVCWebApplication1.Common.ListaPantallas.UE_IMPORTANCIA_SAP } })
+
+<br>
+<br>
+
+@Html.Action("ImportanciaSACGridViewPartial")

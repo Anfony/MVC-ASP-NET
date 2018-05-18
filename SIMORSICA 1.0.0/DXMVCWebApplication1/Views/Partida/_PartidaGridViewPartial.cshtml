@@ -1,0 +1,203 @@
+@{
+    var grid = Html.DevExpress().GridView(settings =>
+    {
+        settings.Name = "PartidaGridView";
+
+        settings.Style["width"] = "98%";
+        settings.Style["position"] = "relative";
+        settings.Style["left"] = "10px";
+        settings.CommandColumn.Width = 20;
+
+        settings.CallbackRouteValues = new { Controller = "Partida", Action = "PartidaGridViewPartial" };
+
+        settings.SettingsEditing.AddNewRowRouteValues = new { Controller = "Partida", Action = "PartidaGridViewPartialAddNew" };
+        settings.SettingsEditing.UpdateRowRouteValues = new { Controller = "Partida", Action = "PartidaGridViewPartialUpdate" };
+        settings.SettingsEditing.DeleteRowRouteValues = new { Controller = "Partida", Action = "PartidaGridViewPartialDelete" };
+        settings.SettingsEditing.Mode = GridViewEditingMode.PopupEditForm;
+
+        settings.SettingsText.PopupEditFormCaption = "PARTIDA";
+
+        settings.SettingsPopup.EditForm.Height = 150;
+        settings.SettingsPopup.EditForm.Width = 525;
+        settings.SettingsPopup.EditForm.HorizontalAlign = DevExpress.Web.ASPxClasses.PopupHorizontalAlign.WindowCenter;
+        settings.SettingsPopup.EditForm.VerticalAlign = DevExpress.Web.ASPxClasses.PopupVerticalAlign.WindowCenter;
+        settings.SettingsPopup.EditForm.Modal = true;
+
+
+        settings.SettingsBehavior.ConfirmDelete = true;
+
+        settings.CommandColumn.Visible = true;
+        settings.CommandColumn.ShowNewButtonInHeader = Convert.ToBoolean(ViewData["Escritura"]);
+        settings.CommandColumn.ShowDeleteButton = Convert.ToBoolean(ViewData["Escritura"]);
+        settings.CommandColumn.ShowEditButton = Convert.ToBoolean(ViewData["Escritura"]) || Convert.ToBoolean(ViewData["Lectura"]);
+        settings.CommandColumn.ShowClearFilterButton = true;  
+
+        settings.KeyFieldName = "Pk_IdPartida";
+
+        settings.SettingsPager.Visible = true;
+        settings.SettingsPager.Position = PagerPosition.Bottom;
+        settings.SettingsPager.FirstPageButton.Visible = true;
+        settings.SettingsPager.LastPageButton.Visible = true;
+        settings.SettingsPager.PageSizeItemSettings.Visible = true;
+        settings.SettingsPager.PageSize = 15;
+        settings.SettingsPager.PageSizeItemSettings.Items = new string[] { "5", "10", "15" };
+        settings.Settings.ShowFilterRowMenu = true;
+
+        settings.Settings.ShowGroupPanel = true;
+        settings.Settings.ShowFilterRow = true;
+        settings.SettingsBehavior.AllowSelectByRowClick = true;
+
+        settings.Columns.Add("ConceptoPartida.CapituloPartida1.Nombre", "Capítulo de Gasto");
+        settings.Columns.Add(column =>
+        {
+            column.FieldName = "Fk_IdConceptoPartida__SIS";
+            column.Caption = "Concepto de Gasto";
+
+            column.ColumnType = MVCxGridViewColumnType.ComboBox;
+            var comboBoxProperties = column.PropertiesEdit as ComboBoxProperties;
+            comboBoxProperties.DataSource = DXMVCWebApplication1.Models.Senasica.GetConceptosPartida();
+            comboBoxProperties.TextField = "Nombre";
+            comboBoxProperties.ValueField = "Pk_IdConceptoPartida";
+            comboBoxProperties.IncrementalFilteringMode = IncrementalFilteringMode.Contains;
+            comboBoxProperties.ValueType = typeof(int);
+        });
+
+        settings.Columns.Add("Nombre", "Partida");
+
+
+        //Comienza codigo de la forma custom
+        //********************************************************
+
+        settings.SetEditFormTemplateContent(c =>
+        {
+
+            var partida = ViewData["dataItem"] ?? c.DataItem;
+            Html.DevExpress().Label(
+                         edtSettings =>
+                         {
+                             edtSettings.ControlStyle.CssClass = "label";
+                             edtSettings.Text = c.KeyValue == null ? "Ingresa  Partida" : "Edita  Partida";
+                             edtSettings.Style["font-size"] = "18px";
+                             edtSettings.Style["color"] = "orange";
+                         }
+                     )
+                     .Render();
+
+            ViewContext.Writer.Write(
+            "<table>" +
+                "<tr>" +  //Table Row
+                    "<td>");  //table Data
+
+            Html.DevExpress().Label(
+               edtSettings =>
+               {
+                   edtSettings.ControlStyle.CssClass = "label";
+                   edtSettings.Text = "Concepto de Gasto:";
+                   edtSettings.AssociatedControlName = "Fk_IdConceptoPartida__SIS";
+               }
+           )
+           .Render();
+
+            Html.DevExpress().ComboBox(
+                edtSettings =>
+                {
+                    edtSettings.Name = "Fk_IdConceptoPartida__SIS";
+                    edtSettings.ControlStyle.CssClass = "editor";
+                    edtSettings.Properties.TextField = "Nombre";
+                    edtSettings.Properties.NullText = "Campo Requerido";
+                    edtSettings.Properties.ValueField = "Pk_IdConceptoPartida";
+                    edtSettings.Properties.ValueType = typeof(int);
+                    edtSettings.ShowModelErrors = true;
+                    edtSettings.Properties.IncrementalFilteringMode = IncrementalFilteringMode.Contains;
+                    edtSettings.Width = Unit.Pixel(500);
+                    edtSettings.ToolTip = c.KeyValue == null ? "Seleccione el Concepto de la Partida" : "Cambiar Concepto Partida";
+                }
+            )
+            .BindList(DXMVCWebApplication1.Models.Senasica.GetConceptosPartidaConcatenado())
+            .Bind(DataBinder.Eval(partida, "Fk_IdConceptoPartida__SIS"))
+            .Render();
+
+            ViewContext.Writer.Write("</td>");
+            ViewContext.Writer.Write("</tr>");
+            ViewContext.Writer.Write("<tr>");
+
+            //Partida
+            ViewContext.Writer.Write("<td>");
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Partida:";
+                edtSettings.AssociatedControlName = "Nombre";
+            }).Render();
+
+
+            Html.DevExpress().TextBox(edtSettings =>
+            {
+                edtSettings.Name = "Nombre";
+                edtSettings.Properties.NullText = "Campo Requerido";
+                edtSettings.ControlStyle.CssClass = "editor";
+                edtSettings.ShowModelErrors = true;
+                edtSettings.Width = Unit.Pixel(300);
+                edtSettings.ToolTip = c.KeyValue == null ? "Ingresar Nombre" : "Editar Nombre";
+            }).Bind(DataBinder.Eval(partida, "Nombre")).Render();
+
+
+            ViewContext.Writer.Write("</td>");
+            ViewContext.Writer.Write("</tr>");
+            ViewContext.Writer.Write("</table>");
+
+            //BOTONES
+            ViewContext.Writer.Write("<br>");
+
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+            }).Render();
+
+            Html.DevExpress().Button(btnSettings =>
+            {
+                btnSettings.Name = "btnUpdat";
+                btnSettings.Text = "Guardar";
+                btnSettings.ControlStyle.CssClass = "button";
+                btnSettings.Images.Image.Url = "Content/Images/guardar.png";
+                btnSettings.ImagePosition = ImagePosition.Right;
+                btnSettings.Images.Image.Width = 16;
+                btnSettings.ClientSideEvents.Click = "function(s, e){ PartidaGridView.UpdateEdit(); }";
+                btnSettings.ClientVisible = Convert.ToBoolean(ViewData["Escritura"]);
+
+            }).Render();
+
+            Html.DevExpress().Button(btnSettings =>
+            {
+                btnSettings.Name = "btnCance";
+                btnSettings.Text = "Cancelar";
+                btnSettings.ControlStyle.CssClass = "button";
+                btnSettings.Images.Image.Url = "Content/Images/cancelar.png";
+                btnSettings.ImagePosition = ImagePosition.Right;
+                btnSettings.Style["position"] = "relative";
+                btnSettings.Style["left"] = "5px";
+                btnSettings.ClientSideEvents.Click = "function(s, e){ PartidaGridView.CancelEdit(); }";
+            }).Render();
+
+            Html.DevExpress().Button(btnSettings =>
+            {
+                btnSettings.Name = "btnAyuda";
+                btnSettings.ControlStyle.CssClass = "button";
+                btnSettings.Text = "Ayuda";
+                btnSettings.Images.Image.Url = "/Content/Images/ayuda.png";
+                btnSettings.ImagePosition = ImagePosition.Right;
+                btnSettings.Images.Image.Width = 16;
+                btnSettings.Style["position"] = "relative";
+                btnSettings.Style["left"] = "20px";
+                btnSettings.ClientSideEvents.Click = "function(s, e){ window.open('https://docs.google.com/document/d/1ZJURCxDAT76zN4TpKa2cBHEdF3RZFUNkAv3o9iyWxG4/edit#heading=h.2dlolyb','_blank'); }";
+            }).Render();
+            ViewContext.Writer.Write("</br>");
+        });
+
+    });
+    if (ViewData["EditError"] != null)
+    {
+        grid.SetEditErrorText((string)ViewData["EditError"]);
+    }
+}
+@grid.Bind(Model).GetHtml()

@@ -1,0 +1,157 @@
+﻿@model DXMVCWebApplication1.Models.Campania
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Edit</title>
+</head>
+<body>
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+        
+        <div class="form-horizontal">
+            <h4>Campania</h4>
+            <hr />
+            @Html.ValidationSummary(true)
+            @Html.HiddenFor(model => model.Pk_IdCampania)
+    
+            <div class="form-group">
+                @Html.LabelFor(model => model.Fk_IdUnidadEjecutora__UE, "Fk_IdUnidadEjecutora__UE", new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.DropDownList("Fk_IdUnidadEjecutora__UE", String.Empty)
+                    @Html.ValidationMessageFor(model => model.Fk_IdUnidadEjecutora__UE)
+                </div>
+            </div>
+    
+            <div class="form-group">
+                @Html.LabelFor(model => model.FK_IdAnio__SIS, "FK_IdAnio__SIS", new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.DropDownList("FK_IdAnio__SIS", String.Empty)
+                    @Html.ValidationMessageFor(model => model.FK_IdAnio__SIS)
+                </div>
+            </div>
+    
+            <div class="form-group">
+                @Html.LabelFor(model => model.Fk_IdPrograma__SIS, "Fk_IdPrograma__SIS", new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.DropDownList("Fk_IdPrograma__SIS", String.Empty)
+                    @Html.ValidationMessageFor(model => model.Fk_IdPrograma__SIS)
+                </div>
+            </div>
+    
+            <div class="form-group">
+                @Html.LabelFor(model => model.Fk_IdComponente__SIS, "Fk_IdComponente__SIS", new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.DropDownList("Fk_IdComponente__SIS", String.Empty)
+                    @Html.ValidationMessageFor(model => model.Fk_IdComponente__SIS)
+                </div>
+            </div>
+    
+            <div class="form-group">
+                @Html.LabelFor(model => model.Fk_IdSubComponente__SIS, "Fk_IdSubComponente__SIS", new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.DropDownList("Fk_IdSubComponente__SIS", String.Empty)
+                    @Html.ValidationMessageFor(model => model.Fk_IdSubComponente__SIS)
+                </div>
+            </div>
+    
+            <div class="form-group">
+                @Html.LabelFor(model => model.NombreCampania, new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.NombreCampania)
+                    @Html.ValidationMessageFor(model => model.NombreCampania)
+                </div>
+            </div>
+    
+            <div class="form-group">
+                @Html.LabelFor(model => model.Introduccion, new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.Introduccion)
+                    @Html.ValidationMessageFor(model => model.Introduccion)
+                </div>
+            </div>
+    
+            <div class="form-group">
+                @Html.LabelFor(model => model.SituacionActual, new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.SituacionActual)
+                    @Html.ValidationMessageFor(model => model.SituacionActual)
+                </div>
+            </div>
+    
+            <div class="form-group">
+                @Html.LabelFor(model => model.ObjetivoEstrategico, new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.ObjetivoEstrategico)
+                    @Html.ValidationMessageFor(model => model.ObjetivoEstrategico)
+                </div>
+            </div>
+    
+            <div class="form-group">
+                @Html.LabelFor(model => model.MetaAnual, new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.MetaAnual)
+                    @Html.ValidationMessageFor(model => model.MetaAnual)
+                </div>
+            </div>
+    
+            <div class="form-group">
+                @Html.LabelFor(model => model.FechaInicio, new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.FechaInicio)
+                    @Html.ValidationMessageFor(model => model.FechaInicio)
+                </div>
+            </div>
+    
+            <div class="form-group">
+                @Html.LabelFor(model => model.FechaFin, new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.FechaFin)
+                    @Html.ValidationMessageFor(model => model.FechaFin)
+                </div>
+            </div>
+    
+            <div class="form-group">
+                @Html.LabelFor(model => model.Fk_IdStatusCampania__SIS, "Fk_IdStatusCampania__SIS", new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.DropDownList("Fk_IdStatusCampania__SIS", String.Empty)
+                    @Html.ValidationMessageFor(model => model.Fk_IdStatusCampania__SIS)
+                </div>
+            </div>
+    
+            <div class="form-group">
+                @Html.LabelFor(model => model.Fk_IdIncentivo, "Fk_IdIncentivo", new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.DropDownList("Fk_IdIncentivo", String.Empty)
+                    @Html.ValidationMessageFor(model => model.Fk_IdIncentivo)
+                </div>
+            </div>
+    
+            <div class="form-group">
+                @Html.LabelFor(model => model.Fk_IdProyectoAutorizado__SIS, "Fk_IdProyectoAutorizado__SIS", new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.DropDownList("Fk_IdProyectoAutorizado__SIS", String.Empty)
+                    @Html.ValidationMessageFor(model => model.Fk_IdProyectoAutorizado__SIS)
+                </div>
+            </div>
+    
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <input type="submit" value="Save" class="btn btn-default" />
+                </div>
+            </div>
+        </div>
+    }
+    
+    <div>
+        @Html.ActionLink("Back to List", "Index")
+    </div>
+</body>
+</html>

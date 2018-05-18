@@ -1,0 +1,128 @@
+﻿﻿@model RegisterViewModel
+@{
+    ViewBag.Title = "Registro";
+}
+
+<h2>@ViewBag.Title.</h2>
+
+@using (Html.BeginForm("Register", "Account", FormMethod.Post, new { @class = "form-horizontal", role = "form", id = "FormularioRegistro" }))
+{
+    @Html.AntiForgeryToken()
+    <h4>Crear una cuenta nueva.</h4>
+    <hr />
+    @Html.ValidationSummary()
+
+    <div class="form-group">
+        @Html.Label("Estado: ", new { @class = "col-md-2 control-label" })
+        <div class="col-md-10">
+            @Html.DropDownList("dropDownEstado", new SelectList(string.Empty, "Value", "Text"), "Seleccione...", new { @style = "width: 250px" })
+        </div>
+    </div>
+    <div class="form-group">
+        @Html.Label("Instancia Ejecutora: ", new { @class = "col-md-2 control-label" })
+        <div class="col-md-10">
+            @Html.DropDownList("dropDownInstanciaEjecutora", new SelectList(string.Empty, "Value", "Text"), "Seleccione...", new { @style = "width: 400px" })
+        </div>
+    </div>
+    <div class="form-group">
+        @Html.Label("Persona: ", new { @class = "col-md-2 control-label" })
+        <div class="col-md-10">
+            @Html.DropDownList("dropDownPersona", new SelectList(string.Empty, "Value", "Text"), "Seleccione...", new { @style = "width: 400px" })
+        </div>
+    </div>
+    <div class="form-group">
+        @Html.Label("Rol: ", new { @class = "col-md-2 control-label" })
+        <div class="col-md-10">
+            @Html.DropDownList("dropDownRoles", new SelectList(string.Empty, "Value", "Text"), "--", new { @style = "width: 400px" })
+        </div>
+    </div>
+    <div id="IdUsuario" class="form-group">
+        @Html.LabelFor(m => m.UserName, new { @class = "col-md-2 control-label" })
+        <div class="col-md-10">
+            @Html.TextBoxFor(m => m.UserName, new { @style = "width: 350px", @class = "form-control" })
+        </div>
+    </div>
+    <div id="IdContrasenia" class="form-group">
+        @Html.LabelFor(m => m.Password, new { @class = "col-md-2 control-label" })
+        <div class="col-md-10">
+            @Html.PasswordFor(m => m.Password, new { @style = "width: 350px", @class = "form-control" })
+        </div>
+    </div>
+    <div id="IdConfimaContrasenia" class="form-group">
+        @Html.LabelFor(m => m.ConfirmPassword, new { @class = "col-md-2 control-label" })
+        <div class="col-md-10">
+            @Html.PasswordFor(m => m.ConfirmPassword, new { @style = "width: 350px", @class = "form-control" })
+        </div>
+    </div>
+    <div id="BotonRegistrar" class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="submit" class="btn btn-default" value="Registrar" />
+        </div>
+    </div>
+}
+
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<script>
+
+    // combo Estado
+    $(function () {
+        $.ajax({
+            type: "GET",
+            url: "/Account/GetEstadoByUnidadEjecutora",
+            datatype: "Json",
+            success: function (data) {
+                $('#dropDownEstado').empty();
+                $.each(data, function (index, value) {
+                    $('#dropDownEstado').append('<option value="' + value.Pk_IdEstado + '">' + value.Nombre + '</option>');
+                })
+            }
+        });
+    });
+
+    //Combo Instancia Ejecutora
+    $(function () {
+        $.ajax({
+            type: "GET",
+            url: "/Account/GetUnidadEjecutora",
+            datatype: "Json",
+            success: function (data) {
+                $('#dropDownInstanciaEjecutora').empty();
+                $.each(data, function (index, value) {
+                    $('#dropDownInstanciaEjecutora').append('<option value="' + value.Pk_IdUnidadEjecutora + '">' + value.Nombre + '</option>');
+                })
+            }
+        });
+    });
+
+    //Combo Personas
+    $(function () {
+        $.ajax({
+            type: "GET",
+            url: "/Account/GetPersonasByUnidadEjecutora",
+            datatype: "Json",
+            success: function (data) {
+                $.each(data, function (index, value) {
+                    $('#dropDownPersona').append('<option value="' + value.Pk_IdPersona + '">' + value.NombreCompleto + '</option>');
+                })
+            }
+        });
+
+        $('#dropDownPersona').change(function () {
+
+            $('#dropDownRoles').empty();
+
+            $.ajax({
+                type: "GET",
+                url: "/Account/GetPuestoByPersona",
+                datatype: "Json",
+                data: { IdPersona: $('#dropDownPersona').val() },
+                success: function (data) {
+                    $.each(data, function (index, value) {
+                        $('#dropDownRoles').append('<option value="' + value.Nombre + '">' + value.Nombre + '</option>');
+                    })
+                }
+            });
+        });
+    });
+
+</script>

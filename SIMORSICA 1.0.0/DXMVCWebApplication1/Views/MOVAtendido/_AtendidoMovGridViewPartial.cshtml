@@ -1,0 +1,289 @@
+@{
+	var grid = Html.DevExpress().GridView(settings => {
+        settings.Name = "AtendidoMovGridView";
+        settings.CallbackRouteValues = new { Controller = "MOVAtendido", Action = "AtendidoMovGridViewPartial", IdCampania = ViewData["IdCampania"], IdEstado = ViewData["IdEstado"] };
+
+        settings.SettingsEditing.AddNewRowRouteValues = new { Controller = "MOVAtendido", Action = "AtendidoMovGridViewPartialAddNew", IdCampania = ViewData["IdCampania"], IdEstado = ViewData["IdEstado"] };
+        settings.SettingsEditing.UpdateRowRouteValues = new { Controller = "MOVAtendido", Action = "AtendidoMovGridViewPartialUpdate", IdCampania = ViewData["IdCampania"], IdEstado = ViewData["IdEstado"] };
+        settings.SettingsEditing.DeleteRowRouteValues = new { Controller = "MOVAtendido", Action = "AtendidoMovGridViewPartialDelete", IdCampania = ViewData["IdCampania"], IdEstado = ViewData["IdEstado"] };
+        settings.SettingsEditing.Mode = GridViewEditingMode.PopupEditForm;
+
+        settings.SettingsPopup.EditForm.Height = 280;
+        settings.SettingsPopup.EditForm.Width = 425;
+        settings.SettingsPopup.EditForm.HorizontalAlign = DevExpress.Web.ASPxClasses.PopupHorizontalAlign.WindowCenter;
+        settings.SettingsPopup.EditForm.VerticalAlign = DevExpress.Web.ASPxClasses.PopupVerticalAlign.WindowCenter;
+        settings.SettingsPopup.EditForm.Modal = true;
+        
+        settings.SettingsBehavior.ConfirmDelete = true;
+
+        settings.CommandColumn.Visible = true;
+        settings.SettingsCommandButton.NewButton.Text = "Nuevo";
+        settings.CommandColumn.ShowNewButtonInHeader = true;
+        settings.CommandColumn.ShowDeleteButton = true;
+        settings.CommandColumn.ShowEditButton = true;
+
+        settings.KeyFieldName = "Pk_IdMov_Atendido";
+
+        settings.SettingsPager.Visible = true;
+        settings.SettingsPager.Position = PagerPosition.Bottom;
+        settings.SettingsPager.FirstPageButton.Visible = true;
+        settings.SettingsPager.LastPageButton.Visible = true;
+        settings.SettingsPager.PageSizeItemSettings.Visible = true;
+        settings.SettingsPager.PageSize = 3;
+        settings.SettingsPager.PageSizeItemSettings.Items = new string[] { "5", "10", "15" };
+        settings.Settings.ShowFilterRowMenu = true;
+        
+         //settings.Columns.Add("Fk_IdEstado");
+        
+        settings.Columns.Add(column =>
+        {
+            column.FieldName = "Fk_IdEstado";
+            column.Caption = "Estado";
+            column.ColumnType = MVCxGridViewColumnType.ComboBox;
+            var comboBoxProperties = column.PropertiesEdit as ComboBoxProperties;
+            comboBoxProperties.DataSource = DXMVCWebApplication1.Models.Senasica.GetEstados();
+            comboBoxProperties.TextField = "Nombre";
+            comboBoxProperties.ValueField = "Pk_Idestado";
+            comboBoxProperties.ValueType = typeof(int);
+            comboBoxProperties.IncrementalFilteringMode = IncrementalFilteringMode.StartsWith;
+        });
+        settings.Columns.Add("NumInspecciones", "Núm. Inspecciones").PropertiesEdit.DisplayFormatString = "n";
+        settings.Columns.Add("NumCuarentenas", "Núm. Cuarentenas").PropertiesEdit.DisplayFormatString = "n";
+        settings.Columns.Add("NumActasRetorno", "Núm. Act. Retorno").PropertiesEdit.DisplayFormatString = "n";
+        settings.Columns.Add("NumTratamientos", "Núm. Tratamientos").PropertiesEdit.DisplayFormatString = "n";
+        settings.Columns.Add("NumDestrucciones", "Núm. Desctrucciones").PropertiesEdit.DisplayFormatString = "n";
+        
+        //****************Custom Form*********************//
+        settings.SetEditFormTemplateContent(c =>
+        {
+            var Atendido = ViewData["dataItem"] ?? c.DataItem;
+            ViewContext.Writer.Write("<p>Edición de Atendido</p>");
+            ViewContext.Writer.Write(
+       "<table>" +
+        "<tr>" +
+            "<td>");
+
+            Html.DevExpress().Label(
+                edtSettings =>
+                {
+                    edtSettings.ControlStyle.CssClass = "label";
+                    edtSettings.Text = "Estado:";
+                    edtSettings.AssociatedControlName = "Fk_IdEstado";
+                }
+            )
+            .Render();
+            Html.DevExpress().ComboBox(
+               edtSettings =>
+               {
+                   edtSettings.Name = "Fk_IdEstado";
+                   edtSettings.ControlStyle.CssClass = "editor";
+                   edtSettings.Properties.TextField = "Nombre";
+                   edtSettings.Properties.NullText = "Campo Requerido";
+                   edtSettings.Properties.ValueField = "Pk_IdEstado";
+                   edtSettings.Properties.ValueType = typeof(int);
+                   edtSettings.ShowModelErrors = true;
+                   edtSettings.Width = Unit.Pixel(300);
+
+                   edtSettings.Properties.EnableSynchronization = DefaultBoolean.False;
+                   edtSettings.Properties.IncrementalFilteringMode = IncrementalFilteringMode.StartsWith;
+               }
+            )
+            .BindList(DXMVCWebApplication1.Models.Senasica.GetEstados())
+            .Bind(DataBinder.Eval(Atendido, "Fk_IdEstado"))
+            .Render();
+            
+            Html.DevExpress().Label(
+                edtSettings =>
+                {
+                    edtSettings.ControlStyle.CssClass = "label";
+                    edtSettings.Text = "Número Inspecciones:";
+                    edtSettings.AssociatedControlName = "NumInspecciones";
+                }
+            )
+            .Render();
+            Html.DevExpress().SpinEdit(
+                edtSettings =>
+                {
+                    edtSettings.Name = "NumInspecciones";
+                    edtSettings.Properties.MinValue = 0;
+                    edtSettings.Properties.MaxValue = 999999999;
+                    edtSettings.Properties.NumberType = SpinEditNumberType.Integer;
+                    edtSettings.Properties.Increment = 0.1M;
+                    edtSettings.Properties.LargeIncrement = 1;
+                    edtSettings.Properties.SpinButtons.ShowLargeIncrementButtons = true;
+                    edtSettings.Properties.DisplayFormatString = "n";
+                    edtSettings.ControlStyle.CssClass = "editor";
+                    edtSettings.ShowModelErrors = true;
+                    edtSettings.Width = Unit.Pixel(250);
+                }
+            )
+            .Bind(DataBinder.Eval(Atendido, "NumInspecciones"))
+            .Render();
+
+            Html.DevExpress().Label(
+                edtSettings =>
+                {
+                    edtSettings.ControlStyle.CssClass = "label";
+                    edtSettings.Text = "Número Cuarentenas:";
+                    edtSettings.AssociatedControlName = "NumCuarentenas";
+                }
+            )
+            .Render();
+            Html.DevExpress().SpinEdit(
+                edtSettings =>
+                {
+                    edtSettings.Name = "NumCuarentenas";
+                    edtSettings.Properties.MinValue = 0;
+                    edtSettings.Properties.MaxValue = 999999999;
+                    edtSettings.Properties.NumberType = SpinEditNumberType.Integer;
+                    edtSettings.Properties.Increment = 0.1M;
+                    edtSettings.Properties.LargeIncrement = 1;
+                    edtSettings.Properties.SpinButtons.ShowLargeIncrementButtons = true;
+                    edtSettings.Properties.DisplayFormatString = "n";
+                    edtSettings.ControlStyle.CssClass = "editor";
+                    edtSettings.ShowModelErrors = true;
+                    edtSettings.Width = Unit.Pixel(250);
+                }
+            )
+            .Bind(DataBinder.Eval(Atendido, "NumCuarentenas"))
+            .Render();
+
+            ViewContext.Writer.Write("</td>");
+            ViewContext.Writer.Write("<td>");
+            
+            Html.DevExpress().Label(
+                edtSettings =>
+                {
+                    edtSettings.ControlStyle.CssClass = "label";
+                    edtSettings.Text = "Número Actas Retorno:";
+                    edtSettings.AssociatedControlName = "NumActasRetorno";
+                }
+            )
+            .Render();
+            Html.DevExpress().SpinEdit(
+                edtSettings =>
+                {
+                    edtSettings.Name = "NumActasRetorno";
+                    edtSettings.Properties.MinValue = 0;
+                    edtSettings.Properties.MaxValue = 999999999;
+                    edtSettings.Properties.NumberType = SpinEditNumberType.Integer;
+                    edtSettings.Properties.Increment = 0.1M;
+                    edtSettings.Properties.LargeIncrement = 1;
+                    edtSettings.Properties.SpinButtons.ShowLargeIncrementButtons = true;
+                    edtSettings.Properties.DisplayFormatString = "n";
+                    edtSettings.ControlStyle.CssClass = "editor";
+                    edtSettings.ShowModelErrors = true;
+                    edtSettings.Width = Unit.Pixel(250);
+                }
+            )
+            .Bind(DataBinder.Eval(Atendido, "NumActasRetorno"))
+            .Render();
+
+            Html.DevExpress().Label(
+                edtSettings =>
+                {
+                    edtSettings.ControlStyle.CssClass = "label";
+                    edtSettings.Text = "Número Tratamientos:";
+                    edtSettings.AssociatedControlName = "NumTratamientos";
+                }
+            )
+            .Render();
+            Html.DevExpress().SpinEdit(
+                edtSettings =>
+                {
+                    edtSettings.Name = "NumTratamientos";
+                    edtSettings.Properties.MinValue = 0;
+                    edtSettings.Properties.MaxValue = 999999999;
+                    edtSettings.Properties.NumberType = SpinEditNumberType.Integer;
+                    edtSettings.Properties.Increment = 0.1M;
+                    edtSettings.Properties.LargeIncrement = 1;
+                    edtSettings.Properties.SpinButtons.ShowLargeIncrementButtons = true;
+                    edtSettings.Properties.DisplayFormatString = "n";
+                    edtSettings.ControlStyle.CssClass = "editor";
+                    edtSettings.ShowModelErrors = true;
+                    edtSettings.Width = Unit.Pixel(250);
+                }
+            )
+            .Bind(DataBinder.Eval(Atendido, "NumTratamientos"))
+            .Render();
+
+            Html.DevExpress().Label(
+                edtSettings =>
+                {
+                    edtSettings.ControlStyle.CssClass = "label";
+                    edtSettings.Text = "Número Destrucciones:";
+                    edtSettings.AssociatedControlName = "NumDestrucciones";
+                }
+            )
+            .Render();
+            Html.DevExpress().SpinEdit(
+                edtSettings =>
+                {
+                    edtSettings.Name = "NumDestrucciones";
+                    edtSettings.Properties.MinValue = 0;
+                    edtSettings.Properties.MaxValue = 999999999;
+                    edtSettings.Properties.NumberType = SpinEditNumberType.Integer;
+                    edtSettings.Properties.Increment = 0.1M;
+                    edtSettings.Properties.LargeIncrement = 1;
+                    edtSettings.Properties.SpinButtons.ShowLargeIncrementButtons = true;
+                    edtSettings.Properties.DisplayFormatString = "n";
+                    edtSettings.ControlStyle.CssClass = "editor";
+                    edtSettings.ShowModelErrors = true;
+                    edtSettings.Width = Unit.Pixel(250);
+                }
+            )
+            .Bind(DataBinder.Eval(Atendido, "NumDestrucciones"))
+            .Render();
+            
+            ViewContext.Writer.Write("</td>");
+            ViewContext.Writer.Write("</tr>");
+            ViewContext.Writer.Write("</table>");
+
+
+            //***************Botones*************//
+            ViewContext.Writer.Write("<br>");
+            Html.DevExpress().Label(
+                edtSettings =>
+                {
+                    edtSettings.ControlStyle.CssClass = "label";
+                }
+            )
+            .Render();
+            Html.DevExpress().Button(
+                btnSettings =>
+                {
+                    btnSettings.Name = "btnUpdat";
+                    btnSettings.Text = "Guardar";
+                    btnSettings.ControlStyle.CssClass = "button";
+                    btnSettings.Images.Image.Url = "Content/Images/guardar.png";
+                    btnSettings.ImagePosition = ImagePosition.Right;
+                    btnSettings.Images.Image.Width = 16;
+                    btnSettings.ClientSideEvents.Click = "function(s, e){ AtendidoMovGridView" + ".UpdateEdit(); }";
+                }
+            )
+            .Render();
+
+            Html.DevExpress().Button(
+                btnSettings =>
+                {
+                    btnSettings.Name = "btnCance";
+                    btnSettings.Text = "Cancelar";
+                    btnSettings.ControlStyle.CssClass = "button";
+                    btnSettings.Images.Image.Url = "Content/Images/cancelar.png";
+                    btnSettings.ImagePosition = ImagePosition.Right;
+                    btnSettings.Style["position"] = "relative";
+                    btnSettings.Style["left"] = "5px";
+                    btnSettings.ClientSideEvents.Click = "function(s, e){ AtendidoMovGridView" + ".CancelEdit(); }";
+                }
+            )
+            .Render();
+
+            ViewContext.Writer.Write("</br>");
+        });
+        
+	});
+	if (ViewData["EditError"] != null){
+    grid.SetEditErrorText((string)ViewData["EditError"]);
+    }
+}
+@grid.Bind(Model).GetHtml()

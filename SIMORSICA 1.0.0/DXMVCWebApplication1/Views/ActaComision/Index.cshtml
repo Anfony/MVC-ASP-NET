@@ -1,0 +1,279 @@
+﻿
+@{
+    ViewBag.Title = "Acta de Comisión";
+}
+
+<h3 style="font-size:17px; font:bold; text-align:center">ACTAS DE COMISIÓN</h3>
+<h3 style="font-size: 13px; text-align: center; position: relative; top: -10px">Registro de Actas de Comisión</h3>
+<br>
+
+@Html.Partial("~/Views/ExportExcelPDF/_ExportExcelPDF.cshtml", new ViewDataDictionary { { "Clave", DXMVCWebApplication1.Common.ListaPantallas.UE_ACTA_COMISION } })
+
+<br>
+<br>
+<script type="text/javascript">
+
+    function ActaComisionUploadFile(Id, Mes, MesTrimestre)
+    {
+        popUpSubirArchivo.Show();
+        Pk_IdActaComision.SetValue(Id);
+        _Mes.SetValue(Mes);
+        _MesTrimestre.SetValue(MesTrimestre);
+    }
+
+</script>
+
+@Html.DevExpress().Button(btnSettings =>
+{
+    btnSettings.Name = "btnCierraMes";
+    btnSettings.Text = "Publicar Acta de Comisión";
+    btnSettings.ControlStyle.CssClass = "button";
+    btnSettings.Images.Image.Url = "/Content/Images/Acta.png";
+    btnSettings.ImagePosition = ImagePosition.Right;
+    btnSettings.Style["position"] = "relative";
+    btnSettings.Style["left"] = "10px";
+    btnSettings.Images.Image.Width = 15;
+    
+    btnSettings.ClientSideEvents.Click = "function(s, e){ popUpActaComision.Show(); }";
+}).GetHtml();
+
+@Html.Action("ActaComisionGridViewPartial")
+
+@*    Popup para Registrar las Actas de Comisión    *@
+@Html.DevExpress().PopupControl(settings =>
+{
+    settings.Name = "popUpActaComision";
+    settings.Width = 400;
+    settings.AllowDragging = true;
+    settings.CloseAction = CloseAction.CloseButton;
+    settings.PopupAnimationType = AnimationType.None;
+    settings.HeaderText = "Registro de Actas de Comisión";
+    settings.Modal = true;
+    settings.PopupHorizontalAlign = PopupHorizontalAlign.WindowCenter;
+    settings.PopupVerticalAlign = PopupVerticalAlign.WindowCenter;
+    DB_SENASICAEntities db = new DB_SENASICAEntities();
+    
+    settings.SetContent(() =>
+    {
+        using (Html.BeginForm("ActaComisionAddNew", "ActaComision", FormMethod.Post, new { id = "FormActas" }))
+        {
+            int IdAnioPres = FuncionesAuxiliares.GetCurrent_IdAnioPresupuestal();
+            int IdAnio = db.Anios.Where(i => i.Pk_IdAnio == IdAnioPres).Select(i => i.Anio1).First();
+
+            if (IdAnio < 2018)
+            {
+                Html.DevExpress().Label(edtSettings =>
+                {
+                    edtSettings.ControlStyle.CssClass = "label";
+                    edtSettings.Text = "Mes a publicar";
+                    edtSettings.ControlStyle.Font.Size = 12;
+                }).Render();
+                
+                Html.DevExpress().ComboBox(settingsCombo =>
+                {
+                    settingsCombo.Name = "Fk_IdMes";
+                    settingsCombo.Properties.TextField = "Descripcion";
+                    settingsCombo.Properties.NullText = "Campo Requerido";
+                    settingsCombo.Properties.ValueField = "Pk_IdMes";
+                    settingsCombo.Properties.ValueType = typeof(int);
+                    settingsCombo.ToolTip = "Seleccione un Mes";
+                    settingsCombo.Width = Unit.Pixel(450);
+                    settingsCombo.ShowModelErrors = true;
+                    settingsCombo.Properties.EnableSynchronization = DefaultBoolean.True;
+                    settingsCombo.Properties.IncrementalFilteringMode = IncrementalFilteringMode.Contains;
+                }).BindList(Senasica.GetMesRestante()).GetHtml();
+            }
+            else
+            {
+                Html.DevExpress().Label(edtSettings =>
+                {
+                    edtSettings.ControlStyle.CssClass = "label";
+                    edtSettings.Text = "Periodo a publicar";
+                    edtSettings.ControlStyle.Font.Size = 12;
+                }).Render();
+                
+                Html.DevExpress().ComboBox(settingsCombo =>
+                {
+                    settingsCombo.Name = "Fk_IdMesTrimestre";
+                    settingsCombo.Properties.TextField = "Descripcion";
+                    settingsCombo.Properties.NullText = "Campo Requerido";
+                    settingsCombo.Properties.ValueField = "Pk_IdMesTrimestre";
+                    settingsCombo.Properties.ValueType = typeof(int);
+                    settingsCombo.ToolTip = "Seleccione un Periodo";
+                    settingsCombo.Width = Unit.Pixel(450);
+                    settingsCombo.ShowModelErrors = true;
+                    settingsCombo.Properties.EnableSynchronization = DefaultBoolean.True;
+                    settingsCombo.Properties.IncrementalFilteringMode = IncrementalFilteringMode.Contains;
+                }).BindList(Senasica.GetMesRestante()).GetHtml();                
+            }
+            ViewContext.Writer.Write("<br />");
+            ViewContext.Writer.Write("<br />");
+
+            ViewContext.Writer.Write("<table>");
+            ViewContext.Writer.Write("<tr><td>");
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Nota:";
+                edtSettings.ControlStyle.Font.Size = 10;
+            }).Render();
+            ViewContext.Writer.Write("</td></tr>");
+            ViewContext.Writer.Write("<tr><td>");
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Una vez publicado, ya no podrá ser modificado";
+                edtSettings.ControlStyle.Font.Size = 10;
+            }).Render();
+            ViewContext.Writer.Write("</td></tr>");
+            ViewContext.Writer.Write("</table>");
+
+            ViewContext.Writer.Write("<br />");
+            ViewContext.Writer.Write("<br />");
+            
+            ViewContext.Writer.Write("<div style='float:right'>");
+            Html.DevExpress().Button(btnSettings =>
+            {
+                btnSettings.Name = "btnAceptarCierre";
+                btnSettings.Text = "Aceptar";
+                btnSettings.ControlStyle.CssClass = "button";
+                btnSettings.Images.Image.Url = "/Content/Images/aceptar.png";
+                btnSettings.ImagePosition = ImagePosition.Right;
+                btnSettings.Style["position"] = "relative";
+                btnSettings.Style["left"] = "5px";
+                btnSettings.UseSubmitBehavior = true;
+            }).Render();
+
+            Html.DevExpress().Button(btnSettings =>
+            {
+                btnSettings.Name = "btnCancelarCierre";
+                btnSettings.Text = "Cancelar";
+                btnSettings.ControlStyle.CssClass = "button";
+                btnSettings.Images.Image.Url = "/Content/Images/cancelar.png";
+                btnSettings.ImagePosition = ImagePosition.Right;
+                btnSettings.Style["position"] = "relative";
+                btnSettings.Style["left"] = "5px";
+                btnSettings.ClientSideEvents.Click = "function(s, e){ popUpActaComision.Hide(); }";
+            }).Render();
+            ViewContext.Writer.Write("</div>");
+        }
+    });
+}).GetHtml()
+
+@*    Popup para Subir Archivo    *@
+@Html.DevExpress().PopupControl(settings =>
+{
+    settings.Name = "popUpSubirArchivo";
+    settings.Width = 400;
+    settings.AllowDragging = true;
+    settings.CloseAction = CloseAction.CloseButton;
+    settings.PopupAnimationType = AnimationType.None;
+    settings.HeaderText = "Subir el Acta de Comisión";
+    settings.Modal = true;
+    settings.PopupHorizontalAlign = PopupHorizontalAlign.WindowCenter;
+    settings.PopupVerticalAlign = PopupVerticalAlign.WindowCenter;
+
+    settings.SetContent(() =>
+    {
+        using (Html.BeginForm("CargaReporte", "ActaComision", FormMethod.Post))
+        {
+            Html.DevExpress().TextBox(settingsTextBox =>
+            {
+                settingsTextBox.Name = "Pk_IdActaComision";
+                settingsTextBox.Width = Unit.Pixel(30);
+                settingsTextBox.ReadOnly = true;
+                settingsTextBox.ControlStyle.ForeColor = System.Drawing.Color.White;
+                settingsTextBox.ControlStyle.Border.BorderColor = System.Drawing.Color.White;
+            }).Render();
+
+            Html.DevExpress().UploadControl(CAsettings =>
+            {
+                CAsettings.Name = "UploadControl";
+                CAsettings.CallbackRouteValues = new { Controller = "ActaComision", Action = "CargaReporte" };
+                CAsettings.ShowUploadButton = true;
+                CAsettings.UploadButton.Text = "Subir Acta";
+                CAsettings.AddUploadButtonsHorizontalPosition = AddUploadButtonsHorizontalPosition.InputRightSide;
+                CAsettings.ShowProgressPanel = true;
+                CAsettings.Width = Unit.Pixel(350);
+                CAsettings.ClientSideEvents.FileUploadComplete = "function(s, e) { popUpCargaFinalizada.Show(); }";
+            }).Render();
+
+            ViewContext.Writer.Write("<br />");
+
+            ViewContext.Writer.Write("<table>");
+            ViewContext.Writer.Write("<tr><td>");
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Nota:";
+                edtSettings.ControlStyle.Font.Size = 10;
+            }).Render();
+            ViewContext.Writer.Write("</td></tr>");
+
+            ViewContext.Writer.Write("<tr><td>");
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "1. El formato del archivo debe ser PDF.";
+                //edtSettings.ControlStyle.ForeColor = System.Drawing.Color.Red;
+                edtSettings.ControlStyle.Font.Size = 10;
+            }).Render();
+            ViewContext.Writer.Write("</td></tr>");
+
+            ViewContext.Writer.Write("<tr><td>");
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "2. Una vez cargado el archivo, ya no podrá ser modificado";
+                //edtSettings.ControlStyle.ForeColor = System.Drawing.Color.Red;
+                edtSettings.ControlStyle.Font.Size = 10;
+            }).Render();
+            ViewContext.Writer.Write("</td></tr>");
+            ViewContext.Writer.Write("</table>");
+        }
+    });
+}).GetHtml()
+
+@*    Mensaje de Carga Finalizada    *@
+@Html.DevExpress().PopupControl(settings =>
+{
+    settings.Name = "popUpCargaFinalizada";
+    settings.Width = 300;
+    settings.AllowDragging = true;
+    settings.CloseAction = CloseAction.CloseButton;
+    settings.PopupAnimationType = AnimationType.None;
+    settings.HeaderText = "La carga ha finalizado";
+    settings.Modal = true;
+    settings.PopupHorizontalAlign = PopupHorizontalAlign.WindowCenter;
+    settings.PopupVerticalAlign = PopupVerticalAlign.WindowCenter;
+
+    settings.SetContent(() =>
+    {
+        using (Html.BeginForm("Index", "ActaComision", FormMethod.Post))
+        {
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "El registro se ha cerrado";
+                edtSettings.ControlStyle.ForeColor = System.Drawing.Color.Red;
+                edtSettings.ControlStyle.Font.Size = 11;
+            }).Render();
+
+            ViewContext.Writer.Write("<br />");
+            ViewContext.Writer.Write("<br />");
+
+            ViewContext.Writer.Write("<div style='float:right'>");
+            Html.DevExpress().Button(btnSettings =>
+            {
+                btnSettings.Name = "btnCargaFinalizada";
+                btnSettings.Text = "Aceptar";
+                btnSettings.ControlStyle.CssClass = "button";
+                btnSettings.Images.Image.Url = "/Content/Images/aceptar.png";
+                btnSettings.ImagePosition = ImagePosition.Right;
+                btnSettings.Images.Image.Width = 16;
+                btnSettings.UseSubmitBehavior = true;
+            }).Render();
+            ViewContext.Writer.Write("</div>");
+        }
+    });
+}).GetHtml()

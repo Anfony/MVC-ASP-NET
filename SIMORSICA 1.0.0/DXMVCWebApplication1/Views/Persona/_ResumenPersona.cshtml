@@ -1,0 +1,183 @@
+﻿@{
+
+    ViewContext.Writer.Write("<br >");
+    Html.DevExpress().Label(edtSettings =>
+    {
+        edtSettings.Name = "resumen";
+        edtSettings.Text = "Resumen General";
+        edtSettings.ControlStyle.Font.Size = 16;
+        edtSettings.Style["position"] = "relative";
+        edtSettings.Style["left"] = "300px";
+    }).GetHtml();
+
+
+
+    ViewContext.Writer.Write("<br >");
+    ViewContext.Writer.Write("<br >");
+    ViewContext.Writer.Write("<br >");
+
+    ViewContext.Writer.Write("<table>");
+    ViewContext.Writer.Write("<tr>");
+    ViewContext.Writer.Write("<td>");
+
+    Html.DevExpress().Label(edtSettings =>
+    {
+        edtSettings.ControlStyle.CssClass = "label";
+        edtSettings.Text = "Catálogo";
+        edtSettings.ControlStyle.Font.Size = 12;
+        edtSettings.ControlStyle.ForeColor = System.Drawing.Color.DarkGreen;
+    }).Render();
+
+    ViewContext.Writer.Write("</td>");
+
+    ViewContext.Writer.Write("<td>");
+    Html.DevExpress().Label(edtSettings =>
+    {
+        edtSettings.ControlStyle.CssClass = "label";
+        edtSettings.Text = "Asignaciones Encontradas";
+        edtSettings.ControlStyle.Font.Size = 12;
+        edtSettings.ControlStyle.ForeColor = System.Drawing.Color.DarkGreen;
+    }).Render();
+
+    ViewContext.Writer.Write("</td>");
+
+    ViewContext.Writer.Write("<td>");
+    Html.DevExpress().Label(edtSettings =>
+    {
+        edtSettings.ControlStyle.CssClass = "label";
+        edtSettings.Text = "Ruta del Catálogo";
+        edtSettings.ControlStyle.Font.Size = 12;
+        edtSettings.ControlStyle.ForeColor = System.Drawing.Color.DarkGreen;
+    }).Render();
+
+    ViewContext.Writer.Write("</td>");
+
+    ViewContext.Writer.Write("<td>"); 
+    Html.DevExpress().Label(edtSettings =>
+    {
+        edtSettings.ControlStyle.CssClass = "label";
+        edtSettings.Text = "Descripción";
+        edtSettings.ControlStyle.Font.Size = 12;
+        edtSettings.ControlStyle.ForeColor = System.Drawing.Color.DarkGreen;
+    }).Render();
+    ViewContext.Writer.Write("</td>");
+    ViewContext.Writer.Write("</tr>");
+    
+    ViewContext.Writer.Write("<tr><td>");
+    Html.DevExpress().Label(edtSettings =>
+    {
+        edtSettings.ControlStyle.CssClass = "label";
+        edtSettings.Text = "Asignación de Actividades";
+    }).Render();
+
+    ViewContext.Writer.Write("</td>");
+    ViewContext.Writer.Write("<td>");
+
+    Html.DevExpress().Label(edtSettings =>
+    {
+        edtSettings.ControlStyle.CssClass = "label";
+        edtSettings.Text = ViewData["CountActividadAsignada"] == null ? "-" : Convert.ToDecimal(ViewData["CountActividadAsignada"]).ToString();
+        edtSettings.Style["position"] = "relative";
+        edtSettings.Style["left"] = "75px";
+    }).Render();
+
+    ViewContext.Writer.Write("</td>");
+    ViewContext.Writer.Write("<td>");
+
+    Html.DevExpress().Label(edtSettings =>
+    {
+        edtSettings.ControlStyle.CssClass = "label";
+        edtSettings.Text = "Planeación –> Actividades a Asignar –> Asignación de Actividades";
+    }).Render();
+    ViewContext.Writer.Write("</td>");
+    ViewContext.Writer.Write("<td>");
+
+    Html.DevExpress().Label(edtSettings =>
+    {
+        edtSettings.ControlStyle.CssClass = "label";
+        edtSettings.Text = "La Fecha Fin no ha concluido";
+    }).Render();
+    ViewContext.Writer.Write("</td></tr>");
+    ViewContext.Writer.Write("<tr><td>");
+
+    Html.DevExpress().Label(edtSettings =>
+    {
+        edtSettings.ControlStyle.CssClass = "label";
+        edtSettings.Text = "Registro de Avances";
+    }).Render();
+
+    ViewContext.Writer.Write("</td>");
+    ViewContext.Writer.Write("<td>");
+
+    Html.DevExpress().Label(edtSettings =>
+    {
+        edtSettings.ControlStyle.CssClass = "label";
+        edtSettings.Text = ViewData["CountInformeAvances"] == null ? "-" : Convert.ToDecimal(ViewData["CountInformeAvances"]).ToString();
+        edtSettings.Style["position"] = "relative";
+        edtSettings.Style["left"] = "75px";
+    }).Render();
+
+    ViewContext.Writer.Write("</td>");
+    ViewContext.Writer.Write("<td>");
+
+    Html.DevExpress().Label(edtSettings =>
+    {
+        edtSettings.ControlStyle.CssClass = "label";
+        edtSettings.Text = "Ejecución –> Informe de Avances –> Registro de Avances";
+    }).Render();
+    
+    ViewContext.Writer.Write("</td>");
+    ViewContext.Writer.Write("<td>");
+
+    Html.DevExpress().Label(edtSettings =>
+    {
+        edtSettings.ControlStyle.CssClass = "label";
+        edtSettings.Text = "Mes Abierto";
+    }).Render();
+    ViewContext.Writer.Write("</td></tr>");
+    ViewContext.Writer.Write("<tr><td>");
+
+    Html.DevExpress().Label(edtSettings =>
+    {
+        edtSettings.ControlStyle.CssClass = "label";
+        edtSettings.Text = "Asignación de Coordinadores a Campaña ";
+    }).Render();
+
+    ViewContext.Writer.Write("</td>");
+    ViewContext.Writer.Write("<td>");
+
+    Html.DevExpress().Label(edtSettings =>
+    {
+        edtSettings.ControlStyle.CssClass = "label";
+        edtSettings.Text = ViewData["CountCoorCampania"] == null ? "-" : Convert.ToDecimal(ViewData["CountCoorCampania"]).ToString();
+        edtSettings.Style["position"] = "relative";
+        edtSettings.Style["left"] = "75px";
+    }).Render();
+
+    ViewContext.Writer.Write("</td>");
+    ViewContext.Writer.Write("<td>");
+
+    Html.DevExpress().Label(edtSettings =>
+    {
+
+        edtSettings.ControlStyle.CssClass = "label";
+        edtSettings.Text = "Planeación –> Asignación de Coordinadores a Campaña";
+    }).Render();
+
+    ViewContext.Writer.Write("</td></tr>");
+    ViewContext.Writer.Write("</table>");
+
+    ViewContext.Writer.Write("<br >");
+    ViewContext.Writer.Write("<br >");
+
+    Html.DevExpress().Label(edtSettings =>
+    {
+        edtSettings.ControlStyle.CssClass = "label";
+        edtSettings.Text = "Para deshabilitar el usuario, debe modificar las !Asignaciones Encontradas!";
+        edtSettings.ControlStyle.Font.Size = 10;
+        edtSettings.ControlStyle.ForeColor = System.Drawing.Color.Red;
+    }).Render();
+
+    ViewContext.Writer.Write("<br >");
+    ViewContext.Writer.Write("<br >");
+}

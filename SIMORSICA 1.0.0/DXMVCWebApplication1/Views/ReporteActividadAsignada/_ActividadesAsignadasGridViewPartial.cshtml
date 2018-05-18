@@ -1,0 +1,285 @@
+﻿@{
+    var grid = Html.DevExpress().GridView(settings =>
+    {
+        settings.Name = "ActividadesAsignadasGridView";
+        settings.CallbackRouteValues = new { Controller = "ReporteActividadAsignada", Action = "ActividadesAsignadasGridViewPartial", Estado = (ViewData["Estado"] == null ? "" : ViewData["Estado"].ToString()) };
+
+        settings.SettingsEditing.Mode = GridViewEditingMode.PopupEditForm;
+
+        settings.SettingsPopup.EditForm.Height = 400;
+        settings.SettingsPopup.EditForm.Width = 625;
+        settings.SettingsPopup.EditForm.HorizontalAlign = DevExpress.Web.ASPxClasses.PopupHorizontalAlign.WindowCenter;
+        settings.SettingsPopup.EditForm.VerticalAlign = DevExpress.Web.ASPxClasses.PopupVerticalAlign.WindowCenter;
+        settings.SettingsPopup.EditForm.Modal = true;
+
+
+        settings.Settings.ShowFilterRow = true;
+        settings.Settings.ShowFilterRowMenu = true;
+
+
+        settings.CommandColumn.Visible = true;
+        settings.SettingsCommandButton.EditButton.Text = "Registrar Avances";
+        settings.CommandColumn.ShowEditButton = Convert.ToBoolean(ViewData["Escritura"]) || Convert.ToBoolean(ViewData["Lectura"]);
+        settings.CommandColumn.ShowClearFilterButton = true; 
+        
+        settings.SettingsBehavior.AllowSelectByRowClick = true;
+        settings.SettingsDetail.AllowOnlyOneMasterRowExpanded = true;
+
+
+        settings.KeyFieldName = "Pk_IdActividad";
+
+        settings.SettingsPager.Visible = true;
+        settings.Settings.ShowGroupPanel = true;
+        settings.Settings.ShowFilterRow = true;
+        settings.SettingsBehavior.AllowSelectByRowClick = true;
+
+        settings.SettingsPager.Visible = true;
+        settings.SettingsPager.Position = PagerPosition.Bottom;
+        settings.SettingsPager.FirstPageButton.Visible = true;
+        settings.SettingsPager.LastPageButton.Visible = true;
+        settings.SettingsPager.PageSizeItemSettings.Visible = true;
+        settings.SettingsPager.PageSize = 15;
+        settings.SettingsPager.PageSizeItemSettings.Items = new string[] { "5", "10", "15", "20" };
+
+        settings.Columns.Add("IE", "Instancia Ejecutora");
+        settings.Columns.Add("PersonaAsignada", "Actividad Asignada a:");
+        settings.Columns.Add("Campania", "Campaña");
+        settings.Columns.Add("Accion", "Acción");
+        settings.Columns.Add("TipoActividad", "Actividad");
+        settings.Columns.Add("UnidadMedida", "Unidad de Medidad");
+        settings.Columns.Add("Descripcion", "Descripción");
+        settings.Columns.Add("Fecha_Inicio", "Fecha Inicio").PropertiesEdit.DisplayFormatString = "d";
+        settings.Columns.Add("FechaFin", "Fecha Fin").PropertiesEdit.DisplayFormatString = "d";
+        settings.Columns.Add("Asignado_Anual", "Meta Anual Asignada").PropertiesEdit.DisplayFormatString = "n";
+        settings.Columns.Add("StatusActividad", "Status Actividad");
+
+        settings.TotalSummary.Add(DevExpress.Data.SummaryItemType.Sum, "Asignado_Anual").DisplayFormat = "n";
+        settings.Settings.ShowFooter = true;
+        
+        settings.SetEditFormTemplateContent(c =>
+        {
+
+            var ActividadAsignada = ViewData["dataItem"] ?? c.DataItem;
+            ViewContext.Writer.Write("<p>Registro de Avance</p>");
+            ViewContext.Writer.Write(
+   "<table>" +
+     "<tr>" +
+         "<td>");
+            Html.DevExpress().Label(
+                           edtSettings =>
+                           {
+                               edtSettings.ControlStyle.CssClass = "label";
+                               edtSettings.Text = "Actividad Asignada a";
+                               edtSettings.AssociatedControlName = "Fk_IdPersona__SIS";
+                           }
+                       )
+                       .Render();
+
+            Html.DevExpress().TextBox(
+                                   edtSettings =>
+                                   {
+                                       edtSettings.Name = "Fk_IdPersona__SIS";
+                                       edtSettings.ControlStyle.CssClass = "editor";
+                                       edtSettings.ShowModelErrors = true;
+                                       edtSettings.Enabled = false;
+                                       edtSettings.Width = Unit.Pixel(300);
+                                       edtSettings.Height = Unit.Pixel(20);
+                                   }
+                               )
+                               .Bind(DataBinder.Eval(ActividadAsignada, "PersonaAsignada"))
+                               .Render();
+
+
+            ViewContext.Writer.Write("</td>");
+            ViewContext.Writer.Write("<td>");
+
+            Html.DevExpress().Label(
+                       edtSettings =>
+                       {
+                           edtSettings.ControlStyle.CssClass = "label";
+                           edtSettings.Text = "Descripción";
+                           edtSettings.AssociatedControlName = "Descripcion";
+                       }
+                   )
+                   .Render();
+            Html.DevExpress().TextBox(
+                                  edtSettings =>
+                                  {
+                                      edtSettings.Name = "Descripcion";
+                                      edtSettings.ControlStyle.CssClass = "editor";
+                                      edtSettings.ShowModelErrors = true;
+                                      //edtSettings.Enabled = false;
+                                      edtSettings.Width = Unit.Pixel(300);
+                                      edtSettings.Height = Unit.Pixel(20);
+                                  }
+                              )
+                              .Bind(DataBinder.Eval(ActividadAsignada, "Descripcion"))
+                              .Render();
+
+
+            ViewContext.Writer.Write("</td>");
+            ViewContext.Writer.Write("</tr>");
+
+            ViewContext.Writer.Write("</table>");
+
+
+
+            ViewContext.Writer.Write("<tr><td colspan=4><h4>Metas Asignadas:</h4></td></tr>");
+
+            //Cantidad Anual
+            ViewContext.Writer.Write("<table>");
+            ViewContext.Writer.Write("<tr>");
+            ViewContext.Writer.Write("<td>");
+
+            Html.DevExpress().Label(
+                      edtSettings =>
+                      {
+                          edtSettings.ControlStyle.CssClass = "label";
+                          edtSettings.Text = "Metas Asignadas";
+                          edtSettings.AssociatedControlName = "Asignado_Anual";
+                      }
+                  )
+                  .Render();
+            Html.DevExpress().SpinEdit(
+                edtSettings =>
+                {
+                    edtSettings.Name = "Cant_Anual";
+                    edtSettings.ControlStyle.CssClass = "editor";
+                    edtSettings.ShowModelErrors = true;
+                    edtSettings.Enabled = false;
+                    edtSettings.Properties.DisplayFormatString = "n";
+                    edtSettings.Width = Unit.Pixel(150);
+                }
+            )
+            .Bind(DataBinder.Eval(ActividadAsignada, "Asignado_Anual"))
+            .Render();
+            ViewContext.Writer.Write("</td>");
+
+            //Importe Anual
+
+            ViewContext.Writer.Write("<td>");
+
+            Html.DevExpress().Label(
+                      edtSettings =>
+                      {
+                          edtSettings.ControlStyle.CssClass = "label";
+                          edtSettings.Text = "Fecha Planeada para Iniciar de Actividad";
+                          edtSettings.AssociatedControlName = "Fecha_Inicio";
+                      }
+                  )
+                  .Render();
+            Html.DevExpress().DateEdit(
+                edtSettings =>
+                {
+                    edtSettings.Name = "Fecha_Inicio";
+                    edtSettings.ControlStyle.CssClass = "editor";
+                    edtSettings.ShowModelErrors = true;
+                    edtSettings.Enabled = false;
+                    edtSettings.Width = Unit.Pixel(150);
+
+                }
+            )
+            .Bind(DataBinder.Eval(ActividadAsignada, "Fecha_Inicio"))
+            .Render();
+
+            ViewContext.Writer.Write("</td>");
+
+            ViewContext.Writer.Write("<td>");
+
+            Html.DevExpress().Label(
+                      edtSettings =>
+                      {
+                          edtSettings.ControlStyle.CssClass = "label";
+                          edtSettings.Text = "Fecha Planeda para terminar la Actividad";
+                          edtSettings.AssociatedControlName = "Fecha_Fin";
+                      }
+                  )
+                  .Render();
+            Html.DevExpress().DateEdit(
+                edtSettings =>
+                {
+                    edtSettings.Name = "Fecha_Fin";
+                    edtSettings.ControlStyle.CssClass = "editor";
+                    edtSettings.ShowModelErrors = true;
+                    edtSettings.Enabled = false;
+                    edtSettings.Width = Unit.Pixel(150);
+
+                }
+            )
+            .Bind(DataBinder.Eval(ActividadAsignada, "FechaFin"))
+            .Render();
+
+            ViewContext.Writer.Write("</td>");
+
+
+            ViewContext.Writer.Write("</tr>");
+            ViewContext.Writer.Write("</table>");
+
+            //Botones
+
+            ViewContext.Writer.Write("<div class=\"line\">");
+            ViewContext.Writer.Write("<br>");
+
+            ViewContext.Writer.Write("<table>");
+            Html.DevExpress().Button(
+                        btnSettings =>
+                        {
+                            btnSettings.Name = "btnCancel";
+                            btnSettings.ControlStyle.CssClass = "button";
+                            btnSettings.Text = "Cerrar";
+                            btnSettings.Images.Image.Url = "Content/Images/cancelar.png";
+                            btnSettings.ImagePosition = ImagePosition.Right;
+                            btnSettings.Style["position"] = "relative";
+                            btnSettings.Style["left"] = "5px";
+                            btnSettings.ClientSideEvents.Click = "function(s, e){ ActividadesAsignadasGridView.CancelEdit(); }";
+                        }
+                    )
+                    .Render();
+            ViewContext.Writer.Write("</table>");
+            ViewContext.Writer.Write("<br></ br>");
+            ViewContext.Writer.Write("</div>"); 
+
+            // COMIENZAN LOS TABS DE DETALLE DE LA Campaña*****************
+
+            @Html.DevExpress().PageControl(PCsettings =>
+            {
+                PCsettings.Name = "pcFeatures";
+                PCsettings.ClientVisible = c.KeyValue == null ? false : true;
+
+                PCsettings.TabPages.Add("Registro de Avances ").SetContent(() =>
+                {
+                    DB_SENASICAEntities db = new DB_SENASICAEntities();
+                    int? Pk_IdActividad = Convert.ToInt32(DataBinder.Eval(ActividadAsignada, "Pk_IdActividad"));
+                    int? IdCampania = db.Actividads.Where(i => i.Pk_IdActividad == Pk_IdActividad).Select(i => i.ActividadXAccion.AccionXCampania.Fk_IdCampania__UE).First();
+                    string StatusActual = Senasica.GetStatusActualCampania(Convert.ToInt32(IdCampania));
+                    if (StatusActual == FuncionesAuxiliares.GetStatusCampaniaEn_Repro(IdCampania))
+                    {
+                        ViewContext.Writer.Write("<H4>No se podrá registrar avances, por una de las siguientes razones:</H4>"
+                            + "\n<H5>1) Campaña en 'Proceso de Modificación'</H5>"
+                            + "\n<H5>2) Campaña en estatus 'Terminado'</H5>");
+                    }
+                    else
+                    {
+                        ViewContext.Writer.Write("<H4>Registro de Avances de las Acciones</H4>");
+                    }
+                    @Html.RenderAction("RepActividadGridViewPartial", new { idActividadAsignada = DataBinder.Eval(ActividadAsignada, "Pk_IdActividad") });
+                });
+
+
+            }).GetHtml();
+
+
+
+        });//Cierre Popup
+
+
+        //Termina Custom
+
+
+
+    });
+}
+@grid.Bind(Model).GetHtml()
+
+
+

@@ -1,0 +1,56 @@
+@{
+    var grid = Html.DevExpress().GridView(settings =>
+    {
+        settings.Name = "detailGrid_Personal";
+        settings.Style["width"] = "98%";
+        settings.Style["position"] = "relative";
+        settings.Style["left"] = "10px";
+        settings.SettingsDetail.MasterGridName = "PersonasRegistradasGridViewPartial";
+        settings.CallbackRouteValues = new { Controller = "PersonasRegistradas", Action = "PersonasRegistradasGridViewPartial" };
+        settings.SettingsEditing.DeleteRowRouteValues = new { Controller = "PersonasRegistradas", Action = "PersonasRegistradasGridViewPartialDelete" };
+
+
+        settings.SettingsEditing.Mode = GridViewEditingMode.PopupEditForm;
+
+        settings.SettingsText.PopupEditFormCaption = "PERSONA";
+
+        settings.SettingsPopup.EditForm.Height = 560;
+        settings.SettingsPopup.EditForm.Width = 530;
+        settings.SettingsPopup.EditForm.HorizontalAlign = DevExpress.Web.ASPxClasses.PopupHorizontalAlign.WindowCenter;
+        settings.SettingsPopup.EditForm.VerticalAlign = DevExpress.Web.ASPxClasses.PopupVerticalAlign.WindowCenter;
+        settings.SettingsPopup.EditForm.Modal = true;
+
+        settings.SettingsBehavior.ConfirmDelete = true;
+
+        settings.CommandColumn.Visible = true;
+        settings.CommandColumn.ShowDeleteButton = Convert.ToBoolean(ViewData["Escritura"]);
+        settings.CommandColumn.ShowClearFilterButton = true;
+                
+        settings.KeyFieldName = "ID";
+
+        settings.SettingsPager.Visible = true;
+        settings.SettingsPager.Position = PagerPosition.Bottom;
+        settings.SettingsPager.FirstPageButton.Visible = true;
+        settings.SettingsPager.LastPageButton.Visible = true;
+        settings.SettingsPager.PageSizeItemSettings.Visible = true;
+        settings.SettingsPager.PageSize = 15;
+        settings.SettingsPager.PageSizeItemSettings.Items = new string[] { "5", "10" };
+        settings.Settings.ShowGroupPanel = true;
+        settings.Settings.ShowFilterRow = true;
+        settings.Settings.ShowFilterRowMenu = true;
+        settings.SettingsBehavior.AllowSelectByRowClick = true;
+
+        settings.Columns.Add("Estado", "Estado");
+        settings.Columns.Add("InstanciaEjecutora", "Instancia Ejecutora");
+        settings.Columns.Add("UserName", "ID Usuario");
+        settings.Columns.Add("NombrePersona", "Nombre de Usuario");
+        settings.Columns.Add("Email", "Correo Electrónico");
+        settings.Columns.Add("Puesto", "Puesto");
+    });
+
+    if (ViewData["EditError"] != null)
+    {
+        grid.SetEditErrorText((string)ViewData["EditError"]);
+    }
+}
+@grid.Bind(Model).GetHtml()

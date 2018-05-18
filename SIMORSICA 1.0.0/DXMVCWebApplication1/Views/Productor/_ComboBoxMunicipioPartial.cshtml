@@ -1,0 +1,16 @@
+﻿@Html.DevExpress().ComboBox(settings =>
+{
+    settings.CallbackRouteValues = new { Controller = "Productor", Action = "_ComboBoxMunicipioPartial" };
+    settings.Name = "Fk_IdMunicipio__SIS";
+
+    settings.Properties.TextField = "Nombre";
+    settings.Properties.NullText = "Campo Requerido";
+    settings.Properties.ValueField = "Pk_IdMunicipio";
+    settings.Properties.ValueType = typeof(int);
+    settings.ToolTip = "Seleccione un Municipio";
+
+    settings.Properties.EnableSynchronization = DefaultBoolean.False;
+    settings.Properties.IncrementalFilteringMode = IncrementalFilteringMode.StartsWith;
+
+    settings.Properties.ClientSideEvents.BeginCallback = "MunicipioCombo_BeginCallback";
+}).BindList(Model).Bind(ViewData["Fk_IdMunicipio__SIS"]).GetHtml()

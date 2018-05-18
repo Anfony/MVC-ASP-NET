@@ -1,0 +1,406 @@
+@{
+    var grid = Html.DevExpress().GridView(settings =>
+    {
+        settings.Name = "InoCompSACGridView" + ViewData["IdCampania"];
+        settings.SettingsDetail.MasterGridName = "CampaniaInoSACGridView";
+        settings.CallbackRouteValues = new { Controller = "InoSACAtendido", Action = "InoCompSACGridViewPartial", IdCampania = ViewData["IdCampania"], IdEstado = ViewData["IdEstado"] };
+
+        settings.SettingsEditing.AddNewRowRouteValues = new { Controller = "InoSACAtendido", Action = "InoCompSACGridViewPartialAddNew", IdCampania = ViewData["IdCampania"], IdEstado = ViewData["IdEstado"] };
+        settings.SettingsEditing.UpdateRowRouteValues = new { Controller = "InoSACAtendido", Action = "InoCompSACGridViewPartialUpdate", IdCampania = ViewData["IdCampania"], IdEstado = ViewData["IdEstado"] };
+        settings.SettingsEditing.DeleteRowRouteValues = new { Controller = "InoSACAtendido", Action = "InoCompSACGridViewPartialDelete", IdCampania = ViewData["IdCampania"], IdEstado = ViewData["IdEstado"] };
+        settings.SettingsEditing.Mode = GridViewEditingMode.PopupEditForm;
+
+        settings.SettingsPopup.EditForm.Height = 220;
+        settings.SettingsPopup.EditForm.Width = 625;
+        settings.SettingsPopup.EditForm.HorizontalAlign = DevExpress.Web.ASPxClasses.PopupHorizontalAlign.WindowCenter;
+        settings.SettingsPopup.EditForm.VerticalAlign = DevExpress.Web.ASPxClasses.PopupVerticalAlign.WindowCenter;
+        settings.SettingsPopup.EditForm.Modal = true;
+
+        settings.SettingsBehavior.ConfirmDelete = true;
+
+        settings.CommandColumn.Visible = true;
+        //settings.CommandColumn.ShowNewButton = true;
+        settings.SettingsCommandButton.NewButton.Text = "Nuevo Registro";
+        settings.CommandColumn.ShowNewButtonInHeader = true;
+        settings.CommandColumn.ShowDeleteButton = true;
+        settings.CommandColumn.ShowEditButton = true;
+
+        settings.KeyFieldName = "Pk_IdInoCompSAC";
+
+        settings.SettingsPager.Visible = true;
+        settings.SettingsPager.Position = PagerPosition.Bottom;
+        settings.SettingsPager.FirstPageButton.Visible = true;
+        settings.SettingsPager.LastPageButton.Visible = true;
+        settings.SettingsPager.PageSizeItemSettings.Visible = true;
+        settings.SettingsPager.PageSize = 3;
+        settings.SettingsPager.PageSizeItemSettings.Items = new string[] { "5", "10", "15" };
+        settings.Settings.ShowFilterRowMenu = true;
+
+
+        int? IdEstado = Convert.ToInt32(ViewData["IdEstado"]);
+
+        settings.Columns.Add(column =>
+        {
+            column.FieldName = "Fk_IdMunicipio";
+            column.Caption = "Municipio";
+            column.ColumnType = MVCxGridViewColumnType.ComboBox;
+            var comboBoxProperties = column.PropertiesEdit as ComboBoxProperties;
+            comboBoxProperties.DataSource = DXMVCWebApplication1.Models.Senasica.GetMunicipiosByEstado(IdEstado);
+            comboBoxProperties.TextField = "Nombre";
+            comboBoxProperties.ValueField = "Pk_IdMunicipio";
+            comboBoxProperties.ValueType = typeof(int);
+            comboBoxProperties.IncrementalFilteringMode = IncrementalFilteringMode.StartsWith;
+        });
+        settings.Columns.Add("Producto");
+        settings.Columns.Add("ProductoresAtendidos").PropertiesEdit.DisplayFormatString = "n";
+        settings.Columns.Add("Superficie").PropertiesEdit.DisplayFormatString = "n";
+        settings.Columns.Add("UnidProduccion", "Unidad de Producción").PropertiesEdit.DisplayFormatString = "n";
+        settings.Columns.Add("Campo").PropertiesEdit.DisplayFormatString = "n";
+        settings.Columns.Add("Empaque").PropertiesEdit.DisplayFormatString = "n";
+        settings.Columns.Add("Cosecha").PropertiesEdit.DisplayFormatString = "n";
+        settings.Columns.Add("UpAnioAnterior", "Up. Año Anterior").PropertiesEdit.DisplayFormatString = "n";
+        settings.Columns.Add("UpAnioActual", "Up. Año Actual").PropertiesEdit.DisplayFormatString = "n";
+
+        //Inicia Popup
+        settings.SetEditFormTemplateContent(c =>
+        {
+            var inocompsv = ViewData["dataItem"] ?? c.DataItem;
+            ViewContext.Writer.Write("<p>Atendido por Sanidad Acuícola y Pesquera</p>");
+            ViewContext.Writer.Write(
+      "<table>" +
+      "<tr>" +
+         "<td>");
+
+            Html.DevExpress().Label(
+                  edtSettings =>
+                  {
+                      edtSettings.ControlStyle.CssClass = "label";
+                      edtSettings.Text = "Municipio";
+                      edtSettings.AssociatedControlName = "Fk_IdMunicipio";
+                  }
+              )
+              .Render();
+            Html.DevExpress().ComboBox(
+                edtSettings =>
+                {
+                    edtSettings.Name = "Fk_IdMunicipio";
+                    edtSettings.ControlStyle.CssClass = "editor";
+                    edtSettings.Properties.TextField = "Nombre";
+                    edtSettings.Properties.NullText = "Campo Requerido";
+                    edtSettings.Properties.ValueField = "Pk_IdMunicipio";
+                    edtSettings.Properties.ValueType = typeof(int);
+                    edtSettings.ShowModelErrors = true;
+                    edtSettings.Width = Unit.Pixel(250);
+                    edtSettings.Properties.IncrementalFilteringMode = IncrementalFilteringMode.Contains;
+                    edtSettings.Properties.IncrementalFilteringDelay = 5;
+                }
+            )
+
+            .BindList(DXMVCWebApplication1.Models.Senasica.GetMunicipiosByEstado(IdEstado))
+               .Bind(DataBinder.Eval(inocompsv, "Fk_IdMunicipio"))
+               .Render();
+
+            ViewContext.Writer.Write("</td>");
+            ViewContext.Writer.Write("<td>");
+            Html.DevExpress().Label(
+                       edtSettings =>
+                       {
+                           edtSettings.ControlStyle.CssClass = "label";
+                           edtSettings.Text = "Producto:";
+                           edtSettings.AssociatedControlName = "Producto";
+                       }
+                   )
+                   .Render();
+            Html.DevExpress().TextBox(
+                edtSettings =>
+                {
+                    edtSettings.Name = "Producto";
+                    edtSettings.ControlStyle.CssClass = "editor";
+                    edtSettings.ShowModelErrors = true;
+                    edtSettings.Width = Unit.Pixel(250);
+                }
+            )
+            .Bind(DataBinder.Eval(inocompsv, "Producto"))
+            .Render();
+            ViewContext.Writer.Write("</td>");
+            ViewContext.Writer.Write("<td>");
+            Html.DevExpress().Label(
+                      edtSettings =>
+                      {
+                          edtSettings.ControlStyle.CssClass = "label";
+                          edtSettings.Text = "Productores Atendidos:";
+                          edtSettings.AssociatedControlName = "ProductoresAtendidos";
+                      }
+                  )
+                  .Render();
+            Html.DevExpress().SpinEdit(
+                edtSettings =>
+                {
+                    edtSettings.Name = "ProductoresAtendidos";
+                    edtSettings.Properties.MinValue = 0;
+                    edtSettings.Properties.MaxValue = 999999999;
+                    edtSettings.Properties.NumberType = SpinEditNumberType.Integer;
+                    edtSettings.Properties.Increment = 0.1M;
+                    edtSettings.Properties.LargeIncrement = 1;
+                    edtSettings.Properties.SpinButtons.ShowLargeIncrementButtons = true;
+                    edtSettings.Properties.DisplayFormatString = "n";
+                    edtSettings.ControlStyle.CssClass = "editor";
+                    edtSettings.ShowModelErrors = true;
+                    edtSettings.Width = Unit.Pixel(250);
+                }
+            )
+            .Bind(DataBinder.Eval(inocompsv, "ProductoresAtendidos"))
+            .Render();
+
+            ViewContext.Writer.Write("</td>");
+            ViewContext.Writer.Write("<td>");
+            Html.DevExpress().Label(
+                       edtSettings =>
+                       {
+                           edtSettings.ControlStyle.CssClass = "label";
+                           edtSettings.Text = "Superficie:";
+                           edtSettings.AssociatedControlName = "Superficie";
+                       }
+                   )
+                   .Render();
+            Html.DevExpress().SpinEdit(
+                edtSettings =>
+                {
+                    edtSettings.Name = "Superficie";
+                    edtSettings.Properties.MinValue = 0;
+                    edtSettings.Properties.MaxValue = 999999999;
+                    edtSettings.Properties.NumberType = SpinEditNumberType.Integer;
+                    edtSettings.Properties.Increment = 0.1M;
+                    edtSettings.Properties.LargeIncrement = 1;
+                    edtSettings.Properties.SpinButtons.ShowLargeIncrementButtons = true;
+                    edtSettings.Properties.DisplayFormatString = "n";
+                    edtSettings.ControlStyle.CssClass = "editor";
+                    edtSettings.ShowModelErrors = true;
+                    edtSettings.Width = Unit.Pixel(250);
+                }
+            )
+            .Bind(DataBinder.Eval(inocompsv, "Superficie"))
+            .Render();
+            ViewContext.Writer.Write("</td>");
+            ViewContext.Writer.Write("</tr>");
+            ViewContext.Writer.Write("<tr>");
+            ViewContext.Writer.Write("<td>");
+            Html.DevExpress().Label(
+                      edtSettings =>
+                      {
+                          edtSettings.ControlStyle.CssClass = "label";
+                          edtSettings.Text = "Unidades de Producción:";
+                          edtSettings.AssociatedControlName = "UnidProduccion";
+                      }
+                  )
+                  .Render();
+            Html.DevExpress().SpinEdit(
+                edtSettings =>
+                {
+                    edtSettings.Name = "UnidProduccion";
+                    edtSettings.Properties.MinValue = 0;
+                    edtSettings.Properties.MaxValue = 999999999;
+                    edtSettings.Properties.NumberType = SpinEditNumberType.Integer;
+                    edtSettings.Properties.Increment = 0.1M;
+                    edtSettings.Properties.LargeIncrement = 1;
+                    edtSettings.Properties.SpinButtons.ShowLargeIncrementButtons = true;
+                    edtSettings.Properties.DisplayFormatString = "n";
+                    edtSettings.ControlStyle.CssClass = "editor";
+                    edtSettings.ShowModelErrors = true;
+                    edtSettings.Width = Unit.Pixel(250);
+                }
+            )
+            .Bind(DataBinder.Eval(inocompsv, "UnidProduccion"))
+            .Render();
+            ViewContext.Writer.Write("</td>");
+            ViewContext.Writer.Write("<td>");
+            Html.DevExpress().Label(
+                      edtSettings =>
+                      {
+                          edtSettings.ControlStyle.CssClass = "label";
+                          edtSettings.Text = "Campo:";
+                          edtSettings.AssociatedControlName = "Campo";
+                      }
+                  )
+                  .Render();
+            Html.DevExpress().SpinEdit(
+                edtSettings =>
+                {
+                    edtSettings.Name = "Campo";
+                    edtSettings.Properties.MinValue = 0;
+                    edtSettings.Properties.MaxValue = 999999999;
+                    edtSettings.Properties.NumberType = SpinEditNumberType.Integer;
+                    edtSettings.Properties.Increment = 0.1M;
+                    edtSettings.Properties.LargeIncrement = 1;
+                    edtSettings.Properties.SpinButtons.ShowLargeIncrementButtons = true;
+                    edtSettings.Properties.DisplayFormatString = "n";
+                    edtSettings.ControlStyle.CssClass = "editor";
+                    edtSettings.ShowModelErrors = true;
+                    edtSettings.Width = Unit.Pixel(250);
+                }
+            )
+            .Bind(DataBinder.Eval(inocompsv, "Campo"))
+            .Render();
+            ViewContext.Writer.Write("</td>");
+            ViewContext.Writer.Write("<td>");
+            Html.DevExpress().Label(
+                      edtSettings =>
+                      {
+                          edtSettings.ControlStyle.CssClass = "label";
+                          edtSettings.Text = "Empaque:";
+                          edtSettings.AssociatedControlName = "Empaque";
+                      }
+                  )
+                  .Render();
+            Html.DevExpress().SpinEdit(
+                edtSettings =>
+                {
+                    edtSettings.Name = "Empaque";
+                    edtSettings.Properties.MinValue = 0;
+                    edtSettings.Properties.MaxValue = 999999999;
+                    edtSettings.Properties.NumberType = SpinEditNumberType.Integer;
+                    edtSettings.Properties.Increment = 0.1M;
+                    edtSettings.Properties.LargeIncrement = 1;
+                    edtSettings.Properties.SpinButtons.ShowLargeIncrementButtons = true;
+                    edtSettings.Properties.DisplayFormatString = "n";
+                    edtSettings.ControlStyle.CssClass = "editor";
+                    edtSettings.ShowModelErrors = true;
+                    edtSettings.Width = Unit.Pixel(250);
+                }
+            )
+            .Bind(DataBinder.Eval(inocompsv, "Empaque"))
+            .Render();
+            ViewContext.Writer.Write("</td>");
+            ViewContext.Writer.Write("<td>");
+            Html.DevExpress().Label(
+                      edtSettings =>
+                      {
+                          edtSettings.ControlStyle.CssClass = "label";
+                          edtSettings.Text = "Cosecha:";
+                          edtSettings.AssociatedControlName = "Cosecha";
+                      }
+                  )
+                  .Render();
+            Html.DevExpress().SpinEdit(
+                edtSettings =>
+                {
+                    edtSettings.Name = "Cosecha";
+                    edtSettings.Properties.MinValue = 0;
+                    edtSettings.Properties.MaxValue = 999999999;
+                    edtSettings.Properties.NumberType = SpinEditNumberType.Integer;
+                    edtSettings.Properties.Increment = 0.1M;
+                    edtSettings.Properties.LargeIncrement = 1;
+                    edtSettings.Properties.SpinButtons.ShowLargeIncrementButtons = true;
+                    edtSettings.Properties.DisplayFormatString = "n";
+                    edtSettings.ControlStyle.CssClass = "editor";
+                    edtSettings.ShowModelErrors = true;
+                    edtSettings.Width = Unit.Pixel(250);
+                }
+            )
+            .Bind(DataBinder.Eval(inocompsv, "Cosecha"))
+            .Render();
+            ViewContext.Writer.Write("</td>");
+            ViewContext.Writer.Write("</tr>");
+            ViewContext.Writer.Write("<tr>");
+            ViewContext.Writer.Write("<td>");
+            Html.DevExpress().Label(
+                      edtSettings =>
+                      {
+                          edtSettings.ControlStyle.CssClass = "label";
+                          edtSettings.Text = "Up Año Anterior:";
+                          edtSettings.AssociatedControlName = "UpAnioAnterior";
+                      }
+                  )
+                  .Render();
+            Html.DevExpress().SpinEdit(
+                edtSettings =>
+                {
+                    edtSettings.Name = "UpAnioAnterior";
+                    edtSettings.Properties.MinValue = 0;
+                    edtSettings.Properties.MaxValue = 999999999;
+                    edtSettings.Properties.NumberType = SpinEditNumberType.Integer;
+                    edtSettings.Properties.Increment = 0.1M;
+                    edtSettings.Properties.LargeIncrement = 1;
+                    edtSettings.Properties.SpinButtons.ShowLargeIncrementButtons = true;
+                    edtSettings.Properties.DisplayFormatString = "n";
+                    edtSettings.ControlStyle.CssClass = "editor";
+                    edtSettings.ShowModelErrors = true;
+                    edtSettings.Width = Unit.Pixel(250);
+                }
+            )
+            .Bind(DataBinder.Eval(inocompsv, "UpAnioAnterior"))
+            .Render();
+
+            ViewContext.Writer.Write("</td>");
+            ViewContext.Writer.Write("<td>");
+            Html.DevExpress().Label(
+                      edtSettings =>
+                      {
+                          edtSettings.ControlStyle.CssClass = "label";
+                          edtSettings.Text = "Up Año Actual:";
+                          edtSettings.AssociatedControlName = "UpAnioActual";
+                      }
+                  )
+                  .Render();
+            Html.DevExpress().SpinEdit(
+                edtSettings =>
+                {
+                    edtSettings.Name = "UpAnioActual";
+                    edtSettings.Properties.MinValue = 0;
+                    edtSettings.Properties.MaxValue = 999999999;
+                    edtSettings.Properties.NumberType = SpinEditNumberType.Integer;
+                    edtSettings.Properties.Increment = 0.1M;
+                    edtSettings.Properties.LargeIncrement = 1;
+                    edtSettings.Properties.SpinButtons.ShowLargeIncrementButtons = true;
+                    edtSettings.Properties.DisplayFormatString = "n";
+                    edtSettings.ControlStyle.CssClass = "editor";
+                    edtSettings.ShowModelErrors = true;
+                    edtSettings.Width = Unit.Pixel(250);
+                }
+            )
+            .Bind(DataBinder.Eval(inocompsv, "UpAnioActual"))
+            .Render();
+
+            ViewContext.Writer.Write("</td>");
+
+            ViewContext.Writer.Write("</tr>");
+            ViewContext.Writer.Write("</table>");
+
+            ViewContext.Writer.Write("<br>");
+            Html.DevExpress().Button(
+                       btnSettings =>
+                       {
+                           btnSettings.Name = "btnUpdatInoCompSACGridView";
+                           btnSettings.Text = "Guardar";
+                           btnSettings.ControlStyle.CssClass = "button";
+                           btnSettings.Images.Image.Url = "Content/Images/guardar.png";
+                           btnSettings.ImagePosition = ImagePosition.Right;
+                           btnSettings.Images.Image.Width = 16;
+                           btnSettings.ClientSideEvents.Click = "function(s, e){ InoCompSACGridView" + ViewData["IdCampania"] + ".UpdateEdit(); }";
+                       }
+                   )
+                   .Render();
+
+            Html.DevExpress().Button(
+                btnSettings =>
+                {
+                    btnSettings.Name = "btnCanceInoCompSACGridView";
+                    btnSettings.Text = "Cancelar";
+                    btnSettings.ControlStyle.CssClass = "button";
+                    btnSettings.Images.Image.Url = "Content/Images/cancelar.png";
+                    btnSettings.ImagePosition = ImagePosition.Right;
+                    btnSettings.Style["position"] = "relative";
+                    btnSettings.Style["left"] = "5px";
+                    btnSettings.ClientSideEvents.Click = "function(s, e){ InoCompSACGridView" + ViewData["IdCampania"] + ".CancelEdit(); }";
+                }
+            )
+            .Render();
+            ViewContext.Writer.Write("</br>");
+        });
+    });
+    if (ViewData["EditError"] != null)
+    {
+        grid.SetEditErrorText((string)ViewData["EditError"]);
+    }
+}
+@grid.Bind(Model).GetHtml()

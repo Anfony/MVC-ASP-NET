@@ -1,0 +1,79 @@
+@{
+    var popup = Html.DevExpress().PopupControl(settings =>
+    {
+        settings.Name = "TipoReporte";
+        settings.PopupAnimationType = AnimationType.None;
+        settings.HeaderText = "Seleccione el Tipo de Reporte";
+        settings.CallbackRouteValues = new { Controller = "TipoReporte", Action = "SelectReporte", IdCampania = ViewData["IdCampania"] };
+        settings.Modal = true;
+        settings.Height = Unit.Pixel(100);
+        settings.Width = Unit.Pixel(300);
+        settings.PopupHorizontalAlign = DevExpress.Web.ASPxClasses.PopupHorizontalAlign.WindowCenter;
+        settings.PopupVerticalAlign = DevExpress.Web.ASPxClasses.PopupVerticalAlign.WindowCenter;
+        settings.PopupAlignCorrection = DevExpress.Web.ASPxClasses.PopupAlignCorrection.Auto;
+        settings.LoadContentViaCallback = LoadContentViaCallback.None;
+
+        settings.SetContent(() =>
+        {
+            int campania = Convert.ToInt32(ViewData["IdCampania"]);
+
+            using (Html.BeginForm("Index", "RepCuadroComparativoCampania", new { PK_IdCampania = campania }, FormMethod.Post))
+            {
+                ViewContext.Writer.Write("<br >");
+                ViewContext.Writer.Write("<table>");
+                ViewContext.Writer.Write("<tr>");
+
+                ViewContext.Writer.Write("<td>");
+                Html.DevExpress().Label(edtSettings =>
+                {
+                    edtSettings.Name = "lblTipoReporte";
+                    edtSettings.Text = "Tipo de Reporte";
+                    edtSettings.AssociatedControlName = "Id_TipoReporte";
+                }).Render();
+
+                Html.DevExpress().ComboBox(setting =>
+                {
+                    setting.Name = "NombreTipoReporte";
+                    setting.ControlStyle.CssClass = "editor";
+                    setting.Properties.TextField = "NombrePantalla";
+                    setting.Properties.NullText = "Campo Requerido";
+                    setting.Properties.ValueField = "Pk_IdCuadroCompXPantalla";
+                    setting.Properties.ValueType = typeof(int);
+                    setting.ShowModelErrors = true;
+                    setting.Width = Unit.Pixel(300);
+                    setting.Properties.EnableSynchronization = DefaultBoolean.False;
+                    setting.Properties.IncrementalFilteringMode = IncrementalFilteringMode.StartsWith;
+                }).BindList(DXMVCWebApplication1.Models.Senasica.GetCuadroComparativoXpantalla(campania))
+                .Render();
+
+                ViewContext.Writer.Write("</td></tr>");
+                ViewContext.Writer.Write("</table>");
+
+                ViewContext.Writer.Write("<br >");
+                Html.DevExpress().Button(btnSettings =>
+                {
+                    btnSettings.Name = "btnimprimir";
+                    btnSettings.Text = "Generar Reporte";
+                    btnSettings.ControlStyle.CssClass = "button";
+                    btnSettings.Images.Image.Url = "/Content/Images/ico_print.png";
+                    btnSettings.ImagePosition = ImagePosition.Right;
+                    btnSettings.Images.Image.Width = 16;
+                    btnSettings.UseSubmitBehavior = true;
+                }).Render();
+
+                Html.DevExpress().Button(btnSettings =>
+                {
+                    btnSettings.Name = "btnCancelq";
+                    btnSettings.Text = "Cancelar";
+                    btnSettings.ControlStyle.CssClass = "button";
+                    btnSettings.Images.Image.Url = "/Content/Images/cancelar.png";
+                    btnSettings.ImagePosition = ImagePosition.Right;
+                    btnSettings.Style["position"] = "relative";
+                    btnSettings.Style["left"] = "5px";
+                    btnSettings.ClientSideEvents.Click = "function(s, e){ TipoReporte.Hide(); }";
+                }).Render();
+            }
+        });
+    });
+}
+@popup.GetHtml()

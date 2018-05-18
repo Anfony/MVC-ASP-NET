@@ -1,0 +1,19 @@
+﻿//@Html.DevExpress().ComboBox(x =>
+//{
+//    x.CallbackRouteValues = new { Controller = "Licitacion", Action = "_ComboBoxComitePartial" };
+//    x.Name = "Fk_IdUnidadEjecutora__UE";
+//    x.Width = 180;
+//    x.Properties.NullText = "Campo Requerido";
+//    x.Properties.TextFormatString = "{0}";
+//    x.Width = Unit.Pixel(450); 
+//    x.Properties.ValueType = typeof(int);
+//    x.Properties.TextField = "Nombre";
+//    x.Properties.ValueField = "Pk_IdUnidadEjecutora";
+//    x.Properties.Columns.Add("Nombre", "Proyecto Autorizado").Width = Unit.Pixel(550);
+//    x.Properties.EnableSynchronization = DefaultBoolean.True;
+//    x.Properties.IncrementalFilteringMode = IncrementalFilteringMode.Contains;
+//    x.ShowModelErrors = true;
+//    
+//    x.Properties.ClientSideEvents.BeginCallback = "function(s, e){ e.customArgs['IdEstado'] = Fk_IdEstado__SIS.GetValue(); }"; 
+//}).BindList(Model).GetHtml()
+//

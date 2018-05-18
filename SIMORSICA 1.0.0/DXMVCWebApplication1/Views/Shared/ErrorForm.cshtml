@@ -1,0 +1,6 @@
+﻿
+@{ 
+    string error = ViewData["EditError"] == null ? "Error en el formulario, favor de revisar" : ViewData["EditError"].ToString();
+}
+
+<h5>@error</h5>

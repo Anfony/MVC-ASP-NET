@@ -1,0 +1,257 @@
+﻿@{
+    var grid = Html.DevExpress().GridView(settings =>
+    {
+        settings.Name = "RepActividadGridView";
+        settings.CallbackRouteValues = new { Controller = "ReporteActividadAsignadaClone", Action = "RepActividadGridViewPartial", idActividadAsignada = ViewData["idActividadAsignada"], IdCierreMensual = ViewData["IdCierreMensual"] };
+
+        settings.SettingsEditing.AddNewRowRouteValues = new { Controller = "ReporteActividadAsignadaClone", Action = "RepActividadGridViewPartialAddNew", idActividadAsignada = ViewData["idActividadAsignada"], IdCierreMensual = ViewData["IdCierreMensual"] };
+        settings.SettingsEditing.UpdateRowRouteValues = new { Controller = "ReporteActividadAsignadaClone", Action = "RepActividadGridViewPartialUpdate", idActividadAsignada = ViewData["idActividadAsignada"], IdCierreMensual = ViewData["IdCierreMensual"] };
+        settings.SettingsEditing.DeleteRowRouteValues = new { Controller = "ReporteActividadAsignadaClone", Action = "RepActividadGridViewPartialDelete", idActividadAsignada = ViewData["idActividadAsignada"], IdCierreMensual = ViewData["IdCierreMensual"] };
+        settings.SettingsEditing.Mode = GridViewEditingMode.PopupEditForm;
+        settings.SettingsBehavior.ConfirmDelete = true;
+
+        settings.SettingsPopup.EditForm.Height = 300;
+        settings.SettingsPopup.EditForm.Width = 700;
+        settings.SettingsPopup.EditForm.HorizontalAlign = DevExpress.Web.ASPxClasses.PopupHorizontalAlign.WindowCenter;
+        settings.SettingsPopup.EditForm.VerticalAlign = DevExpress.Web.ASPxClasses.PopupVerticalAlign.WindowCenter;
+        settings.SettingsPopup.EditForm.Modal = true;
+
+        settings.CommandColumn.Visible = true;
+        settings.SettingsCommandButton.NewButton.Text = "Nuevo Avance";
+        settings.CommandColumn.ShowNewButtonInHeader = true;
+        settings.CommandColumn.ShowDeleteButton = true;
+        settings.CommandColumn.ShowEditButton = true;
+
+        settings.KeyFieldName = "Pk_IdRepActividad";
+
+        settings.SettingsPager.Visible = true;
+        settings.SettingsPager.Position = PagerPosition.Bottom;
+        settings.SettingsPager.FirstPageButton.Visible = true;
+        settings.SettingsPager.LastPageButton.Visible = true;
+        settings.SettingsPager.PageSizeItemSettings.Visible = true;
+        settings.SettingsPager.PageSize = 5;
+        settings.SettingsPager.PageSizeItemSettings.Items = new string[] { "5", "10" };
+
+        settings.Settings.ShowGroupPanel = true;
+        settings.Settings.ShowFilterRow = true;
+        settings.SettingsBehavior.AllowSelectByRowClick = true;
+
+        settings.Columns.Add("Actividad.Descripcion", "Actividad");
+        settings.Columns.Add("Persona.NombreCompleto", "Realizó");
+        settings.Columns.Add("FechaInforme", "Fecha Informe").PropertiesEdit.DisplayFormatString = "d";
+        settings.Columns.Add("FechaInicio", "Inicio de la Actividad").PropertiesEdit.DisplayFormatString = "d";
+        settings.Columns.Add("FechaFin", "Fin de la Actividad").PropertiesEdit.DisplayFormatString = "d";
+        settings.Columns.Add("CantidadMetas", "Metas Logradas").PropertiesEdit.DisplayFormatString = "n";
+
+        var cerrado = settings.Columns.Add("cerrado", "¿Registro Cerrado?");
+        cerrado.UnboundType = DevExpress.Data.UnboundColumnType.String;
+
+        settings.CustomUnboundColumnData = (sender, e) =>
+        {
+            if (e.Column.FieldName == "cerrado")
+            {
+                if (Convert.ToBoolean(e.GetListSourceFieldValue("esCerrado"))) e.Value = "Sí";
+                else e.Value = "No";
+
+                e.Column.ReadOnly = true;
+            }
+        };
+
+        settings.TotalSummary.Add(DevExpress.Data.SummaryItemType.Sum, "CantidadMetas").DisplayFormat = "n";
+        settings.Settings.ShowFooter = true;
+
+        //**************************************Comienza Custom Form*************************
+        //***********************************************************************************
+
+        settings.SetEditFormTemplateContent(c =>
+        {
+            var repactividad = ViewData["dataItem"] ?? c.DataItem;
+
+            int UEID = (int)ViewData["IdUnidadEjecutora"];
+
+            ViewContext.Writer.Write("<p>Edición de Reporte de Actividades</p>");
+
+            #region se puede registrar
+
+            ViewContext.Writer.Write("<table>" + "<tr>" + "<td>");
+            //COMBOBOX PERSONAS
+
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Persona";
+                edtSettings.AssociatedControlName = "Fk_IdPersona";
+            }).Render();
+
+            Html.DevExpress().ComboBox(edtSettings =>
+            {
+                edtSettings.Name = "Fk_IdPersona";
+                edtSettings.Properties.NullText = "Campo Requerido";
+                edtSettings.ControlStyle.CssClass = "editor";
+                edtSettings.Properties.TextField = "NombreCompleto";
+                edtSettings.Properties.ValueField = "Pk_IdPersona";
+                edtSettings.Properties.ValueType = typeof(int);
+                edtSettings.ShowModelErrors = true;
+                edtSettings.Width = Unit.Pixel(250);
+                edtSettings.ToolTip = "Seleccione a la persona que realizó la actividad";
+                edtSettings.Properties.IncrementalFilteringMode = IncrementalFilteringMode.Contains;
+            }).BindList(DXMVCWebApplication1.Models.Senasica.GetPersonasByUnidadEjecutora(UEID))
+               .Bind(DataBinder.Eval(repactividad, "Fk_IdPersona"))
+               .Render();
+
+            ViewContext.Writer.Write("</td>");
+
+            ViewContext.Writer.Write("<td>");
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Fecha Inicio";
+                edtSettings.AssociatedControlName = "FechaInicio";
+            }).Render();
+
+            Html.DevExpress().DateEdit(edtSettings =>
+            {
+                edtSettings.Name = "FechaInicio";
+                edtSettings.Properties.NullText = "Campo Requerido";
+                edtSettings.ControlStyle.CssClass = "editor";
+                edtSettings.ShowModelErrors = true;
+                edtSettings.Width = Unit.Pixel(250);
+                edtSettings.Properties.DisplayFormatString = "D";
+                edtSettings.ToolTip = "Fecha en la que inició la actividad";
+                edtSettings.Properties.MinDate = DateTime.Parse(ViewData["FechaIni_CotaMin"].ToString());
+                edtSettings.Properties.MaxDate = DateTime.Parse(ViewData["FechaIni_CotaMax"].ToString());
+            }).Bind(DataBinder.Eval(repactividad, "FechaInicio"))
+            .Render();
+
+            ViewContext.Writer.Write("</td>");
+            ViewContext.Writer.Write("</tr>");
+
+            //Fecha Fin
+            ViewContext.Writer.Write("<tr>");
+            ViewContext.Writer.Write("<td>");
+            ViewContext.Writer.Write("<br>");
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Fecha Fin";
+                edtSettings.AssociatedControlName = "FechaFin";
+            }).Render();
+
+            Html.DevExpress().DateEdit(edtSettings =>
+            {
+                edtSettings.Name = "FechaFin";
+                edtSettings.Properties.NullText = "Campo Requerido";
+                edtSettings.ControlStyle.CssClass = "editor";
+                edtSettings.ShowModelErrors = true;
+                edtSettings.Width = Unit.Pixel(250);
+                edtSettings.Properties.DisplayFormatString = "D";
+                edtSettings.Properties.MinDate = DateTime.Parse(ViewData["FechaFin_CotaMin"].ToString());
+                edtSettings.Properties.MaxDate = DateTime.Parse(ViewData["FechaFin_CotaMax"].ToString());
+                edtSettings.ToolTip = "Fecha en la que terminó la actividad";
+            }).Bind(DataBinder.Eval(repactividad, "FechaFin"))
+            .Render();
+
+            ViewContext.Writer.Write("</br>");
+            ViewContext.Writer.Write("</td>");
+
+            //Cantidad Metas
+            ViewContext.Writer.Write("<td>");
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Cantidad Metas alcanzadas";
+                edtSettings.AssociatedControlName = "CantidadMetas";
+            }).Render();
+
+            Html.DevExpress().SpinEdit(edtSettings =>
+            {
+                edtSettings.Name = "CantidadMetas";
+                edtSettings.Properties.MinValue = 0;
+                edtSettings.Properties.MaxValue = 999999999;
+                edtSettings.Properties.DecimalPlaces = 5;
+                edtSettings.Properties.Increment = 0.1M;
+                edtSettings.Properties.LargeIncrement = 1;
+                edtSettings.Properties.SpinButtons.ShowLargeIncrementButtons = true;
+                edtSettings.Properties.NullText = "Campo Requerido";
+                edtSettings.ControlStyle.CssClass = "editor";
+                edtSettings.ShowModelErrors = true;
+                edtSettings.Width = Unit.Pixel(250);
+                edtSettings.Properties.DisplayFormatString = "n";
+                edtSettings.ToolTip = "Escriba el numero de unidades alcanzadas";
+            }).Bind(DataBinder.Eval(repactividad, "CantidadMetas"))
+            .Render();
+
+            ViewContext.Writer.Write("</td>");
+
+            //Ubicacion
+            //TODO Este reporte eventualmente será georeferenciado
+
+            ViewContext.Writer.Write("</td>");
+            ViewContext.Writer.Write("</tr>");
+            ViewContext.Writer.Write("</table>");
+
+            ViewContext.Writer.Write("<br>");
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Informe";
+                edtSettings.AssociatedControlName = "Informe";
+            }).Render();
+
+            Html.DevExpress().Memo(edtSettings =>
+            {
+                edtSettings.Name = "Informe";
+                edtSettings.ControlStyle.CssClass = "editor";
+                edtSettings.ShowModelErrors = true;
+                edtSettings.Width = Unit.Pixel(800);
+                edtSettings.Height = Unit.Pixel(70);
+                edtSettings.ToolTip = "Describa ampliamente el imforme fisico de las actividades realizadas";
+            }).Bind(DataBinder.Eval(repactividad, "Informe"))
+            .Render();
+
+            //Botones
+            ViewContext.Writer.Write("<div class=\"line\">");
+            ViewContext.Writer.Write("<br>");
+
+            ViewContext.Writer.Write("<table>" + "<tr>" + "<td>");
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+            }).Render();
+
+            Html.DevExpress().Button(btnSettings =>
+            {
+                btnSettings.Name = "btnActualiza";
+                btnSettings.ControlStyle.CssClass = "button";
+                btnSettings.Text = "Actualizar";
+                btnSettings.ClientSideEvents.Click = "function(s, e){ RepActividadGridView.UpdateEdit(); }";
+                btnSettings.Width = Unit.Pixel(30);
+                btnSettings.ClientVisible = !Convert.ToBoolean(DataBinder.Eval(repactividad, "esCerrado"));
+                btnSettings.Images.Image.Url = "Content/Images/aceptar.png";
+            }).Render();
+            ViewContext.Writer.Write("</td>");
+
+            ViewContext.Writer.Write("<td>");
+            Html.DevExpress().Button(btnSettings =>
+            {
+                btnSettings.Name = "btnCancela";
+                btnSettings.ControlStyle.CssClass = "button";
+                btnSettings.Images.Image.Url = "Content/Images/cancelar.png";
+                btnSettings.Text = "Cancelar";
+                btnSettings.ClientSideEvents.Click = "function(s, e){ RepActividadGridView.CancelEdit(); }";
+            }).Render();
+
+            ViewContext.Writer.Write("</td>" + "</tr>" + "</table>");
+            ViewContext.Writer.Write("<br></ br>");
+            ViewContext.Writer.Write("</div>");
+
+            #endregion
+
+        });
+    });//Termina Forma
+    if (ViewData["EditError"] != null)
+    {
+        grid.SetEditErrorText((string)ViewData["EditError"]);
+    }
+}
+@grid.Bind(Model).GetHtml()

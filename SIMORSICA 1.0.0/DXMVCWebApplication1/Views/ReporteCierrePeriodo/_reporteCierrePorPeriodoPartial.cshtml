@@ -1,0 +1,8 @@
+﻿@Html.DevExpress().DocumentViewer(settings =>
+{
+    settings.Name = "ReporteCierrePeriodo";
+    settings.CallbackRouteValues = new { Controller = "ReporteCierrePeriodo", Action = "reporteCierrePorPeriodo" };
+    settings.ExportRouteValues = new { Controller = "ReporteCierrePeriodo", Action = "ReportPartialExport" };
+    settings.Report = (XtraReport)Model;
+    settings.ToolbarMode = DocumentViewerToolbarMode.StandardToolbar;
+}).GetHtml()

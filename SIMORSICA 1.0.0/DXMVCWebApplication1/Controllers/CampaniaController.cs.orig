@@ -1,0 +1,222 @@
+﻿using System;
+using System.Linq;
+using System.Web.Mvc;
+using DXMVCWebApplication1.Models;
+using DXMVCWebApplication1.Common;
+using DevExpress.Web.Mvc;
+
+namespace DXMVCWebApplication1.Controllers
+{
+    [Authorize(Roles = RolesUsuarios.SUPERUSUARIO
+                          + "," + RolesUsuarios.IE_VEGETAL
+                          + "," + RolesUsuarios.UR_VEGETAL
+                          + "," + RolesUsuarios.PUESTO_COOR_PROYECTO
+                          + "," + RolesUsuarios.COORDINADOR_CAMPANIA
+                          + "," + RolesUsuarios.PUESTO_COOR_REGIONAL
+                          + "," + RolesUsuarios.PUESTO_GERENTE
+                          + "," + RolesUsuarios.PUESTO_PROF_ADMI_ESTATAL_SISTEMAS_INFORMATICOS
+                          + "," + RolesUsuarios.PUESTO_PROF_RESP_INFORMATICA
+         )]
+    public class CampaniaController : Controller
+    {
+        private DB_SENASICAEntities db = new DB_SENASICAEntities();
+
+        public ActionResult Index() { return View(); }
+
+        [ValidateInput(false)]
+        public ActionResult CampaniaGridViewPartial()
+        {
+            int? _Fk_IdUnidadEjecutora = ((UserData)Session["DataUsuario"]).setFilter(((UserData)Session["DataUsuario"]).FK_IdUnidadEjecutora__UE);
+            int? _Fk_IdEstado = ((UserData)Session["DataUsuario"]).setFilter(((UserData)Session["DataUsuario"]).FK_IdEstado__SIS);
+            string rolusuraio = ((UserData)Session["DataUsuario"]).RolesUsuario[0].ToString();
+            ViewBag.Estado = _Fk_IdEstado;
+            ViewData["Fk_IdUnidadEjecutora"] = _Fk_IdUnidadEjecutora;
+
+            return PartialView("_CampaniaGridViewPartial", Senasica.GetCampaniasFiltradas(rolusuraio, _Fk_IdEstado, _Fk_IdUnidadEjecutora, 4, 5));
+        }
+
+        [HttpPost, ValidateInput(false)]
+        public ActionResult CampaniaGridViewPartialAddNew(Campania item)
+        {
+            int? _Fk_IdUnidadEjecutora = ((UserData)Session["DataUsuario"]).setFilter(((UserData)Session["DataUsuario"]).FK_IdUnidadEjecutora__UE);
+            int? _Fk_IdEstado = ((UserData)Session["DataUsuario"]).setFilter(((UserData)Session["DataUsuario"]).FK_IdEstado__SIS);
+            string rolusuraio = ((UserData)Session["DataUsuario"]).RolesUsuario[0].ToString();
+            ViewBag.Estado = _Fk_IdEstado;
+            ViewData["Fk_IdUnidadEjecutora"] = _Fk_IdUnidadEjecutora;
+
+            var model = db.Campanias;
+            //Valores por Default pues esta usando la pantalla de Sanidad Vegetal.
+            // A esta pantalla solo tienen acceso los Administradores Generales, Los Administradores de Unidad Responsable y Los Administradores de Instancia Ejecutora
+            item.Fk_IdPrograma__SIS = 1; //Programa de Sanidad e Inocuidad Agroalimentaria
+            item.Fk_IdComponente__SIS = 4; // Componente de Sanidad Federalizado
+            item.Fk_IdIncentivo = 1; //Incentivo de Sanidad 
+<<<<<<< Updated upstream
+=======
+            //item.Fk_IdSubComponente__SIS = 4;// SubComponente de Sanidad Vegetal
+>>>>>>> Stashed changes
+            item.FK_IdAnio__SIS = 2; //Año por default 2016
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    model.Add(item);
+                    db.SaveChanges();
+                }
+                catch (Exception e)
+                {
+                    ViewData["EditError"] = e.Message;
+                }
+            }
+            else
+                ViewData["EditError"] = "Por favor corrija los errores marcados.";
+            return PartialView("_CampaniaGridViewPartial", Senasica.GetCampaniasFiltradas(rolusuraio, _Fk_IdEstado, _Fk_IdUnidadEjecutora, 4, 5));
+        }
+
+        [HttpPost, ValidateInput(false)]
+        public ActionResult CampaniaGridViewPartialUpdate(Campania item)
+        {
+            int? _Fk_IdUnidadEjecutora = ((UserData)Session["DataUsuario"]).setFilter(((UserData)Session["DataUsuario"]).FK_IdUnidadEjecutora__UE);
+            int? _Fk_IdEstado = ((UserData)Session["DataUsuario"]).setFilter(((UserData)Session["DataUsuario"]).FK_IdEstado__SIS);
+            string rolusuraio = ((UserData)Session["DataUsuario"]).RolesUsuario[0].ToString();
+            ViewBag.Estado = _Fk_IdEstado;
+            ViewData["Fk_IdUnidadEjecutora"] = _Fk_IdUnidadEjecutora;
+
+            var model = db.Campanias;
+
+            //Valores por Default pues esta usando la pantalla de Sanidad Vegetal
+            item.Fk_IdPrograma__SIS = 1; //Programa de Sanidad e Inocuidad Agroalimentaria
+            item.Fk_IdComponente__SIS = 4; // Componente de Sanidad Federalizado
+            item.Fk_IdIncentivo = 1; //Incentivo de Sanidad             
+            item.FK_IdAnio__SIS = 2; //Año por default 2016 PEDILE a KIKE UNA VARIABLE GLOBAL
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    var modelItem = model.FirstOrDefault(it => it.Pk_IdCampania == item.Pk_IdCampania);
+                    if (modelItem != null)
+                    {
+                        this.UpdateModel(modelItem);
+                        db.SaveChanges();
+                    }
+                }
+                catch (Exception e)
+                {
+                    ViewData["EditError"] = e.Message;
+                }
+            }
+            else
+                ViewData["EditError"] = "Por favor corrija los errores marcados.";
+            return PartialView("_CampaniaGridViewPartial", Senasica.GetCampaniasFiltradas(rolusuraio, _Fk_IdEstado, _Fk_IdUnidadEjecutora, 4, 5));
+        }
+
+        [HttpPost, ValidateInput(false)]
+        public ActionResult CampaniaGridViewPartialDelete(int Pk_IdCampania)
+        {
+            int? _Fk_IdUnidadEjecutora = ((UserData)Session["DataUsuario"]).setFilter(((UserData)Session["DataUsuario"]).FK_IdUnidadEjecutora__UE);
+            int? _Fk_IdEstado = ((UserData)Session["DataUsuario"]).setFilter(((UserData)Session["DataUsuario"]).FK_IdEstado__SIS);
+            string rolusuraio = ((UserData)Session["DataUsuario"]).RolesUsuario[0].ToString();
+            ViewBag.Estado = _Fk_IdEstado;
+            ViewData["Fk_IdUnidadEjecutora"] = _Fk_IdUnidadEjecutora;
+
+            var model = db.Campanias;
+            if (Pk_IdCampania >= 0)
+            {
+                try
+                {
+                    var item = model.FirstOrDefault(it => it.Pk_IdCampania == Pk_IdCampania);
+                    if (item != null)
+                        model.Remove(item);
+                    db.SaveChanges();
+                }
+                catch (Exception e)
+                {
+                    ViewData["EditError"] = e.Message;
+                }
+            }
+            return PartialView("_CampaniaGridViewPartial", Senasica.GetCampaniasFiltradas(rolusuraio, _Fk_IdEstado, _Fk_IdUnidadEjecutora, 4, 5));
+        }
+
+        public ActionResult _ComboBoxProyectoPartial()
+        {
+            int Pk_IdSubComponente = (Request.Params["Fk_IdSubComponente__SIS"] != null) ? int.Parse(Request.Params["Fk_IdSubComponente__SIS"]) : -1;
+            return PartialView("_ComboBoxProyectoPartial", Senasica.GetProyectosAutorizadosBySubComponente(Pk_IdSubComponente));
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                db.Dispose();
+            }
+            base.Dispose(disposing);
+        }
+        public ActionResult Scrolling()
+        {
+            return PartialView("Scrolling");
+        }
+
+        #region EXPORT PROGRAMAS DE TRABAJO SANIDAD VEGETAL
+        //Esta Acción envia un documento a Excel de "REGISTRO DE PROGRAMAS DE TRABAJO SANIDAD VEGETAL"; con los datos del DataGrid como respuesta 
+        public ActionResult ExportToXLSRegistrodeCampañas()
+        {
+            int? _Fk_IdUnidadEjecutora = ((UserData)Session["DataUsuario"]).setFilter(((UserData)Session["DataUsuario"]).FK_IdUnidadEjecutora__UE);
+            int? _Fk_IdEstado = ((UserData)Session["DataUsuario"]).setFilter(((UserData)Session["DataUsuario"]).FK_IdEstado__SIS);
+            string rolusuraio = ((UserData)Session["DataUsuario"]).RolesUsuario[0].ToString();
+            ViewBag.Estado = _Fk_IdEstado;
+            ViewData["Fk_IdUnidadEjecutora"] = _Fk_IdUnidadEjecutora;
+            return GridViewExtension.ExportToXls(GetCampaniasSettings(),Senasica.GetCampaniasFiltradas(rolusuraio, _Fk_IdEstado, _Fk_IdUnidadEjecutora, 4, 5));
+        }
+        //Esta Acción envia un documento a PDF de "REGISTRO DE PROGRAMAS DE TRABAJO SANIDAD VEGETAL"; con los datos del DataGrid como respuesta 
+        public ActionResult ExportToPDFRegistrodeCampañas()
+        {
+            int? _Fk_IdUnidadEjecutora = ((UserData)Session["DataUsuario"]).setFilter(((UserData)Session["DataUsuario"]).FK_IdUnidadEjecutora__UE);
+            int? _Fk_IdEstado = ((UserData)Session["DataUsuario"]).setFilter(((UserData)Session["DataUsuario"]).FK_IdEstado__SIS);
+            string rolusuraio = ((UserData)Session["DataUsuario"]).RolesUsuario[0].ToString();
+            ViewBag.Estado = _Fk_IdEstado;
+            ViewData["Fk_IdUnidadEjecutora"] = _Fk_IdUnidadEjecutora;
+            return GridViewExtension.ExportToPdf(GetCampaniasSettings(),Senasica.GetCampaniasFiltradas(rolusuraio, _Fk_IdEstado, _Fk_IdUnidadEjecutora, 4, 5));
+        }
+        /// <summary>
+        /// Genera las propiedades del GataGrid
+        /// </summary>
+        /// <returns></returns>
+        private GridViewSettings GetCampaniasSettings()
+        {
+            var settings = new GridViewSettings();
+            settings.Name = "GridView";
+
+            settings.SettingsExport.FileName = "Proyectos de Campañas";
+
+
+            settings.SettingsExport.PaperKind = System.Drawing.Printing.PaperKind.A3Transverse;
+            settings.SettingsExport.Landscape = true;
+            settings.SettingsExport.Styles.Cell.Font.Name = "arial";
+            settings.SettingsExport.Styles.Cell.Font.Size = 10;
+            settings.SettingsExport.TopMargin = 130;
+            settings.SettingsExport.LeftMargin = 130;
+            settings.SettingsExport.RightMargin = 0;
+            settings.SettingsExport.BottomMargin = 90;
+            settings.SettingsExport.PageHeader.Center = "REGISTRO DE PROGRAMAS DE TRABAJO SANIDAD VEGETAL";
+            settings.SettingsExport.PageHeader.Font.Name = "Arial";
+            settings.SettingsExport.PageHeader.Font.Size = 20;
+            settings.SettingsExport.PageFooter.Center = "[Page # of Pages #]";
+            settings.SettingsExport.PageFooter.Left = "FECHA: [Date Printed]";
+            settings.SettingsExport.PageFooter.Right = "HORA: [Time Printed]";
+            settings.SettingsExport.PageFooter.Font.Name = "Arial";
+            settings.SettingsExport.PageFooter.Font.Size = 12;
+            settings.SettingsExport.ReportFooter = "www.simosica.org";
+            settings.KeyFieldName = "Pk_IdCampania";
+            settings.Columns.Add("UnidadEjecutora.Nombre", "Instancia Ejecutora");
+            settings.Columns.Add("Incentivo.Nombre", "Incentivo");
+            settings.Columns.Add("SubComponente.Nombre", "SubComponente");
+            settings.Columns.Add("ProyectoAutorizado.Nombre", "Proyecto Autorizado");
+            settings.Columns.Add("FechaInicio", MVCxGridViewColumnType.DateEdit);
+            settings.Columns.Add("FechaFin", MVCxGridViewColumnType.DateEdit);
+            settings.Columns.Add("StatusKardex", "Status Actual de la Campaña");
+
+            return settings;
+        }
+        #endregion
+    }
+}

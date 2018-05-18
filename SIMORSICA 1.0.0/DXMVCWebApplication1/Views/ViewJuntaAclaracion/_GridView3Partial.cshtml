@@ -1,0 +1,80 @@
+@{
+	var grid = Html.DevExpress().GridView(settings => {
+        settings.Name = "GridView3";
+        settings.Width = System.Web.UI.WebControls.Unit.Percentage(100);
+        settings.CallbackRouteValues = new { Controller = "ViewJuntaAclaracion", Action = "GridView3Partial" };
+
+				settings.SettingsEditing.AddNewRowRouteValues = new { Controller = "ViewJuntaAclaracion", Action = "GridView3PartialAddNew" };
+        settings.SettingsEditing.UpdateRowRouteValues = new { Controller = "ViewJuntaAclaracion", Action = "GridView3PartialUpdate" };
+        settings.SettingsEditing.DeleteRowRouteValues = new { Controller = "ViewJuntaAclaracion", Action = "GridView3PartialDelete" };
+        settings.SettingsEditing.Mode = GridViewEditingMode.EditFormAndDisplayRow;
+        settings.SettingsBehavior.ConfirmDelete = true;
+
+		settings.CommandColumn.Visible = true;
+        settings.CommandColumn.ShowNewButton = false;
+        settings.CommandColumn.ShowDeleteButton = false;
+        settings.CommandColumn.ShowEditButton = false;
+
+        settings.KeyFieldName = "Pk_IdJuntaAclaracion";
+
+        //settings.SettingsPager.Visible = true;
+        settings.SettingsPager.Position = PagerPosition.Bottom;
+        settings.SettingsPager.FirstPageButton.Visible = true;
+        settings.SettingsPager.LastPageButton.Visible = true;
+        settings.SettingsPager.PageSizeItemSettings.Visible = true;
+        settings.SettingsPager.PageSize = 15;
+        settings.SettingsPager.PageSizeItemSettings.Items = new string[] { "5", "10", "15" };
+        //settings.Settings.ShowGroupPanel = true;
+        //settings.Settings.ShowFilterRow = true;
+        settings.Settings.ShowFilterRowMenu = true;
+        //settings.SettingsBehavior.AllowSelectByRowClick = true;
+
+		settings.SettingsPager.Visible = true;
+		settings.Settings.ShowGroupPanel = true;
+		settings.Settings.ShowFilterRow = true;
+		settings.SettingsBehavior.AllowSelectByRowClick = true;
+        settings.Columns.Add("Estado");
+        settings.Columns.Add("UnidadEjecutora");
+        settings.Columns.Add("Licitacion");
+        settings.Columns.Add("Descripcion");
+        settings.Columns.Add("FechaJuntaAclaracion").PropertiesEdit.DisplayFormatString = "dd/MM/yyyy";
+        settings.Columns.Add("Fk_IdFiles__INFO");
+        settings.Columns.Add(column =>
+        {
+            column.Caption = "Licitación";
+            column.Visible = true;
+            column.SetDataItemTemplateContent(c =>
+            {
+                if ((DataBinder.Eval(c.DataItem, "Documento") ?? "").ToString() != "")
+                {
+                    using (Html.BeginForm("Download", "UploadFileJA", new { Pk_IdJuntaAclaracion = c.KeyValue }, FormMethod.Post))
+                    {
+                        Html.DevExpress().Button(btnSettings =>
+                        {
+                            btnSettings.Name = "btnDescargaArchivo" + c.KeyValue.ToString();
+                            btnSettings.Text = "Documento";
+                            btnSettings.ControlStyle.CssClass = "button";
+                            btnSettings.Images.Image.Url = "/Content/Images/descargar.png";
+                            btnSettings.ImagePosition = ImagePosition.Left;
+                            btnSettings.Images.Image.Width = 16;
+                            btnSettings.UseSubmitBehavior = true;
+                        }).Render();
+                    }
+                }
+                //else
+                //{
+                //    Html.DevExpress().Label(x =>
+                //    {
+                //        x.Name = "lblenablex";
+                //        x.Text = "no se cargaron archivos.";
+                //    }).Render();
+                //}
+            });
+        });
+
+	    });
+		if (ViewData["EditError"] != null){
+        grid.SetEditErrorText((string)ViewData["EditError"]);
+    }
+}
+@grid.Bind(Model).GetHtml()

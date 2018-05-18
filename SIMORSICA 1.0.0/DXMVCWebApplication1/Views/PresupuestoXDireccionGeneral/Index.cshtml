@@ -1,0 +1,165 @@
+﻿<script type="text/javascript">
+
+    window.onload = function ()
+    {
+        var _totalDG = totalDG();
+        var _presupuestoTotalOtorgado = document.getElementById('GtoInvOtorgado_I').value;
+        _presupuestoTotalOtorgado = _presupuestoTotalOtorgado.replace(/,/g, "");
+
+        var _presupuestoFaltante = _presupuestoTotalOtorgado - _totalDG;
+        document.getElementById('PresupuestoNoAsignado_I').value = _presupuestoFaltante;
+
+        if (_presupuestoFaltante < 0) btnGuardar.clickLocked = true;
+        if (_presupuestoFaltante > 0) btnGuardar.clickLocked = true;
+        if (_presupuestoFaltante == 0) btnGuardar.clickLocked = false;
+    }
+
+    function verificaSumaTotalDG(s, e)
+    {
+        var _totalDG = totalDG();
+        var _presupuestoTotalOtorgado = document.getElementById('GtoInvOtorgado_I').value;
+        _presupuestoTotalOtorgado = _presupuestoTotalOtorgado.replace(/,/g, "");
+
+        var _presupuestoFaltante = _presupuestoTotalOtorgado - _totalDG;
+        document.getElementById('PresupuestoNoAsignado_I').value = _presupuestoFaltante;
+
+        if (_presupuestoFaltante < 0) {
+            popUpRecursoExcedido.Show();
+            btnGuardar.clickLocked = true;
+        }
+
+        if (_presupuestoFaltante > 0) btnGuardar.clickLocked = true;
+        if (_presupuestoFaltante == 0) btnGuardar.clickLocked = false;
+    }
+
+    function totalDG(){
+        return ((DGSA.number * 10) + (DGSV.number * 10) + (DGIAAP.number * 10) + (DGIF.number * 10)) / 10;
+    }
+</script>
+
+@{
+    ViewBag.Title = "Presupuesto por Estado y Direcciones Generales";
+}
+
+<div style="float: right; margin-right: 20px"><a href="https://docs.google.com/document/d/1ZJURCxDAT76zN4TpKa2cBHEdF3RZFUNkAv3o9iyWxG4/edit#heading=h.j8sehv" target="_blank"><u>Ayuda</u></a>  |  <a href="http://soporte.simosica.com/support/solutions/articles/22000184563-preguntas-frecuentes" target="_blank"> <u>Preguntas Frecuentes</u></a></div>
+ 
+<h3 style="font-size:17px; font:bold; text-align:center">PRESUPUESTO POR ESTADOS Y DIRECCIONES GENERALES</h3>
+<h3 style="font-size: 13px; text-align: center; position: relative; top: -10px">RESUMEN DESGLOSADO</h3>
+
+<br />
+<br />
+
+<br>
+<br>
+
+<table style='width:100%'>
+    <tr style='width:100%'>
+        <td style='width:10%'>
+            @Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.Name = "PresupuestoYaOtorgado";
+                edtSettings.ClientVisible = !Convert.ToBoolean(ViewData["presupuestoYaOtorgado"]);
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Style["TextAlign"] = "center";
+                edtSettings.Style["color"] = "red";
+                edtSettings.Text = "AÚN NO SE HA CERRADO LA DISTRIBUCIÓN DEL PRESUPUESTO PARA LAS DIRECCIONES GENERALES";
+            }).GetHtml()
+        </td>
+    </tr>
+
+    <tr style='width:100%'>
+        <td style='width:10%'>
+            @Html.DevExpress().Button(btnSettings =>
+            {
+                btnSettings.Name = "CierraDistribucion";
+                btnSettings.ClientVisible = Convert.ToBoolean(ViewData["presupuestoYaOtorgado"]);
+                btnSettings.Text = Convert.ToBoolean(ViewData["esRecursoCerrado"]) ? "Recursos cerrados" : "Cierra la distribución";
+                btnSettings.ToolTip = Convert.ToBoolean(ViewData["esRecursoCerrado"]) ? "El recurso ha sido cerrado para este año" : "Movimiento irreversible";
+                btnSettings.ClientEnabled = Convert.ToBoolean(ViewData["recursosYaDistribuidos"]) && !Convert.ToBoolean(ViewData["esRecursoCerrado"]) ? true : false;
+                btnSettings.ControlStyle.CssClass = "button";
+                btnSettings.ImagePosition = ImagePosition.Right;
+                btnSettings.Images.Image.Url = Convert.ToBoolean(ViewData["esRecursoCerrado"]) ? "/Content/Images/candado_cerrado.png" : "/Content/Images/candado_abierto.png";
+                btnSettings.Style["position"] = "relative";
+                btnSettings.Style["left"] = "5px";
+                btnSettings.ClientSideEvents.Click = "function(s, e){ popUpCerrarDistribucion.Show(); }";
+            }).GetHtml()
+        </td>
+        <td style='width:10%'>
+            @Html.DevExpress().Button(btnSettings =>
+            {
+                btnSettings.Name = "DistribuyeRecurso";
+                btnSettings.ClientVisible = Convert.ToBoolean(ViewData["presupuestoYaOtorgado"]);
+                btnSettings.Text = Convert.ToBoolean(ViewData["esRecursoCerrado"]) ? "Recurso ya distribuido" : "Distribuir recurso";
+                btnSettings.ToolTip = Convert.ToBoolean(ViewData["esRecursoCerrado"]) ? "El recurso no se puede distribuir nuevamente para este año" : "Distribuya el recurso en las diferentes Direcciones Generales";
+                btnSettings.ClientEnabled = Convert.ToBoolean(ViewData["esRecursoCerrado"]) ? false : true;
+                btnSettings.ControlStyle.CssClass = "button";
+                btnSettings.ImagePosition = ImagePosition.Right;
+                btnSettings.Style["position"] = "relative";
+                btnSettings.Style["left"] = "5px";
+                btnSettings.ClientSideEvents.Click = "function(s, e){ popUpDistribucionRecursos.Show(); }";
+            }).GetHtml()
+        </td>
+        <td style='width:5%'>
+            @Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.Name = "GtoInvOtorgado_Label";
+                edtSettings.ClientVisible = Convert.ToBoolean(ViewData["presupuestoYaOtorgado"]);
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Gasto de Inversión Otorgado: " + Convert.ToDecimal(ViewData["GastoInversionTotal"]).ToString("c");
+            }).GetHtml()
+        </td>
+        <td style='width:10%'>
+            @Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.Name = "DGSA_Label";
+                edtSettings.ClientVisible = Convert.ToBoolean(ViewData["presupuestoYaOtorgado"]);
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "DGSA: " + Convert.ToDecimal(ViewData["DGSA"]).ToString("c");
+            }).GetHtml()
+        </td>
+        <td style='width:10%'>
+            @Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.Name = "DGSV_Label";
+                edtSettings.ClientVisible = Convert.ToBoolean(ViewData["presupuestoYaOtorgado"]);
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "DGSV: " + Convert.ToDecimal(ViewData["DGSV"]).ToString("c");
+            }).GetHtml()
+        </td>
+        <td style='width:10%'>
+            @Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.Name = "DGIAAP_Label";
+                edtSettings.ClientVisible = Convert.ToBoolean(ViewData["presupuestoYaOtorgado"]);
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "DGIAAP: " + Convert.ToDecimal(ViewData["DGIAAP"]).ToString("c");
+            }).GetHtml()
+        </td>
+        <td style='width:10%'>
+            @Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.Name = "DGIF_Label";
+                edtSettings.ClientVisible = Convert.ToBoolean(ViewData["presupuestoYaOtorgado"]);
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "DGIF: " + Convert.ToDecimal(ViewData["DGIF"]).ToString("c");
+            }).GetHtml()
+        </td>
+        <td style='width:35%'></td>
+    </tr>
+</table>
+
+<br />
+
+<table>
+    <tr>
+        <td>
+            @Html.Partial("~/Views/ExportExcelPDF/_ExportExcelPDF.cshtml", new ViewDataDictionary { { "Clave", DXMVCWebApplication1.Common.ListaPantallas.PRES_PRESUPUESTOXDIRECCIONGENERAL } })
+        </td>
+    </tr>
+</table>
+
+<br />
+
+@Html.Action("ResumenXEstado")
+
+

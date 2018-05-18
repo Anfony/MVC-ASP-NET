@@ -1,0 +1,31 @@
+﻿@{
+    ViewBag.Title = "Cierre Mensual Histórico";
+}
+
+<h3 style="font-size:17px; font:bold; text-align:center">CIERRE MENSUAL HISTÓRICO</h3>
+<h3 style="font-size: 13px; text-align: center; position: relative; top: -10px">Registro de movimintos de Cierres Mensuales</h3>
+
+<br>
+<br>
+<br>
+
+@{
+    using (Html.BeginForm("Index", ViewData["controlador"].ToString()))
+    {
+        Html.DevExpress().Button(btnSettings =>
+        {
+            btnSettings.Name = "btnRegresa";
+            btnSettings.ClientVisible = true;
+            btnSettings.EnableClientSideAPI = true;
+            btnSettings.Text = "Regresar";
+            btnSettings.ControlStyle.CssClass = "button";
+            btnSettings.Images.Image.Url = "/Content/Images/regresa.png";
+            btnSettings.ImagePosition = ImagePosition.Right;
+            btnSettings.Style["position"] = "relative";
+            btnSettings.Style["left"] = "20px";
+            btnSettings.UseSubmitBehavior = true;
+        }).GetHtml();
+    }
+}
+
+@Html.Action("CierreMensualHistGridViewPartialGeneral", new { IdCierreMensual = ViewData["IdCierreMensual"] })

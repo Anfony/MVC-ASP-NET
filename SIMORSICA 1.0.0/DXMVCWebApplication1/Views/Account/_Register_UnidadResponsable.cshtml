@@ -1,0 +1,8 @@
+﻿<div id="UnidadResponsable" style="position:absolute; left:180px; top:460px; visibility:hidden">
+    <div class="form-group">
+        @Html.Label("Unidad Responsable: ", new { @class = "col-md-2 control-label" })
+        <div class="col-md-10">
+            @Html.DropDownList("dropDownUnidadResponsable", new SelectList(string.Empty, "Value", "Text"), "Seleccione...", new { @style = "width: 300px" })
+        </div>
+    </div>
+</div>

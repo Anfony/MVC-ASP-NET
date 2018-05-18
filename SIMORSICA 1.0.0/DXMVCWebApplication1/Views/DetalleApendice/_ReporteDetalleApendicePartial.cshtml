@@ -1,0 +1,8 @@
+﻿@Html.DevExpress().DocumentViewer(settings =>
+{
+    settings.Name = "DetalleReporte";
+    settings.CallbackRouteValues = new { Controller = "DetalleApendice", Action = "reporteDetalleApendice", ComboEstado = ViewData["ComboEstado"] };
+    settings.ExportRouteValues = new { Controller = "DetalleApendice", Action = "ReportPartialExport", ComboEstado = ViewData["ComboEstado"] };
+    settings.Report = (XtraReport)Model;
+    settings.ToolbarMode = DocumentViewerToolbarMode.StandardToolbar;
+}).GetHtml()

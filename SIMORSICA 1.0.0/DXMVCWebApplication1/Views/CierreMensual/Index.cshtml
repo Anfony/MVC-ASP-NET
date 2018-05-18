@@ -1,0 +1,273 @@
+﻿@{
+    ViewBag.Title = "Cierre Mensual";
+}
+
+<h3 style="font-size:17px; font:bold; text-align:center">REALIZA AQUÍ EL CIERRE MENSUAL</h3>
+<h3 style="font-size: 13px; text-align: center; position: relative; top: -10px">Registro de los Cierres Mensuales</h3>
+<br>
+
+@Html.Partial("~/Views/ExportExcelPDF/_ExportExcelPDF.cshtml", new ViewDataDictionary { { "Clave", DXMVCWebApplication1.Common.ListaPantallas.UE_CIERRE_MENSUAL } })
+
+<br>
+<br>
+
+<script type="text/javascript">
+
+    function cierreMensualUploadFile(Id, Mes, Campania)
+    {
+        popUpSubirArchivo.Show();
+        IdCierre.SetValue(Id);
+        _Mes.SetValue(Mes);
+        _Campania.SetValue(Campania);
+    }
+
+</script>
+
+@Html.DevExpress().Button(btnSettings =>
+{
+    btnSettings.Name = "btnCierraMes";
+    btnSettings.Text = "Registra Campaña a Cerrar";
+    btnSettings.ControlStyle.CssClass = "button";
+    btnSettings.Images.Image.Url = "/Content/Images/candado_cerrado.png";
+    btnSettings.ImagePosition = ImagePosition.Right;
+    btnSettings.Style["position"] = "relative";
+    btnSettings.Style["left"] = "10px";
+    btnSettings.ClientSideEvents.Click = "function(s, e){ popUpCerrarMes.Show(); }";
+}).GetHtml();
+
+@Html.Action("CierreMensualGridViewPartial")
+
+@*    Popup para Registrar campaña a cerrar    *@
+@Html.DevExpress().PopupControl(settings =>
+{
+    settings.Name = "popUpCerrarMes";
+    settings.Width = 400;
+    settings.AllowDragging = true;
+    settings.CloseAction = CloseAction.CloseButton;
+    settings.PopupAnimationType = AnimationType.None;
+    settings.HeaderText = "Registro de Campaña a Cerrar";
+    settings.Modal = true;
+    settings.PopupHorizontalAlign = PopupHorizontalAlign.WindowCenter;
+    settings.PopupVerticalAlign = PopupVerticalAlign.WindowCenter;
+
+    settings.SetContent(() =>
+    {
+        using (Html.BeginForm("CierraCampania", "CierreMensual", FormMethod.Post, new { id = "FormCierre" }))
+        {
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Mes a cerrar: ";
+                edtSettings.ControlStyle.Font.Size = 12;
+            }).Render();
+
+            Html.DevExpress().ComboBox(settingsCombo =>
+            {
+                settingsCombo.Name = "Fk_IdMes";
+                settingsCombo.Properties.TextField = "Descripcion";
+                settingsCombo.Properties.NullText = "Campo Requerido";
+                settingsCombo.Properties.ValueField = "Pk_IdMes";
+                settingsCombo.Properties.ValueType = typeof(int);
+                settingsCombo.ToolTip = "Seleccione un Mes";
+                settingsCombo.Width = Unit.Pixel(450);
+                settingsCombo.ShowModelErrors = true;
+                settingsCombo.Properties.EnableSynchronization = DefaultBoolean.True;
+                settingsCombo.Properties.IncrementalFilteringMode = IncrementalFilteringMode.Contains;
+                settingsCombo.Properties.ClientSideEvents.SelectedIndexChanged = "function(s, e){ Fk_IdCampania.PerformCallback(); }";
+            }).BindList(Senasica.GetMes()).GetHtml();
+
+            ViewContext.Writer.Write("<br />");
+
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Elige una campaña";
+                edtSettings.ControlStyle.Font.Size = 12;
+            }).Render();
+
+            Html.RenderPartial("_ComboCampania");
+
+            ViewContext.Writer.Write("<br />");
+            ViewContext.Writer.Write("<br />");
+
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Comentarios para el cierre de campaña";
+                edtSettings.AssociatedControlName = "Comentarios";
+            }).Render();
+
+            Html.DevExpress().Memo(edtSettings =>
+            {
+                edtSettings.Name = "Comentarios";
+                edtSettings.ControlStyle.CssClass = "editor";
+                edtSettings.ShowModelErrors = true;
+                edtSettings.Width = Unit.Pixel(800);
+                edtSettings.Height = Unit.Pixel(100);
+                edtSettings.ToolTip = "Ingrese sus comentarios para la campaña a cerrar";
+            }).Render();
+
+            ViewContext.Writer.Write("<br />");
+            ViewContext.Writer.Write("<br />");
+
+            ViewContext.Writer.Write("<div style='float:right'>");
+            Html.DevExpress().Button(btnSettings =>
+            {
+                btnSettings.Name = "btnAceptarCierre";
+                btnSettings.Text = "Aceptar";
+                btnSettings.ControlStyle.CssClass = "button";
+                btnSettings.Images.Image.Url = "/Content/Images/aceptar.png";
+                btnSettings.ImagePosition = ImagePosition.Right;
+                btnSettings.Style["position"] = "relative";
+                btnSettings.Style["left"] = "5px";
+                btnSettings.UseSubmitBehavior = true;
+            }).Render();
+
+            Html.DevExpress().Button(btnSettings =>
+            {
+                btnSettings.Name = "btnCancelarCierre";
+                btnSettings.Text = "Cancelar";
+                btnSettings.ControlStyle.CssClass = "button";
+                btnSettings.Images.Image.Url = "/Content/Images/cancelar.png";
+                btnSettings.ImagePosition = ImagePosition.Right;
+                btnSettings.Style["position"] = "relative";
+                btnSettings.Style["left"] = "5px";
+                btnSettings.ClientSideEvents.Click = "function(s, e){ popUpCerrarMes.Hide(); }";
+            }).Render();
+            ViewContext.Writer.Write("</div>");
+        }
+    });
+}).GetHtml()
+
+@*    Popup para Subir Archivo    *@
+@Html.DevExpress().PopupControl(settings =>
+{
+    settings.Name = "popUpSubirArchivo";
+    settings.Width = 400;
+    settings.AllowDragging = true;
+    settings.CloseAction = CloseAction.CloseButton;
+    settings.PopupAnimationType = AnimationType.None;
+    settings.HeaderText = "Subir el archivo";
+    settings.Modal = true;
+    settings.PopupHorizontalAlign = PopupHorizontalAlign.WindowCenter;
+    settings.PopupVerticalAlign = PopupVerticalAlign.WindowCenter;
+
+    settings.SetContent(() =>
+    {
+        using (Html.BeginForm("CargaReporteCierre", "CierreMensual", FormMethod.Post))
+        {
+            Html.DevExpress().TextBox(settingsTextBox =>
+            {
+                settingsTextBox.Name = "IdCierre";
+                settingsTextBox.Width = Unit.Pixel(30);
+                settingsTextBox.ReadOnly = true;
+                settingsTextBox.ControlStyle.ForeColor = System.Drawing.Color.White;
+                settingsTextBox.ControlStyle.Border.BorderColor = System.Drawing.Color.White;
+            }).Render();
+
+            ViewContext.Writer.Write("<table>");
+            ViewContext.Writer.Write("<tr><td>");
+            Html.DevExpress().TextBox(settingsTextBox =>
+            {
+                settingsTextBox.Name = "_Mes";
+                settingsTextBox.Width = Unit.Pixel(80);
+                settingsTextBox.ReadOnly = true;
+                settingsTextBox.ControlStyle.Border.BorderColor = System.Drawing.Color.White;
+            }).Render();
+            ViewContext.Writer.Write("</td>");
+
+            ViewContext.Writer.Write("<td>");
+            Html.DevExpress().TextBox(settingsTextBox =>
+            {
+                settingsTextBox.Name = "_Campania";
+                settingsTextBox.Width = Unit.Pixel(300);
+                settingsTextBox.ReadOnly = true;
+                settingsTextBox.ControlStyle.Border.BorderColor = System.Drawing.Color.White;
+            }).Render();
+            ViewContext.Writer.Write("</td></tr>");
+            ViewContext.Writer.Write("</table>");
+
+            ViewContext.Writer.Write("<br />");
+
+            Html.DevExpress().UploadControl(CAsettings =>
+            {
+                CAsettings.Name = "UploadControl";
+                CAsettings.CallbackRouteValues = new { Controller = "CierreMensual", Action = "CargaReporteCierre" };
+                CAsettings.ShowUploadButton = true;
+                CAsettings.UploadButton.Text = "Subir Reporte Firmado";
+                CAsettings.AddUploadButtonsHorizontalPosition = AddUploadButtonsHorizontalPosition.InputRightSide;
+                CAsettings.ShowProgressPanel = true;
+                CAsettings.Width = Unit.Pixel(350);
+                CAsettings.ClientSideEvents.FileUploadComplete = "function(s, e) { popUpCargaFinalizada.Show(); }";
+            }).Render();
+
+            ViewContext.Writer.Write("<br />");
+
+            ViewContext.Writer.Write("<table>");
+            ViewContext.Writer.Write("<tr><td>");
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Una vez cargado el archivo, la campaña se cerrará ";
+                edtSettings.ControlStyle.ForeColor = System.Drawing.Color.Red;
+                edtSettings.ControlStyle.Font.Size = 11;
+            }).Render();
+            ViewContext.Writer.Write("</td></tr>");
+
+            ViewContext.Writer.Write("<tr><td>");
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "para el mes correspondiente y ya no podrá ser modificado";
+                edtSettings.ControlStyle.ForeColor = System.Drawing.Color.Red;
+                edtSettings.ControlStyle.Font.Size = 11;
+            }).Render();
+            ViewContext.Writer.Write("</td></tr>");
+            ViewContext.Writer.Write("</table>");
+        }
+    });
+}).GetHtml()
+
+@*    Mensaje de Carga Finalizada    *@
+@Html.DevExpress().PopupControl(settings =>
+{
+    settings.Name = "popUpCargaFinalizada";
+    settings.Width = 300;
+    settings.AllowDragging = true;
+    settings.CloseAction = CloseAction.CloseButton;
+    settings.PopupAnimationType = AnimationType.None;
+    settings.HeaderText = "La carga ha finalizado";
+    settings.Modal = true;
+    settings.PopupHorizontalAlign = PopupHorizontalAlign.WindowCenter;
+    settings.PopupVerticalAlign = PopupVerticalAlign.WindowCenter;
+
+    settings.SetContent(() =>
+    {
+        using (Html.BeginForm("Index", "CierreMensual", FormMethod.Post))
+        {
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "El registro se ha cerrado";
+                edtSettings.ControlStyle.ForeColor = System.Drawing.Color.Red;
+                edtSettings.ControlStyle.Font.Size = 11;
+            }).Render();
+
+            ViewContext.Writer.Write("<br />");
+            ViewContext.Writer.Write("<br />");
+
+            ViewContext.Writer.Write("<div style='float:right'>");
+            Html.DevExpress().Button(btnSettings =>
+            {
+                btnSettings.Name = "btnCargaFinalizada";
+                btnSettings.Text = "Aceptar";
+                btnSettings.ControlStyle.CssClass = "button";
+                btnSettings.Images.Image.Url = "/Content/Images/aceptar.png";
+                btnSettings.ImagePosition = ImagePosition.Right;
+                btnSettings.Images.Image.Width = 16;
+                btnSettings.UseSubmitBehavior = true;
+            }).Render();
+            ViewContext.Writer.Write("</div>");
+        }
+    });
+}).GetHtml()

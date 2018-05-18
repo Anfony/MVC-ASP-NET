@@ -1,0 +1,225 @@
+@{
+    var grid = Html.DevExpress().GridView(settings => {
+        settings.Name = "PAAGridView";
+        settings.Style["position"] = "relative";
+        settings.Style["left"] = "10px";
+        settings.CallbackRouteValues = new { Controller = "ReporteDeAdquisicionesClone", Action = "PAAGridViewPartial", IdCierreMensual = ViewData["IdCierreMensual"] };
+
+        settings.SettingsEditing.Mode = GridViewEditingMode.PopupEditForm;
+        settings.SettingsText.PopupEditFormCaption = "Registro de Gasto";
+
+        settings.SettingsPopup.EditForm.Height = 400;
+        settings.SettingsPopup.EditForm.Width = 625;
+        settings.SettingsPopup.EditForm.HorizontalAlign = DevExpress.Web.ASPxClasses.PopupHorizontalAlign.WindowCenter;
+        settings.SettingsPopup.EditForm.VerticalAlign = DevExpress.Web.ASPxClasses.PopupVerticalAlign.WindowCenter;
+        settings.SettingsPopup.EditForm.Modal = true;
+
+        settings.SettingsBehavior.ConfirmDelete = true;
+        settings.Settings.ShowFilterRow = true;
+        settings.Settings.ShowFilterRowMenu = true;
+
+        settings.CommandColumn.Visible = true;
+        settings.SettingsCommandButton.EditButton.Text = "Registrar gastos";
+        settings.CommandColumn.ShowEditButton = true; //Convert.ToBoolean(ViewData["Escritura"]) || Convert.ToBoolean(ViewData["Lectura"]);
+        settings.CommandColumn.ShowClearFilterButton = true;
+
+        settings.SettingsBehavior.AllowSelectByRowClick = true;
+        settings.SettingsDetail.AllowOnlyOneMasterRowExpanded = true;
+
+        settings.KeyFieldName = "Pk_IdProgramaAnualAdq";
+
+        settings.SettingsPager.Visible = true;
+        settings.SettingsPager.Position = PagerPosition.Bottom;
+        settings.SettingsPager.FirstPageButton.Visible = true;
+        settings.SettingsPager.LastPageButton.Visible = true;
+        settings.SettingsPager.PageSizeItemSettings.Visible = true;
+        settings.SettingsPager.PageSize = 15;
+        settings.SettingsPager.PageSizeItemSettings.Items = new string[] { "5", "10", "15", "20" };
+
+        settings.Columns.Add("IE", "Instancia Ejecutora");
+        settings.Columns.Add("Campania", "Campaña");
+        settings.Columns.Add("AccionXCampania", "Acción");
+        settings.Columns.Add("BienOServ", "Bien o Servicio");
+        settings.Columns.Add("UnidadMedida", "Unidad de Medida");
+        settings.Columns.Add("Cant_Anual", "Cantidad Anual");
+        settings.Columns.Add("imp_Anual", "Importe ").PropertiesEdit.DisplayFormatString = "c";
+        settings.Columns.Add("Gastos").PropertiesEdit.DisplayFormatString = "c";
+        settings.Columns.Add("TipoRecurso", "Tipo de Recurso");
+        settings.Columns.Add("EstadoDeGasto", "Estado de Gastos");
+
+        settings.TotalSummary.Add(DevExpress.Data.SummaryItemType.Sum, "Cant_Anual").DisplayFormat = "n";
+        settings.TotalSummary.Add(DevExpress.Data.SummaryItemType.Sum, "imp_Anual").DisplayFormat = "c";
+        settings.TotalSummary.Add(DevExpress.Data.SummaryItemType.Sum, "Gastos").DisplayFormat = "n";
+
+
+        settings.Settings.ShowFooter = true;
+
+        //Comienza Custom
+
+
+        settings.SetEditFormTemplateContent(c =>
+        {
+
+            var programaAnual = ViewData["dataItem"] ?? c.DataItem;
+
+            ViewContext.Writer.Write("<br />");
+
+            ViewContext.Writer.Write("<table>" + "<tr>" + "<td>");
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Bien o Servicio:";
+                edtSettings.AssociatedControlName = "Fk_IdBienOServ__SIS";
+            }).Render();
+            ViewContext.Writer.Write("</td> <td>");
+
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.Name = "Fk_IdBienOServ__SIS";
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = DataBinder.Eval(programaAnual, "BienOServ").ToString();
+            }).Render();
+
+            ViewContext.Writer.Write("</td>");
+            ViewContext.Writer.Write("</tr>");
+            ViewContext.Writer.Write("<tr>");
+            ViewContext.Writer.Write("<td>");
+
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Unidad de Medida:";
+                edtSettings.AssociatedControlName = "Fk_IdUnidadDeMedida__SIS";
+            }).Render();
+            ViewContext.Writer.Write("</td> <td>");
+
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.Name = "Fk_IdUnidadDeMedida__SIS";
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = DataBinder.Eval(programaAnual, "UnidadMedida").ToString();
+            }).Render();
+
+            ViewContext.Writer.Write("</td>");
+            ViewContext.Writer.Write("</tr>");
+
+            ViewContext.Writer.Write("<tr>");
+            ViewContext.Writer.Write("<td>");
+
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Tipo de Recurso:";
+                edtSettings.AssociatedControlName = "TipoRecurso";
+            }).Render();
+            ViewContext.Writer.Write("</td> <td>");
+
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.Name = "TipoRecurso";
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = DataBinder.Eval(programaAnual, "TipoRecurso").ToString();
+            }).Render();
+
+            ViewContext.Writer.Write("</td>");
+            ViewContext.Writer.Write("</tr>");
+
+            ViewContext.Writer.Write("</table>");
+
+            ViewContext.Writer.Write("<br />");
+
+            ViewContext.Writer.Write("<tr><td colspan=4><h4>Cantidades Programadas:</h4></td></tr>");
+
+            //Cantidad Anual
+            ViewContext.Writer.Write("<table>");
+            ViewContext.Writer.Write("<tr>");
+            ViewContext.Writer.Write("<td>");
+
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Cantidad Anual";
+                edtSettings.AssociatedControlName = "Cant_Anual";
+            }).Render();
+
+            Html.DevExpress().SpinEdit(edtSettings =>
+            {
+                edtSettings.Name = "Cant_Anual";
+                edtSettings.ControlStyle.CssClass = "editor";
+                edtSettings.ShowModelErrors = true;
+                edtSettings.Enabled = false;
+                edtSettings.Width = Unit.Pixel(250);
+            }).Bind(DataBinder.Eval(programaAnual, "Cant_Anual"))
+            .Render();
+
+            ViewContext.Writer.Write("</td>");
+
+            //Importe Anual
+
+            ViewContext.Writer.Write("<td>");
+
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Importe Anual";
+                edtSettings.AssociatedControlName = "imp_Anual";
+            }).Render();
+
+            Html.DevExpress().SpinEdit(edtSettings =>
+            {
+                edtSettings.Name = "imp_Anual";
+                edtSettings.ControlStyle.CssClass = "editor";
+                edtSettings.ShowModelErrors = true;
+                edtSettings.Enabled = false;
+                edtSettings.Width = Unit.Pixel(250);
+                edtSettings.Properties.DisplayFormatString = "c";
+            }).Bind(DataBinder.Eval(programaAnual, "imp_Anual"))
+            .Render();
+
+            ViewContext.Writer.Write("</td>");
+
+            ViewContext.Writer.Write("</tr>");
+            ViewContext.Writer.Write("</table>");
+
+            ViewContext.Writer.Write("</br>");
+            ViewContext.Writer.Write("<table><tr><td>");
+            Html.DevExpress().Button(btnSettings =>
+            {
+                btnSettings.Name = "btnCancel";
+                btnSettings.ControlStyle.CssClass = "button";
+                btnSettings.Text = "Cerrar";
+                btnSettings.Images.Image.Url = "Content/Images/cancelar.png";
+                btnSettings.ImagePosition = ImagePosition.Right;
+                btnSettings.Style["position"] = "relative";
+                btnSettings.Style["left"] = "5px";
+                btnSettings.ClientSideEvents.Click = "function(s, e){ PAAGridView.CancelEdit(); }";
+            }).Render();
+
+            ViewContext.Writer.Write("</td></tr></table>");
+            ViewContext.Writer.Write("</br>");
+
+            // COMIENZAN LOS TABS DE DETALLE DE LA Campaña*****************
+
+            @Html.DevExpress().PageControl(PCsettings =>
+            {
+                PCsettings.Name = "pcFeatures";
+                PCsettings.ClientVisible = c.KeyValue == null ? false : true;
+
+                PCsettings.TabPages.Add("Registro de Gastos").SetContent(() =>
+                {
+                    //llama al dg de SVImportanciaCultivo
+                    ViewContext.Writer.Write("<H4>Registro de los gastos de la necesidad</H4>");
+                    @Html.RenderAction("RepGastoGridViewPartial", new { idNecesidad = DataBinder.Eval(programaAnual, "Pk_IdProgramaAnualAdq"), IdCierreMensual = ViewData["IdCierreMensual"] });
+                });
+
+            }).GetHtml();
+        });//Cierre Popup
+
+
+        // termina Custom	
+    }); // Fin DataGrid
+    if (ViewData["EditError"] != null){
+        grid.SetEditErrorText((string)ViewData["EditError"]);
+    }
+}
+@grid.Bind(Model).GetHtml()

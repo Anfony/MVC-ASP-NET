@@ -1,0 +1,43 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<items>
+  <group Text="Catálogos de Sistema">
+    <item Text="Instancia Ejecutora" NavigateUrl="~/UnidadEjecutora"  />
+    <item Text="Presupuesto por Proyecto" NavigateUrl="~/ProyectoPresupuesto"  />
+    <item Text="Registro de Proveedores" NavigateUrl="~/Proveedor"  />
+    <item Text="Padrón de Unidades de Producción" NavigateUrl="~/Productor"  />
+    <item Text="Registro de usuarios" NavigateUrl="~/Account/Register"  />
+    <item Text="Personal con acceso al sistema" NavigateUrl="~/PersonasRegistradas"  />
+  </group>
+  <group Text="Planeación">
+    <item Text="Programas de Trabajo S" NavigateUrl="~/CampaniaN" />
+    <item Text="Programas de Trabajo U" NavigateUrl="~/CampaniaU" />
+    <item Text="Gastos Fijos de Operación - Programas S" NavigateUrl="~/ProgramaAnualAdq"  />
+    <item Text="Gastos Fijos de Operación - Programas U" NavigateUrl="~/ProgramaAnualAdqU"  />
+    <item Text="Asignación de Actividades" NavigateUrl="~/ActividadXAccion"  />
+    <item Text="Actividades Programadas" NavigateUrl="~/Actividades2"  />
+    <item Text="Asignación de Coordinadores a Campañas" NavigateUrl="~/AsignacionCoordinadorCampania" />
+  </group>
+  <group Text="Ministración">
+    <item Text="Registro de Ministraciones" NavigateUrl="~/MinistracionesXComite" />
+    <item Text="Reintegros" NavigateUrl="~/Tesofe" />
+  </group>
+  <group Text="Ejecución">
+    <item Text="Informe de Avances" NavigateUrl="~/ReporteActividadAsignada"  />
+    <item Text="Informe de Adquisiciones" NavigateUrl="~/ReporteDeAdquisiciones"  />
+  </group>
+  <group Text="Reportes">
+    <group Text="Programa Integral">
+      <item Text="Federal" NavigateUrl="~/ReporteGastosFijosDeOperacion" />
+      <item Text="Estatal" NavigateUrl="~/ReporteGastosFijosDeOperacionEstatal" />
+    </group>
+    <item Text="Reporte Cierre Mensual (Previo)" NavigateUrl="~/ReporteInformeMensualAvance" />
+    <item Text="Reporte Cierre Trimestral" NavigateUrl="~/ReporteCierrePeriodo" />
+    <item Text="Reporte Detalle Físico/Financiero" NavigateUrl="~/ReporteInformeDetalleFisicoFinanciero" />
+  </group>
+  <group Text="Comunicación SURI">
+    <item Text="Enviar información a SURI" NavigateUrl="~/SURI"  />
+  </group>
+  <group Text="Cierre">
+    <item Text="Cierre Mensual" NavigateUrl="~/CierreMensual"  />
+  </group>
+</items>

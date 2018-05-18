@@ -1,0 +1,21 @@
+﻿@Html.DevExpress().ComboBox(settings =>
+{
+    settings.CallbackRouteValues = new { Controller = "CierreMensual", Action = "_ComboCampania" };
+    settings.Name = "Fk_IdCampania";
+
+    settings.Properties.TextField = "Nombre";
+    settings.Properties.NullText = "Campo Requerido";
+    settings.Properties.ValueField = "Pk_IdCampania";
+    settings.Properties.ValueType = typeof(int);
+    settings.ToolTip = "Seleccione una Campaña";
+    settings.Width = Unit.Pixel(450);
+    settings.ShowModelErrors = true;
+    settings.Properties.EnableSynchronization = DefaultBoolean.False;
+    settings.Properties.IncrementalFilteringMode = IncrementalFilteringMode.Contains;
+    settings.Properties.Columns.Add("Nombre", "Campaña").Width = Unit.Pixel(450);
+    settings.Properties.Columns.Add("RecSol_Fed", "Recurso Federal Solicitado").Width = Unit.Pixel(140);
+    settings.Properties.Columns.Add("RecSol_Est", "Recurso Estatal Solicitado").Width = Unit.Pixel(140);
+
+    settings.Properties.ClientSideEvents.BeginCallback = "function(s, e){ e.customArgs['IdMes'] = Fk_IdMes.GetValue(); }";
+}).BindList(Model).GetHtml()
+

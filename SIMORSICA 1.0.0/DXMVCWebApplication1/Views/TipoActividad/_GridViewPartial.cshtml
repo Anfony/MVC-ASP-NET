@@ -1,0 +1,231 @@
+@{
+    var grid = Html.DevExpress().GridView(settings => {
+        settings.Name = "TipoActividadGridViewPartial";
+        settings.Style["width"] = "98%";
+        settings.Style["position"] = "relative";
+        settings.Style["left"] = "10px";
+        settings.CommandColumn.Width = 20;
+        settings.CallbackRouteValues = new { Controller = "TipoActividad", Action = "GridViewPartial" };
+
+        settings.SettingsEditing.AddNewRowRouteValues = new { Controller = "TipoActividad", Action = "GridViewPartialAddNew" };
+        settings.SettingsEditing.UpdateRowRouteValues = new { Controller = "TipoActividad", Action = "GridViewPartialUpdate" };
+        settings.SettingsEditing.DeleteRowRouteValues = new { Controller = "TipoActividad", Action = "GridViewPartialDelete" };
+        settings.SettingsEditing.Mode = GridViewEditingMode.PopupEditForm;
+        settings.SettingsText.PopupEditFormCaption = "TIPO DE ACTIVIDAD";
+
+        settings.SettingsPopup.EditForm.Height = 180;
+        settings.SettingsPopup.EditForm.Width = 525;
+        settings.SettingsPopup.EditForm.HorizontalAlign = DevExpress.Web.ASPxClasses.PopupHorizontalAlign.WindowCenter;
+        settings.SettingsPopup.EditForm.VerticalAlign = DevExpress.Web.ASPxClasses.PopupVerticalAlign.WindowCenter;
+        settings.SettingsPopup.EditForm.Modal = true;
+
+        settings.SettingsBehavior.ConfirmDelete = true;
+
+        settings.CommandColumn.Visible = true;
+        settings.CommandColumn.ShowNewButtonInHeader = Convert.ToBoolean(ViewData["Escritura"]);
+        settings.CommandColumn.ShowDeleteButton = Convert.ToBoolean(ViewData["Escritura"]);
+        settings.CommandColumn.ShowEditButton = Convert.ToBoolean(ViewData["Escritura"]) || Convert.ToBoolean(ViewData["Lectura"]);
+        settings.CommandColumn.ShowClearFilterButton = true;
+
+        settings.SettingsPager.Visible = true;
+        settings.SettingsPager.Position = PagerPosition.Bottom;
+        settings.SettingsPager.FirstPageButton.Visible = true;
+        settings.SettingsPager.LastPageButton.Visible = true;
+        settings.SettingsPager.PageSizeItemSettings.Visible = true;
+        settings.SettingsPager.PageSize = 15;
+        settings.SettingsPager.PageSizeItemSettings.Items = new string[] { "5", "10", "15" };
+        settings.Settings.ShowFilterRowMenu = true;
+        settings.KeyFieldName = "Pk_IdTipoActividad";
+
+        settings.Settings.ShowGroupPanel = true;
+        settings.Settings.ShowFilterRow = true;
+        settings.SettingsBehavior.AllowSelectByRowClick = true;
+
+        settings.Columns.Add("TipoDeAccion.ProyectoAutorizado.SubComponente.Nombre", "Concepto de Apoyo");
+        settings.Columns.Add("TipoDeAccion.ProyectoAutorizado.Nombre", "Proyecto Autorizado");
+
+        settings.Columns.Add("TipoDeAccion.Nombre", "Tipo de Acción");
+
+        settings.Columns.Add("Nombre","Nombre del Tipo de Actividad");
+
+        settings.Columns.Add("UnidadDeMedida.Nombre", "Unidad de Medida");
+
+        settings.SetEditFormTemplateContent(c =>
+        {
+            var Actividad = ViewData["dataItem"] ?? c.DataItem;
+
+            Html.DevExpress().Label(
+               edtSettings =>
+               {
+                   edtSettings.ControlStyle.CssClass = "label";
+                   edtSettings.Text = c.KeyValue == null ? "Ingresa un Nuevo Tipo de Actividad" : "Edita el Tipo de Actividad";
+                   edtSettings.Style["font-size"] = "18px";
+                   edtSettings.Style["color"] = "orange";
+               }
+           )
+           .Render();
+            ViewContext.Writer.Write("<br>");
+            ViewContext.Writer.Write("</br>");
+
+            ViewContext.Writer.Write("<table>" + "<tr>" + "<td>");
+            //***Tipo de Accion
+            Html.DevExpress().Label(
+                edtSettings =>
+                {
+                    edtSettings.ControlStyle.CssClass = "label";
+                    edtSettings.Text = "Tipo de Acción";
+                    edtSettings.AssociatedControlName = "Fk_IdTipoAccion";
+                }
+            )
+            .Render();
+            Html.DevExpress().ComboBox(
+               edtSettings =>
+               {
+                   edtSettings.Name = "Fk_IdTipoAccion";
+                   edtSettings.ControlStyle.CssClass = "editor";
+                   edtSettings.Properties.TextField = "Descripcion";
+                   edtSettings.Properties.NullText = "Campo Requerido";
+                   edtSettings.Properties.ValueField = "Pk_IDTipoDeAccion";
+                   edtSettings.ToolTip = c.KeyValue == null ? "Seleccione el Tipo de Acción" : "Cambiar Tipo de Acción";
+                   edtSettings.Properties.ValueType = typeof(int);
+                   edtSettings.ShowModelErrors = true;
+                   edtSettings.Width = Unit.Pixel(800);
+                   edtSettings.Properties.IncrementalFilteringMode = IncrementalFilteringMode.Contains;
+                   edtSettings.Properties.IncrementalFilteringDelay = 5;
+                   edtSettings.Properties.Columns.Add("ProyectoAutorizado.SubComponente.Nombre", "Concepto de Apoyo");
+                   edtSettings.Properties.Columns.Add("ProyectoAutorizado.Nombre", "Programa Institucional");
+                   edtSettings.Properties.Columns.Add("Nombre", "Tipo Acción");
+               }
+            ).BindList(DXMVCWebApplication1.Models.Senasica.GetTiposDeAccionAux(ViewData["rolusuario"].ToString(), Convert.ToInt32(Session["IdAnio"])))
+            .Bind(DataBinder.Eval(Actividad, "Fk_IdTipoAccion"))
+            .Render();
+
+            ViewContext.Writer.Write("</td>");
+            ViewContext.Writer.Write("</tdr>");
+
+            ViewContext.Writer.Write("<tr>");
+            ViewContext.Writer.Write("<td>");
+            //***Nombre             
+            Html.DevExpress().Label(
+                edtSettings =>
+                {
+                    edtSettings.ControlStyle.CssClass = "label";
+                    edtSettings.Text = "Nombre del Tipo de Actividad";
+                    edtSettings.AssociatedControlName = "Nombre";
+                }
+            )
+            .Render();
+            Html.DevExpress().TextBox(
+                edtSettings =>
+                {
+                    edtSettings.Name = "Nombre";
+                    edtSettings.Properties.NullText = "Campo Requerido";
+                    edtSettings.ControlStyle.CssClass = "editor";
+                    edtSettings.ShowModelErrors = true;
+                    edtSettings.Width = Unit.Pixel(350);
+                    edtSettings.ToolTip = c.KeyValue == null ? "Ingresar el Nombre de la Actividad" : "Editar el Nombre de la Actividad";
+                }
+            )
+            .Bind(DataBinder.Eval(Actividad, "Nombre"))
+            .Render();
+            //***Unidad de Medida
+            ViewContext.Writer.Write("</td>");
+            ViewContext.Writer.Write("</tdr>");
+
+            ViewContext.Writer.Write("<tr>");
+            ViewContext.Writer.Write("<td>");
+            Html.DevExpress().Label(
+               edtSettings =>
+               {
+                   edtSettings.ControlStyle.CssClass = "label";
+                   edtSettings.Text = "Unidad de Medida";
+                   edtSettings.AssociatedControlName = "FK_IdUnidadDeMedida";
+               }
+            )
+            .Render();
+            Html.DevExpress().ComboBox(
+               edtSettings =>
+               {
+                   edtSettings.Name = "FK_IdUnidadDeMedida";
+                   edtSettings.ControlStyle.CssClass = "editor";
+                   edtSettings.Properties.TextField = "Nombre";
+                   edtSettings.Properties.NullText = "Campo Requerido";
+                   edtSettings.Properties.ValueField = "Pk_IdUnidadDeMedida";
+                   edtSettings.ToolTip = c.KeyValue == null ? "Seleccione la Unidad de Medida" : "Cambiar Unidad de Medida";
+                   edtSettings.Properties.ValueType = typeof(int);
+                   edtSettings.ShowModelErrors = true;
+                   edtSettings.Width = Unit.Pixel(350);
+                   edtSettings.Properties.IncrementalFilteringMode = IncrementalFilteringMode.Contains;
+                   edtSettings.Properties.IncrementalFilteringDelay = 5;
+               }
+            )
+            .BindList(DXMVCWebApplication1.Models.Senasica.GetUnidadesDeMedida())
+            .Bind(DataBinder.Eval(Actividad, "FK_IdUnidadDeMedida"))
+            .Render();
+
+
+            ViewContext.Writer.Write("</td>");
+            ViewContext.Writer.Write("</tr>");
+            ViewContext.Writer.Write("</table>");
+
+
+            //***Botones
+
+            ViewContext.Writer.Write("<hr noshade>");
+            Html.DevExpress().Label(
+                       edtSettings =>
+                       {
+                           edtSettings.ControlStyle.CssClass = "label";
+                       }
+                   )
+                   .Render();
+            Html.DevExpress().Button(
+                btnSettings =>
+                {
+                    btnSettings.Name = "btnUpdat";
+                    btnSettings.Text = "Guardar";
+                    btnSettings.ControlStyle.CssClass = "button";
+                    btnSettings.Images.Image.Url = "Content/Images/guardar.png";
+                    btnSettings.ImagePosition = ImagePosition.Right;
+                    btnSettings.Images.Image.Width = 16;
+                    btnSettings.ClientSideEvents.Click = "function(s, e){ TipoActividadGridViewPartial" + ".UpdateEdit(); }";
+                    btnSettings.ClientVisible = Convert.ToBoolean(ViewData["Escritura"]);
+                }
+            )
+            .Render();
+
+            Html.DevExpress().Button(
+                btnSettings =>
+                {
+                    btnSettings.Name = "btnCance";
+                    btnSettings.Text = "Cancelar";
+                    btnSettings.ControlStyle.CssClass = "button";
+                    btnSettings.Images.Image.Url = "Content/Images/cancelar.png";
+                    btnSettings.ImagePosition = ImagePosition.Right;
+                    btnSettings.Style["position"] = "relative";
+                    btnSettings.Style["left"] = "5px";
+                    btnSettings.ClientSideEvents.Click = "function(s, e){ TipoActividadGridViewPartial" + ".CancelEdit(); }";
+                }
+            )
+            .Render();
+
+            Html.DevExpress().Button(btnSettings =>
+            {
+                btnSettings.Name = "btnAyuda";
+                btnSettings.ControlStyle.CssClass = "button";
+                btnSettings.Text = "Ayuda";
+                btnSettings.Images.Image.Url = "/Content/Images/ayuda.png";
+                btnSettings.ImagePosition = ImagePosition.Right;
+                btnSettings.Images.Image.Width = 16;
+                btnSettings.Style["position"] = "relative";
+                btnSettings.Style["left"] = "20px";
+                btnSettings.ClientSideEvents.Click = "function(s, e){ window.open('https://docs.google.com/document/d/1ZJURCxDAT76zN4TpKa2cBHEdF3RZFUNkAv3o9iyWxG4/edit#heading=h.49x2ik5','_blank'); }";
+            }).Render();
+
+        });
+    });
+    if (ViewData["EditError"] != null){
+        grid.SetEditErrorText((string)ViewData["EditError"]);
+    }
+}
+@grid.Bind(Model).GetHtml()

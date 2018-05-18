@@ -1,0 +1,36 @@
+﻿<script type="text/javascript">
+    function ProyectoAutorizadoCombo_BeginCallback(s, e) {
+        e.customArgs['Fk_IdSubComponente__SIS'] = Fk_IdSubComponente__SIS.GetValue();
+    }
+
+    function SubComponenteCombo_SelectedIndexChanged(s, e) {
+        Fk_IdProyectoPresupuesto.PerformCallback();
+    }
+</script>
+
+<script type="text/javascript">
+    function BienServCombo_SelectedIndexChanged(s, e) {
+        Fk_IdUnidadDeMedida__SIS.PerformCallback();
+    }
+
+    function UnidadMedidaCombo_BeginCallback(s, e) {
+        e.customArgs['Fk_IdBienOServ__SIS'] = Fk_IdBienOServ__SIS.GetValue();
+    }
+</script>
+@{
+    ViewBag.Title = "Registro de Campañas Estatales";
+}
+<div style="float: right; margin-right: 20px"><a href="https://docs.google.com/document/d/1ZJURCxDAT76zN4TpKa2cBHEdF3RZFUNkAv3o9iyWxG4/edit#heading=h.3ep43zb" target="_blank"><u>Ayuda</u></a>  |  <a href="http://soporte.simosica.com/support/solutions/articles/22000184563-preguntas-frecuentes" target="_blank"> <u>Preguntas Frecuentes</u></a></div>
+
+<h3 style="font-size:17px; font:bold; text-align:center">REGISTRO DE PROGRAMAS DE TRABAJO ESTATALES</h3>
+<h3 style="font-size: 13px; text-align: center; position: relative; top: -10px">Registre aquí los Proyectos de Campañas Estatales</h3>
+
+<br>
+<br>
+
+@Html.Partial("~/Views/ExportExcelPDF/_ExportExcelPDF.cshtml", new ViewDataDictionary { { "Clave", DXMVCWebApplication1.Common.ListaPantallas.UE_PROGRAMAS_TRABAJO_SV } })
+
+<br>
+<br>
+
+@Html.Action("CampaniaEstGridViewPartial")

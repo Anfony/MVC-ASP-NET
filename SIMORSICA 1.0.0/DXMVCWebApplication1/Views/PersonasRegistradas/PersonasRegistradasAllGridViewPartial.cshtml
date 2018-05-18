@@ -1,0 +1,331 @@
+@{
+    var grid = Html.DevExpress().GridView(settings =>
+    {
+        settings.Name = "detailGrid_Personal";
+        settings.Style["width"] = "98%";
+        settings.Style["position"] = "relative";
+        settings.Style["left"] = "10px";
+        settings.SettingsDetail.MasterGridName = "PersonasRegistradasGridViewPartial";
+        settings.CallbackRouteValues = new { Controller = "PersonasRegistradas", Action = "PersonasRegistradasGridViewPartial" };
+
+        settings.SettingsEditing.DeleteRowRouteValues = new { Controller = "PersonasRegistradas", Action = "PersonasRegistradasGridViewPartialDelete" };
+        settings.SettingsEditing.AddNewRowRouteValues = new { Controller = "PersonasRegistradas", Action = "PersonasRegistradasGridViewPartialAddNew" };
+        settings.SettingsEditing.UpdateRowRouteValues = new { Controller = "PersonasRegistradas", Action = "PersonasRegistradasGridViewPartialUpdate" };
+
+        settings.SettingsEditing.Mode = GridViewEditingMode.PopupEditForm;
+
+        settings.SettingsText.PopupEditFormCaption = "Persona Registrado en el Sistema";
+
+        settings.SettingsPopup.EditForm.Height = 500;
+        settings.SettingsPopup.EditForm.Width = 600;
+        settings.SettingsPopup.EditForm.HorizontalAlign = DevExpress.Web.ASPxClasses.PopupHorizontalAlign.WindowCenter;
+        settings.SettingsPopup.EditForm.VerticalAlign = DevExpress.Web.ASPxClasses.PopupVerticalAlign.WindowCenter;
+        settings.SettingsPopup.EditForm.Modal = true;
+
+        settings.SettingsBehavior.ConfirmDelete = true;
+
+        settings.CommandColumn.Visible = true;
+        settings.CommandColumn.ShowNewButtonInHeader = Convert.ToBoolean(ViewData["Escritura"]);
+        settings.CommandColumn.ShowDeleteButton = Convert.ToBoolean(ViewData["Escritura"]);
+        settings.CommandColumn.ShowEditButton = Convert.ToBoolean(ViewData["Escritura"]) || Convert.ToBoolean(ViewData["Lectura"]);
+        settings.CommandColumn.ShowClearFilterButton = true;
+
+        settings.KeyFieldName = "ID";
+
+        settings.SettingsPager.Visible = true;
+        settings.SettingsPager.Position = PagerPosition.Bottom;
+        settings.SettingsPager.FirstPageButton.Visible = true;
+        settings.SettingsPager.LastPageButton.Visible = true;
+        settings.SettingsPager.PageSizeItemSettings.Visible = true;
+        settings.SettingsPager.PageSize = 15;
+        settings.SettingsPager.PageSizeItemSettings.Items = new string[] { "5", "10" };
+        settings.Settings.ShowGroupPanel = true;
+        settings.Settings.ShowFilterRow = true;
+        settings.Settings.ShowFilterRowMenu = true;
+        settings.SettingsBehavior.AllowSelectByRowClick = true;
+
+        settings.Columns.Add("Rol", "Rol de Usuario");
+        settings.Columns.Add("UserName", "Nombre Usuario");
+        settings.Columns.Add("Estado", "Estado");
+        settings.Columns.Add("UnidadEjecutora", "Instancia Ejecutora");
+        settings.Columns.Add("UnidadResponsable", "Unidad Responsable");
+
+        settings.SetEditFormTemplateContent(c =>
+        {
+            //var dataUser = ViewData["dataItem"] ?? c.DataItem;
+            var dataUser = c.DataItem;
+
+            ViewContext.Writer.Write("<br >");
+            ViewContext.Writer.Write("<table>");
+
+            ViewContext.Writer.Write("<tr>");
+            ViewContext.Writer.Write("<td>");
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.Name = "UserNameLbl";
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Nombre de Usuario";
+            }).Render();
+
+            Html.DevExpress().TextBox(edtSettings =>
+            {
+                edtSettings.Name = "UserName";
+                edtSettings.ControlStyle.CssClass = "editor";
+                edtSettings.ShowModelErrors = true;
+                edtSettings.Width = Unit.Pixel(250);
+                edtSettings.Style["position"] = "relative";
+                edtSettings.Style["left"] = "10px";
+            }).Bind(DataBinder.Eval(dataUser, "UserName"))
+            .Render();
+
+            ViewContext.Writer.Write("</td>");
+            ViewContext.Writer.Write("</tr>");
+
+            ViewContext.Writer.Write("<tr>");
+            ViewContext.Writer.Write("<td>");
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.Name = "PswLbl";
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Contraseña";
+            }).Render();
+            Html.DevExpress().TextBox(edtSettings =>
+            {
+                edtSettings.Name = "Password";
+                edtSettings.ControlStyle.CssClass = "editor";
+                edtSettings.ShowModelErrors = true;
+                edtSettings.Width = Unit.Pixel(250);
+                edtSettings.Properties.Password = true;
+                edtSettings.Width = Unit.Pixel(250);
+                edtSettings.Style["position"] = "relative";
+                edtSettings.Style["left"] = "10px";
+                edtSettings.ToolTip = "Escriba su contraseña";
+            }).Render();
+            ViewContext.Writer.Write("</td>");
+            ViewContext.Writer.Write("</tr>");
+
+            ViewContext.Writer.Write("<tr>");
+            ViewContext.Writer.Write("<td>");
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.Name = "ConfirmPswLbl";
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Confirmar Contraseña";
+            }).Render();
+            Html.DevExpress().TextBox(edtSettings =>
+            {
+                edtSettings.Name = "ConfirmPassword";
+                edtSettings.ControlStyle.CssClass = "editor";
+                edtSettings.ShowModelErrors = true;
+                edtSettings.Width = Unit.Pixel(250);
+                edtSettings.Properties.Password = true;
+                edtSettings.Width = Unit.Pixel(250);
+                edtSettings.Style["position"] = "relative";
+                edtSettings.Style["left"] = "10px";
+                edtSettings.ToolTip = "Confirme su contraseña";
+            }).Render();
+            ViewContext.Writer.Write("</td>");
+            ViewContext.Writer.Write("</tr>");
+
+            ViewContext.Writer.Write("</table>");
+
+            ViewContext.Writer.Write("<br />");
+            ViewContext.Writer.Write("<br />");
+
+            ViewContext.Writer.Write("<table>");
+
+            ViewContext.Writer.Write("<tr>");
+            ViewContext.Writer.Write("<td>");
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Rol del Usuario";
+                edtSettings.AssociatedControlName = "Pk_IdRol";
+            }).Render();
+
+            Html.DevExpress().ComboBox(edtSettings =>
+            {
+                edtSettings.Name = "dropDownRoles";
+                edtSettings.ControlStyle.CssClass = "editor";
+                edtSettings.Properties.TextField = "Nombre";
+                edtSettings.Properties.NullText = "Campo Requerido";
+                edtSettings.Properties.ValueField = "Pk_IdRol";
+                edtSettings.Properties.ValueType = typeof(int);
+                edtSettings.ShowModelErrors = true;
+                edtSettings.ToolTip = "Seleccione un Rol";
+                edtSettings.Properties.IncrementalFilteringMode = IncrementalFilteringMode.Contains;
+
+                edtSettings.Width = Unit.Pixel(500);
+                edtSettings.Style["position"] = "relative";
+                edtSettings.Style["left"] = "10px";
+
+                edtSettings.Properties.EnableClientSideAPI = true;
+                edtSettings.Properties.ClientSideEvents.ValueChanged = "ChangeRol";
+
+            }).BindList(DXMVCWebApplication1.Models.Senasica.GetRoles())
+            .Bind(Senasica.GetIdRolByName(DataBinder.Eval(dataUser, "Rol") == null ? "" : DataBinder.Eval(dataUser, "Rol").ToString()))
+            .Render();
+
+            ViewContext.Writer.Write("</td>");
+            ViewContext.Writer.Write("</tr>");
+            ViewContext.Writer.Write("</table>");
+
+            ViewContext.Writer.Write("<br />");
+            ViewContext.Writer.Write("<br />");
+
+            ViewContext.Writer.Write("<table>");
+
+            ViewContext.Writer.Write("<tr>");
+            ViewContext.Writer.Write("<td>");
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.Name = "estadoLbl";
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Estado";
+                edtSettings.ClientVisible = c.KeyValue == null ? false : true;
+                edtSettings.AssociatedControlName = "dropDownEstado";
+
+                edtSettings.Properties.EnableClientSideAPI = true;
+            }).Render();
+
+            Html.DevExpress().ComboBox(edtSettings =>
+            {
+                edtSettings.Name = "dropDownEstado";
+                edtSettings.ClientVisible = c.KeyValue == null ? false : true;
+                edtSettings.ControlStyle.CssClass = "editor";
+                edtSettings.Properties.TextField = "Nombre";
+                //edtSettings.Properties.NullText = "Campo Requerido";
+                edtSettings.Properties.ValueField = "Pk_IdEstado";
+                edtSettings.Properties.ValueType = typeof(int);
+                edtSettings.ShowModelErrors = true;
+                edtSettings.ToolTip = "Seleccione un Estado";
+                edtSettings.Properties.IncrementalFilteringMode = IncrementalFilteringMode.Contains;
+
+                edtSettings.Width = Unit.Pixel(500);
+                edtSettings.Style["position"] = "relative";
+                edtSettings.Style["left"] = "10px";
+
+                edtSettings.Properties.EnableClientSideAPI = true;
+
+            }).BindList(DXMVCWebApplication1.Models.Senasica.GetEstados())
+            .Bind(DataBinder.Eval(dataUser, "Pk_IdEstado"))
+            .Render();
+
+            ViewContext.Writer.Write("</td>");
+            ViewContext.Writer.Write("</tr>");
+
+            ViewContext.Writer.Write("<tr>");
+            ViewContext.Writer.Write("<td>");
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.Name = "IELbl";
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Instancia Ejecutora";
+                edtSettings.ClientVisible = c.KeyValue == null ? false : true;
+                edtSettings.AssociatedControlName = "dropDownInstanciaEjecutora";
+
+                edtSettings.Properties.EnableClientSideAPI = true;
+            }).Render();
+
+            Html.DevExpress().ComboBox(edtSettings =>
+            {
+                edtSettings.Name = "dropDownInstanciaEjecutora";
+                edtSettings.ClientVisible = c.KeyValue == null ? false : true;
+                edtSettings.ControlStyle.CssClass = "editor";
+                edtSettings.Properties.TextField = "Nombre";
+                //edtSettings.Properties.NullText = "Campo Requerido";
+                edtSettings.Properties.ValueField = "Pk_IdUnidadEjecutora";
+                edtSettings.Properties.ValueType = typeof(int);
+                edtSettings.ShowModelErrors = true;
+                edtSettings.ToolTip = "Seleccione una Instancia Ejecutora";
+                edtSettings.Properties.IncrementalFilteringMode = IncrementalFilteringMode.Contains;
+
+                edtSettings.Width = Unit.Pixel(500);
+                edtSettings.Style["position"] = "relative";
+                edtSettings.Style["left"] = "10px";
+
+                edtSettings.Properties.EnableClientSideAPI = true;
+
+            }).BindList(DXMVCWebApplication1.Models.Senasica.GetUnidadesEjecutoras())
+            .Bind(DataBinder.Eval(dataUser, "Pk_IdUnidadEjecutora"))
+            .Render();
+
+            ViewContext.Writer.Write("</td>");
+            ViewContext.Writer.Write("</tr>");
+            ViewContext.Writer.Write("</table>");
+
+            ViewContext.Writer.Write("<br />");
+            ViewContext.Writer.Write("<br />");
+
+            ViewContext.Writer.Write("<div style='float:right'>");
+
+            ViewContext.Writer.Write("<table><tr><td>");
+            Html.DevExpress().Button(btnSettings =>
+            {
+                btnSettings.Name = "btnUpdate";
+                btnSettings.Text = "Guardar";
+                btnSettings.ControlStyle.CssClass = "button";
+                btnSettings.Images.Image.Url = "/Content/Images/guardar.png";
+                btnSettings.ImagePosition = ImagePosition.Right;
+                btnSettings.Images.Image.Width = 16;
+                btnSettings.ClientSideEvents.Click = "function(s, e){ detailGrid_Personal.UpdateEdit(); }";
+            }).Render();
+            ViewContext.Writer.Write("</td>");
+
+            ViewContext.Writer.Write("<td>");
+            Html.DevExpress().Button(btnSettings =>
+            {
+                btnSettings.Name = "btnCancel";
+                btnSettings.Text = "Cancelar";
+                btnSettings.ControlStyle.CssClass = "button";
+                btnSettings.Images.Image.Url = "/Content/Images/cancelar.png";
+                btnSettings.ImagePosition = ImagePosition.Right;
+                btnSettings.Style["position"] = "relative";
+                btnSettings.Style["left"] = "5px";
+                btnSettings.ClientSideEvents.Click = "function(s, e){ detailGrid_Personal.CancelEdit(); }";
+            }).Render();
+            ViewContext.Writer.Write("</td>");
+            ViewContext.Writer.Write("</tr>");
+            ViewContext.Writer.Write("</table>");
+
+            ViewContext.Writer.Write("</div>");
+
+            ViewContext.Writer.Write("<br >");
+            ViewContext.Writer.Write("<br >");
+
+            ViewContext.Writer.Write("<table>");
+            ViewContext.Writer.Write("<tr>");
+            ViewContext.Writer.Write("<td>");
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.Name = "Nota1";
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Para el caso de los usarios regionales, su UserName debe de iniciar con REGXX, en donde XX puede ser 01, 02, 03, 04, 05 y 06";
+                edtSettings.ClientVisible = true;
+            }).Render();
+
+            ViewContext.Writer.Write("</td>");
+            ViewContext.Writer.Write("</tr>");
+
+            ViewContext.Writer.Write("<tr>");
+            ViewContext.Writer.Write("<td>");
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.Name = "Nota2";
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Ejemplos: REG01_miUsuario (usuario de la región 01), REG06miUsuario (usuario de la región 06)";
+                edtSettings.ClientVisible = true;
+            }).Render();
+
+            ViewContext.Writer.Write("</td>");
+            ViewContext.Writer.Write("</tr>");
+            ViewContext.Writer.Write("</table>");
+        });
+    });
+
+    if (ViewData["EditError"] != null)
+    {
+        grid.SetEditErrorText((string)ViewData["EditError"]);
+    }
+}
+@grid.Bind(Model).GetHtml()

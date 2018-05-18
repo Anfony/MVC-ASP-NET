@@ -1,0 +1,160 @@
+@{
+	var grid = Html.DevExpress().GridView(settings => {
+        settings.Name = "StatusAlcanceGridView";
+
+        settings.Style["width"] = "98%";
+        settings.Style["position"] = "relative";
+        settings.Style["left"] = "10px";
+        settings.CommandColumn.Width = 20;
+
+        settings.CallbackRouteValues = new { Controller = "StatusAlcance", Action = "StatusAlcanceGridViewPartial" };
+
+		settings.SettingsEditing.AddNewRowRouteValues = new { Controller = "StatusAlcance", Action = "StatusAlcanceGridViewPartialAddNew" };
+        settings.SettingsEditing.UpdateRowRouteValues = new { Controller = "StatusAlcance", Action = "StatusAlcanceGridViewPartialUpdate" };
+        settings.SettingsEditing.DeleteRowRouteValues = new { Controller = "StatusAlcance", Action = "StatusAlcanceGridViewPartialDelete" };
+        settings.SettingsEditing.Mode = GridViewEditingMode.PopupEditForm;
+
+        settings.SettingsText.PopupEditFormCaption = "Estado Actividad";
+
+        settings.SettingsPopup.EditForm.Height = 150;
+        settings.SettingsPopup.EditForm.Width = 525;
+        settings.SettingsPopup.EditForm.HorizontalAlign = DevExpress.Web.ASPxClasses.PopupHorizontalAlign.WindowCenter;
+        settings.SettingsPopup.EditForm.VerticalAlign = DevExpress.Web.ASPxClasses.PopupVerticalAlign.WindowCenter;
+        settings.SettingsPopup.EditForm.Modal = true;
+
+        settings.SettingsBehavior.ConfirmDelete = true;
+
+        settings.CommandColumn.Visible = true;
+        settings.CommandColumn.ShowNewButtonInHeader = Convert.ToBoolean(ViewData["Escritura"]);
+        settings.CommandColumn.ShowDeleteButton = Convert.ToBoolean(ViewData["Escritura"]);
+        settings.CommandColumn.ShowEditButton = Convert.ToBoolean(ViewData["Escritura"]) || Convert.ToBoolean(ViewData["Lectura"]);
+        settings.CommandColumn.ShowClearFilterButton = true;  
+
+		settings.KeyFieldName = "PK_IdStatusAlcance";
+
+		settings.SettingsPager.Visible = true;
+        settings.SettingsPager.Position = PagerPosition.Bottom;
+        settings.SettingsPager.FirstPageButton.Visible = true;
+        settings.SettingsPager.LastPageButton.Visible = true;
+        settings.SettingsPager.PageSizeItemSettings.Visible = true;
+        settings.SettingsPager.PageSize = 10;
+        settings.SettingsPager.PageSizeItemSettings.Items = new string[] { "5", "10", "15" };
+
+		settings.Settings.ShowGroupPanel = false;
+		settings.Settings.ShowFilterRow = false;
+		settings.SettingsBehavior.AllowSelectByRowClick = false;
+
+        settings.Columns.Add("Nombre");
+
+        //empieza custom
+
+                settings.SetEditFormTemplateContent(c =>
+                {
+                    var statusalcance = ViewData["dataItem"] ?? c.DataItem;
+                    //ViewContext.Writer.Write("<p style='color:orange; font-size:14px; left:5px; position:relative' >Edición de  Programa</p>");
+                    Html.DevExpress().Label(
+                        edtSettings =>
+                        {
+                            edtSettings.ControlStyle.CssClass = "label";
+                            edtSettings.Text = c.KeyValue == null ? "Ingresa Estado Actividad" : "Edita el Estado Actividad";
+                            edtSettings.Style["font-size"] = "18px";
+                            edtSettings.Style["color"] = "orange";
+                        }
+                    )
+                    .Render();
+                    ViewContext.Writer.Write("<br>");
+                    ViewContext.Writer.Write("</br>");
+
+                    ViewContext.Writer.Write("<table>" + "<tr>" + "<td>");
+                    Html.DevExpress().Label(
+                        edtSettings =>
+                        {
+                            edtSettings.ControlStyle.CssClass = "label";
+                            edtSettings.Text = "Nombre";
+                            edtSettings.AssociatedControlName = "Nombre";
+                        }
+                    )
+                    .Render();
+
+                    ViewContext.Writer.Write("</td>");
+                    ViewContext.Writer.Write("<td>");
+                    Html.DevExpress().TextBox(
+                        edtSettings =>
+                        {
+                            edtSettings.Name = "Nombre";
+                            edtSettings.Properties.NullText = "Campo Requerido";
+                            edtSettings.ControlStyle.CssClass = "editor";
+                            edtSettings.ShowModelErrors = true;
+                            edtSettings.Width = Unit.Pixel(350);
+                            edtSettings.ToolTip = c.KeyValue == null ? "Ingresar el Estado que se puede encontrar una Actividad" : "Editar Estado";
+                        }
+                    )
+                    .Bind(DataBinder.Eval(statusalcance, "Nombre"))
+                    .Render();
+
+                    ViewContext.Writer.Write("</td>");
+                    ViewContext.Writer.Write("</tr>");
+                    ViewContext.Writer.Write("</table>");
+
+                    //**Botones Guardar & Cancelar
+                    //ViewContext.Writer.Write("<br>");
+                    ViewContext.Writer.Write("<hr noshade>");
+                    Html.DevExpress().Label(
+                               edtSettings =>
+                               {
+                                   edtSettings.ControlStyle.CssClass = "label";
+                               }
+                           )
+                           .Render();
+                    Html.DevExpress().Button(
+                        btnSettings =>
+                        {
+                            btnSettings.Name = "btnUpdat";
+                            btnSettings.Text = "Guardar";
+                            btnSettings.ControlStyle.CssClass = "button";
+                            btnSettings.Images.Image.Url = "Content/Images/guardar.png";
+                            btnSettings.ImagePosition = ImagePosition.Right;
+                            btnSettings.Images.Image.Width = 16;
+                            btnSettings.ClientSideEvents.Click = "function(s, e){ StatusAlcanceGridView" + ".UpdateEdit(); }";
+                            btnSettings.ClientVisible = Convert.ToBoolean(ViewData["Escritura"]);
+                        }
+                    )
+                    .Render();
+
+                    Html.DevExpress().Button(
+                        btnSettings =>
+                        {
+                            btnSettings.Name = "btnCance";
+                            btnSettings.Text = "Cancelar";
+                            btnSettings.ControlStyle.CssClass = "button";
+                            btnSettings.Images.Image.Url = "Content/Images/cancelar.png";
+                            btnSettings.ImagePosition = ImagePosition.Right;
+                            btnSettings.Style["position"] = "relative";
+                            btnSettings.Style["left"] = "5px";
+                            btnSettings.ClientSideEvents.Click = "function(s, e){ StatusAlcanceGridView" + ".CancelEdit(); }";
+                        }
+                    )
+                    .Render();
+
+                    Html.DevExpress().Button(btnSettings =>
+                    {
+                        btnSettings.Name = "btnAyuda";
+                        btnSettings.ControlStyle.CssClass = "button";
+                        btnSettings.Text = "Ayuda";
+                        btnSettings.Images.Image.Url = "/Content/Images/ayuda.png";
+                        btnSettings.ImagePosition = ImagePosition.Right;
+                        btnSettings.Images.Image.Width = 16;
+                        btnSettings.Style["position"] = "relative";
+                        btnSettings.Style["left"] = "20px";
+                        btnSettings.ClientSideEvents.Click = "function(s, e){ window.open('https://docs.google.com/document/d/1ZJURCxDAT76zN4TpKa2cBHEdF3RZFUNkAv3o9iyWxG4/edit#heading=h.kgcv8k','_blank'); }";
+                    }).Render();
+
+                });
+        //termina custom
+
+			});
+		if (ViewData["EditError"] != null){
+        grid.SetEditErrorText((string)ViewData["EditError"]);
+    }
+}
+@grid.Bind(Model).GetHtml()

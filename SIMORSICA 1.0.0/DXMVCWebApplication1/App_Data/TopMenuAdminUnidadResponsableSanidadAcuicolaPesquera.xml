@@ -1,0 +1,81 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<items>
+   <group Text="Catálogos de Sistema">
+    <item Text="Presupuesto por Proyecto" NavigateUrl="~/ProyectoPresupuesto"  />
+    <item Text="Tipo de Acción" NavigateUrl="~/TipoAccion"  />
+    <item Text="Tipo de Actividad" NavigateUrl="~/TipoActividad"  />
+    <item Text="Instancia Ejecutora" NavigateUrl="~/UnidadEjecutora"  />
+    <item Text="Tipo de Instalación" NavigateUrl="~/TipoInstalacion"  />
+    <item Text="Unidad de Medida" NavigateUrl="~/UnidadDeMedida"  />
+    <item Text="Padrón de Unidades de Producción" NavigateUrl="~/Productor"  />
+    <item Text="Estado de los Bienes" NavigateUrl="~/EstadoBien"  />
+     <item Text="Registro de Proveedores" NavigateUrl="~/Proveedor"  />
+  </group>
+
+  <group Text="Catálogos Administrativos">
+    <item Text="Capítulos de Gasto" NavigateUrl="~/CapituloPartida" />
+    <item Text="Conceptos de Gasto" NavigateUrl="~/ConceptoPartida"  />
+    <item Text="Partidas de Gasto" NavigateUrl="~/Partida"  />
+    <item Text="Tipos de Bienes" NavigateUrl="~/TipoDeBien"  />
+    <item Text="Bienes y Servicios" NavigateUrl="~/BienOServ"  />
+    <item Text="Bienes y Servicios Transversales" NavigateUrl="~/BienOServTransversales"  />
+    <!--<item Text="Estados de las Acciones" NavigateUrl="~/StatusActividad"  />
+    <item Text="Estados de las Actividades" NavigateUrl="~/StatusAlcance"  />
+    <item Text="Estados de las Campañas" NavigateUrl="~/StatusCampania"/>
+    <item Text="Flujo de las Acciones" NavigateUrl="~/FlujoAlcance"/>
+    <item Text="Flujo de las Actividades" NavigateUrl="~/FlujoActividad"/>
+    <item Text="Flujo de las Campañas" NavigateUrl="~/FlujoCampania"/>-->
+    <item Text="Catálogo de Cargos" NavigateUrl="~/Cargo"/>
+    <item Text="Catálogo de Certificaciones" NavigateUrl="~/Certificacion"/>
+  </group>
+
+  <group Text="Ministración">
+    <item Text="Registro de Ministraciones" NavigateUrl="~/MinistracionesXComite" />
+    <item Text="Reintegros" NavigateUrl="~/Tesofe" />
+  </group>
+
+  <group Text="Planeación">
+    <item Text="Programas de Trabajo S" NavigateUrl="~/CampaniaN" />
+    <item Text="Programas de Trabajo U" NavigateUrl="~/CampaniaU" />
+    <item Text="Gastos Fijos de Operación - Programas S" NavigateUrl="~/ProgramaAnualAdq"  />
+    <item Text="Gastos Fijos de Operación - Programas U" NavigateUrl="~/ProgramaAnualAdqU"  />
+    <item Text="Asignación de Actividades" NavigateUrl="~/ActividadXAccion"  />
+  </group>
+
+  <group Text="Ejecución">
+    <item Text="Informe de Avances" NavigateUrl="~/ReporteActividadAsignada"  />
+    <item Text="Informe de Adquisiciones" NavigateUrl="~/ReporteDeAdquisiciones"  />
+  </group>
+  
+  <group Text="Reportes">
+    <item Text="Reporte Avance de Captura" NavigateUrl="~/ReporteAvancesDeCaptura" />
+    <item Text="Reporte Proyecto Autorizado" NavigateUrl="~/ReporteProyectosAcuicola" />
+    <item Text="Reporte Personal de Instancia Ejecutora" NavigateUrl="~/ReportePersonalInstanciaEjecutora" />
+    <item Text="Reporte Detalle Apéndice" NavigateUrl="~/DetalleApendice" />
+    <item Text="Reporte Inventario de Bienes" NavigateUrl="~/ReporteInventarioDeBienes" />
+    <item Text="Reporte Detalle de Bienes" NavigateUrl="~/ReporteDetalleDeBienes" />
+    <item Text="Reporte Cierre Mensual (Previo)" NavigateUrl="~/ReporteInformeMensualAvance" />
+    <item Text="Reporte Detalle Físico/Financiero" NavigateUrl="~/ReporteInformeDetalleFisicoFinanciero" />
+    <item Text="Actas de Comisión" NavigateUrl="~/ActaComision" />
+
+    <item Text="Reporte Anexo Técnico Apendice 1" NavigateUrl="~/ReporteAnexoTecnico1" />
+    <item Text="Reporte Anexo Técnico Apendice 2" NavigateUrl="~/ReporteAnexoTecnico2" />
+    <group Text="Programa Integral">
+      <item Text="Federal" NavigateUrl="~/ReporteGastosFijosDeOperacion" />
+      <item Text="Estatal" NavigateUrl="~/ReporteGastosFijosDeOperacionEstatal" />
+    </group>
+  </group>
+  <group Text="Reporteador Dinámico">
+    <item Text="Metas Financieras" NavigateUrl="~/PivotMetasFinancieras" />
+    <item Text="Metas Físicas" NavigateUrl="~/PivotMetasFisicas" />
+    <group Text="Avance Financiero">
+      <item Text="Federal" NavigateUrl="~/PivotAvanceFisicoFinanciero_Federal" />
+      <item Text="Estatal" NavigateUrl="~/PivotAvanceFisicoFinanciero_Estatal" />
+      <item Text="Productor" NavigateUrl="~/PivotAvanceFisicoFinanciero_Productor" />
+    </group>
+    <item Text="Avance Físico" NavigateUrl="~/PivotAvanceFisico" />
+  </group>
+  <group Text="Cierre">
+    <item Text="Cierre Mensual" NavigateUrl="~/CierreMensual"  />
+  </group>
+</items>

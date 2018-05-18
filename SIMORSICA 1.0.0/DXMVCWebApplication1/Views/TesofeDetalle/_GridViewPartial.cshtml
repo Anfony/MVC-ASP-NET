@@ -1,0 +1,162 @@
+﻿
+@{
+    var grid = Html.DevExpress().GridView(settings =>
+    {
+        settings.Name = "TesofeDetalle";
+        settings.CallbackRouteValues = new { Controller = "TesofeDetalle", Action = "TesofeDetalleGridViewPartial", IdTesofe = ViewData["IdTesofe"] };
+        settings.SettingsEditing.AddNewRowRouteValues = new { Controller = "TesofeDetalle", Action = "TesofeDetalleGridViewPartialAddNew", IdTesofe = ViewData["IdTesofe"] };
+        settings.SettingsEditing.UpdateRowRouteValues = new { Controller = "TesofeDetalle", Action = "TesofeDetalleGridViewPartialUpdate", IdTesofe = ViewData["IdTesofe"] };
+        settings.SettingsEditing.DeleteRowRouteValues = new { Controller = "TesofeDetalle", Action = "TesofeDetalleGridViewPartialDelete", IdTesofe = ViewData["IdTesofe"] };
+        settings.SettingsEditing.Mode = GridViewEditingMode.PopupEditForm;
+
+        settings.SettingsBehavior.ConfirmDelete = true;
+
+        settings.SettingsPopup.EditForm.Height = 135;
+        settings.SettingsPopup.EditForm.Width = 500;
+        settings.SettingsPopup.EditForm.HorizontalAlign = PopupHorizontalAlign.WindowCenter;
+        settings.SettingsPopup.EditForm.VerticalAlign = PopupVerticalAlign.WindowCenter;
+        settings.SettingsPopup.EditForm.Modal = true;
+
+        settings.SettingsText.PopupEditFormCaption = "Creación del Detalle";
+        settings.KeyFieldName = "Pk_IdTesofeDetalle";
+
+        settings.CommandColumn.Visible = true;
+        settings.CommandColumn.ShowClearFilterButton = true;
+        settings.CommandColumn.ShowNewButtonInHeader = Convert.ToBoolean(ViewData["Escritura"]);
+        settings.CommandColumn.ShowDeleteButton =  Convert.ToBoolean(ViewData["Escritura"]);
+        settings.CommandColumn.ShowEditButton = Convert.ToBoolean(ViewData["Escritura"]) || Convert.ToBoolean(ViewData["Lectura"]);
+
+        settings.SettingsPager.Visible = true;
+        settings.SettingsPager.Position = PagerPosition.Bottom;
+        settings.SettingsPager.FirstPageButton.Visible = true;
+        settings.SettingsPager.LastPageButton.Visible = true;
+        settings.SettingsPager.PageSizeItemSettings.Visible = true;
+        settings.SettingsPager.PageSize = 10;
+        settings.SettingsPager.PageSizeItemSettings.Items = new string[] { "5", "10", "15" };
+        settings.Settings.ShowGroupPanel = true;
+        settings.Settings.ShowFilterRow = true;
+        settings.Settings.ShowFilterRowMenu = true;
+        settings.SettingsBehavior.AllowSelectByRowClick = true;
+
+        settings.Columns.Add("ProyectoPresupuesto.ProyectoAutorizado.Nombre", "Proyecto Autorizado");
+        settings.Columns.Add("ImporteDetalle", "Importe Registrado").PropertiesEdit.DisplayFormatString = "c";
+
+        settings.Settings.ShowFooter = true;
+        settings.TotalSummary.Add(DevExpress.Data.SummaryItemType.Sum, "ImporteDetalle").DisplayFormat = "c";
+
+        settings.SetEditFormTemplateContent(c =>
+        {
+            var dataDetalle = ViewData["dataItem"] ?? c.DataItem;
+
+            ViewContext.Writer.Write("<table>");
+            ViewContext.Writer.Write("<tr>");
+            ViewContext.Writer.Write("<td>");
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Proyecto Autorizado";
+                edtSettings.Name = "ProyectoAutorizadoLabel";
+            }).Render();
+
+            bool Habil;
+            if (FuncionesAuxiliares.GetCurrent_RolUsuario() == RolesUsuarios.IE_MOVILIZACION
+                || FuncionesAuxiliares.GetCurrent_RolUsuario() == RolesUsuarios.IE_ANIMAL
+                || FuncionesAuxiliares.GetCurrent_RolUsuario() == RolesUsuarios.IE_VEGETAL
+                || FuncionesAuxiliares.GetCurrent_RolUsuario() == RolesUsuarios.IE_INOCUIDAD
+                || FuncionesAuxiliares.GetCurrent_RolUsuario() == RolesUsuarios.IE_ACUICOLA_PESQUERA
+                || FuncionesAuxiliares.GetCurrent_RolUsuario() == RolesUsuarios.IE_PROGRAMAS_U
+                || FuncionesAuxiliares.GetCurrent_RolUsuario() == RolesUsuarios.SUP_ESTATAL)
+            { Habil = true; }
+            else { Habil = false; }
+            
+            Html.DevExpress().ComboBox(edtSettings =>
+            {
+                edtSettings.Name = "Fk_IdProyectoPresupuesto";
+                edtSettings.ControlStyle.CssClass = "editor";
+                edtSettings.Properties.TextField = "ProyectoPresupuesto.ProyectoAutorizado.Nombre";
+                edtSettings.Properties.TextFormatString = "{0}";
+                edtSettings.Properties.NullText = "Campo Requerido";
+                edtSettings.Properties.ValueField = "Pk_IdProyectoPresupuesto";
+                edtSettings.Properties.ValueType = typeof(int);
+                edtSettings.Properties.IncrementalFilteringMode = IncrementalFilteringMode.Contains;
+                edtSettings.ShowModelErrors = true;
+                edtSettings.Width = Unit.Pixel(530);
+                edtSettings.Enabled = Habil;
+                edtSettings.ToolTip = c.KeyValue == null ? "Seleccione un Proyecto Autorizado" : "Cambiar Proyecto Autorizado";
+
+                edtSettings.Properties.Columns.Add("ProyectoAutorizado.Nombre", "Proyecto Autorizado").Width = Unit.Pixel(450);
+                edtSettings.Properties.Columns.Add("RF_Anual", "Recurso Federal");
+                edtSettings.Properties.Columns.Add("RE_Anual", "Recurso Estatal");
+                edtSettings.Properties.Columns.Add("RP_Anual", "Recurso Productor");
+
+            }).BindList(DXMVCWebApplication1.Models.Senasica.GetProyectoPresupuesto())
+               .Bind(DataBinder.Eval(dataDetalle, "Fk_IdProyectoPresupuesto"))
+               .Render();
+            ViewContext.Writer.Write("</td>");
+            ViewContext.Writer.Write("</tr>");
+            ViewContext.Writer.Write("</table>");
+
+            ViewContext.Writer.Write("<br >");
+
+            ViewContext.Writer.Write("<table cellspacing='20'>");
+            ViewContext.Writer.Write("<tr>");
+            ViewContext.Writer.Write("<td>");
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Importe";
+                edtSettings.Name = "ImporteLAbel";
+            }).Render();
+
+            Html.DevExpress().SpinEdit(edtSettings =>
+            {
+                edtSettings.Name = "ImporteDetalle";
+                edtSettings.Properties.MinValue = 0;
+                edtSettings.Properties.MaxValue = 999999999;
+                edtSettings.Properties.DecimalPlaces = 2;
+                edtSettings.Properties.NumberType = SpinEditNumberType.Float;
+                edtSettings.Properties.Increment = 0.1M;
+                edtSettings.Properties.LargeIncrement = 1;
+                edtSettings.Properties.SpinButtons.ShowLargeIncrementButtons = true;
+                edtSettings.ControlStyle.CssClass = "editor";
+                edtSettings.ShowModelErrors = true;
+                edtSettings.Width = Unit.Pixel(250);
+                edtSettings.Properties.DisplayFormatString = "c";
+            }).Bind(DataBinder.Eval(dataDetalle, "ImporteDetalle"))
+            .Render();
+            ViewContext.Writer.Write("</td>");
+            ViewContext.Writer.Write("</tr>");
+            ViewContext.Writer.Write("</table>");
+
+            ViewContext.Writer.Write("<br >");
+            ViewContext.Writer.Write("<div style='float:right'>");
+            Html.DevExpress().Button(btnSettings =>
+            {
+                btnSettings.Name = "btnUpdateDetalle";
+                btnSettings.Text = "Guardar";
+                btnSettings.ClientVisible = Convert.ToBoolean(ViewData["permisoCreacion"]);
+                btnSettings.Images.Image.Url = "/Content/Images/guardar.png";
+                btnSettings.Images.Image.Width = 16;
+                btnSettings.ClientSideEvents.Click = "function(s, e){ TesofeDetalle.UpdateEdit(); }";
+                btnSettings.ClientVisible = Convert.ToBoolean(ViewData["Escritura"]);
+            }).Render();
+
+            Html.DevExpress().Button(btnSettings =>
+            {
+                btnSettings.Name = "btnCancelDetalle";
+                btnSettings.Text = "Cancelar";
+                btnSettings.Images.Image.Url = "/Content/Images/cancelar.png";
+                btnSettings.Style[HtmlTextWriterStyle.MarginLeft] = "5px";
+                btnSettings.ClientSideEvents.Click = "function(s, e){ TesofeDetalle.CancelEdit(); }";
+            }).Render();
+            ViewContext.Writer.Write("</div>");
+        });
+    });
+
+    if (ViewData["EditError"] != null)
+    {
+        grid.SetEditErrorText((string)ViewData["EditError"]);
+    }
+}
+
+@grid.Bind(Model).GetHtml()

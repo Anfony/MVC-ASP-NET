@@ -1,0 +1,34 @@
+@using DXMVCWebApplication1.Controllers;
+
+@{
+    var scheduler = Html.DevExpress().Scheduler(settings => {
+        settings.Name = "ActividadScheduler";
+        settings.CallbackRouteValues = new { Controller = "Actividades2", Action = "ActividadSchedulerPartial" };
+        //settings.EditAppointmentRouteValues = new { Controller = "Actividades2", Action = "ActividadSchedulerPartialEditAppointment" };
+
+        settings.Storage.EnableReminders = false;
+
+        settings.Views.DayView.ResourcesPerPage = 1;
+        settings.Views.DayView.Styles.ScrollAreaHeight = Unit.Pixel(400);
+        settings.Views.WorkWeekView.ResourcesPerPage = 1;
+        settings.Views.WorkWeekView.Styles.ScrollAreaHeight = Unit.Pixel(400);
+        settings.Views.WeekView.ResourcesPerPage = 1;
+        settings.Views.WeekView.Styles.DateCellBody.Height = Unit.Pixel(150);
+        settings.Views.MonthView.ResourcesPerPage = 1;
+        settings.Views.MonthView.Styles.DateCellBody.Height = Unit.Pixel(100);
+        settings.Views.TimelineView.ResourcesPerPage = 5;
+        settings.Views.TimelineView.Styles.TimelineCellBody.Height = Unit.Pixel(250);
+        settings.GroupType = SchedulerGroupType.Resource;
+
+        //settings.OptionsCustomization.AllowAppointmentCreate = UsedAppointmentType.None;
+        //settings.OptionsCustomization.AllowAppointmentEdit = UsedAppointmentType.None;
+        //settings.OptionsCustomization.AllowAppointmentDelete = UsedAppointmentType.None;
+        
+		settings.Storage.Appointments.Assign(Actividades2ControllerControllerActividadSchedulerSettings.AppointmentStorage);
+        settings.Storage.Resources.Assign(Actividades2ControllerControllerActividadSchedulerSettings.ResourceStorage);
+    });
+    if (ViewData["SchedulerErrorText"] != null) {
+        scheduler.SetErrorText((string)ViewData["SchedulerErrorText"]);
+    }
+}
+@scheduler.Bind(ViewData["Appointments"], ViewData["Resources"]).GetHtml()

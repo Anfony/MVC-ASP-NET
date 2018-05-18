@@ -1,0 +1,22 @@
+﻿<div id='capa' onclick='MostrarProductores();'><a href="#" class="ajax">Mostrar</a></div>
+<div id='capa' onclick='OcultarProductores();'><a href="#" class="ajax">Ocultar</a></div>
+<div id='capa' onclick='AgregarProductor();'><a href="#" class="ajax">Agregar</a></div>
+<div id='capa' onclick='EditarProductor();'><a href="#" class="ajax">Editar</a></div>
+<div id='capa' onclick='EliminarProductor();'><a href="#" class="ajax">Eliminar</a></div>
+
+<script>
+    function MostrarProductores() {
+        for (var i = 0; i < markersProductores.length; i++) {
+            markersProductores[i].setMap(map);
+        }
+    }
+
+    function OcultarProductores() {
+        //alert(markersProductores.length);
+        for (var i = 0; i < markersProductores.length; i++) {
+            markersProductores[i].setMap(null);
+        }
+    }
+
+
+</script>

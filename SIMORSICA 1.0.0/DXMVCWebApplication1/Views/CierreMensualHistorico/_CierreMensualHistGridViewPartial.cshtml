@@ -1,0 +1,78 @@
+﻿@{
+    var grid = Html.DevExpress().GridView(settings =>
+    {
+        settings.Name = "DGCierreMensualHist";
+        settings.Style["position"] = "relative";
+        settings.Style["left"] = "10px";
+
+        settings.CallbackRouteValues = new { Controller = "CierreMensualHistorico", Action = "CierreMensualHistGridViewPartialGeneral", IdCierreMensual = ViewData["IdCierreMensual"] };
+
+        settings.SettingsEditing.Mode = GridViewEditingMode.PopupEditForm;
+        settings.SettingsBehavior.ConfirmDelete = true;
+
+        settings.SettingsPopup.EditForm.Height = 300;
+        settings.SettingsPopup.EditForm.Width = 70;
+        settings.SettingsPopup.EditForm.HorizontalAlign = PopupHorizontalAlign.WindowCenter;
+        settings.SettingsPopup.EditForm.VerticalAlign = PopupVerticalAlign.WindowCenter;
+        settings.SettingsPopup.EditForm.Modal = true;
+
+        settings.CommandColumn.ShowClearFilterButton = true;
+
+        settings.CommandColumn.Visible = false;
+
+        settings.SettingsPager.Visible = true;
+        settings.SettingsPager.Position = PagerPosition.Bottom;
+        settings.SettingsPager.FirstPageButton.Visible = true;
+        settings.SettingsPager.LastPageButton.Visible = true;
+        settings.SettingsPager.PageSizeItemSettings.Visible = true;
+        settings.SettingsPager.PageSize = 10;
+        settings.SettingsPager.PageSizeItemSettings.Items = new string[] { "5", "10", "15" };
+        settings.Settings.ShowFilterRowMenu = true;
+
+        settings.KeyFieldName = "Pk_IdCierreMensualSolicitudApertura";
+
+        settings.Settings.ShowGroupPanel = true;
+        settings.Settings.ShowFilterRow = true;
+        settings.SettingsBehavior.AllowSelectByRowClick = true;
+
+        settings.Columns.Add("CierreMensual.Campania.ProyectoPresupuesto.ProyectoAutorizado.Nombre", "Campaña");
+
+        var cerrado = settings.Columns.Add("atendido", "¿Está Atendido?");
+        var solApertura = settings.Columns.Add("apertura", "¿Apertura Aceptada?");
+
+        cerrado.UnboundType = DevExpress.Data.UnboundColumnType.String;
+        solApertura.UnboundType = DevExpress.Data.UnboundColumnType.String;
+
+        settings.CustomUnboundColumnData = (sender, e) =>
+        {
+            if (e.Column.FieldName == "atendido")
+            {
+                if (Convert.ToBoolean(e.GetListSourceFieldValue("esCerrado"))) e.Value = "Sí";
+                else e.Value = "No";
+
+                e.Column.ReadOnly = true;
+            }
+
+            if (e.Column.FieldName == "apertura")
+            {
+                if (e.GetListSourceFieldValue("aperturaAceptada") == null) e.Value = "En espera de respuesta";
+                else
+                {
+                    if (Convert.ToBoolean(e.GetListSourceFieldValue("aperturaAceptada"))) e.Value = "Sí";
+                    else e.Value = "No";
+                }
+
+                e.Column.ReadOnly = true;
+            }
+        };
+
+        settings.Columns.Add("FechaCreacion", "Fecha Solicitud");
+        settings.Columns.Add("FechaCierreAutomatico", "Fecha Cierre Automático");
+        settings.Columns.Add("MotivosApertura", "Motivos de Apertura");
+        settings.Columns.Add("RespuestaApertura", "Respuesta de Apertura");
+
+    });
+}
+
+@grid.Bind(Model).GetHtml()
+

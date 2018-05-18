@@ -1,0 +1,48 @@
+﻿<br />
+<br />
+
+@{
+    Dictionary<string, string> parametros = new Dictionary<string, string>()
+                                {
+                                    { "Clave", ViewData["Clave"].ToString() },
+                                    { "IdUnidadEjecutora", ViewData["IdUnidadEjecutora"] == null ? "" : ViewData["IdUnidadEjecutora"].ToString() },
+                                    { "IdCampania", ViewData["IdCampania"] == null ? "" : ViewData["IdCampania"].ToString() },
+                                    { "IdAccionXCamp", ViewData["IdAccionXCamp"] == null ? "" : ViewData["IdAccionXCamp"].ToString() },
+                                    { "IdPEFXEstado", ViewData["IdPEFXEstado"] == null ? "" : ViewData["IdPEFXEstado"].ToString() },
+                                    { "IdUnidadResponsable", ViewData["IdUnidadResponsable"] == null ? "" : ViewData["IdUnidadResponsable"].ToString() },
+                                    { "anio_param", ViewData["anio_param"] == null ? "-1" : ViewData["anio_param"].ToString() },
+                                    { "estado_param", ViewData["estado_param"] == null ? "" : ViewData["estado_param"].ToString() },
+                                    { "IdEstado", ViewData["IdEstado"] == null ? "" : ViewData["IdEstado"].ToString()},
+                                    { "IdMinistracionesXComite", ViewData["IdMinistracionesXComite"] == null ? "" : ViewData["IdMinistracionesXComite"].ToString()},
+                                    { "Estado", ViewData["Estado"] == null ? "" : ViewData["Estado"].ToString() },
+                                    { "IdTesofe", ViewData["IdTesofe"] == null ? "" : ViewData["IdTesofe"].ToString()}
+                                };
+}
+
+@Html.DevExpress().Button(btnSettings =>
+{
+    btnSettings.Name = "ButtonPDF" + ViewData["Clave"];
+    btnSettings.Text = "Exporta PDF";
+    btnSettings.ControlStyle.CssClass = "button";
+    btnSettings.Images.Image.Url = "~/Content/Images/ExportPDF2.png";
+    btnSettings.ImagePosition = ImagePosition.Right;
+    btnSettings.Style["position"] = "relative";
+    btnSettings.Style["left"] = "10px";
+    btnSettings.UseSubmitBehavior = false;
+    btnSettings.ToolTip = "Exportar a PDF";
+    btnSettings.RouteValues = DXMVCWebApplication1.Common.FuncionesAuxiliares.GetRouteValues(true, @parametros);
+}).GetHtml()
+
+@Html.DevExpress().Button(btnSettings =>
+{
+    btnSettings.Name = "ButtonExcel" + ViewData["Clave"];
+    btnSettings.Text = "Exporta Excel";
+    btnSettings.ControlStyle.CssClass = "button";
+    btnSettings.Images.Image.Url = "~/Content/Images/ExporXLS2.png";
+    btnSettings.ImagePosition = ImagePosition.Right;
+    btnSettings.Style["position"] = "relative";
+    btnSettings.Style["left"] = "10px";
+    btnSettings.UseSubmitBehavior = false;
+    btnSettings.ToolTip = "Exportar a excel";
+    btnSettings.RouteValues = DXMVCWebApplication1.Common.FuncionesAuxiliares.GetRouteValues(false, @parametros);
+}).GetHtml()

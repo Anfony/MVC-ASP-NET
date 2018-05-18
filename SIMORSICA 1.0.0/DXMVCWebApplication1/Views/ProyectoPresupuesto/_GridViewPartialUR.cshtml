@@ -1,0 +1,297 @@
+﻿@{
+    var grid = Html.DevExpress().GridView(settings =>
+    {
+        settings.Name = "ProyectoPresupuestoGridView";
+        settings.KeyFieldName = "Pk_IdProyectoPresupuesto";
+        settings.Style["width"] = "98%";
+        settings.Style["position"] = "relative";
+        settings.Style["left"] = "10px";
+        settings.CommandColumn.Width = 20;
+        settings.CallbackRouteValues = new { Controller = "ProyectoPresupuesto", Action = "ProyectoPresupuestoGridViewPartial", Estado = (ViewData["Estado"] == null ? "" : ViewData["Estado"].ToString()) };
+
+        //settings.SettingsEditing.AddNewRowRouteValues = new { Controller = "ProyectoPresupuesto", Action = "ProyectoPresupuestoGridViewPartialAddNew", Estado_param = (ViewData["Estado"] == null ? "" : ViewData["Estado"].ToString()) };
+        settings.SettingsEditing.UpdateRowRouteValues = new { Controller = "ProyectoPresupuesto", Action = "ProyectoPresupuestoGridViewPartialUpdate", Estado_param = (ViewData["Estado"] == null ? "" : ViewData["Estado"].ToString()) };
+        //settings.SettingsEditing.DeleteRowRouteValues = new { Controller = "ProyectoPresupuesto", Action = "ProyectoPresupuestoGridViewPartialDelete", Estado_param = (ViewData["Estado"] == null ? "" : ViewData["Estado"].ToString()) };
+
+        settings.SettingsBehavior.ConfirmDelete = true;
+        settings.SettingsBehavior.AllowSelectByRowClick = true;
+        settings.SettingsEditing.Mode = GridViewEditingMode.EditForm;
+
+        settings.CommandColumn.Visible = true; //ViewData["Estado"] != null && !Convert.ToBoolean(ViewData["esRecursoCerrado"]);
+        settings.CommandColumn.ShowNewButton = false;
+        settings.CommandColumn.ShowDeleteButton = false;
+        settings.CommandColumn.ShowEditButton = true;
+        settings.CommandColumn.ShowClearFilterButton = true;
+        settings.SettingsCommandButton.EditButton.Text = "Registrar Presupuesto";
+
+        settings.SettingsPager.Visible = true;
+        settings.SettingsPager.Position = PagerPosition.Bottom;
+        settings.SettingsPager.FirstPageButton.Visible = true;
+        settings.SettingsPager.LastPageButton.Visible = true;
+        settings.SettingsPager.PageSizeItemSettings.Visible = true;
+        settings.SettingsPager.PageSize = 10;
+        settings.SettingsPager.PageSizeItemSettings.Items = new string[] { "5", "10", "15" };
+
+        settings.Settings.ShowFilterRowMenu = true;
+        settings.Settings.ShowGroupPanel = true;
+        settings.Settings.ShowFilterRow = !Convert.ToBoolean(ViewData["PermisosEdicion"]);
+        settings.Settings.ShowFooter = true;
+
+        settings.TotalSummary.Add(DevExpress.Data.SummaryItemType.Sum, "RF_Anual");
+        settings.TotalSummary.Add(DevExpress.Data.SummaryItemType.Sum, "RE_Anual");
+        settings.TotalSummary.Add(DevExpress.Data.SummaryItemType.Sum, "RP_Anual");
+        settings.TotalSummary.Add(DevExpress.Data.SummaryItemType.Sum, "SubTotal");
+
+        settings.Columns.Add("Estado.Nombre", "Estado");
+        settings.Columns.Add("ProyectoAutorizado.SubComponente.Incentivo.Componente.Programa.Nombre", "Programa");
+        settings.Columns.Add("ProyectoAutorizado.SubComponente.Incentivo.Componente.Nombre", "Componente");
+        settings.Columns.Add("ProyectoAutorizado.SubComponente.Nombre", "Concepto de Apoyo");
+        settings.Columns.Add("ProyectoAutorizado.Nombre", "Proyecto Autorizado");
+        settings.Columns.Add("RF_Anual", "Recurso Federal").PropertiesEdit.DisplayFormatString = "c";
+        settings.Columns.Add("RE_Anual", "Recurso Estatal").PropertiesEdit.DisplayFormatString = "c";
+        settings.Columns.Add("RP_Anual", "Recurso Productores").PropertiesEdit.DisplayFormatString = "c";
+
+        var columnSubtotal = settings.Columns.Add("SubTotal");
+        var cerrado = settings.Columns.Add("Cerrado", "Presupuesto Cerrado");
+
+        columnSubtotal.PropertiesEdit.DisplayFormatString = "c";
+        columnSubtotal.UnboundType = DevExpress.Data.UnboundColumnType.Decimal;
+
+        cerrado.UnboundType = DevExpress.Data.UnboundColumnType.String;
+
+        settings.CustomUnboundColumnData = (sender, e) =>
+        {
+            if (e.Column.FieldName == "SubTotal")
+            {
+                decimal federal = Convert.ToDecimal(e.GetListSourceFieldValue("RF_Anual"));
+                decimal estatal = Convert.ToDecimal(e.GetListSourceFieldValue("RE_Anual"));
+                decimal productores = Convert.ToDecimal(e.GetListSourceFieldValue("RP_Anual"));
+                e.Value = federal + estatal + productores;
+                e.Column.ReadOnly = true;
+            }
+
+            if (e.Column.FieldName == "Cerrado")
+            {
+                if (Convert.ToBoolean(e.GetListSourceFieldValue("CierraPresupuesto"))) e.Value = "cerrado";
+                else e.Value = "no cerrado";
+
+                e.Column.ReadOnly = true;
+            }
+        };
+
+        settings.SetEditFormTemplateContent(c =>
+        {
+            var proyectoPresupuesto = ViewData["dataItem"] ?? c.DataItem;
+
+            ViewContext.Writer.Write("<br />");
+            ViewContext.Writer.Write("<h3>Edición del Presupuesto Federal</h3>");
+            ViewContext.Writer.Write("<br />");
+
+            ViewContext.Writer.Write("<table>");
+            ViewContext.Writer.Write("<tr><td>");
+
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Concepto de Apoyo";
+                edtSettings.AssociatedControlName = "Fk_IdSubComponente__SIS";
+            }).Render();
+            ViewContext.Writer.Write("</td>");
+
+            ViewContext.Writer.Write("<td>");
+            Html.DevExpress().ComboBox(edtSettings =>
+            {
+                edtSettings.Name = "Fk_IdSubComponente__SIS";
+                edtSettings.ClientEnabled = false;
+                edtSettings.ControlStyle.CssClass = "editor";
+                edtSettings.Properties.TextField = "Nombre";
+                edtSettings.Properties.ValueField = "Pk_IdSubComponente";
+                edtSettings.ToolTip = "Seleccione el Concepto de Apoyo";
+                edtSettings.Properties.ValueType = typeof(int);
+                edtSettings.Width = Unit.Pixel(450);
+                edtSettings.Properties.EnableSynchronization = DefaultBoolean.False;
+                edtSettings.Properties.IncrementalFilteringMode = IncrementalFilteringMode.StartsWith;
+                edtSettings.Properties.ClientSideEvents.SelectedIndexChanged = "function(s, e){ Fk_IdProyectoAutorizado.PerformCallback(); }";
+            }).BindList(DXMVCWebApplication1.Models.Senasica.GetSubComponenteBySubComponente(Convert.ToInt32(DataBinder.Eval(proyectoPresupuesto, "ProyectoAutorizado.Fk_IdSubComponente__SIS"))))
+            .Bind(DataBinder.Eval(proyectoPresupuesto, "ProyectoAutorizado.Fk_IdSubComponente__SIS"))
+            .Render();
+            ViewContext.Writer.Write("</td>");
+
+            ViewContext.Writer.Write("<td>");
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.Name = "lbProyectoAutorizado";
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Proyecto Autorizado";
+                edtSettings.AssociatedControlName = "Fk_IdProyectoAutorizado";
+            }).Render();
+            ViewContext.Writer.Write("</td>");
+
+            ViewContext.Writer.Write("<td>");
+            Html.RenderPartial("_ComboBoxProyectoAutorizado",
+                DXMVCWebApplication1.Models.Senasica.GetProyectosAutorizadosById(Convert.ToInt32(DataBinder.Eval(proyectoPresupuesto, "Fk_IdProyectoAutorizado"))),
+                new ViewDataDictionary
+                {
+                    { "Fk_IdProyectoAutorizado", DataBinder.Eval(proyectoPresupuesto, "Fk_IdProyectoAutorizado") }
+                });
+            ViewContext.Writer.Write("</td>");
+
+            ViewContext.Writer.Write("<td>");
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Monto:";
+                edtSettings.AssociatedControlName = "RF_Mar";
+            }).Render();
+            ViewContext.Writer.Write("</td>");
+
+            ViewContext.Writer.Write("<td>");
+            Html.DevExpress().SpinEdit(edtSettings =>
+            {
+                edtSettings.Name = "RF_Mar";
+                edtSettings.Properties.MinValue = 0;
+                edtSettings.Properties.MaxValue = 999999999;
+                edtSettings.Properties.NumberType = SpinEditNumberType.Float;
+                edtSettings.Properties.Increment = 0.1M;
+                edtSettings.Properties.LargeIncrement = 1;
+                edtSettings.Properties.SpinButtons.ShowLargeIncrementButtons = true;
+                edtSettings.ControlStyle.CssClass = "editor";
+                edtSettings.ShowModelErrors = true;
+                edtSettings.Width = Unit.Pixel(250);
+                edtSettings.Width = Unit.Pixel(250);
+                edtSettings.Properties.DisplayFormatString = "n";
+            }).Bind(DataBinder.Eval(proyectoPresupuesto, "RF_Mar"))
+            .Render();
+
+            ViewContext.Writer.Write("</td></tr>");
+            ViewContext.Writer.Write("</table>");
+
+            ViewContext.Writer.Write("<br />");
+            Html.DevExpress().Button(btnSettings =>
+            {
+                btnSettings.Name = "btnUpdate";
+                btnSettings.Text = "Guardar";
+                btnSettings.ControlStyle.CssClass = "button";
+                btnSettings.Images.Image.Url = "Content/Images/guardar.png";
+                btnSettings.ImagePosition = ImagePosition.Right;
+                btnSettings.Images.Image.Width = 16;
+                btnSettings.Style["position"] = "relative";
+                btnSettings.Style["left"] = "1370px";
+                btnSettings.ClientSideEvents.Click = "function(s, e){ ProyectoPresupuestoGridView.UpdateEdit(); }";
+                btnSettings.ClientVisible = false; //!Convert.ToBoolean(DataBinder.Eval(proyectoPresupuesto, "CierraPresupuesto"));
+            }).Render();
+
+            Html.DevExpress().Button(btnSettings =>
+            {
+                btnSettings.Name = "btnCancel";
+                btnSettings.Text = "Cancelar";
+                btnSettings.ControlStyle.CssClass = "button";
+                btnSettings.Images.Image.Url = "Content/Images/cancelar.png";
+                btnSettings.ImagePosition = ImagePosition.Right;
+                btnSettings.Style["position"] = "relative";
+                btnSettings.Style["left"] = "1380px";
+                btnSettings.ClientSideEvents.Click = "function(s, e){ ProyectoPresupuestoGridView.CancelEdit(); }";
+            }).Render();
+        });
+
+    });
+
+    if (ViewData["EditError"] != null)
+    {
+        grid.SetEditErrorText((string)ViewData["EditError"]);
+    }
+}
+@grid.Bind(Model).GetHtml()
+
+
+@Html.DevExpress().PopupControl(settings =>
+{
+    settings.Name = "popUpRecursoExcedido";
+    settings.Width = 400;
+    settings.AllowDragging = true;
+    settings.CloseAction = CloseAction.CloseButton;
+    settings.PopupAnimationType = AnimationType.None;
+    settings.HeaderText = "¡ERROR!";
+    settings.Modal = true;
+    settings.PopupHorizontalAlign = PopupHorizontalAlign.WindowCenter;
+    settings.PopupVerticalAlign = PopupVerticalAlign.WindowCenter;
+
+    settings.SetContent(() =>
+    {
+        Html.DevExpress().Label(edtSettings =>
+        {
+            edtSettings.ControlStyle.CssClass = "label";
+            edtSettings.Text = "El recurso se debe de distribuir en todos los proyectos y no debe ser excedido al otorgado";
+            edtSettings.ToolTip = "El recurso se debe de distribuir en todos los proyectos y no debe ser excedido al otorgado";
+            edtSettings.Style["color"] = "red";
+        }).Render();
+
+        ViewContext.Writer.Write("<br />");
+        ViewContext.Writer.Write("<br />");
+
+        Html.DevExpress().Button(btnSettings =>
+        {
+            btnSettings.Name = "btnAceptar";
+            btnSettings.Text = "Aceptar";
+            btnSettings.ControlStyle.CssClass = "button";
+            btnSettings.Images.Image.Url = "/Content/Images/aceptar.png";
+            btnSettings.ImagePosition = ImagePosition.Right;
+            btnSettings.Style["position"] = "relative";
+            btnSettings.Style["left"] = "5px";
+            btnSettings.ClientSideEvents.Click = "function(s, e){ popUpRecursoExcedido.Hide(); }";
+        }).Render();
+    });
+}).GetHtml()
+
+@Html.DevExpress().PopupControl(settings =>
+{
+    settings.Name = "popUpCerrarDistribucion";
+    settings.Width = 400;
+    settings.AllowDragging = true;
+    settings.CloseAction = CloseAction.CloseButton;
+    settings.PopupAnimationType = AnimationType.None;
+    settings.HeaderText = "¡Movimiento irreversible!";
+    settings.Modal = true;
+    settings.PopupHorizontalAlign = PopupHorizontalAlign.WindowCenter;
+    settings.PopupVerticalAlign = PopupVerticalAlign.WindowCenter;
+
+    settings.SetContent(() =>
+    {
+        using (Html.BeginForm("CierraDistribucionRecurso", "ProyectoPresupuesto", new { Estado = (ViewData["Estado"] == null ? "" : ViewData["Estado"].ToString()) }, FormMethod.Post, new { id = "FormCierre" }))
+        {
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Una vez cerrado la distribución del recurso, no se podrán hacer modificaciones";
+                edtSettings.ToolTip = "Una vez cerrado la distribución del recurso, no se podrán hacer modificaciones";
+            }).Render();
+
+            ViewContext.Writer.Write("<br />");
+            ViewContext.Writer.Write("<br />");
+
+            Html.DevExpress().Button(btnSettings =>
+            {
+                btnSettings.Name = "btnAceptarCierre";
+                btnSettings.Text = "Aceptar";
+                btnSettings.ControlStyle.CssClass = "button";
+                btnSettings.Images.Image.Url = "/Content/Images/aceptar.png";
+                btnSettings.ImagePosition = ImagePosition.Right;
+                btnSettings.Style["position"] = "relative";
+                btnSettings.Style["left"] = "5px";
+                btnSettings.UseSubmitBehavior = true;
+            }).Render();
+
+            Html.DevExpress().Button(btnSettings =>
+            {
+                btnSettings.Name = "btnCancelarCierre";
+                btnSettings.Text = "Cancelar";
+                btnSettings.ControlStyle.CssClass = "button";
+                btnSettings.Images.Image.Url = "/Content/Images/cancelar.png";
+                btnSettings.ImagePosition = ImagePosition.Right;
+                btnSettings.Style["position"] = "relative";
+                btnSettings.Style["left"] = "5px";
+                btnSettings.ClientSideEvents.Click = "function(s, e){ popUpCerrarDistribucion.Hide(); }";
+            }).Render();
+        }
+    });
+}).GetHtml()

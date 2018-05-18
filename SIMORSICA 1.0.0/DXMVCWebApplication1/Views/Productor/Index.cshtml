@@ -1,0 +1,226 @@
+﻿@{
+    ViewBag.Title = "Padrón de Unidades de Producción";
+}
+@using System.Linq
+
+
+<h3 style="font-size:17px; font:bold; text-align:center">Registro del Padrón de Unidades de Producción</h3>
+<!--<h3>Registre aquí los Productores </h3>-->
+
+<br>
+<br>
+<br>
+<br>
+
+<div id="map" style="height:60%"></div>
+<script src="~/Scripts/PantallaMapa.js" type="text/javascript"></script>
+<script src="~/Scripts/utils.js"></script>
+<script type="text/javascript">
+
+    var selectedIDs = "";
+    function EstadoCombo_SelectedIndexChanged(s, e) {
+        Fk_IdMunicipio__SIS.PerformCallback();
+    }
+    function MunicipioCombo_BeginCallback(s, e) {
+        e.customArgs['Fk_IdEstado__SIS'] = Fk_IdEstado__SIS.GetValue();
+    }
+    function OnBeginCallback(s, e) {
+        //Pass all selected keys to GridView callback action
+        e.customArgs["selectedIDs"] = selectedIDs;
+        //alert("OnBeginCallback");
+    }
+
+
+
+
+    function OnGetValues(selectedValues) {
+        alert("OnGetValues");
+        for (var i=0; i<selectedValues.length; i++) {
+            if(markersPoints[i] == selectedValues[i]){
+                markersPoints[i].setMap(map);
+            }else{
+                markersPoints[i].setMap(null);
+            }
+        }
+        //alert(selectedKeys);
+    }
+
+
+    /***********************************************************************************/
+    function capturaMapa(){
+        alert("Navegue por el mapa y haga clic en la ubicación deseada");
+        $('#btnGeocodificar').prop( "disabled", true );
+        $('#Latitud_I').prop( "disabled", true );
+        $('#Longitud_I').prop( "disabled", true );
+        $('#Direccion_I').prop( "disabled", true );
+        $('#Colonia_I').prop( "disabled", true );
+        $(".dxic").removeAttr("onmousedown");
+        $('#Fk_IdEstado__SIS_B-1').css( "visibility", 'hidden' );
+        $('#Fk_IdMunicipio__SIS_B-1').css( "visibility", 'hidden' );
+        goFullScreen();
+        var resultGeocode = reverseGeocode();
+        //alert(resultGeocode.formatted_address);
+    }
+
+    /***********************************************************************************/
+    function VerPuntoEnMapa(){
+        $('#btnGeocodificar').prop( "disabled", true );
+        $('#Latitud_I').prop( "disabled", true );
+        $('#Longitud_I').prop( "disabled", true );
+        $('#Direccion_I').prop( "disabled", true );
+        $('#Colonia_I').prop( "disabled", true );
+        $(".dxic").removeAttr("onmousedown");
+        $('#Fk_IdEstado__SIS_B-1').css( "visibility", 'hidden' );
+        $('#Fk_IdMunicipio__SIS_B-1').css( "visibility", 'hidden' );
+        goFullScreen();
+
+    }
+
+
+    /***********************************************************************************/
+    function actualizaDireccion(resultado){
+        var direccion = [];
+        var Municipios;
+        var lat = resultado.geometry.location.lat();
+        var lng = resultado.geometry.location.lng();
+
+        for (var i in resultado.address_components){
+            switch(resultado.address_components[i].types[0]){
+                case 'route':
+                    //calle
+                    direccion[0] = resultado.address_components[i].long_name;
+                    break;
+                case 'street_number':
+                    //numero
+                    direccion[1] = resultado.address_components[i].long_name;
+                    break;
+                case 'locality':
+                    //localidad
+                    direccion[2] = resultado.address_components[i].long_name;
+                    break;
+                case 'political':
+                    //colonia
+                    Colonia.SetText(resultado.address_components[i].long_name);
+                    break;
+            } //switch
+        }
+
+        getEstadoNombreSpatial(Fk_IdEstado__SIS,lat,lng);
+        getMunicipioSpatial(Fk_IdMunicipio__SIS,"Fk_IdMunicipio__SIS_I",lat,lng);
+
+        var dirCompleta = "";
+        for(var i in direccion){
+            dirCompleta += direccion[i] + " ";
+        }
+        Direccion.SetText(dirCompleta);
+        Latitud.SetText(lat.toString());
+        Longitud.SetText(lng.toString());
+
+    }
+
+    /***********************************************************************************/
+    /* Edicion de registro, captura del punto por direccion */
+    function capturaDireccion(){
+        alert("Favor de capturar la direccion");
+        $('#btnGeocodificar').prop( "disabled", false );
+        $('#Latitud_I').prop( "disabled", true );
+        $('#Longitud_I').prop( "disabled", true );
+        $('#Fk_IdEstado__SIS_B-1').css( "visibility", 'visible' );
+        $('#Fk_IdMunicipio__SIS_B-1').css( "visibility", 'visible' );
+
+    }
+
+    /* Edicion de registro, captura del punto por coordenadas */
+    function capturaCoordenadas(){
+        alert("Favor de capturar las coordenadas");
+        $('#btnGeocodificar').prop( "disabled", false );
+        $('#Latitud_I').prop( "disabled", false );
+        $('#Longitud_I').prop( "disabled", false );
+        $('#Direccion_I').prop( "disabled", true );
+        $('#Colonia_I').prop( "disabled", true );
+        $(".dxic").removeAttr("onmousedown");
+        $('#Fk_IdEstado__SIS_B-1').css( "visibility", 'hidden' );
+        $('#Fk_IdMunicipio__SIS_B-1').css( "visibility", 'hidden' );
+    }
+
+    /***********************************************************************************/
+    /******** accion del boton geocodificar ***********************/
+    function elegirGeocod(Regresar){
+        if($("input:checked").val() == 'Mapa'){
+            //La geocodificacion ya se realizó
+            return;
+        }
+        if($( "input:checked" ).val() == 'Direccion'){
+            var direccion = $('#Direccion_I').val() + ", " + $("#Colonia_I").val() + ", " +
+                $("#Fk_IdMunicipio__SIS_I").val() + ", " + $("#Fk_IdEstado__SIS_I").val();
+            //alert("enviando: " + direccion);
+            geocodeAddress(direccion,Regresar);
+
+        }
+        else if ($( "input:checked" ).val() == 'Coordenada'){
+            //alert('Geocodificacion inversa');
+            var arrCoords = [
+                $('#Latitud_I').val(),
+                $('#Longitud_I').val()
+            ];
+            reverseGeocodeByCoords(arrCoords,Regresar);
+        }
+        else {
+            alert('Para geocodificar debe estar activada la opción Direccion o Coordenadas');
+        }
+
+    }
+
+
+
+
+    /***********************************************************************************/
+    /*funcion para crear los info de los markers*/
+    function crearInfo(i) {
+        var tableClick = "aspxGVTableClick('ProductorGridView', event);";
+        var tabla = ' <table id="ProductorGridView_DXMainTable" class="dxgvTable_Metropolis" ' +
+                    ' onclick="' + tableClick + '"' +
+                    ' style="width:100%;empty-cells:show;">'
+
+        var editAction = "aspxGVScheduleCommand('ProductorGridView',['StartEdit'," + i + "],1)";
+        var deleteAction = "aspxGVScheduleCommand('ProductorGridView',['Delete'," + i + "],1);";
+        var borrarMarker = "markersPoints[" + i + "].setMap(null)";
+
+        info = "Nombre del Productor: " + nomPoint[i] + "<br />" +
+            tabla + "<tr><td>" +
+            "<a class='dxgvCommandColumnItem_Metropolis dxgv__cci' onclick=" + editAction + " href='javascript:;'>Editar</a>" +
+            "&nbsp &nbsp &nbsp" +
+            "<a class='dxgvCommandColumnItem_Metropolis dxgv__cci' onclick=" + deleteAction + borrarMarker + " href='javascript:;'>Eliminar</a>" +
+            "</td></tr></table>";
+        return info;
+    }
+
+
+</script>
+
+
+<script>
+    jQuery(window).load(function () {
+        detectUserLocation();
+        google.maps.event.trigger(map, 'resize');
+        geocoder = new google.maps.Geocoder();
+    });
+
+</script>
+
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDck_KnRYo0h8DYMYcWyoTrN8i3__X5ZW0&callback=initMap&signed_in=true" async defer>
+</script>
+
+<br>
+<br>
+<br>
+<br>
+
+
+
+@Html.Action("ProductorGridViewPartial")
+
+@using (Html.BeginForm("Index", "Home"))
+{
+    @Html.Hidden("selectedIDsHF");
+}

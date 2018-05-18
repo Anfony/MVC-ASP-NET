@@ -1,0 +1,113 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="DB_SENASICA_PRODUCCIONModel1.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <Function Name="SP_CancelaReprogramacion_Campania" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="REPRO">
+          <Parameter Name="FK_IdCampania__UE" Type="int" Mode="In" />
+          <Parameter Name="mensaje" Type="nvarchar" Mode="InOut" />
+        </Function>
+        <Function Name="SP_Clona_TablasProcesoDeReprogramacion" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="REPRO">
+          <Parameter Name="PK_IdCampania__UE" Type="int" Mode="In" />
+          <Parameter Name="mensaje" Type="nvarchar" Mode="InOut" />
+        </Function>
+        <Function Name="SP_CRUD_ProcesoReprogramacion" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="REPRO">
+          <Parameter Name="PK_IdCampania__UE" Type="int" Mode="In" />
+        </Function>
+        <Function Name="Cierra_RepActividad" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="SIS">
+          <Parameter Name="IdCampania" Type="int" Mode="In" />
+          <Parameter Name="IdMes" Type="int" Mode="In" />
+          <Parameter Name="cierra" Type="bit" Mode="In" />
+        </Function>
+        <Function Name="Cierra_RepAdquisicion" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="SIS">
+          <Parameter Name="IdCampania" Type="int" Mode="In" />
+          <Parameter Name="IdMes" Type="int" Mode="In" />
+          <Parameter Name="cierra" Type="bit" Mode="In" />
+        </Function>
+        <Function Name="SP_AperturaCampania" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="UE">
+          <Parameter Name="IdCierreMensual" Type="int" Mode="In" />
+          <Parameter Name="RespuestaApertura" Type="text" Mode="In" />
+          <Parameter Name="FechaCierreAutomatico" Type="date" Mode="In" />
+          <Parameter Name="AperturaAceptada" Type="bit" Mode="In" />
+        </Function>
+        <Function Name="SP_SolicitudAperturaCampania" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="UE">
+          <Parameter Name="IdCierreMensual" Type="int" Mode="In" />
+          <Parameter Name="MotivosApertura" Type="text" Mode="In" />
+        </Function>
+        <EntityContainer Name="DB_SENASICA_PRODUCCIONModel1StoreContainer" />
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="DB_SENASICA_PRODUCCIONModel1" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityContainer Name="DB_SENASICA_Storeds" annotation:LazyLoadingEnabled="true" >
+          <FunctionImport Name="SP_CancelaReprogramacion_Campania">
+            <Parameter Name="FK_IdCampania__UE" Mode="In" Type="Int32" />
+            <Parameter Name="mensaje" Mode="InOut" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="SP_Clona_TablasProcesoDeReprogramacion">
+            <Parameter Name="PK_IdCampania__UE" Mode="In" Type="Int32" />
+            <Parameter Name="mensaje" Mode="InOut" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="SP_CRUD_ProcesoReprogramacion">
+          <Parameter Name="PK_IdCampania__UE" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="Cierra_RepActividad">
+            <Parameter Name="IdCampania" Mode="In" Type="Int32" />
+            <Parameter Name="IdMes" Mode="In" Type="Int32" />
+            <Parameter Name="cierra" Mode="In" Type="Boolean" />
+          </FunctionImport>
+          <FunctionImport Name="Cierra_RepAdquisicion">
+            <Parameter Name="IdCampania" Mode="In" Type="Int32" />
+            <Parameter Name="IdMes" Mode="In" Type="Int32" />
+            <Parameter Name="cierra" Mode="In" Type="Boolean" />
+          </FunctionImport>
+          <FunctionImport Name="SP_AperturaCampania">
+            <Parameter Name="IdCierreMensual" Mode="In" Type="Int32" />
+            <Parameter Name="RespuestaApertura" Mode="In" Type="String" />
+            <Parameter Name="FechaCierreAutomatico" Mode="In" Type="DateTime" />
+            <Parameter Name="AperturaAceptada" Mode="In" Type="Boolean" />
+          </FunctionImport>
+          <FunctionImport Name="SP_SolicitudAperturaCampania">
+            <Parameter Name="IdCierreMensual" Mode="In" Type="Int32" />
+            <Parameter Name="MotivosApertura" Mode="In" Type="String" />
+          </FunctionImport>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="DB_SENASICA_PRODUCCIONModel1StoreContainer" CdmEntityContainer="DB_SENASICA_Storeds" >
+          <FunctionImportMapping FunctionImportName="SP_CancelaReprogramacion_Campania" FunctionName="DB_SENASICA_PRODUCCIONModel1.Store.SP_CancelaReprogramacion_Campania" />
+          <FunctionImportMapping FunctionImportName="SP_Clona_TablasProcesoDeReprogramacion" FunctionName="DB_SENASICA_PRODUCCIONModel1.Store.SP_Clona_TablasProcesoDeReprogramacion" />
+          <FunctionImportMapping FunctionImportName="SP_CRUD_ProcesoReprogramacion" FunctionName="DB_SENASICA_PRODUCCIONModel1.Store.SP_CRUD_ProcesoReprogramacion" />
+          <FunctionImportMapping FunctionImportName="Cierra_RepActividad" FunctionName="DB_SENASICA_PRODUCCIONModel1.Store.Cierra_RepActividad" />
+          <FunctionImportMapping FunctionImportName="Cierra_RepAdquisicion" FunctionName="DB_SENASICA_PRODUCCIONModel1.Store.Cierra_RepAdquisicion" />
+          <FunctionImportMapping FunctionImportName="SP_AperturaCampania" FunctionName="DB_SENASICA_PRODUCCIONModel1.Store.SP_AperturaCampania" />
+          <FunctionImportMapping FunctionImportName="SP_SolicitudAperturaCampania" FunctionName="DB_SENASICA_PRODUCCIONModel1.Store.SP_SolicitudAperturaCampania" />
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="True" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

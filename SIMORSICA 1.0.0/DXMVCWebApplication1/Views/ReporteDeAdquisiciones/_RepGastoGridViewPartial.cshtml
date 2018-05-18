@@ -1,0 +1,326 @@
+@{
+    var grid = Html.DevExpress().GridView(settings =>
+    {
+        settings.Name = "RepGastoGridView";
+        settings.CallbackRouteValues = new { Controller = "ReporteDeAdquisiciones", Action = "RepGastoGridViewPartial", IdNecesidad = ViewData["IdNecesidad"] };
+
+        settings.SettingsEditing.AddNewRowRouteValues = new { Controller = "ReporteDeAdquisiciones", Action = "RepGastoGridViewPartialAddNew", IdNecesidad = ViewData["IdNecesidad"] };
+        settings.SettingsEditing.UpdateRowRouteValues = new { Controller = "ReporteDeAdquisiciones", Action = "RepGastoGridViewPartialUpdate", IdNecesidad = ViewData["IdNecesidad"] };
+        settings.SettingsEditing.DeleteRowRouteValues = new { Controller = "ReporteDeAdquisiciones", Action = "RepGastoGridViewPartialDelete", IdNecesidad = ViewData["IdNecesidad"] };
+        settings.SettingsEditing.Mode = GridViewEditingMode.PopupEditForm;
+
+        settings.SettingsText.PopupEditFormCaption = "Edición de la Adquisición";
+        settings.SettingsPopup.EditForm.Height = 330;
+        settings.SettingsPopup.EditForm.Width = 625;
+        settings.SettingsPopup.EditForm.HorizontalAlign = PopupHorizontalAlign.WindowCenter;
+        settings.SettingsPopup.EditForm.VerticalAlign = PopupVerticalAlign.WindowCenter;
+        settings.SettingsPopup.EditForm.Modal = true;
+
+        settings.SettingsBehavior.ConfirmDelete = true;
+        settings.Settings.ShowFilterRow = true;
+        settings.Settings.ShowFilterRowMenu = true;
+
+        settings.CommandColumn.Visible = true;
+        settings.SettingsCommandButton.NewButton.Text = "Nuevo Gasto";
+        settings.CommandColumn.ShowNewButtonInHeader = Convert.ToBoolean(ViewData["Escritura"]) && Convert.ToBoolean(ViewData["Status_Escritura"]);
+        settings.CommandColumn.ShowDeleteButton = Convert.ToBoolean(ViewData["Escritura"]) && Convert.ToBoolean(ViewData["Status_Escritura"]);
+        settings.CommandColumn.ShowEditButton = Convert.ToBoolean(ViewData["Escritura"]) || Convert.ToBoolean(ViewData["Lectura"]);
+        settings.CommandColumn.ShowClearFilterButton = true;
+
+        settings.KeyFieldName = "Pk_IdRepAdquisicion";
+
+        //settings.GroupSummary.Add(DevExpress.Data.SummaryItemType.Sum, "Fk_IdUnidadEjecutora__UE").DisplayFormat = "c";
+
+        settings.SettingsBehavior.AllowSelectByRowClick = true;
+
+        settings.SettingsPager.Visible = true;
+        settings.SettingsPager.Position = PagerPosition.Bottom;
+        settings.SettingsPager.FirstPageButton.Visible = true;
+        settings.SettingsPager.LastPageButton.Visible = true;
+        settings.SettingsPager.PageSizeItemSettings.Visible = true;
+        settings.SettingsPager.PageSize = 15;
+        settings.SettingsPager.PageSizeItemSettings.Items = new string[] { "5", "10", "15", "20" };
+
+
+        settings.Columns.Add("FechaAdquisicion", "Fecha de Adquisición").PropertiesEdit.DisplayFormatString = "d";
+        settings.Columns.Add("Concepto", "Descripción del Gasto");
+        settings.Columns.Add("Importe").PropertiesEdit.DisplayFormatString = "c";
+        settings.Columns.Add("Comentario", "Observaciones");
+        settings.Columns.Add("Proveedor.Estado.Nombre", "Estado del Proveedor");
+        settings.Columns.Add("Proveedor.RazonSocial_Nombre", "Proveedor");
+
+        var cerrado = settings.Columns.Add("cerrado", "¿Registro Cerrado?");
+        cerrado.UnboundType = DevExpress.Data.UnboundColumnType.String;
+
+        settings.CustomUnboundColumnData = (sender, e) =>
+        {
+            if (e.Column.FieldName == "cerrado")
+            {
+                if (Convert.ToBoolean(e.GetListSourceFieldValue("esCerrado"))) e.Value = "Sí";
+                else e.Value = "No";
+
+                e.Column.ReadOnly = true;
+            }
+        };
+
+        settings.TotalSummary.Add(DevExpress.Data.SummaryItemType.Sum, "Importe").DisplayFormat = "c";
+
+        settings.Settings.ShowFooter = true;
+
+        //Comienza custom
+
+        //nuevoPk_IdProgramaAnualAdq
+        settings.SetEditFormTemplateContent(c =>
+        {
+            int Fk_IdEstado = Convert.ToInt32(ViewData["_Fk_IdEstado"]);
+            var gasto = ViewData["dataItem"] ?? c.DataItem;
+
+            //if (Convert.ToBoolean(ViewData["sePuedeRegistrar"]))
+            if (true)
+            {
+                ViewContext.Writer.Write("<table>");
+                Html.DevExpress().Label(edtSettings =>
+                {
+                    edtSettings.ControlStyle.CssClass = "enRepro";
+                    edtSettings.Name = "enRepro_";
+                    edtSettings.Text = "No se podrá registrar avances, por una de las siguientes razones:"
+                                         + "\n1) Campaña en 'Proceso de Modificación'"
+                                         + "\n2) Campaña en estatus 'Terminado'";
+                    edtSettings.ControlStyle.ForeColor = System.Drawing.Color.Red;
+                    edtSettings.ClientVisible = !Convert.ToBoolean(ViewData["Status_Escritura"]);
+                }).Render();
+                ViewContext.Writer.Write("</table>");
+                ViewContext.Writer.Write("<br />");
+                
+                ViewContext.Writer.Write("<tr>" + "<td>");
+                Html.DevExpress().Label(edtSettings =>
+                {
+                    edtSettings.ControlStyle.CssClass = "label";
+                    edtSettings.Text = "Descripción del Gasto:";
+                    edtSettings.AssociatedControlName = "Concepto";
+                }).Render();
+
+                Html.DevExpress().Memo(
+                    edtSettings =>
+                    {
+                        edtSettings.Name = "Concepto";
+                        edtSettings.Properties.NullText = "Campo Requerido";
+                        edtSettings.ToolTip = "Describa el concepto del gasto";
+                        edtSettings.ControlStyle.CssClass = "editor";
+                        edtSettings.ShowModelErrors = true;
+                        edtSettings.Width = Unit.Pixel(550);
+                        edtSettings.Height = Unit.Pixel(50);
+                    }
+                )
+                .Bind(DataBinder.Eval(gasto, "Concepto"))
+                .Render();
+                ViewContext.Writer.Write("</td>");
+
+                ViewContext.Writer.Write("</tr></table>");
+
+                ViewContext.Writer.Write("<br />");
+
+                ViewContext.Writer.Write("<table><tr>");
+
+                ViewContext.Writer.Write("<td>");
+                Html.DevExpress().Label(edtSettings =>
+                {
+                    edtSettings.ControlStyle.CssClass = "label";
+                    edtSettings.Text = "Importe:";
+                    edtSettings.AssociatedControlName = "Importe";
+                }).Render();
+
+                Html.DevExpress().SpinEdit(edtSettings =>
+                {
+                    edtSettings.Name = "Importe";
+                    edtSettings.Properties.MinValue = 0;
+                    edtSettings.Properties.MaxValue = 999999999;
+                    edtSettings.Properties.NullText = "Campo Requerido";
+                    edtSettings.ControlStyle.CssClass = "editor";
+                    edtSettings.ShowModelErrors = true;
+                    edtSettings.Width = Unit.Pixel(250);
+                    edtSettings.Properties.DisplayFormatString = "c";
+                    edtSettings.ToolTip = "Registre el importe del gasto incluyendo IVA";
+                }
+                )
+                .Bind(DataBinder.Eval(gasto, "Importe"))
+                .Render();
+                ViewContext.Writer.Write("</td>");
+
+                ViewContext.Writer.Write("<td>");
+                Html.DevExpress().Label(edtSettings =>
+                {
+                    edtSettings.ControlStyle.CssClass = "label";
+                    edtSettings.Text = "Fecha Adquisición";
+                    edtSettings.AssociatedControlName = "FechaAdquisicion";
+                }).Render();
+
+                Html.DevExpress().DateEdit(edtSettings =>
+                {
+                    edtSettings.Name = "FechaAdquisicion";
+                    edtSettings.Properties.NullText = "Campo Requerido";
+                    edtSettings.ControlStyle.CssClass = "editor";
+                    edtSettings.ShowModelErrors = true;
+                    edtSettings.Width = Unit.Pixel(125);
+                    edtSettings.ToolTip = "Seleccione la fecha en la que realizó el gasto";
+                    edtSettings.Properties.DisplayFormatString = "D";
+                    //edtSettings.Properties.MinDate = DateTime.Parse(ViewData["FechaFin_CotaMin"].ToString());
+                    //edtSettings.Properties.MaxDate = DateTime.Parse(ViewData["FechaFin_CotaMax"].ToString());
+                    edtSettings.Properties.MinDate = DateTime.Parse("01/01/2018");
+                    edtSettings.Properties.MaxDate = DateTime.Today;
+
+                }).Bind(DataBinder.Eval(gasto, "FechaAdquisicion"))
+                .Render();
+
+                ViewContext.Writer.Write("</td>");
+                ViewContext.Writer.Write("</tr>");
+                ViewContext.Writer.Write("</table>");
+
+                ViewContext.Writer.Write("<br >");
+
+                ViewContext.Writer.Write("<table>");
+                ViewContext.Writer.Write("<tr>");
+                ViewContext.Writer.Write("<td>");
+
+                Html.DevExpress().Label(edtSettings =>
+                {
+                    edtSettings.ControlStyle.CssClass = "label";
+                    edtSettings.Text = "Proveedor:";
+                    edtSettings.AssociatedControlName = "Fk_IdProveedor";
+                }).Render();
+
+                Html.RenderPartial("_ComboBoxPartialProveedor", new ViewDataDictionary { { "Fk_IdProveedor", DataBinder.Eval(gasto, "Fk_IdProveedor") } });
+
+                ViewContext.Writer.Write("</td>");
+                ViewContext.Writer.Write("</tr>");
+                ViewContext.Writer.Write("</table>");
+
+                ViewContext.Writer.Write("<br />");
+
+                ViewContext.Writer.Write("<table/>");
+                ViewContext.Writer.Write("<tr/>");
+                ViewContext.Writer.Write("<td/>");
+
+                Html.DevExpress().Label(edtSettings =>
+                {
+                    edtSettings.ControlStyle.CssClass = "label";
+                    edtSettings.Text = "Comentario:";
+                    edtSettings.AssociatedControlName = "Comentario";
+                }).Render();
+
+                Html.DevExpress().Memo(edtSettings =>
+                {
+                    edtSettings.Name = "Comentario";
+                    edtSettings.ControlStyle.CssClass = "editor";
+                    edtSettings.ShowModelErrors = true;
+                    edtSettings.Width = Unit.Pixel(550);
+                    edtSettings.Height = Unit.Pixel(50);
+                    edtSettings.ToolTip = "Precise o especifique el Gasto.";
+                }).Bind(DataBinder.Eval(gasto, "Comentario"))
+                .Render();
+
+                ViewContext.Writer.Write("</td>");
+                ViewContext.Writer.Write("</tr>");
+                ViewContext.Writer.Write("</table>");
+
+                ViewContext.Writer.Write("<div class=\"line\">");
+                ViewContext.Writer.Write("<br>");
+                ViewContext.Writer.Write("<table><td>");
+                Html.DevExpress().Button(
+                    btnSettings =>
+                    {
+                        btnSettings.Name = "btnUpdat";
+                        btnSettings.Text = "Guardar";
+                        btnSettings.ControlStyle.CssClass = "button";
+                        btnSettings.Images.Image.Url = "/Content/Images/guardar.png";
+                        btnSettings.ImagePosition = ImagePosition.Right;
+                        btnSettings.Images.Image.Width = 16;
+                        btnSettings.ClientSideEvents.Click = "function(s, e){ RepGastoGridView.UpdateEdit(); }";
+                        btnSettings.ClientVisible = Convert.ToBoolean(ViewData["Escritura"]) && Convert.ToBoolean(ViewData["Status_Escritura"]);
+                    }).Render();
+
+                ViewContext.Writer.Write("</td><td>");
+
+                Html.DevExpress().Button(
+                            btnSettings =>
+                            {
+                                btnSettings.Name = "btnCance";
+                                btnSettings.Text = "Cancelar";
+                                btnSettings.ControlStyle.CssClass = "button";
+                                btnSettings.Images.Image.Url = "/Content/Images/cancelar.png";
+                                btnSettings.ImagePosition = ImagePosition.Right;
+                                btnSettings.Style["position"] = "relative";
+                                btnSettings.Style["left"] = "5px";
+                                btnSettings.ClientSideEvents.Click = "function(s, e){ RepGastoGridView.CancelEdit(); }";
+                            }).Render();
+
+                ViewContext.Writer.Write("</td><td>");
+
+                Html.DevExpress().Button(btnSettings =>
+                {
+                    btnSettings.Name = "btnAyuda";
+                    btnSettings.ControlStyle.CssClass = "button";
+                    btnSettings.Text = "Ayuda";
+                    btnSettings.Images.Image.Url = "/Content/Images/ayuda.png";
+                    btnSettings.ImagePosition = ImagePosition.Right;
+                    btnSettings.Images.Image.Width = 16;
+                    btnSettings.Style["position"] = "relative";
+                    btnSettings.Style["left"] = "20px";
+                    btnSettings.ClientSideEvents.Click = "function(s, e){ window.open('https://docs.google.com/document/d/1ZJURCxDAT76zN4TpKa2cBHEdF3RZFUNkAv3o9iyWxG4/edit#heading=h.36ei31r','_blank'); }";
+                }).Render();
+
+                ViewContext.Writer.Write("</td></table>");
+                ViewContext.Writer.Write("</div>"); // Termina Codigo de Botones
+
+                //Termina Custom
+                Html.DevExpress().PageControl(PCsettings =>
+                {
+                    PCsettings.Name = "pcScrollingg";
+                    PCsettings.Width = Unit.Percentage(100);
+                    PCsettings.Height = 300;
+                    PCsettings.EnableTabScrolling = true;
+                    PCsettings.TabAlign = TabAlign.Justify;
+                    PCsettings.Styles.Tab.CssClass = "scrolling_Tab";
+                    PCsettings.ClientVisible = c.KeyValue == null ? false : true;
+                    PCsettings.TabPages.Add("Archivos").SetContent(() =>
+                    {
+                        Html.RenderAction("Index", "ArchivosRepAdquisiciones", new { IdRepAdquisicion = DataBinder.Eval(gasto, "Pk_IdRepAdquisicion") });
+                    });
+                }).GetHtml();
+            }
+            else
+            {
+                ViewContext.Writer.Write("<br />");
+                ViewContext.Writer.Write("<br />");
+
+                Html.DevExpress().Label(edtSettings =>
+                {
+                    edtSettings.ControlStyle.CssClass = "label";
+                    edtSettings.Text = "¡El Mes Actual ya está cerrado!";
+                    edtSettings.ControlStyle.ForeColor = System.Drawing.Color.Green;
+                    edtSettings.ControlStyle.Font.Size = 16;
+                }).Render();
+
+                ViewContext.Writer.Write("<br />");
+                ViewContext.Writer.Write("<br />");
+
+                Html.DevExpress().Label(edtSettings =>
+                {
+                    edtSettings.ControlStyle.CssClass = "label";
+                    edtSettings.Text = "Para poder registrar nuevas actividades deberá de esperar al próximo mes.";
+                    edtSettings.ControlStyle.ForeColor = System.Drawing.Color.Green;
+                    edtSettings.ControlStyle.Font.Size = 14;
+                }).Render();
+
+                ViewContext.Writer.Write("<br />");
+                ViewContext.Writer.Write("<br />");
+            }
+
+        });
+    });//Termina GridView
+    if (ViewData["EditError"] != null)
+    {
+        grid.SetEditErrorText((string)ViewData["EditError"]);
+    }
+}
+@grid.Bind(Model).GetHtml()

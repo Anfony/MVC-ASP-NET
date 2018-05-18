@@ -1,0 +1,12 @@
+@Html.DevExpress().DocumentViewer(settings =>
+{
+    settings.Name = "MOVCampaniaReport";
+    settings.Height = 530;
+    settings.Width = 1120;
+    settings.ControlStyle.HorizontalAlign = HorizontalAlign.Center;
+    settings.ControlStyle.VerticalAlign = VerticalAlign.Middle;
+    settings.CallbackRouteValues = new { Controller = "MOVCampania", Action = "MOVCampaniaReport3Partial", PK_IdCampania = ViewData["PK_IdCampania"] };
+    settings.ExportRouteValues = new { Controller = "MOVCampania", Action = "MOVCampaniaReport3PartialExport" };
+    settings.Report = (XtraReport)Model;
+    settings.ToolbarMode = DocumentViewerToolbarMode.StandardToolbar;
+}).GetHtml()

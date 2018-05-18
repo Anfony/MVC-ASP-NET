@@ -1,0 +1,436 @@
+@{
+    var grid = Html.DevExpress().GridView(settings =>
+    {
+        settings.Name = "ProductorGridView";
+        settings.CallbackRouteValues = new { Controller = "Productor", Action = "ProductorGridViewPartial" };
+
+        settings.SettingsEditing.AddNewRowRouteValues = new { Controller = "Productor", Action = "ProductorGridViewPartialAddNew" };
+        settings.SettingsEditing.UpdateRowRouteValues = new { Controller = "Productor", Action = "ProductorGridViewPartialUpdate" };
+        settings.SettingsEditing.DeleteRowRouteValues = new { Controller = "Productor", Action = "ProductorGridViewPartialDelete" };
+        settings.SettingsEditing.Mode = GridViewEditingMode.PopupEditForm;
+        settings.SettingsBehavior.ConfirmDelete = true;
+
+        settings.SettingsPopup.EditForm.Height = 420;
+        settings.SettingsPopup.EditForm.Width = 525;
+        settings.SettingsPopup.EditForm.HorizontalAlign = DevExpress.Web.ASPxClasses.PopupHorizontalAlign.WindowCenter;
+        settings.SettingsPopup.EditForm.VerticalAlign = DevExpress.Web.ASPxClasses.PopupVerticalAlign.WindowCenter;
+        settings.SettingsPopup.EditForm.Modal = true;
+
+        settings.CommandColumn.Visible = true;
+        settings.CommandColumn.ShowNewButtonInHeader = Convert.ToBoolean(ViewData["Escritura"]);
+        settings.CommandColumn.ShowDeleteButton = Convert.ToBoolean(ViewData["Escritura"]);
+        settings.CommandColumn.ShowEditButton = Convert.ToBoolean(ViewData["Escritura"]) || Convert.ToBoolean(ViewData["Lectura"]);
+        settings.CommandColumn.ShowClearFilterButton = true;
+
+        settings.SettingsPager.Visible = true;
+        settings.SettingsPager.Position = PagerPosition.Bottom;
+        settings.SettingsPager.FirstPageButton.Visible = true;
+        settings.SettingsPager.LastPageButton.Visible = true;
+        settings.SettingsPager.PageSizeItemSettings.Visible = true;
+        settings.SettingsPager.PageSize = 5;
+        settings.SettingsPager.PageSizeItemSettings.Items = new string[] { "5", "10", "15" };
+        settings.Settings.ShowFilterRowMenu = true;
+
+        settings.KeyFieldName = "Pk_IdProductor";
+
+        settings.Settings.ShowGroupPanel = true;
+        settings.Settings.ShowFilterRow = true;
+        settings.SettingsBehavior.AllowSelectByRowClick = true;
+
+        settings.ClientSideEvents.BeginCallback = "OnBeginCallback";
+        settings.ClientSideEvents.SelectionChanged = "SelectionChanged";
+        settings.CommandColumn.ShowSelectCheckbox = true;
+
+        settings.Columns.Add("Pk_IdProductor", "Id").SetColVisible(false);
+
+        settings.Columns.Add("Estado.Nombre", "Estado");
+        settings.Columns.Add("RazonSocial", "Razón Social");
+        settings.Columns.Add("ApellidoPaterno", "Apellido Paterno");
+        settings.Columns.Add("ApellidoMaterno", "Apellido Materno");
+        settings.Columns.Add("Nombre");
+        settings.Columns.Add("Direccion", "Dirección");
+        settings.Columns.Add("Colonia");
+
+        settings.Columns.Add("Estado.Nombre", "Estado");
+        settings.Columns.Add("Municipio.Nombre", "Municipio");
+
+        settings.Columns.Add("Telefono", "Teléfono");
+        settings.Columns.Add("Email");
+        settings.Columns.Add("Ubicacion.Latitude", "Latitud");
+        settings.Columns.Add("Ubicacion.Longitude", "Longitud");
+
+        var textoBoton = "";
+
+        settings.BeforeGetCallbackResult = (sender, e) =>
+        {
+            MVCxGridView gridView = sender as MVCxGridView;
+            if (gridView.IsNewRowEditing) //new
+                textoBoton = "Guardar";
+            //gridView.SettingsText.CommandUpdate = "Save";
+            else //update
+                textoBoton = "Actualizar";
+            //gridView.SettingsText.CommandUpdate = "Update";
+        };
+
+        ////////////////////////////////////////////////////////////////
+        //(INICIO) Inicia Custom popup
+        ////////////////////////////////////////////////////////////////
+        settings.SetEditFormTemplateContent(c =>
+        {
+            //var product = ViewData["EditError"] != null ? ViewData["EditError"] : ViewData["dataItem"] ?? c.DataItem;
+            var campania = ViewData["dataItem"] ?? c.DataItem;
+            ViewContext.Writer.Write("<p>Edición de Productor</p>");
+            ViewContext.Writer.Write(
+                "<table>" +
+                     "<tr>" +
+                         "<td>");
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Apellido Paterno";
+                edtSettings.AssociatedControlName = "ApellidoPaterno";
+            }).Render();
+
+            Html.DevExpress().TextBox(edtSettings =>
+            {
+                edtSettings.Name = "ApellidoPaterno";
+                edtSettings.ControlStyle.CssClass = "editor";
+                edtSettings.ShowModelErrors = true;
+                edtSettings.Width = Unit.Pixel(250);
+                edtSettings.ToolTip = c.KeyValue == null ? "Ingresar Apellido Paterno" : "Editar Apellido Paterno";
+
+            }).Bind(DataBinder.Eval(campania, "ApellidoPaterno")).Render();
+
+            ViewContext.Writer.Write("</td>");
+
+            //Apellido Materno
+            ViewContext.Writer.Write("<td>");
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Apellido Materno";
+                edtSettings.AssociatedControlName = "ApellidoMaterno";
+            }).Render();
+
+            Html.DevExpress().TextBox(edtSettings =>
+            {
+                edtSettings.Name = "ApellidoMaterno";
+                edtSettings.ControlStyle.CssClass = "editor";
+                edtSettings.ShowModelErrors = true;
+                edtSettings.Width = Unit.Pixel(250);
+                edtSettings.ToolTip = c.KeyValue == null ? "Ingresar Apellido Materno" : "Editar Apellido Materno";
+
+            }).Bind(DataBinder.Eval(campania, "ApellidoMaterno")).Render();
+            ViewContext.Writer.Write("</td>");
+
+            //Nombre
+            ViewContext.Writer.Write("<td>");
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Nombre";
+                edtSettings.AssociatedControlName = "Nombre";
+            }).Render();
+
+            Html.DevExpress().TextBox(edtSettings =>
+            {
+                edtSettings.Name = "Nombre";
+                edtSettings.ControlStyle.CssClass = "editor";
+                edtSettings.ShowModelErrors = true;
+                edtSettings.Width = Unit.Pixel(250);
+                edtSettings.ToolTip = c.KeyValue == null ? "Ingresar Nombre del Productor" : "Editar Nombre del Productor";
+
+            }).Bind(DataBinder.Eval(campania, "Nombre")).Render();
+            ViewContext.Writer.Write("</td>");
+            ViewContext.Writer.Write("</tr>");
+
+            ViewContext.Writer.Write("<tr>");
+            //Razon Social
+            ViewContext.Writer.Write("<td>");
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Razón Social";
+                edtSettings.AssociatedControlName = "RazonSocial";
+            }).Render();
+
+            Html.DevExpress().TextBox(edtSettings =>
+            {
+                edtSettings.Name = "RazonSocial";
+                edtSettings.ControlStyle.CssClass = "editor";
+                edtSettings.ShowModelErrors = true;
+                edtSettings.Width = Unit.Pixel(250);
+                edtSettings.ToolTip = c.KeyValue == null ? "Ingresar la Razón Social" : "Editar la Razón Social";
+            }).Bind(DataBinder.Eval(campania, "RazonSocial")).Render();
+            ViewContext.Writer.Write("</td>");
+
+            //Email
+            ViewContext.Writer.Write("<td>");
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Correo Electrónico";
+                edtSettings.AssociatedControlName = "Email";
+            }).Render();
+
+            Html.DevExpress().TextBox(edtSettings =>
+            {
+                edtSettings.Name = "Email";
+                edtSettings.ControlStyle.CssClass = "editor";
+                edtSettings.ShowModelErrors = true;
+                edtSettings.Width = Unit.Pixel(250);
+                edtSettings.ToolTip = c.KeyValue == null ? "Ingresar un Correo Electrónico" : "Editar el Correo Electrónico";
+
+            }).Bind(DataBinder.Eval(campania, "Email")).Render();
+            ViewContext.Writer.Write("</td>");
+
+            //Telefono
+            ViewContext.Writer.Write("<td>");
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Teléfono";
+                edtSettings.AssociatedControlName = "Telefono";
+            }).Render();
+
+            Html.DevExpress().TextBox(edtSettings =>
+            {
+                edtSettings.Name = "Telefono";
+                edtSettings.ControlStyle.CssClass = "editor";
+                edtSettings.ShowModelErrors = true;
+                edtSettings.Width = Unit.Pixel(250);
+                edtSettings.ToolTip = c.KeyValue == null ? "Ingresar un Teléfono" : "Editar el Teléfono";
+
+            }).Bind(DataBinder.Eval(campania, "Telefono")).Render();
+            ViewContext.Writer.Write("</td>");
+            ViewContext.Writer.Write("</tr>");
+
+            ViewContext.Writer.Write("</table>");
+
+            //RadioButton
+            ViewContext.Writer.Write("<br>");
+            ViewContext.Writer.Write("<div>");
+            ViewContext.Writer.Write("<div>");
+            ViewContext.Writer.Write("<label>Método de Captura</label><br>");
+            ViewContext.Writer.Write("<input type='radio' name='metodo' id='radioDireccion' value='Direccion' checked='checked' onclick='capturaDireccion();'>Dirección   ");
+            ViewContext.Writer.Write("<input type='radio' name='metodo' id='radioMapa' value='Mapa' onclick='capturaMapa();'>Mapa   ");
+            ViewContext.Writer.Write("<input type='radio' name='metodo' id='radioCoordenada' value='Coordenada' onclick='capturaCoordenadas();'>Coordenadas<br>");
+            ViewContext.Writer.Write("<input type='button' id='btnGeocodificar' onclick='elegirGeocod(true); VerPuntoEnMapa(); ' value='Ver Punto en Mapa' />");
+            ViewContext.Writer.Write("</div> ");
+            ViewContext.Writer.Write("<div>");
+            ViewContext.Writer.Write("<div>");
+            ViewContext.Writer.Write("</div>");
+            ViewContext.Writer.Write("</div>");
+            ViewContext.Writer.Write("</div>");
+            ViewContext.Writer.Write("</br>");
+
+            ViewContext.Writer.Write("<table>");
+
+            ViewContext.Writer.Write("<tr>");
+
+            //latitud
+            ViewContext.Writer.Write("<td>");
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Latitud";
+                edtSettings.AssociatedControlName = "Latitud";
+            }).Render();
+
+            Html.DevExpress().Memo(edtSettings =>
+            {
+                edtSettings.Name = "Latitud";
+                edtSettings.ControlStyle.CssClass = "editor";
+                edtSettings.ShowModelErrors = true;
+                edtSettings.Width = Unit.Pixel(250);
+                edtSettings.ToolTip = c.KeyValue == null ? "Ingresar" : "Editar";
+
+            }).Bind(DataBinder.Eval(campania, "Ubicacion.Latitude")).Render();
+            ViewContext.Writer.Write("</td>");
+
+            //longitud
+            ViewContext.Writer.Write("<td>");
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Longitud";
+                edtSettings.AssociatedControlName = "Longitud";
+            }).Render();
+
+            Html.DevExpress().Memo(edtSettings =>
+            {
+                edtSettings.Name = "Longitud";
+                edtSettings.ControlStyle.CssClass = "editor";
+                edtSettings.ShowModelErrors = true;
+                edtSettings.Width = Unit.Pixel(250);
+                edtSettings.ToolTip = c.KeyValue == null ? "Seleccione" : "Cambiar";
+                edtSettings.ToolTip = c.KeyValue == null ? "Ingresar" : "Editar";
+
+            }).Bind(DataBinder.Eval(campania, "Ubicacion.Longitude")).Render();
+            ViewContext.Writer.Write("</td>");
+            ViewContext.Writer.Write("</tr>");
+
+            ViewContext.Writer.Write("<tr>");
+            //Estado
+            ViewContext.Writer.Write("<td>");
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Estado";
+                edtSettings.AssociatedControlName = "Fk_IdEstado__SIS";
+            }).Render();
+
+            Html.DevExpress().ComboBox(edtSettings =>
+            {
+                edtSettings.Name = "Fk_IdEstado__SIS";
+                edtSettings.ControlStyle.CssClass = "editor";
+                edtSettings.Properties.TextField = "Nombre";
+                edtSettings.Properties.NullText = "Campo Requerido";
+                edtSettings.Properties.ValueField = "Pk_IdEstado";
+                edtSettings.Properties.ValueType = typeof(int);
+                edtSettings.ShowModelErrors = true;
+                edtSettings.Width = Unit.Pixel(300);
+                edtSettings.ToolTip = c.KeyValue == null ? "Seleccione un Estado" : "Cambiar el Estado";
+
+                edtSettings.Properties.EnableSynchronization = DefaultBoolean.False;
+                edtSettings.Properties.IncrementalFilteringMode = IncrementalFilteringMode.StartsWith;
+
+                edtSettings.Properties.ClientSideEvents.SelectedIndexChanged = "EstadoCombo_SelectedIndexChanged";
+            }
+  )
+  .BindList(DXMVCWebApplication1.Models.Senasica.GetEstados())
+  .Bind(DataBinder.Eval(campania, "Fk_IdEstado__SIS"))
+  .Render();
+
+            ViewContext.Writer.Write("</td>");
+
+            //Municipio
+            ViewContext.Writer.Write("<td>");
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Municipio";
+                edtSettings.AssociatedControlName = "Fk_IdMunicipio__SIS";
+            }).Render();
+
+
+            var Pk_IdEstado = c.Grid.GetRowValues(c.Grid.EditingRowVisibleIndex, "Fk_IdEstado__SIS");
+            var Fk_IdMunicipio = DataBinder.Eval(campania, "Fk_IdMunicipio__SIS");
+            ViewData["Fk_IdMunicipio__SIS"] = Fk_IdMunicipio;
+            var Municipios = (Pk_IdEstado == null)
+                ? DXMVCWebApplication1.Models.Senasica.GetMunicipiosByEstado(null)
+                : DXMVCWebApplication1.Models.Senasica.GetMunicipiosByEstado((int)Pk_IdEstado);
+
+            @Html.RenderPartial("_ComboBoxMunicipioPartial", Municipios);
+            ViewContext.Writer.Write("</td>");
+            ViewContext.Writer.Write("</tr>");
+
+            ViewContext.Writer.Write("<tr>");
+            //Direcciï¿½n
+            ViewContext.Writer.Write("<td>");
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Dirección";
+                edtSettings.AssociatedControlName = "Direccion";
+            }).Render();
+
+            Html.DevExpress().Memo(edtSettings =>
+            {
+                edtSettings.Name = "Direccion";
+                edtSettings.Properties.NullText = "Campo Requerido";
+                edtSettings.ControlStyle.CssClass = "editor";
+                edtSettings.ShowModelErrors = true;
+                edtSettings.Width = Unit.Pixel(400);
+                edtSettings.Height = Unit.Pixel(30);
+                edtSettings.ToolTip = c.KeyValue == null ? "Ingresar la Dirección del Productor" : "Editar la Dirección";
+
+            }).Bind(DataBinder.Eval(campania, "Direccion")).Render();
+            ViewContext.Writer.Write("</td>");
+
+            //Colonia
+            ViewContext.Writer.Write("<td>");
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Colonia";
+                edtSettings.AssociatedControlName = "Colonia";
+            }).Render();
+
+            Html.DevExpress().Memo(edtSettings =>
+            {
+                edtSettings.Name = "Colonia";
+                edtSettings.Properties.NullText = "Campo Requerido";
+                edtSettings.ControlStyle.CssClass = "editor";
+                edtSettings.ShowModelErrors = true;
+                edtSettings.Width = Unit.Pixel(400);
+                edtSettings.Height = Unit.Pixel(30);
+                edtSettings.ToolTip = c.KeyValue == null ? "Ingresar la Colonia del Productor" : "Editar la Colonia";
+
+            }).Bind(DataBinder.Eval(campania, "Colonia")).Render();
+            ViewContext.Writer.Write("</td>");
+            ViewContext.Writer.Write("</tr>");
+            ViewContext.Writer.Write("</table>");
+
+
+            ViewContext.Writer.Write("<BR>");
+            ViewContext.Writer.Write("<BR>");
+
+            //BOTONES
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+            }).Render();
+
+
+            Html.DevExpress().Button(btnSettings =>
+            {
+                btnSettings.Name = "btnUpdate";
+                //btnSettings.Text = "Actualizar";
+                btnSettings.Text = textoBoton;
+                btnSettings.Images.Image.Url = "Content/Images/guardar.png";
+                btnSettings.ImagePosition = ImagePosition.Right;
+                btnSettings.Images.Image.Width = 16;
+                btnSettings.ClientSideEvents.Click = "function(s, e){ ProductorGridView.UpdateEdit(); actualizarMarker('#RazonSocial_I',s,e);  }";
+                btnSettings.CausesValidation = true;
+                btnSettings.ClientEnabled = true;
+                //btnSettings.ClientSideEvents.LostFocus = "function(s,e){}";
+                btnSettings.ControlStyle.CssClass = "button";
+                btnSettings.ClientVisible = Convert.ToBoolean(ViewData["Escritura"]);
+            }).Render();
+
+            Html.DevExpress().Button(btnSettings =>
+            {
+                btnSettings.Name = "btnCancel";
+                btnSettings.ControlStyle.CssClass = "button";
+                btnSettings.Text = "Cancelar";
+                btnSettings.Images.Image.Url = "Content/Images/cancelar.png";
+                btnSettings.ImagePosition = ImagePosition.Right;
+                btnSettings.Style["position"] = "relative";
+                btnSettings.Style["left"] = "5px";
+                btnSettings.ClientSideEvents.Click = "function(s, e){ ProductorGridView.CancelEdit(); ocultarMarker(); }";
+            }).Render();
+        });//popup
+    });//fin
+       ////////////////////////////////////////////////////////////////
+       //(FIN) Inicia Custom popup
+       ////////////////////////////////////////////////////////////////
+
+    if (ViewData["EditError"] != null)
+    {
+        grid.SetEditErrorText((string)ViewData["EditError"]);
+    }
+}
+@grid.Bind(Model).GetHtml()
+
+<p id="idProd"></p>
+
+@*@{
+        <script>
+            var idProductor =  @ViewBag.idProductor;
+            if(!Number.NaN(idProductor)){
+                markersProductores.setMap(null);
+                document.getElementById("idProd").innerHTML = idProductor;
+            }
+        </script>
+    }*@

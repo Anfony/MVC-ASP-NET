@@ -1,0 +1,166 @@
+﻿@{
+    var grid = Html.DevExpress().GridView(settings =>
+    {
+        settings.Name = "ProgramasGastosTransversalesGridView";
+        settings.CallbackRouteValues = new { Controller = "ProgramaAnualAdq", Action = "ProgramasGastosTransversalesGridViewPartial", IdProgramaAnualAdq = ViewData["IdProgramaAnualAdq"] };
+        settings.Width = Unit.Percentage(100);
+
+        settings.SettingsEditing.AddNewRowRouteValues = new { Controller = "ProgramaAnualAdq", Action = "ProgramasGastosTransversalesAddNew", IdProgramaAnualAdq = ViewData["IdProgramaAnualAdq"] };
+        settings.SettingsEditing.UpdateRowRouteValues = new { Controller = "ProgramaAnualAdq", Action = "ProgramasGastosTransversalesUpdate", IdProgramaAnualAdq = ViewData["IdProgramaAnualAdq"] };
+        settings.SettingsEditing.DeleteRowRouteValues = new { Controller = "ProgramaAnualAdq", Action = "ProgramasGastosTransversalesDelete", IdProgramaAnualAdq = ViewData["IdProgramaAnualAdq"] };
+        settings.SettingsEditing.Mode = GridViewEditingMode.PopupEditForm;
+        settings.SettingsText.PopupEditFormCaption = "Recurso de Proyectos para el concepto transversal";
+
+        settings.SettingsPopup.EditForm.Height = 160;
+        settings.SettingsPopup.EditForm.Width = 625;
+        settings.SettingsPopup.EditForm.HorizontalAlign = PopupHorizontalAlign.WindowCenter;
+        settings.SettingsPopup.EditForm.VerticalAlign = PopupVerticalAlign.WindowCenter;
+        settings.SettingsPopup.EditForm.Modal = true;
+
+        settings.SettingsBehavior.ConfirmDelete = true;
+        settings.Settings.ShowFilterRow = true;
+        settings.Settings.ShowFilterRowMenu = true;
+
+        settings.CommandColumn.Visible = true;
+        settings.SettingsCommandButton.NewButton.Text = "Nueva Campaña";
+        settings.CommandColumn.ShowNewButtonInHeader = Convert.ToBoolean(ViewData["Escritura"]);
+        settings.CommandColumn.ShowDeleteButton = Convert.ToBoolean(ViewData["Escritura"]);
+        settings.CommandColumn.ShowEditButton = Convert.ToBoolean(ViewData["Escritura"]) || Convert.ToBoolean(ViewData["Lectura"]);
+        settings.CommandColumn.ShowClearFilterButton = true;
+
+        //settings.GroupSummary.Add(DevExpress.Data.SummaryItemType.Sum, "Monto").DisplayFormat = "c";
+
+        settings.SettingsBehavior.AllowSelectByRowClick = true;
+        settings.SettingsDetail.AllowOnlyOneMasterRowExpanded = true;
+
+        settings.KeyFieldName = "Pk_IdProgramasGastosTransversales";
+
+        settings.SettingsPager.Visible = true;
+        settings.SettingsPager.Position = PagerPosition.Bottom;
+        settings.SettingsPager.FirstPageButton.Visible = true;
+        settings.SettingsPager.LastPageButton.Visible = true;
+        settings.SettingsPager.PageSizeItemSettings.Visible = true;
+        settings.SettingsPager.PageSize = 15;
+        settings.SettingsPager.PageSizeItemSettings.Items = new string[] { "5", "10", "15", "20" };
+
+        settings.Columns.Add("ProyectoPresupuesto.ProyectoAutorizado.Nombre", "Campaña a la que se le solicita presupuesto");
+        settings.Columns.Add("Monto", "Importe Solicitado a la Campaña").PropertiesEdit.DisplayFormatString = "c";
+
+        /*settings.Columns.AddBand(RecursosBand =>
+        {
+            RecursosBand.Caption = "Origen de Recursos";
+            RecursosBand.HeaderStyle.HorizontalAlign = HorizontalAlign.Center;
+            RecursosBand.Columns.Add("RecFed", "Federales").PropertiesEdit.DisplayFormatString = "c";
+            RecursosBand.Columns.Add("RecEst", "Estatales").PropertiesEdit.DisplayFormatString = "c";
+            RecursosBand.Columns.Add("RecProp", "Propios").PropertiesEdit.DisplayFormatString = "c";
+        });*/
+
+        settings.TotalSummary.Add(DevExpress.Data.SummaryItemType.Sum, "Monto").DisplayFormat = "c";
+        //settings.TotalSummary.Add(DevExpress.Data.SummaryItemType.Sum, "RecEst").DisplayFormat = "c";
+        //settings.TotalSummary.Add(DevExpress.Data.SummaryItemType.Sum, "RecProp").DisplayFormat = "c";
+
+        settings.Settings.ShowGroupPanel = true;
+        settings.Settings.ShowFooter = true;
+        settings.Settings.ShowGroupFooter = GridViewGroupFooterMode.VisibleAlways;
+
+        settings.SetEditFormTemplateContent(c =>
+        {
+            var programaAnual = ViewData["dataItem"] ?? c.DataItem;
+
+            ViewContext.Writer.Write("<br >");
+            ViewContext.Writer.Write("<br >");
+
+            ViewContext.Writer.Write("<table><tr><td>");
+
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Proyecto Autorizado";
+                edtSettings.AssociatedControlName = "Fk_IdProyectoPresupuesto";
+            }).Render();
+
+            Html.DevExpress().ComboBox(edtSettings =>
+            {
+                edtSettings.Name = "Fk_IdProyectoPresupuesto";
+                edtSettings.ControlStyle.CssClass = "editor";
+                edtSettings.Properties.TextField = "ProyectoAutorizado.Nombre";
+                edtSettings.Properties.TextFormatString = "{0}";
+                edtSettings.Properties.NullText = "Campo Requerido";
+                edtSettings.Properties.ValueField = "Pk_IdProyectoPresupuesto";
+                edtSettings.Properties.ValueType = typeof(int);
+                edtSettings.ShowModelErrors = true;
+                edtSettings.Width = Unit.Pixel(400);
+                edtSettings.ToolTip = c.KeyValue == null ? "Seleccione un Proyecto" : "Cambiar Proyecto";
+                edtSettings.Properties.IncrementalFilteringMode = IncrementalFilteringMode.Contains;
+
+                edtSettings.Properties.Columns.Add("ProyectoAutorizado.Nombre", "Proyecto").Width = Unit.Pixel(450);
+                edtSettings.Properties.Columns.Add("RF_Anual", "Recurso Federal");
+                edtSettings.Properties.Columns.Add("RE_Anual", "Recurso Estatal");
+                edtSettings.Properties.Columns.Add("RP_Anual", "Recurso Productores");
+
+            }).BindList(DXMVCWebApplication1.Models.Senasica.GetProyectoPresupuestoS(Convert.ToInt32(DataBinder.Eval(programaAnual, "Fk_IdProyectoPresupuesto"))))
+            .Bind(DataBinder.Eval(programaAnual, "Fk_IdProyectoPresupuesto"))
+            .Render();
+
+            ViewContext.Writer.Write("</td>");
+
+            ViewContext.Writer.Write("<td>");
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Importe";
+                edtSettings.Name = "MontoLabel";
+            }).Render();
+
+            Html.DevExpress().SpinEdit(edtSettings =>
+            {
+                edtSettings.Name = "Monto";
+                edtSettings.Properties.MinValue = 0;
+                edtSettings.Properties.MaxValue = 999999999;
+                edtSettings.Properties.DecimalPlaces = 2;
+                edtSettings.Properties.NumberType = SpinEditNumberType.Float;
+                edtSettings.Properties.Increment = 0.1M;
+                edtSettings.Properties.LargeIncrement = 1;
+                edtSettings.Properties.SpinButtons.ShowLargeIncrementButtons = true;
+                edtSettings.ControlStyle.CssClass = "editor";
+                edtSettings.ShowModelErrors = true;
+                edtSettings.Width = Unit.Pixel(250);
+                edtSettings.Properties.DisplayFormatString = "n";
+            }).Bind(DataBinder.Eval(programaAnual, "Monto"))
+            .Render();
+            ViewContext.Writer.Write("</td></tr></table>");
+
+            ViewContext.Writer.Write("<br >");
+            ViewContext.Writer.Write("<br >");
+
+            ViewContext.Writer.Write("<div style='float:right'>");
+            Html.DevExpress().Button(btnSettings =>
+            {
+                btnSettings.Name = "btnUpdateProgGastosTrans";
+                btnSettings.Text = "Guardar";
+                btnSettings.ClientVisible = Convert.ToBoolean(ViewData["permisoCreacion"]);
+                btnSettings.Images.Image.Url = "/Content/Images/guardar.png";
+                btnSettings.Images.Image.Width = 16;
+                btnSettings.ClientSideEvents.Click = "function(s, e){ ProgramasGastosTransversalesGridView.UpdateEdit(); }";
+                btnSettings.ClientVisible = Convert.ToBoolean(ViewData["Escritura"]);
+            }).Render();
+
+            Html.DevExpress().Button(btnSettings =>
+            {
+                btnSettings.Name = "btnCancelProgGastosTrans";
+                btnSettings.Text = "Cancelar";
+                btnSettings.Images.Image.Url = "/Content/Images/cancelar.png";
+                btnSettings.Style[HtmlTextWriterStyle.MarginLeft] = "5px";
+                btnSettings.ClientSideEvents.Click = "function(s, e){ ProgramasGastosTransversalesGridView.CancelEdit(); }";
+            }).Render();
+            ViewContext.Writer.Write("</div>");
+        });
+    });
+
+    if (ViewData["EditError"] != null)
+    {
+        grid.SetEditErrorText((string)ViewData["EditError"]);
+    }
+}
+
+@grid.Bind(Model).GetHtml()

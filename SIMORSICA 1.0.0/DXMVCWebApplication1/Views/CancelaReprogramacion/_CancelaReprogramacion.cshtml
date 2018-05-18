@@ -1,0 +1,21 @@
+@Html.DevExpress().Button(btnSettings =>
+           {
+               var StatusActual = Senasica.GetStatusActualCampania(Convert.ToInt32(ViewData["IdCampania"]));
+               string StatusCampaniaEn_Repro = FuncionesAuxiliares.GetStatusCampaniaEn_Repro(Convert.ToInt32(ViewData["IdCampania"]));
+               string rolUsuario = FuncionesAuxiliares.GetCurrent_RolUsuario();
+               string Rol_CancelarRepro = FuncionesAuxiliares.CancelarReproByRol();
+
+               btnSettings.Name = "btnCancelar_repro";
+               btnSettings.Text = "Cancelar Reprogramación";
+               btnSettings.ControlStyle.CssClass = "button";
+               btnSettings.Images.Image.Url = "/Content/Images/cancelar.png";
+               btnSettings.ImagePosition = ImagePosition.Right;
+               btnSettings.Images.Image.Width = 16;
+               btnSettings.Style["position"] = "relative";
+               btnSettings.Style["left"] = "30px";
+               btnSettings.ClientVisible = (StatusActual == StatusCampaniaEn_Repro
+                                            && rolUsuario == Rol_CancelarRepro) ? true : false;
+               btnSettings.ControlStyle.Border.BorderColor = System.Drawing.Color.Red;
+               btnSettings.ClientSideEvents.Click = "function(s, e) { showMensaje.Show(); showMensaje.PerformCallback(); }";
+           }).GetHtml();
+@Html.Partial("_Mensaje")

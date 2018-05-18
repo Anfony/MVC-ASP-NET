@@ -1,0 +1,24 @@
+﻿@Html.DevExpress().ComboBox(edtSettings =>
+{
+    edtSettings.Name = "Fk_IdBienOServ__SIS";
+    edtSettings.ControlStyle.CssClass = "editor";
+    edtSettings.ShowModelErrors = true;
+    edtSettings.Width = Unit.Pixel(350);
+    //edtSettings.CallbackRouteValues = new { Controller = "ProgramaAnualAdq", Action = "ComboBoxPartialBienOServicio" };
+
+    edtSettings.Properties.TextField = "Nombre";
+    edtSettings.Properties.NullText = "Campo Requerido";
+    edtSettings.Properties.ValueField = "Pk_IdBienOServ";
+    edtSettings.Properties.ValueType = typeof(int);
+    //edtSettings.Properties.DropDownStyle = DropDownStyle.DropDown;
+    edtSettings.Properties.IncrementalFilteringMode = IncrementalFilteringMode.Contains;
+    //edtSettings.Properties.FilterMinLength = 2;
+    //edtSettings.Properties.CallbackPageSize = 15;
+    edtSettings.Properties.Columns.Add("TipoDeBien", "Tipo de Bien").Width = Unit.Pixel(300);
+    edtSettings.Properties.Columns.Add("Nombre", "Bien o Servicio").Width = Unit.Pixel(300);
+    //HttpContext.Current.Items["Fk_IdBienOServ__SIS"] = ViewData["Fk_IdBienOServ__SIS"] == null ? "" : ViewData["Fk_IdBienOServ__SIS"].ToString();
+    edtSettings.Properties.EnableClientSideAPI = true;
+    //edtSettings.Properties.ClientSideEvents.ValueChanged = "CambiaBienServ";
+    edtSettings.Properties.ClientSideEvents.SelectedIndexChanged = "function(s, e){ BienServTransversalCombo_SelectedIndexChanged(s, e); CambiaBienServ }";
+
+}).BindList(Senasica.GetBienesOServTransversales()).Bind(ViewData["Fk_IdBienOServ__SIS"]).GetHtml()

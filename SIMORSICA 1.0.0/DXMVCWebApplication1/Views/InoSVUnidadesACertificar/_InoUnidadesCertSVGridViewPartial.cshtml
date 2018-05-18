@@ -1,0 +1,337 @@
+﻿@{
+    var grid = Html.DevExpress().GridView(settings =>
+    {
+        settings.Name = "InoUnidadesCertSVGridView" + ViewData["IdCampania"];
+        settings.SettingsDetail.MasterGridName = "CampaniaInoSVGridView";
+        settings.CallbackRouteValues = new { Controller = "InoSVUnidadesACertificar", Action = "InoUnidadesCertSVGridViewPartial", IdCampania = ViewData["IdCampania"], IdEstado = ViewData["IdEstado"] };
+
+        settings.SettingsEditing.AddNewRowRouteValues = new { Controller = "InoSVUnidadesACertificar", Action = "InoUnidadesCertSVGridViewPartialAddNew", IdCampania = ViewData["IdCampania"], IdEstado = ViewData["IdEstado"] };
+        settings.SettingsEditing.UpdateRowRouteValues = new { Controller = "InoSVUnidadesACertificar", Action = "InoUnidadesCertSVGridViewPartialUpdate", IdCampania = ViewData["IdCampania"], IdEstado = ViewData["IdEstado"] };
+        settings.SettingsEditing.DeleteRowRouteValues = new { Controller = "InoSVUnidadesACertificar", Action = "InoUnidadesCertSVGridViewPartialDelete", IdCampania = ViewData["IdCampania"], IdEstado = ViewData["IdEstado"] };
+        settings.SettingsEditing.Mode = GridViewEditingMode.PopupEditForm;
+
+        settings.SettingsPopup.EditForm.Height = 220;
+        settings.SettingsPopup.EditForm.Width = 625;
+        settings.SettingsPopup.EditForm.HorizontalAlign = DevExpress.Web.ASPxClasses.PopupHorizontalAlign.WindowCenter;
+        settings.SettingsPopup.EditForm.VerticalAlign = DevExpress.Web.ASPxClasses.PopupVerticalAlign.WindowCenter;
+        settings.SettingsPopup.EditForm.Modal = true;
+
+        settings.SettingsBehavior.ConfirmDelete = true;
+
+        settings.CommandColumn.Visible = true;
+        //settings.CommandColumn.ShowNewButton = true;
+        settings.SettingsCommandButton.NewButton.Text = "Nueva Unidad";
+        settings.CommandColumn.ShowNewButtonInHeader = true;
+        settings.CommandColumn.ShowDeleteButton = true;
+        settings.CommandColumn.ShowEditButton = true;
+
+        settings.KeyFieldName = "Pk_IdInoUnidadesCertSV";
+
+        settings.SettingsPager.Visible = true;
+        settings.SettingsPager.Position = PagerPosition.Bottom;
+        settings.SettingsPager.FirstPageButton.Visible = true;
+        settings.SettingsPager.LastPageButton.Visible = true;
+        settings.SettingsPager.PageSizeItemSettings.Visible = true;
+        settings.SettingsPager.PageSize = 3;
+        settings.SettingsPager.PageSizeItemSettings.Items = new string[] { "5", "10", "15" };
+        settings.Settings.ShowFilterRowMenu = true;
+
+        //settings.Columns.Add("FK_IdCampania");
+        //settings.Columns.Add("Fk_IdMunicipio");
+        int? IdEstado = Convert.ToInt32(ViewData["IdEstado"]);
+        settings.Columns.Add(column =>
+        {
+            column.FieldName = "Fk_IdMunicipio";
+            column.Caption = "Municipio";
+            column.ColumnType = MVCxGridViewColumnType.ComboBox;
+            var comboBoxProperties = column.PropertiesEdit as ComboBoxProperties;
+            comboBoxProperties.DataSource = DXMVCWebApplication1.Models.Senasica.GetMunicipiosByEstado(IdEstado);
+            comboBoxProperties.TextField = "Nombre";
+            comboBoxProperties.ValueField = "Pk_IdMunicipio";
+            comboBoxProperties.ValueType = typeof(int);
+            comboBoxProperties.IncrementalFilteringMode = IncrementalFilteringMode.StartsWith;
+        });
+        settings.Columns.Add("TotalProductores").PropertiesEdit.DisplayFormatString = "n";
+        settings.Columns.Add("UnidadesProd", "Unidades Producción").PropertiesEdit.DisplayFormatString = "n";
+
+        settings.Columns.AddBand(UPBand =>
+        {
+            UPBand.Caption = "Unidades Programadas";
+            UPBand.HeaderStyle.HorizontalAlign = HorizontalAlign.Center;
+            UPBand.Columns.Add("Prog_UnidadesCertificar", "A Certificar").PropertiesEdit.DisplayFormatString = "n";
+            UPBand.Columns.Add("Prog_UnidadesReconocer", "A Reconocer").PropertiesEdit.DisplayFormatString = "n";
+        });
+
+        settings.Columns.AddBand(RealBand =>
+        {
+            RealBand.Caption = "Realizado";
+            RealBand.HeaderStyle.HorizontalAlign = HorizontalAlign.Center;
+            RealBand.Columns.Add("Real_UnidadesCertificar", "Certificadas").PropertiesEdit.DisplayFormatString = "n";
+            RealBand.Columns.Add("Real_UnidadesReconocer", "Reconocidas").PropertiesEdit.DisplayFormatString = "n";
+        });
+
+        //Inicia Popup
+        settings.SetEditFormTemplateContent(c =>
+        {
+            var inocompsv = ViewData["dataItem"] ?? c.DataItem;
+            ViewContext.Writer.Write("<p>Unidades a Certificar/Reconocer</p>");
+            ViewContext.Writer.Write(
+      "<table>" +
+      "<tr>" +
+         "<td>");
+
+            Html.DevExpress().Label(
+                  edtSettings =>
+                  {
+                      edtSettings.ControlStyle.CssClass = "label";
+                      edtSettings.Text = "Municipio";
+                      edtSettings.AssociatedControlName = "Fk_IdMunicipio";
+                  }
+              )
+              .Render();
+            Html.DevExpress().ComboBox(
+                edtSettings =>
+                {
+                    edtSettings.Name = "Fk_IdMunicipio";
+                    edtSettings.Properties.NullText = "Campo Requerido";
+                    edtSettings.ControlStyle.CssClass = "editor";
+                    edtSettings.Properties.TextField = "Nombre";
+                    edtSettings.Properties.ValueField = "Pk_IdMunicipio";
+                    edtSettings.Properties.ValueType = typeof(int);
+                    edtSettings.ShowModelErrors = true;
+                    edtSettings.Width = Unit.Pixel(250);
+                    edtSettings.Properties.IncrementalFilteringMode = IncrementalFilteringMode.Contains;
+                    edtSettings.Properties.IncrementalFilteringDelay = 5;
+                }
+            )
+
+            .BindList(DXMVCWebApplication1.Models.Senasica.GetMunicipiosByEstado(IdEstado))
+               .Bind(DataBinder.Eval(inocompsv, "Fk_IdMunicipio"))
+               .Render();
+
+            ViewContext.Writer.Write("</td>");
+         
+            ViewContext.Writer.Write("<td>");
+            Html.DevExpress().Label(
+                       edtSettings =>
+                       {
+                           edtSettings.ControlStyle.CssClass = "label";
+                           edtSettings.Text = "Total de Productores:";
+                           edtSettings.AssociatedControlName = "TotalProductores";
+                       }
+                   )
+                   .Render();
+            Html.DevExpress().SpinEdit(
+                edtSettings =>
+                {
+                    edtSettings.Name = "TotalProductores";
+                    edtSettings.Properties.MinValue = 0;
+                    edtSettings.Properties.MaxValue = 999999999;
+                    edtSettings.Properties.NumberType = SpinEditNumberType.Integer;
+                    edtSettings.Properties.Increment = 0.1M;
+                    edtSettings.Properties.LargeIncrement = 1;
+                    edtSettings.Properties.SpinButtons.ShowLargeIncrementButtons = true;
+                    edtSettings.Properties.DisplayFormatString = "n";
+                    edtSettings.ControlStyle.CssClass = "editor";
+                    edtSettings.ShowModelErrors = true;
+                    edtSettings.Width = Unit.Pixel(250);
+                }
+            )
+            .Bind(DataBinder.Eval(inocompsv, "TotalProductores"))
+            .Render();
+            ViewContext.Writer.Write("</td>");
+
+
+            ViewContext.Writer.Write("<td>");
+            Html.DevExpress().Label(
+                      edtSettings =>
+                      {
+                          edtSettings.ControlStyle.CssClass = "label";
+                          edtSettings.Text = "Unidades Producción:";
+                          edtSettings.AssociatedControlName = "UnidadesProd";
+                      }
+                  )
+                  .Render();
+            Html.DevExpress().SpinEdit(
+                edtSettings =>
+                {
+                    edtSettings.Name = "UnidadesProd";
+                    edtSettings.Properties.MinValue = 0;
+                    edtSettings.Properties.MaxValue = 999999999;
+                    edtSettings.Properties.NumberType = SpinEditNumberType.Integer;
+                    edtSettings.Properties.Increment = 0.1M;
+                    edtSettings.Properties.LargeIncrement = 1;
+                    edtSettings.Properties.SpinButtons.ShowLargeIncrementButtons = true;
+                    edtSettings.Properties.DisplayFormatString = "n";
+                    edtSettings.ControlStyle.CssClass = "editor";
+                    edtSettings.ShowModelErrors = true;
+                    edtSettings.Width = Unit.Pixel(250);
+                }
+            )
+            .Bind(DataBinder.Eval(inocompsv, "UnidadesProd"))
+            .Render();
+            ViewContext.Writer.Write("</td>");
+            ViewContext.Writer.Write("<td>");
+            Html.DevExpress().Label(
+                      edtSettings =>
+                      {
+                          edtSettings.ControlStyle.CssClass = "label";
+                          edtSettings.Text = "Prog. Unidades Certificar:";
+                          edtSettings.AssociatedControlName = "Prog_UnidadesCertificar";
+                      }
+                  )
+                  .Render();
+            Html.DevExpress().SpinEdit(
+                edtSettings =>
+                {
+                    edtSettings.Name = "Prog_UnidadesCertificar";
+                    edtSettings.Properties.MinValue = 0;
+                    edtSettings.Properties.MaxValue = 999999999;
+                    edtSettings.Properties.NumberType = SpinEditNumberType.Integer;
+                    edtSettings.Properties.Increment = 0.1M;
+                    edtSettings.Properties.LargeIncrement = 1;
+                    edtSettings.Properties.SpinButtons.ShowLargeIncrementButtons = true;
+                    edtSettings.Properties.DisplayFormatString = "n";
+                    edtSettings.ControlStyle.CssClass = "editor";
+                    edtSettings.ShowModelErrors = true;
+                    edtSettings.Width = Unit.Pixel(250);
+                }
+            )
+            .Bind(DataBinder.Eval(inocompsv, "Prog_UnidadesCertificar"))
+            .Render();
+            ViewContext.Writer.Write("</td>");
+            ViewContext.Writer.Write("</tr>");
+            ViewContext.Writer.Write("<tr>");
+            ViewContext.Writer.Write("<td>");
+            Html.DevExpress().Label(
+                      edtSettings =>
+                      {
+                          edtSettings.ControlStyle.CssClass = "label";
+                          edtSettings.Text = "Prog. Unidades a Reconocer:";
+                          edtSettings.AssociatedControlName = "Prog_UnidadesReconocer";
+                      }
+                  )
+                  .Render();
+            Html.DevExpress().SpinEdit(
+                edtSettings =>
+                {
+                    edtSettings.Name = "Prog_UnidadesReconocer";
+                    edtSettings.Properties.MinValue = 0;
+                    edtSettings.Properties.MaxValue = 999999999;
+                    edtSettings.Properties.NumberType = SpinEditNumberType.Integer;
+                    edtSettings.Properties.Increment = 0.1M;
+                    edtSettings.Properties.LargeIncrement = 1;
+                    edtSettings.Properties.SpinButtons.ShowLargeIncrementButtons = true;
+                    edtSettings.Properties.DisplayFormatString = "n";
+                    edtSettings.ControlStyle.CssClass = "editor";
+                    edtSettings.ShowModelErrors = true;
+                    edtSettings.Width = Unit.Pixel(250);
+                }
+            )
+            .Bind(DataBinder.Eval(inocompsv, "Prog_UnidadesReconocer"))
+            .Render();
+            ViewContext.Writer.Write("</td>");
+            ViewContext.Writer.Write("<td>");
+            Html.DevExpress().Label(
+                      edtSettings =>
+                      {
+                          edtSettings.ControlStyle.CssClass = "label";
+                          edtSettings.Text = "Real de Unidades a Certificar:";
+                          edtSettings.AssociatedControlName = "Real_UnidadesCertificar";
+                      }
+                  )
+                  .Render();
+            Html.DevExpress().SpinEdit(
+                edtSettings =>
+                {
+                    edtSettings.Name = "Real_UnidadesCertificar";
+                    edtSettings.Properties.MinValue = 0;
+                    edtSettings.Properties.MaxValue = 999999999;
+                    edtSettings.Properties.NumberType = SpinEditNumberType.Integer;
+                    edtSettings.Properties.Increment = 0.1M;
+                    edtSettings.Properties.LargeIncrement = 1;
+                    edtSettings.Properties.SpinButtons.ShowLargeIncrementButtons = true;
+                    edtSettings.Properties.DisplayFormatString = "n";
+                    edtSettings.ControlStyle.CssClass = "editor";
+                    edtSettings.ShowModelErrors = true;
+                    edtSettings.Width = Unit.Pixel(250);
+                }
+            )
+            .Bind(DataBinder.Eval(inocompsv, "Real_UnidadesCertificar"))
+            .Render();
+            ViewContext.Writer.Write("</td>");
+            
+            
+            ViewContext.Writer.Write("<td>");
+            Html.DevExpress().Label(
+                      edtSettings =>
+                      {
+                          edtSettings.ControlStyle.CssClass = "label";
+                          edtSettings.Text = "Real de Unidades a Reconocer:";
+                          edtSettings.AssociatedControlName = "Real_UnidadesReconocer";
+                      }
+                  )
+                  .Render();
+            Html.DevExpress().SpinEdit(
+                edtSettings =>
+                {
+                    edtSettings.Name = "Real_UnidadesReconocer";
+                    edtSettings.Properties.MinValue = 0;
+                    edtSettings.Properties.MaxValue = 999999999;
+                    edtSettings.Properties.NumberType = SpinEditNumberType.Integer;
+                    edtSettings.Properties.Increment = 0.1M;
+                    edtSettings.Properties.LargeIncrement = 1;
+                    edtSettings.Properties.SpinButtons.ShowLargeIncrementButtons = true;
+                    edtSettings.Properties.DisplayFormatString = "n";
+                    edtSettings.ControlStyle.CssClass = "editor";
+                    edtSettings.ShowModelErrors = true;
+                    edtSettings.Width = Unit.Pixel(250);
+                }
+            )
+            .Bind(DataBinder.Eval(inocompsv, "Real_UnidadesReconocer"))
+            .Render();
+
+            ViewContext.Writer.Write("</td>");
+
+            ViewContext.Writer.Write("</tr>");
+            ViewContext.Writer.Write("</table>");
+
+            ViewContext.Writer.Write("<br>");
+            Html.DevExpress().Button(
+                       btnSettings =>
+                       {
+                           btnSettings.Name = "btnUpdatInoCertSVGridView";
+                           btnSettings.Text = "Guardar";
+                           btnSettings.ControlStyle.CssClass = "button";
+                           btnSettings.Images.Image.Url = "Content/Images/guardar.png";
+                           btnSettings.ImagePosition = ImagePosition.Right;
+                           btnSettings.Images.Image.Width = 16;
+                           btnSettings.ClientSideEvents.Click = "function(s, e){ InoUnidadesCertSVGridView" + ViewData["IdCampania"] + ".UpdateEdit(); }";
+                       }
+                   )
+                   .Render();
+
+            Html.DevExpress().Button(
+                btnSettings =>
+                {
+                    btnSettings.Name = "btnCanceInoCertSVGridView";
+                    btnSettings.Text = "Cancelar";
+                    btnSettings.ControlStyle.CssClass = "button";
+                    btnSettings.Images.Image.Url = "Content/Images/cancelar.png";
+                    btnSettings.ImagePosition = ImagePosition.Right;
+                    btnSettings.Style["position"] = "relative";
+                    btnSettings.Style["left"] = "5px";
+                    btnSettings.ClientSideEvents.Click = "function(s, e){ InoUnidadesCertSVGridView" + ViewData["IdCampania"] + ".CancelEdit(); }";
+                }
+            )
+            .Render();
+            ViewContext.Writer.Write("</br>");
+        });
+
+    });
+    if (ViewData["EditError"] != null)
+    {
+        grid.SetEditErrorText((string)ViewData["EditError"]);
+    }
+}
+@grid.Bind(Model).GetHtml()

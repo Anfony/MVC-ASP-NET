@@ -1,0 +1,22 @@
+﻿@Html.DevExpress().ComboBox(edtSettings =>
+{
+    edtSettings.Name = "Fk_IdProveedor";
+    edtSettings.ControlStyle.CssClass = "editor";
+    edtSettings.ShowModelErrors = true;
+    edtSettings.Width = Unit.Pixel(550);
+    edtSettings.CallbackRouteValues = new { Controller = "ReporteDeAdquisiciones", Action = "ComboBoxPartialProveedor" };
+
+    edtSettings.Properties.TextField = "RazonSocial_Nombre";
+
+    edtSettings.Properties.ValueField = "Pk_IdProveedor";
+    edtSettings.Properties.ValueType = typeof(int);
+    edtSettings.Properties.DropDownStyle = DropDownStyle.DropDown;
+    edtSettings.Properties.IncrementalFilteringMode = IncrementalFilteringMode.Contains;
+    edtSettings.Properties.FilterMinLength = 2;
+    edtSettings.Properties.CallbackPageSize = 15;
+    edtSettings.Properties.Columns.Add("Estado.Nombre", "Estado del Proveedor");
+    edtSettings.Properties.Columns.Add("RazonSocial_Nombre", "Proveedor");
+
+    HttpContext.Current.Items["Fk_IdProveedor"] = ViewData["Fk_IdProveedor"] == null ? "" : ViewData["Fk_IdProveedor"].ToString();
+
+}).BindList(FuncionesAuxiliares.GetProveedorRange, FuncionesAuxiliares.GetProveedorById).Bind(ViewData["Fk_IdProveedor"]).GetHtml()

@@ -1,0 +1,410 @@
+@{
+    var grid = Html.DevExpress().GridView(settings =>
+    {
+        settings.Name = "PoblacionSAGridView";
+        settings.CallbackRouteValues = new { Controller = "SAImportanciaEconomica", Action = "PoblacionSAGridViewPartial", IdCampania = ViewData["IdCampania"], IdEstado = ViewData["IdEstado"] };
+
+        settings.SettingsEditing.AddNewRowRouteValues = new { Controller = "SAImportanciaEconomica", Action = "PoblacionSAGridViewPartialAddNew", IdCampania = ViewData["IdCampania"], IdEstado = ViewData["IdEstado"] };
+        settings.SettingsEditing.UpdateRowRouteValues = new { Controller = "SAImportanciaEconomica", Action = "PoblacionSAGridViewPartialUpdate", IdCampania = ViewData["IdCampania"], IdEstado = ViewData["IdEstado"] };
+        settings.SettingsEditing.DeleteRowRouteValues = new { Controller = "SAImportanciaEconomica", Action = "PoblacionSAGridViewPartialDelete", IdCampania = ViewData["IdCampania"], IdEstado = ViewData["IdEstado"] };
+        settings.SettingsEditing.Mode = GridViewEditingMode.PopupEditForm;
+
+        settings.SettingsPopup.EditForm.Height = 210;
+        settings.SettingsPopup.EditForm.Width = 425;
+        settings.SettingsPopup.EditForm.HorizontalAlign = DevExpress.Web.ASPxClasses.PopupHorizontalAlign.WindowCenter;
+        settings.SettingsPopup.EditForm.VerticalAlign = DevExpress.Web.ASPxClasses.PopupVerticalAlign.WindowCenter;
+        settings.SettingsPopup.EditForm.Modal = true;
+        
+        settings.SettingsBehavior.ConfirmDelete = true;
+
+        settings.CommandColumn.Visible = true;
+        settings.SettingsCommandButton.NewButton.Text = "Nueva Población";
+        settings.CommandColumn.ShowNewButtonInHeader = true;
+        settings.CommandColumn.ShowDeleteButton = true;
+        settings.CommandColumn.ShowEditButton = true;
+
+        settings.KeyFieldName = "Pk_IdSAPoblacion";
+
+        settings.SettingsPager.Visible = true;
+        settings.SettingsPager.Position = PagerPosition.Bottom;
+        settings.SettingsPager.FirstPageButton.Visible = true;
+        settings.SettingsPager.LastPageButton.Visible = true;
+        settings.SettingsPager.PageSizeItemSettings.Visible = true;
+        settings.SettingsPager.PageSize = 3;
+        settings.SettingsPager.PageSizeItemSettings.Items = new string[] { "5", "10", "15" };
+        settings.Settings.ShowFilterRowMenu = true;
+
+        //settings.Settings.ShowGroupPanel = true;
+        //settings.Settings.ShowFilterRow = true;
+        //settings.SettingsBehavior.AllowSelectByRowClick = true;
+
+        //settings.ClientSideEvents.BeginCallback = "OnBeginCallback";
+        //settings.ClientSideEvents.SelectionChanged = "SelectionChanged";
+        //settings.CommandColumn.ShowSelectCheckbox = true;
+
+        settings.Columns.Add("Raza");
+        settings.Columns.Add("UnidadesDeProduc", "Producción");
+        settings.Columns.Add("Region", "Región");
+
+        int? IdEstado = Convert.ToInt32(ViewData["IdEstado"]);
+        
+        settings.Columns.Add(column =>
+        {
+            column.FieldName = "Fk_IdMunicipio";
+            column.Caption = "Municipio";
+            column.ColumnType = MVCxGridViewColumnType.ComboBox;
+            var comboBoxProperties = column.PropertiesEdit as ComboBoxProperties;
+            comboBoxProperties.DataSource = DXMVCWebApplication1.Models.Senasica.GetMunicipiosByEstado(IdEstado);
+            comboBoxProperties.TextField = "Nombre";
+            comboBoxProperties.ValueField = "Pk_IdMunicipio";
+            comboBoxProperties.ValueType = typeof(int);
+            comboBoxProperties.IncrementalFilteringMode = IncrementalFilteringMode.StartsWith;
+        });
+
+        settings.Columns.Add("ZonaAmortig", "Zona Amortig.").PropertiesEdit.DisplayFormatString = "n";
+        settings.Columns.Add("PoblacionTotalReg", "Población Total Reg.").PropertiesEdit.DisplayFormatString = "n";
+        settings.Columns.Add("UPRegional").PropertiesEdit.DisplayFormatString = "n";
+        
+        settings.Columns.AddBand(AnioAntBand =>
+        {
+            AnioAntBand.Caption = "Año Aterior";
+            AnioAntBand.HeaderStyle.HorizontalAlign = HorizontalAlign.Center;
+            AnioAntBand.Columns.Add("AnioAntUPAtendidos", "UP Atend.").PropertiesEdit.DisplayFormatString = "n";
+            AnioAntBand.Columns.Add("AnioAntCabezasAtendidas", "Cabezas Atend.").PropertiesEdit.DisplayFormatString = "n";
+        });
+        
+        settings.Columns.AddBand(ImporteBand =>
+        {
+            ImporteBand.Caption = "Año Actual";
+            ImporteBand.HeaderStyle.HorizontalAlign = HorizontalAlign.Center;
+            ImporteBand.Columns.Add("AnioActUPEstimados", "UP Estim.").PropertiesEdit.DisplayFormatString = "n";
+            ImporteBand.Columns.Add("AnioActCabezasEstimadas", "Cabezas Estim.").PropertiesEdit.DisplayFormatString = "n";
+        });
+        
+        // Custom
+        settings.SetEditFormTemplateContent(c =>
+        {
+            var poblacion = ViewData["dataItem"] ?? c.DataItem;
+            ViewContext.Writer.Write("<p>Edición de Población</p>");
+            ViewContext.Writer.Write("<table><tr><td>");
+
+            Html.DevExpress().Label(edtSettings =>
+            {
+                 edtSettings.ControlStyle.CssClass = "label";
+                 edtSettings.Text = "Municipio";
+                 edtSettings.AssociatedControlName = "Fk_IdMunicipio";
+            }
+               )
+               .Render();
+            Html.DevExpress().ComboBox(edtSettings =>
+            {
+                 edtSettings.Name = "Fk_IdMunicipio";
+                 edtSettings.ControlStyle.CssClass = "editor";
+                 edtSettings.Properties.TextField = "Nombre";
+                 edtSettings.Properties.ValueField = "Pk_IdMunicipio";
+                 edtSettings.Properties.ValueType = typeof(int);
+                 edtSettings.ShowModelErrors = true;
+                 edtSettings.Width = Unit.Pixel(250);
+                 edtSettings.Properties.IncrementalFilteringMode = IncrementalFilteringMode.Contains;
+                 edtSettings.Properties.IncrementalFilteringDelay = 5;
+                 edtSettings.ToolTip = c.KeyValue == null ? "Seleccione un Municipio" : "Cambiar Municipio";
+            }).BindList(DXMVCWebApplication1.Models.Senasica.GetMunicipiosByEstado(IdEstado))
+              .Bind(DataBinder.Eval(poblacion, "Fk_IdMunicipio"))
+              .Render();
+            
+            ViewContext.Writer.Write("</td><td>");
+            
+            Html.DevExpress().Label(edtSettings =>
+            {
+                 edtSettings.ControlStyle.CssClass = "label";
+                 edtSettings.Text = "Raza:";
+                 edtSettings.AssociatedControlName = "Raza";
+            }).Render();
+            
+            Html.DevExpress().TextBox(edtSettings =>
+            {
+                 edtSettings.Name = "Raza";
+                 edtSettings.ControlStyle.CssClass = "editor";
+                 edtSettings.ShowModelErrors = true;
+                 edtSettings.Width = Unit.Pixel(250);
+                 edtSettings.ToolTip = c.KeyValue == null ? "Ingresar la Raza" : "Editar la Raza";
+            }).Bind(DataBinder.Eval(poblacion, "Raza"))
+              .Render();
+            
+            ViewContext.Writer.Write("</td><td>");
+            
+            Html.DevExpress().Label(edtSettings =>
+            {
+                 edtSettings.ControlStyle.CssClass = "label";
+                 edtSettings.Text = "Unidades de Producción:";
+                 edtSettings.AssociatedControlName = "UnidadesDeProduc";
+            }).Render();
+            
+            Html.DevExpress().SpinEdit(edtSettings =>
+            {
+                 edtSettings.Name = "UnidadesDeProduc";
+                 edtSettings.ControlStyle.CssClass = "editor";
+                 edtSettings.ShowModelErrors = true;
+                 edtSettings.Width = Unit.Pixel(250);
+                 edtSettings.Properties.MinValue = 0;
+                 edtSettings.Properties.MaxValue = 999999999;
+                 edtSettings.Properties.NumberType = SpinEditNumberType.Integer;
+                 edtSettings.Properties.Increment = 0.1M;
+                 edtSettings.Properties.LargeIncrement = 1;
+                 edtSettings.Properties.SpinButtons.ShowLargeIncrementButtons = true;
+                 edtSettings.Properties.DisplayFormatString = "n";
+                 edtSettings.ToolTip = c.KeyValue == null ? "Ingresar la Cantidad de Unidad de Producción de esta Población" : "Editar  la Unidad de Producción";
+            }).Bind(DataBinder.Eval(poblacion, "UnidadesDeProduc"))
+              .Render();
+            
+            ViewContext.Writer.Write("</td><td>");
+            
+            Html.DevExpress().Label(edtSettings =>
+            {
+                 edtSettings.ControlStyle.CssClass = "label";
+                 edtSettings.Text = "Región:";
+                 edtSettings.AssociatedControlName = "Region";
+            }).Render();
+            
+            Html.DevExpress().SpinEdit(edtSettings =>
+            {
+                 edtSettings.Name = "Region";
+                 edtSettings.ControlStyle.CssClass = "editor";
+                 edtSettings.ShowModelErrors = true;
+                 edtSettings.Width = Unit.Pixel(250);
+                 edtSettings.Properties.MinValue = 0;
+                 edtSettings.Properties.MaxValue = 999999999;
+                 edtSettings.Properties.NumberType = SpinEditNumberType.Integer;
+                 edtSettings.Properties.Increment = 0.1M;
+                 edtSettings.Properties.LargeIncrement = 1;
+                 edtSettings.Properties.SpinButtons.ShowLargeIncrementButtons = true;
+                 edtSettings.Properties.DisplayFormatString = "n";
+                 edtSettings.ToolTip = c.KeyValue == null ? "Ingresar el Número de Región de esta Población" : "Editar el Número de Región";
+            }).Bind(DataBinder.Eval(poblacion, "Region"))
+              .Render();
+            
+            ViewContext.Writer.Write("</td></tr>");
+            ViewContext.Writer.Write("<tr><td>");
+            
+            Html.DevExpress().Label(edtSettings =>
+            {
+                 edtSettings.ControlStyle.CssClass = "label";
+                 edtSettings.Text = "Zona de Amortig. :";
+                 edtSettings.AssociatedControlName = "ZonaAmortig";
+            }).Render();
+            
+            Html.DevExpress().SpinEdit(edtSettings =>
+            {
+                 edtSettings.Name = "ZonaAmortig";
+                 edtSettings.ControlStyle.CssClass = "editor";
+                 edtSettings.ShowModelErrors = true;
+                 edtSettings.Width = Unit.Pixel(250);
+                 edtSettings.Properties.MinValue = 0;
+                 edtSettings.Properties.MaxValue = 999999999;
+                 edtSettings.Properties.NumberType = SpinEditNumberType.Float;
+                 edtSettings.Properties.Increment = 0.1M;
+                 edtSettings.Properties.LargeIncrement = 1;
+                 edtSettings.Properties.SpinButtons.ShowLargeIncrementButtons = true;
+                 edtSettings.Properties.DisplayFormatString = "n";
+                 edtSettings.ToolTip = c.KeyValue == null ? "Ingresar la Cantidad para la Zona de Amortiguamiento de esta Población" : "Editar la Cantidad para la Zona";
+            }).Bind(DataBinder.Eval(poblacion, "ZonaAmortig"))
+              .Render();
+            
+            ViewContext.Writer.Write("</td><td>");
+            
+            Html.DevExpress().Label(edtSettings =>
+            {
+                 edtSettings.ControlStyle.CssClass = "label";
+                 edtSettings.Text = "Población Total:";
+                 edtSettings.AssociatedControlName = "PoblacionTotalReg";
+            }).Render();
+            
+            Html.DevExpress().SpinEdit(edtSettings =>
+            {
+                 edtSettings.Name = "PoblacionTotalReg";
+                 edtSettings.ControlStyle.CssClass = "editor";
+                 edtSettings.ShowModelErrors = true;
+                 edtSettings.Width = Unit.Pixel(250);
+                 edtSettings.Properties.MinValue = 0;
+                 edtSettings.Properties.MaxValue = 999999999;
+                 edtSettings.Properties.NumberType = SpinEditNumberType.Float;
+                 edtSettings.Properties.Increment = 0.1M;
+                 edtSettings.Properties.LargeIncrement = 1;
+                 edtSettings.Properties.SpinButtons.ShowLargeIncrementButtons = true;
+                 edtSettings.Properties.DisplayFormatString = "n";
+                 edtSettings.ToolTip = c.KeyValue == null ? "Ingresar la Cantidad que habita la Población" : "Editar Población Total";
+            }).Bind(DataBinder.Eval(poblacion, "PoblacionTotalReg"))
+              .Render();
+            
+            ViewContext.Writer.Write("</td><td>");
+            
+            Html.DevExpress().Label(edtSettings =>
+            {
+                 edtSettings.ControlStyle.CssClass = "label";
+                 edtSettings.Text = "UP. Regional:";
+                 edtSettings.AssociatedControlName = "UPRegional";
+            }).Render();
+            
+            Html.DevExpress().SpinEdit(edtSettings =>
+            {
+                 edtSettings.Name = "UPRegional";
+                 edtSettings.ControlStyle.CssClass = "editor";
+                 edtSettings.ShowModelErrors = true;
+                 edtSettings.Width = Unit.Pixel(250);
+                 edtSettings.Properties.MinValue = 0;
+                 edtSettings.Properties.MaxValue = 999999999;
+                 edtSettings.Properties.NumberType = SpinEditNumberType.Integer;
+                 edtSettings.Properties.Increment = 0.1M;
+                 edtSettings.Properties.LargeIncrement = 1;
+                 edtSettings.Properties.SpinButtons.ShowLargeIncrementButtons = true;
+                 edtSettings.Properties.DisplayFormatString = "n";
+                 edtSettings.ToolTip = c.KeyValue == null ? "Ingresar la cantidad de UP. Regional de la Población" : "Editar UP. Regional ";
+            }).Bind(DataBinder.Eval(poblacion, "UPRegional"))
+              .Render();
+            
+            ViewContext.Writer.Write("</td><td>");
+            
+            Html.DevExpress().Label(edtSettings =>
+            {
+                 edtSettings.ControlStyle.CssClass = "label";
+                 edtSettings.Text = "Año Anterior UP. Atendido:";
+                 edtSettings.AssociatedControlName = "AnioAntUPAtendidos";
+            }).Render();
+            
+            Html.DevExpress().SpinEdit(edtSettings =>
+            {
+                 edtSettings.Name = "AnioAntUPAtendidos";
+                 edtSettings.ControlStyle.CssClass = "editor";
+                 edtSettings.ShowModelErrors = true;
+                 edtSettings.Width = Unit.Pixel(250);
+                 edtSettings.Properties.MinValue = 0;
+                 edtSettings.Properties.MaxValue = 999999999;
+                 edtSettings.Properties.NumberType = SpinEditNumberType.Float;
+                 edtSettings.Properties.Increment = 0.1M;
+                 edtSettings.Properties.LargeIncrement = 1;
+                 edtSettings.Properties.SpinButtons.ShowLargeIncrementButtons = true;
+                 edtSettings.Properties.DisplayFormatString = "n";
+                 edtSettings.ToolTip = c.KeyValue == null ? "Ingresar la Cantidad del Año Aterior" : "Editar UP. Año Anterior";
+            }).Bind(DataBinder.Eval(poblacion, "AnioAntUPAtendidos"))
+              .Render();
+            
+            ViewContext.Writer.Write("</td></tr>");
+            ViewContext.Writer.Write("<tr><td>");
+            
+            Html.DevExpress().Label(edtSettings =>
+            {
+                 edtSettings.ControlStyle.CssClass = "label";
+                 edtSettings.Text = "Año Anterior Cabezas Atendidas:";
+                 edtSettings.AssociatedControlName = "AnioAntCabezasAtendidas";
+            }).Render();
+            
+            Html.DevExpress().SpinEdit(edtSettings =>
+            {
+                 edtSettings.Name = "AnioAntCabezasAtendidas";
+                 edtSettings.ControlStyle.CssClass = "editor";
+                 edtSettings.ShowModelErrors = true;
+                 edtSettings.Width = Unit.Pixel(250);
+                 edtSettings.Properties.MinValue = 0;
+                 edtSettings.Properties.MaxValue = 999999999;
+                 edtSettings.Properties.NumberType = SpinEditNumberType.Integer;
+                 edtSettings.Properties.Increment = 0.1M;
+                 edtSettings.Properties.LargeIncrement = 1;
+                 edtSettings.Properties.SpinButtons.ShowLargeIncrementButtons = true;
+                 edtSettings.Properties.DisplayFormatString = "n";
+                 edtSettings.ToolTip = c.KeyValue == null ? "Ingresar la Cantidad de las Cabezas Atendidas en el Año Anterior" : "Editar Cabezas Atendidas del Año Anterior";
+            }).Bind(DataBinder.Eval(poblacion, "AnioAntCabezasAtendidas"))
+              .Render();
+            
+            ViewContext.Writer.Write("</td><td>");
+            
+            Html.DevExpress().Label(edtSettings =>
+            {
+                 edtSettings.ControlStyle.CssClass = "label";
+                 edtSettings.Text = "Año Anterior UP. Estimados:";
+                 edtSettings.AssociatedControlName = "AnioActUPEstimados";
+            }).Render();
+            
+            Html.DevExpress().SpinEdit(edtSettings =>
+            {
+                 edtSettings.Name = "AnioActUPEstimados";
+                 edtSettings.ControlStyle.CssClass = "editor";
+                 edtSettings.ShowModelErrors = true;
+                 edtSettings.Width = Unit.Pixel(250);
+                 edtSettings.Properties.MinValue = 0;
+                 edtSettings.Properties.MaxValue = 999999999;
+                 edtSettings.Properties.NumberType = SpinEditNumberType.Float;
+                 edtSettings.Properties.Increment = 0.1M;
+                 edtSettings.Properties.LargeIncrement = 1;
+                 edtSettings.Properties.SpinButtons.ShowLargeIncrementButtons = true;
+                 edtSettings.Properties.DisplayFormatString = "n";
+                 edtSettings.ToolTip = c.KeyValue == null ? "Ingresar la Cantidad de UP. del Año Anterior" : "Editar UP. del Año Anterior";
+            }).Bind(DataBinder.Eval(poblacion, "AnioActUPEstimados"))
+              .Render();
+            
+            ViewContext.Writer.Write("</td><td>");
+            
+            Html.DevExpress().Label(edtSettings =>
+            {
+                 edtSettings.ControlStyle.CssClass = "label";
+                 edtSettings.Text = "Año Anterior Cabezas Estimadas:";
+                 edtSettings.AssociatedControlName = "AnioActCabezasEstimadas";
+            }).Render();
+            
+            Html.DevExpress().SpinEdit(edtSettings =>
+            {
+                 edtSettings.Name = "AnioActCabezasEstimadas";
+                 edtSettings.ControlStyle.CssClass = "editor";
+                 edtSettings.ShowModelErrors = true;
+                 edtSettings.Width = Unit.Pixel(250);
+                 edtSettings.Properties.MinValue = 0;
+                 edtSettings.Properties.MaxValue = 999999999;
+                 edtSettings.Properties.NumberType = SpinEditNumberType.Integer;
+                 edtSettings.Properties.Increment = 0.1M;
+                 edtSettings.Properties.LargeIncrement = 1;
+                 edtSettings.Properties.SpinButtons.ShowLargeIncrementButtons = true;
+                 edtSettings.Properties.DisplayFormatString = "n";
+                 edtSettings.ToolTip = c.KeyValue == null ? "Ingresar la Cantidad de las Cabezas Estimadas del Año Anterior" : "Editar Cabezas Estimadas del Año Anterior";
+            }).Bind(DataBinder.Eval(poblacion, "AnioActCabezasEstimadas"))
+              .Render();
+            
+            ViewContext.Writer.Write("</td></tr>");
+            ViewContext.Writer.Write("</table>");
+
+            ViewContext.Writer.Write("<br>");
+            
+            Html.DevExpress().Label(edtSettings =>
+            {
+                 edtSettings.ControlStyle.CssClass = "label";
+            }).Render();
+            
+            Html.DevExpress().Button(btnSettings =>
+            {
+                 btnSettings.Name = "btnUpdat";
+                 btnSettings.Text = "Guardar";
+                 btnSettings.ControlStyle.CssClass = "button";
+                 btnSettings.Images.Image.Url = "Content/Images/guardar.png";
+                 btnSettings.ImagePosition = ImagePosition.Right;
+                 btnSettings.Images.Image.Width = 16;
+                 btnSettings.ClientSideEvents.Click = "function(s, e){ PoblacionSAGridView.UpdateEdit(); }";
+            }).Render();
+
+            Html.DevExpress().Button(btnSettings =>
+            {
+                 btnSettings.Name = "btnCance";
+                 btnSettings.Text = "Cancelar";
+                 btnSettings.ControlStyle.CssClass = "button";
+                 btnSettings.Images.Image.Url = "Content/Images/cancelar.png";
+                 btnSettings.ImagePosition = ImagePosition.Right;
+                 btnSettings.Style["position"] = "relative";
+                 btnSettings.Style["left"] = "5px";
+                 btnSettings.ClientSideEvents.Click = "function(s, e){ PoblacionSAGridView.CancelEdit(); }";
+            }).Render();
+            ViewContext.Writer.Write("</br>");
+        });
+    });
+    if (ViewData["EditError"] != null)
+    {
+        grid.SetEditErrorText((string)ViewData["EditError"]);
+    }
+}
+@grid.Bind(Model).GetHtml()

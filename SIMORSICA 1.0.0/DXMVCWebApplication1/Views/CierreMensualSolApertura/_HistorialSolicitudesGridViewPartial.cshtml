@@ -1,0 +1,50 @@
+﻿@{
+    var grid = Html.DevExpress().GridView(settings =>
+    {
+        settings.Name = "DGHistorialSol";
+        settings.Style["position"] = "relative";
+        settings.Style["left"] = "10px";
+
+        settings.CallbackRouteValues = new { Controller = "CierreMensualSolApertura", Action = "HistorialSolicitudesGridViewPartial", IdCierreMensual = ViewData["IdCierreMensual"]  };
+
+        settings.SettingsEditing.Mode = GridViewEditingMode.PopupEditForm;
+        settings.SettingsBehavior.ConfirmDelete = true;
+
+        settings.SettingsPopup.EditForm.Height = 300;
+        settings.SettingsPopup.EditForm.Width = 70;
+        settings.SettingsPopup.EditForm.HorizontalAlign = PopupHorizontalAlign.WindowCenter;
+        settings.SettingsPopup.EditForm.VerticalAlign = PopupVerticalAlign.WindowCenter;
+        settings.SettingsPopup.EditForm.Modal = true;
+
+        settings.CommandColumn.ShowClearFilterButton = true;
+
+        settings.CommandColumn.Visible = true;
+        settings.CommandColumn.ShowEditButton = true;
+        settings.SettingsCommandButton.EditButton.Text = "Detalles";
+
+        settings.SettingsPager.Visible = true;
+        settings.SettingsPager.Position = PagerPosition.Bottom;
+        settings.SettingsPager.FirstPageButton.Visible = true;
+        settings.SettingsPager.LastPageButton.Visible = true;
+        settings.SettingsPager.PageSizeItemSettings.Visible = true;
+        settings.SettingsPager.PageSize = 3;
+        settings.SettingsPager.PageSizeItemSettings.Items = new string[] { "3" };
+        settings.Settings.ShowFilterRowMenu = true;
+
+        settings.KeyFieldName = "Pk_IdCierreMensualSolicitudApertura";
+
+        settings.Settings.ShowGroupPanel = true;
+        settings.Settings.ShowFilterRow = true;
+        settings.SettingsBehavior.AllowSelectByRowClick = true;
+
+        settings.Settings.ShowFooter = true;
+
+        settings.Columns.Add("FechaCreacion", "Fecha de Solicitud");
+        settings.Columns.Add("aperturaAceptada", "¿Solicitud Aceptada?");
+        settings.Columns.Add("MotivosApertura", "Motivos de Solicitud");
+        settings.Columns.Add("RespuestaApertura", "Respuesta a la Solicitud");
+
+    });
+}
+
+@grid.Bind(Model).GetHtml()

@@ -1,0 +1,70 @@
+﻿@{
+    var grid = Html.DevExpress().GridView(settings =>
+    {
+        settings.Name = "DGMovimientosRealizados";
+        settings.Style["position"] = "relative";
+        settings.Style["left"] = "10px";
+
+        settings.CallbackRouteValues = new { Controller = "ReprogramacionPresFed", Action = "MovimientosReprogramacionViewPartial" };
+
+        settings.SettingsEditing.Mode = GridViewEditingMode.PopupEditForm;
+        settings.SettingsBehavior.ConfirmDelete = true;
+
+        settings.SettingsPopup.EditForm.Height = 300;
+        settings.SettingsPopup.EditForm.Width = 70;
+        settings.SettingsPopup.EditForm.HorizontalAlign = PopupHorizontalAlign.WindowCenter;
+        settings.SettingsPopup.EditForm.VerticalAlign = PopupVerticalAlign.WindowCenter;
+        settings.SettingsPopup.EditForm.Modal = true;
+
+        settings.CommandColumn.ShowClearFilterButton = true;
+        settings.CommandColumn.Visible = true;
+        settings.SettingsPager.Visible = true;
+        settings.SettingsPager.Position = PagerPosition.Bottom;
+        settings.SettingsPager.FirstPageButton.Visible = true;
+        settings.SettingsPager.LastPageButton.Visible = true;
+        settings.SettingsPager.PageSizeItemSettings.Visible = true;
+        settings.SettingsPager.PageSize = 3;
+        settings.SettingsPager.PageSizeItemSettings.Items = new string[] { "5", "10", "15" };
+        settings.Settings.ShowFilterRowMenu = true;
+
+        settings.KeyFieldName = "Pk_IdMovRepRecursoFed";
+
+        settings.Settings.ShowGroupPanel = true;
+        settings.Settings.ShowFilterRow = true;
+        settings.SettingsBehavior.AllowSelectByRowClick = true;
+
+        settings.Settings.ShowFooter = true;
+
+        settings.Columns.AddBand(band =>
+        {
+            band.Caption = "Campaña de Origen";
+            band.HeaderStyle.HorizontalAlign = HorizontalAlign.Center;
+
+            band.Columns.Add("NombreCampaniaOrigen", "Nombre");
+            band.Columns.Add("RecFedOrigen", "Autorizado").PropertiesEdit.DisplayFormatString = "c";
+            band.Columns.Add("RecSol_FedOrigen", "Programado").PropertiesEdit.DisplayFormatString = "c";
+            band.Columns.Add("Rec_GastadoOrigen", "Gastado").PropertiesEdit.DisplayFormatString = "c";
+            band.Columns.Add("SaldoDisponibleOrigen", "Disponible").PropertiesEdit.DisplayFormatString = "c";
+        });
+
+        settings.Columns.AddBand(band =>
+        {
+            band.Caption = "Campaña de Destino";
+            band.HeaderStyle.HorizontalAlign = HorizontalAlign.Center;
+
+            band.Columns.Add("NombreCampaniaDestino", "Nombre");
+            band.Columns.Add("RecFedDestino", "Autorizado").PropertiesEdit.DisplayFormatString = "c";
+            band.Columns.Add("RecSol_FedDestino", "Programado").PropertiesEdit.DisplayFormatString = "c";
+            band.Columns.Add("Rec_GastadoDestino", "Gastado").PropertiesEdit.DisplayFormatString = "c";
+            band.Columns.Add("SaldoDisponibleDestino", "Disponible").PropertiesEdit.DisplayFormatString = "c";
+        });
+
+        settings.Columns.Add("MotivoIncremento.Motivos", "Motivo Transferencia");
+        settings.Columns.Add("MontoTransferido", "Monto Transferido").PropertiesEdit.DisplayFormatString = "c";
+        settings.Columns.Add("FechaMovimiento", "Fecha del Movimiento");
+
+    });
+}
+
+@grid.Bind(Model).GetHtml()
+

@@ -1,0 +1,19 @@
+﻿@Html.DevExpress().ComboBox(settings =>
+{
+    settings.CallbackRouteValues = new { Controller = "ProyectoPresupuesto", Action = "_ComboBoxProyectoAutorizado" };
+    settings.Name = "Fk_IdProyectoAutorizado";
+    settings.ClientEnabled = false;
+
+    settings.Properties.TextField = "Nombre";
+    settings.Properties.NullText = "Campo Requerido";
+    settings.Properties.ValueField = "Pk_IdProyectoAutorizado";
+    settings.Properties.ValueType = typeof(int);
+    settings.ToolTip = "Seleccione el Proyecto Autorizado";
+    settings.Width = Unit.Pixel(450);
+    settings.ShowModelErrors = true;
+
+    settings.Properties.EnableSynchronization = DefaultBoolean.False;
+    settings.Properties.IncrementalFilteringMode = IncrementalFilteringMode.Contains;
+
+    settings.Properties.ClientSideEvents.BeginCallback = "function(s, e){ e.customArgs['IdSubComponente'] = Fk_IdSubComponente__SIS.GetValue(); }";
+}).BindList(Model).Bind(ViewData["Fk_IdProyectoAutorizado"]).GetHtml()

@@ -1,0 +1,268 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="DB_ReprogramacionRecursoFederal.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="CampaniasXEstado">
+          <Key>
+            <PropertyRef Name="Pk_IdCampania" />
+          </Key>
+          <Property Name="Pk_IdCampania" Type="int" Nullable="false" />
+          <Property Name="StatusKardex" Type="varchar" MaxLength="50" />
+          <Property Name="Fk_IdAnio" Type="int" Nullable="false" />
+          <Property Name="Fk_IdEstado__SIS" Type="int" Nullable="false" />
+          <Property Name="Estado" Type="varchar" MaxLength="150" Nullable="false" />
+          <Property Name="UnidadResponsable" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="UnidadEjecutora" Type="varchar" MaxLength="200" />
+          <Property Name="Proyecto" Type="varchar" MaxLength="150" Nullable="false" />
+          <Property Name="RecFed" Type="numeric" Precision="14" Scale="2" />
+          <Property Name="RecSol_Fed" Type="numeric" Precision="14" Scale="2" />
+          <Property Name="Rec_Gastado" Type="numeric" Precision="14" Scale="2" />
+          <Property Name="SaldoDisponible" Type="numeric" Precision="14" Scale="2" />
+        </EntityType>
+        <EntityType Name="MotivoIncremento">
+          <Key>
+            <PropertyRef Name="Pk_IdMotivoIncremento" />
+          </Key>
+          <Property Name="Pk_IdMotivoIncremento" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Motivos" Type="varchar" MaxLength="350" Nullable="false" />
+        </EntityType>
+        <EntityType Name="MovRepRecursoFed">
+          <Key>
+            <PropertyRef Name="Pk_IdMovRepRecursoFed" />
+          </Key>
+          <Property Name="Pk_IdMovRepRecursoFed" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Identificador" Type="int" Nullable="false" />
+          <Property Name="Fk_IdAnio" Type="int" Nullable="false" />
+          <Property Name="Fk_IdEstado" Type="int" Nullable="false" />
+          <Property Name="Fk_IdCampaniaOrigen" Type="int" />
+          <Property Name="NombreCampaniaOrigen" Type="varchar" MaxLength="150" />
+          <Property Name="RecFedOrigen" Type="numeric" Precision="14" Scale="2" />
+          <Property Name="RecSol_FedOrigen" Type="numeric" Precision="14" Scale="2" />
+          <Property Name="Rec_GastadoOrigen" Type="numeric" Precision="14" Scale="2" />
+          <Property Name="SaldoDisponibleOrigen" Type="numeric" Precision="14" Scale="2" />
+          <Property Name="Fk_IdCampaniaDestino" Type="int" Nullable="false" />
+          <Property Name="NombreCampaniaDestino" Type="varchar" MaxLength="150" />
+          <Property Name="RecFedDestino" Type="numeric" Precision="14" Scale="2" />
+          <Property Name="RecSol_FedDestino" Type="numeric" Precision="14" Scale="2" />
+          <Property Name="Rec_GastadoDestino" Type="numeric" Precision="14" Scale="2" />
+          <Property Name="SaldoDisponibleDestino" Type="numeric" Precision="14" Scale="2" />
+          <Property Name="Fk_IdMotivoIncremento" Type="int" />
+          <Property Name="MontoTransferido" Type="numeric" Precision="38" Scale="2" Nullable="false" />
+          <Property Name="FechaMovimiento" Type="datetime" Nullable="false" />
+          <Property Name="esHistorico" Type="bit" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_MovRepRecursoFed_MotivoIncremento">
+          <End Role="MotivoIncremento" Type="Self.MotivoIncremento" Multiplicity="0..1" />
+          <End Role="MovRepRecursoFed" Type="Self.MovRepRecursoFed" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="MotivoIncremento">
+              <PropertyRef Name="Pk_IdMotivoIncremento" />
+            </Principal>
+            <Dependent Role="MovRepRecursoFed">
+              <PropertyRef Name="Fk_IdMotivoIncremento" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Function Name="SP_AgregaElementoReproFed" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="SIS">
+          <Parameter Name="Identificador" Type="int" Mode="In" />
+          <Parameter Name="IdCampaniaOrigen" Type="int" Mode="In" />
+          <Parameter Name="IdCampaniaDestino" Type="int" Mode="In" />
+          <Parameter Name="IdMotivoIncremento" Type="int" Mode="In" />
+          <Parameter Name="MontoTransferido" Type="numeric" Mode="In" />
+        </Function>
+        <Function Name="SP_CleanCampaniaXEstado" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="SIS" />
+        <Function Name="SP_CleanMovRepRecursoFed" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="SIS" />
+        <Function Name="SP_EjecutaReproFed" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="SIS" />
+        <Function Name="SP_RespaldoCampaniasXEstado" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="SIS">
+          <Parameter Name="IdEstado" Type="int" Mode="In" />
+          <Parameter Name="IdAnioPres" Type="int" Mode="In" />
+        </Function>
+        <EntityContainer Name="DB_ReprogramacionRecursoFederalStoreContainer">
+          <EntitySet Name="CampaniasXEstado" EntityType="Self.CampaniasXEstado" Schema="SIS" store:Type="Tables" />
+          <EntitySet Name="MotivoIncremento" EntityType="Self.MotivoIncremento" Schema="SIS" store:Type="Tables" />
+          <EntitySet Name="MovRepRecursoFed" EntityType="Self.MovRepRecursoFed" Schema="SIS" store:Type="Tables" />
+          <AssociationSet Name="FK_MovRepRecursoFed_MotivoIncremento" Association="Self.FK_MovRepRecursoFed_MotivoIncremento">
+            <End Role="MotivoIncremento" EntitySet="MotivoIncremento" />
+            <End Role="MovRepRecursoFed" EntitySet="MovRepRecursoFed" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="DB_ReprogramacionRecursoFederal" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityContainer Name="DB_ReprogramacionRecFed" annotation:LazyLoadingEnabled="true">
+          <FunctionImport Name="SP_CleanCampaniaXEstado" />
+          <FunctionImport Name="SP_CleanMovRepRecursoFed" />
+          <FunctionImport Name="SP_RespaldoCampaniasXEstado">
+            <Parameter Name="IdEstado" Mode="In" Type="Int32" />
+            <Parameter Name="IdAnioPres" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <EntitySet Name="MotivoIncremento" EntityType="DB_ReprogramacionRecursoFederal.MotivoIncremento" />
+          <EntitySet Name="MovRepRecursoFed" EntityType="DB_ReprogramacionRecursoFederal.MovRepRecursoFed" />
+          <AssociationSet Name="FK_MovRepRecursoFed_MotivoIncremento" Association="DB_ReprogramacionRecursoFederal.FK_MovRepRecursoFed_MotivoIncremento">
+            <End Role="MotivoIncremento" EntitySet="MotivoIncremento" />
+            <End Role="MovRepRecursoFed" EntitySet="MovRepRecursoFed" />
+          </AssociationSet>
+          <FunctionImport Name="SP_AgregaElementoReproFed">
+            <Parameter Name="Identificador" Mode="In" Type="Int32" />
+            <Parameter Name="IdCampaniaOrigen" Mode="In" Type="Int32" />
+            <Parameter Name="IdCampaniaDestino" Mode="In" Type="Int32" />
+            <Parameter Name="IdMotivoIncremento" Mode="In" Type="Int32" />
+            <Parameter Name="MontoTransferido" Mode="In" Type="Decimal" />
+          </FunctionImport>
+          <FunctionImport Name="SP_EjecutaReproFed" />
+          <EntitySet Name="CampaniasXEstado" EntityType="DB_ReprogramacionRecursoFederal.CampaniasXEstado" />
+        </EntityContainer>
+        <EntityType Name="MotivoIncremento">
+          <Key>
+            <PropertyRef Name="Pk_IdMotivoIncremento" />
+          </Key>
+          <Property Name="Pk_IdMotivoIncremento" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Motivos" Type="String" Nullable="false" MaxLength="350" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="MovRepRecursoFed" Relationship="DB_ReprogramacionRecursoFederal.FK_MovRepRecursoFed_MotivoIncremento" FromRole="MotivoIncremento" ToRole="MovRepRecursoFed" />
+        </EntityType>
+        <EntityType Name="MovRepRecursoFed">
+          <Key>
+            <PropertyRef Name="Pk_IdMovRepRecursoFed" />
+          </Key>
+          <Property Name="Pk_IdMovRepRecursoFed" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Identificador" Type="Int32" Nullable="false" />
+          <Property Name="Fk_IdAnio" Type="Int32" Nullable="false" />
+          <Property Name="Fk_IdEstado" Type="Int32" Nullable="false" />
+          <Property Name="Fk_IdCampaniaOrigen" Type="Int32" />
+          <Property Name="NombreCampaniaOrigen" Type="String" MaxLength="150" FixedLength="false" Unicode="false" />
+          <Property Name="RecFedOrigen" Type="Decimal" Precision="14" Scale="2" />
+          <Property Name="RecSol_FedOrigen" Type="Decimal" Precision="14" Scale="2" />
+          <Property Name="Rec_GastadoOrigen" Type="Decimal" Precision="14" Scale="2" />
+          <Property Name="SaldoDisponibleOrigen" Type="Decimal" Precision="14" Scale="2" />
+          <Property Name="Fk_IdCampaniaDestino" Type="Int32" Nullable="false" />
+          <Property Name="NombreCampaniaDestino" Type="String" MaxLength="150" FixedLength="false" Unicode="false" />
+          <Property Name="RecFedDestino" Type="Decimal" Precision="14" Scale="2" />
+          <Property Name="RecSol_FedDestino" Type="Decimal" Precision="14" Scale="2" />
+          <Property Name="Rec_GastadoDestino" Type="Decimal" Precision="14" Scale="2" />
+          <Property Name="SaldoDisponibleDestino" Type="Decimal" Precision="14" Scale="2" />
+          <Property Name="Fk_IdMotivoIncremento" Type="Int32" />
+          <Property Name="MontoTransferido" Type="Decimal" Nullable="false" Precision="38" Scale="2" />
+          <Property Name="FechaMovimiento" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="esHistorico" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="MotivoIncremento" Relationship="DB_ReprogramacionRecursoFederal.FK_MovRepRecursoFed_MotivoIncremento" FromRole="MovRepRecursoFed" ToRole="MotivoIncremento" />
+        </EntityType>
+        <Association Name="FK_MovRepRecursoFed_MotivoIncremento">
+          <End Type="DB_ReprogramacionRecursoFederal.MotivoIncremento" Role="MotivoIncremento" Multiplicity="0..1" />
+          <End Type="DB_ReprogramacionRecursoFederal.MovRepRecursoFed" Role="MovRepRecursoFed" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="MotivoIncremento">
+              <PropertyRef Name="Pk_IdMotivoIncremento" />
+            </Principal>
+            <Dependent Role="MovRepRecursoFed">
+              <PropertyRef Name="Fk_IdMotivoIncremento" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="CampaniasXEstado">
+          <Key>
+            <PropertyRef Name="Pk_IdCampania" />
+          </Key>
+          <Property Name="Pk_IdCampania" Type="Int32" Nullable="false" />
+          <Property Name="StatusKardex" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Fk_IdAnio" Type="Int32" Nullable="false" />
+          <Property Name="Fk_IdEstado__SIS" Type="Int32" Nullable="false" />
+          <Property Name="Estado" Type="String" Nullable="false" MaxLength="150" FixedLength="false" Unicode="false" />
+          <Property Name="UnidadResponsable" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="UnidadEjecutora" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="Proyecto" Type="String" Nullable="false" MaxLength="150" FixedLength="false" Unicode="false" />
+          <Property Name="RecFed" Type="Decimal" Precision="14" Scale="2" />
+          <Property Name="RecSol_Fed" Type="Decimal" Precision="14" Scale="2" />
+          <Property Name="Rec_Gastado" Type="Decimal" Precision="14" Scale="2" />
+          <Property Name="SaldoDisponible" Type="Decimal" Precision="14" Scale="2" />
+        </EntityType>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="DB_ReprogramacionRecursoFederalStoreContainer" CdmEntityContainer="DB_ReprogramacionRecFed">
+          <FunctionImportMapping FunctionImportName="SP_CleanCampaniaXEstado" FunctionName="DB_ReprogramacionRecursoFederal.Store.SP_CleanCampaniaXEstado" />
+          <FunctionImportMapping FunctionImportName="SP_CleanMovRepRecursoFed" FunctionName="DB_ReprogramacionRecursoFederal.Store.SP_CleanMovRepRecursoFed" />
+          <FunctionImportMapping FunctionImportName="SP_RespaldoCampaniasXEstado" FunctionName="DB_ReprogramacionRecursoFederal.Store.SP_RespaldoCampaniasXEstado" />
+          <EntitySetMapping Name="MotivoIncremento">
+            <EntityTypeMapping TypeName="DB_ReprogramacionRecursoFederal.MotivoIncremento">
+              <MappingFragment StoreEntitySet="MotivoIncremento">
+                <ScalarProperty Name="Motivos" ColumnName="Motivos" />
+                <ScalarProperty Name="Pk_IdMotivoIncremento" ColumnName="Pk_IdMotivoIncremento" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="MovRepRecursoFed">
+            <EntityTypeMapping TypeName="DB_ReprogramacionRecursoFederal.MovRepRecursoFed">
+              <MappingFragment StoreEntitySet="MovRepRecursoFed">
+                <ScalarProperty Name="esHistorico" ColumnName="esHistorico" />
+                <ScalarProperty Name="FechaMovimiento" ColumnName="FechaMovimiento" />
+                <ScalarProperty Name="MontoTransferido" ColumnName="MontoTransferido" />
+                <ScalarProperty Name="Fk_IdMotivoIncremento" ColumnName="Fk_IdMotivoIncremento" />
+                <ScalarProperty Name="SaldoDisponibleDestino" ColumnName="SaldoDisponibleDestino" />
+                <ScalarProperty Name="Rec_GastadoDestino" ColumnName="Rec_GastadoDestino" />
+                <ScalarProperty Name="RecSol_FedDestino" ColumnName="RecSol_FedDestino" />
+                <ScalarProperty Name="RecFedDestino" ColumnName="RecFedDestino" />
+                <ScalarProperty Name="NombreCampaniaDestino" ColumnName="NombreCampaniaDestino" />
+                <ScalarProperty Name="Fk_IdCampaniaDestino" ColumnName="Fk_IdCampaniaDestino" />
+                <ScalarProperty Name="SaldoDisponibleOrigen" ColumnName="SaldoDisponibleOrigen" />
+                <ScalarProperty Name="Rec_GastadoOrigen" ColumnName="Rec_GastadoOrigen" />
+                <ScalarProperty Name="RecSol_FedOrigen" ColumnName="RecSol_FedOrigen" />
+                <ScalarProperty Name="RecFedOrigen" ColumnName="RecFedOrigen" />
+                <ScalarProperty Name="NombreCampaniaOrigen" ColumnName="NombreCampaniaOrigen" />
+                <ScalarProperty Name="Fk_IdCampaniaOrigen" ColumnName="Fk_IdCampaniaOrigen" />
+                <ScalarProperty Name="Fk_IdEstado" ColumnName="Fk_IdEstado" />
+                <ScalarProperty Name="Fk_IdAnio" ColumnName="Fk_IdAnio" />
+                <ScalarProperty Name="Identificador" ColumnName="Identificador" />
+                <ScalarProperty Name="Pk_IdMovRepRecursoFed" ColumnName="Pk_IdMovRepRecursoFed" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="SP_AgregaElementoReproFed" FunctionName="DB_ReprogramacionRecursoFederal.Store.SP_AgregaElementoReproFed" />
+          <FunctionImportMapping FunctionImportName="SP_EjecutaReproFed" FunctionName="DB_ReprogramacionRecursoFederal.Store.SP_EjecutaReproFed" />
+          <EntitySetMapping Name="CampaniasXEstado">
+            <EntityTypeMapping TypeName="DB_ReprogramacionRecursoFederal.CampaniasXEstado">
+              <MappingFragment StoreEntitySet="CampaniasXEstado">
+                <ScalarProperty Name="SaldoDisponible" ColumnName="SaldoDisponible" />
+                <ScalarProperty Name="Rec_Gastado" ColumnName="Rec_Gastado" />
+                <ScalarProperty Name="RecSol_Fed" ColumnName="RecSol_Fed" />
+                <ScalarProperty Name="RecFed" ColumnName="RecFed" />
+                <ScalarProperty Name="Proyecto" ColumnName="Proyecto" />
+                <ScalarProperty Name="UnidadEjecutora" ColumnName="UnidadEjecutora" />
+                <ScalarProperty Name="UnidadResponsable" ColumnName="UnidadResponsable" />
+                <ScalarProperty Name="Estado" ColumnName="Estado" />
+                <ScalarProperty Name="Fk_IdEstado__SIS" ColumnName="Fk_IdEstado__SIS" />
+                <ScalarProperty Name="Fk_IdAnio" ColumnName="Fk_IdAnio" />
+                <ScalarProperty Name="StatusKardex" ColumnName="StatusKardex" />
+                <ScalarProperty Name="Pk_IdCampania" ColumnName="Pk_IdCampania" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="Ninguno" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

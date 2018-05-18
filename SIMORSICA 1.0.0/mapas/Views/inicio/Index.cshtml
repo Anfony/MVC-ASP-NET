@@ -1,0 +1,249 @@
+﻿@model IEnumerable<DXMVCWebApplication1.Models.Productor>
+    
+@{
+    ViewBag.Title = "Mapa";
+}
+
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+
+<link href="~/Content/mbExtruder.css" media="all" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="~/inc/jquery.hoverIntent.min.js"></script>
+<script type="text/javascript" src="~/inc/jquery.mb.flipText.js"></script>
+<script type="text/javascript" src="~/inc/mbExtruder.js"></script>
+
+<link href="~/Content/styles.css" rel="stylesheet" />
+<script src="~/Scripts/utils.js"></script>
+
+<script>
+    //globales
+    var latlng = [];
+    var prodCount = 0;
+    var nomProductor = [];
+    var map;
+    var geocoder;
+    //var infowindow;
+    var markers = [];
+    var markersProductores = [];
+
+
+</script>
+<div id="map"></div>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.RazonSocial)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ApellidoPaterno)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ApellidoMaterno)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Nombre)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Direccion)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Colonia)
+        </th>
+        <th>
+            Estado
+        </th>
+        <th>
+            Municipio
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.RazonSocial)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ApellidoPaterno)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ApellidoMaterno)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Nombre)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Direccion)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Colonia)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Estado.Nombre)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Municipio.Nombre)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { id = item.Pk_IdProductor }) |
+                @Html.ActionLink("Details", "Details", new { id = item.Pk_IdProductor }) |
+                @Html.ActionLink("Delete", "Delete", new { id = item.Pk_IdProductor })
+                <script>
+                    nomProductor[prodCount] = "@item.RazonSocial";
+                    var lat = @item.Ubicacion.Latitude;
+                    var lng = @item.Ubicacion.Longitude;
+                    latlng[prodCount] = { lat: lat, lng: lng };
+                    prodCount = prodCount + 1;
+                    
+</script>
+            </td>
+        </tr>
+    }
+
+</table>
+
+
+<!-- extruder -->
+<div id="extruderLeft" class="{title:'Menú', url:'../../parts/extruderLeft.html'}"></div>
+<!-- extruder -->
+
+    <script>
+
+        $("#extruderLeft").buildMbExtruder({
+            position: "left",
+            width: 300,
+            extruderOpacity: .6,
+            textOrientation: "tb",
+            hidePanelsOnClose: false,
+            closeOnClick: false,
+            //accordionPanels:false,
+            autoCloseTime: 500,
+            onExtOpen: function () { },
+            onExtContentLoad: function () { },
+            onExtClose: function () { }
+        });
+
+
+        /***********************************************************************************/
+        $(function () {
+            detectUserLocation();
+
+        });
+
+
+        /***********************************************************************************/
+        function geocodeAddress() {
+            for (var i = 0; i < markers.length; i++) {
+                markers[i].setMap(null);
+            }
+            markers = [];
+
+            var address = document.getElementById('address').value;
+            geocoder.geocode({ 'address': address }, function (results, status) {
+                if (status === google.maps.GeocoderStatus.OK) {
+                    map.setCenter(results[0].geometry.location);
+                    var latlng = { lat: results[0].geometry.location.lat(), lng: results[0].geometry.location.lng() };
+                    marker = placeMarker(latlng, false,results[0].formatted_address);
+                    markers.push(marker);
+
+                } else {
+                    alert('La geocodificación no pudo ser completada: ' + status);
+                }
+
+            });
+        }
+
+        /***********************************************************************************/
+        function reverseGeocode() {
+            for (var i = 0; i < markers.length; i++) {
+                markers[i].setMap(null);
+            }
+            markers = [];
+
+            map.setOptions({ draggableCursor: 'crosshair' });
+
+            google.maps.event.addListener(map, 'click', function (event) {
+                var latlng = { lat: event.latLng.lat(), lng: event.latLng.lng() };
+
+                geocoder.geocode({ 'location': latlng }, function (results, status) {
+                    if (status === google.maps.GeocoderStatus.OK) {
+                        if (results[0]) {
+                            //map.setZoom(14);
+                            marker = placeMarker(latlng, true,results[0].formatted_address);
+                            markers.push(marker);
+
+//                            infowindow.setContent(results[0].formatted_address);
+                            //infowindow.open(map, marker);
+                        } else {
+                            window.alert('No hay resultados. Pruebe otra vez');
+                        }
+                    } else {
+                        window.alert('Falla de Geocodificacion debido a: ' + status);
+                    }
+                });
+
+                map.setOptions({ draggableCursor: '' });
+
+            });
+        }
+
+
+
+        /***********************************************************************************/
+        function placeMarker(latLng, desplazable,info) {
+            var marker;
+            var infowindow = new google.maps.InfoWindow;
+            marker = new google.maps.Marker({
+                map: map,
+                position: latLng,
+                draggable: desplazable
+            });
+            if (desplazable) {
+                // evento dragend
+                google.maps.event.addListener(marker, "dragend", function () {
+                    latlng = { lat: marker.getPosition().lat(), lng: marker.getPosition().lng() };
+                    geocoder.geocode({ 'location': latlng }, function (results, status) {
+                        if (status === google.maps.GeocoderStatus.OK) {
+                            if (results[0]) { //muestra nueva direccion despues del drag
+                                infowindow.setContent(results[0].formatted_address);
+                            }
+                        }
+                    });
+                });
+            }
+            infowindow.setContent(info);
+            infowindow.open(map, marker);
+            return marker;
+        }
+        
+        /***********************************************************************************/
+        function initMap() {
+            map = new google.maps.Map(document.getElementById('map'), {
+                //center: { lat: 19.303449, lng:  -99.182827 },
+                zoom: 11,
+                zoomControl: true,
+                zoomControlOptions: {
+                    position: google.maps.ControlPosition.LEFT_CENTER
+                },
+                scaleControl: true,
+                streetViewControl: true,
+                streetViewControlOptions: {
+                    position: google.maps.ControlPosition.LEFT_TOP
+                }
+            });
+
+            var marker;
+            //alert('Productor 0: ' + nomProductor[0]);
+            for (i = 0; i < prodCount; i++) {
+                marker = placeMarker(latlng[i], false, "Productor: " + nomProductor[i]);
+                markersProductores.push(marker);
+                markersProductores[i].setMap(null);
+            }
+            
+            geocoder = new google.maps.Geocoder();
+
+        }
+
+    </script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDck_KnRYo0h8DYMYcWyoTrN8i3__X5ZW0&callback=initMap&signed_in=true" async defer>
+    </script>

@@ -1,0 +1,566 @@
+@{
+    var grid = Html.DevExpress().GridView(settings => {
+        settings.Name = "PEFXEstadoGridView";
+        settings.CallbackRouteValues = new { Controller = "PEFXEstado", Action = "PEFXEstadoGridViewPartial" };
+
+        settings.SettingsEditing.AddNewRowRouteValues = new { Controller = "PEFXEstado", Action = "PEFXEstadoGridViewPartialAddNew" };
+        settings.SettingsEditing.UpdateRowRouteValues = new { Controller = "PEFXEstado", Action = "PEFXEstadoGridViewPartialUpdate" };
+        settings.SettingsEditing.DeleteRowRouteValues = new { Controller = "PEFXEstado", Action = "PEFXEstadoGridViewPartialDelete" };
+
+        settings.SettingsEditing.Mode = GridViewEditingMode.PopupEditForm;
+        settings.SettingsText.PopupEditFormCaption = "Presupuesto de Egresos de la Federación";
+
+        settings.SettingsPopup.EditForm.Height = 380;
+        settings.SettingsPopup.EditForm.Width = 725;
+        settings.SettingsPopup.EditForm.HorizontalAlign = PopupHorizontalAlign.WindowCenter;
+        settings.SettingsPopup.EditForm.VerticalAlign = PopupVerticalAlign.WindowCenter;
+        settings.SettingsPopup.EditForm.Modal = true;
+
+        settings.SettingsBehavior.ConfirmDelete = true;
+
+        settings.CommandColumn.Visible = !Convert.ToBoolean(ViewData["esRecursoCerrado"]);
+        settings.CommandColumn.ShowDeleteButton = true;
+        settings.CommandColumn.ShowEditButton = true;
+        settings.CommandColumn.ShowNewButtonInHeader = true;
+        settings.CommandColumn.ShowClearFilterButton = true;
+
+        settings.KeyFieldName = "Pk_IdPEFXEstado";
+
+        settings.SettingsPager.Visible = true;
+        settings.SettingsPager.Position = PagerPosition.Bottom;
+        settings.SettingsPager.FirstPageButton.Visible = true;
+        settings.SettingsPager.LastPageButton.Visible = true;
+        settings.SettingsPager.PageSizeItemSettings.Visible = true;
+        settings.SettingsPager.PageSize = 10;
+        settings.SettingsPager.PageSizeItemSettings.Items = new string[] { "10", "15", "20" };
+        settings.Settings.ShowGroupPanel = false;
+        settings.Settings.ShowFilterRow = true;
+        settings.Settings.ShowFilterRowMenu = true;
+        settings.SettingsBehavior.AllowSelectByRowClick = true;
+
+        settings.Columns.Add("Anio.Anio1", "Año");
+        settings.Columns.Add("Estado.Nombre", "Estado");
+
+        settings.Columns.AddBand(TransversalesBand =>
+        {
+            TransversalesBand.Caption = "Proyectos Estrategicos Transversales";
+            TransversalesBand.HeaderStyle.HorizontalAlign = HorizontalAlign.Center;
+
+            TransversalesBand.Columns.Add("SistemaInform", "Sistema Informático").PropertiesEdit.DisplayFormatString = "C";
+            TransversalesBand.Columns.Add("Capacitacion", "Capacitación").PropertiesEdit.DisplayFormatString = "C";
+            TransversalesBand.Columns.Add("Divulgacion", "Divulgacion").PropertiesEdit.DisplayFormatString = "C";
+            TransversalesBand.Columns.Add("Emergencias", "Emergencias Sanitarias").PropertiesEdit.DisplayFormatString = "C";
+            TransversalesBand.Columns.Add("UISEstatales", "UIS Estatales").PropertiesEdit.DisplayFormatString = "C";
+            TransversalesBand.Columns.Add("Gtotransv", "Total").PropertiesEdit.DisplayFormatString = "C";
+        });
+
+        settings.Columns.AddBand(ComponentesBand =>
+        {
+            ComponentesBand.Caption = "Componentes Previstos en Proyectos del PEF";
+            ComponentesBand.HeaderStyle.HorizontalAlign = HorizontalAlign.Center;
+
+            ComponentesBand.Columns.Add("Comp_CampFitoZoo", "Campañas FitoZoosanitarias").PropertiesEdit.DisplayFormatString = "C";
+            ComponentesBand.Columns.Add("Comp_InspVig", "Insp. y Vig. No Cuarentenaria").PropertiesEdit.DisplayFormatString = "C";
+            ComponentesBand.Columns.Add("Comp_VigCuarentenaria", "Vig. Cuarentenaria").PropertiesEdit.DisplayFormatString = "C";
+            ComponentesBand.Columns.Add("Comp_IAAP", "Inocuidad Agroalim. Ac. y Pesq.").PropertiesEdit.DisplayFormatString = "C";
+            ComponentesBand.Columns.Add("Componentes", "Total").PropertiesEdit.DisplayFormatString = "C";
+
+
+        });
+
+        settings.Columns.Add("GtoInversion", "Gastos de Inversión").PropertiesEdit.DisplayFormatString = "C";
+        settings.Columns.Add("GtoOperacion", "Gastos de Operación").PropertiesEdit.DisplayFormatString = "C";
+        settings.Columns.Add("Importe", "Presupuesto Autorizado").PropertiesEdit.DisplayFormatString = "C";
+
+        //Totales
+
+        settings.TotalSummary.Add(DevExpress.Data.SummaryItemType.Sum, "Gtotransv").DisplayFormat = "c";
+
+        settings.TotalSummary.Add(DevExpress.Data.SummaryItemType.Sum, "Comp_CampFitoZoo").DisplayFormat = "c";
+        settings.TotalSummary.Add(DevExpress.Data.SummaryItemType.Sum, "Comp_InspVig").DisplayFormat = "c";
+        settings.TotalSummary.Add(DevExpress.Data.SummaryItemType.Sum, "Comp_VigCuarentenaria").DisplayFormat = "c";
+        settings.TotalSummary.Add(DevExpress.Data.SummaryItemType.Sum, "Comp_IAAP").DisplayFormat = "c";
+        settings.TotalSummary.Add(DevExpress.Data.SummaryItemType.Sum, "Componentes").DisplayFormat = "c";
+
+        settings.TotalSummary.Add(DevExpress.Data.SummaryItemType.Sum, "GtoInversion").DisplayFormat = "c";
+        settings.TotalSummary.Add(DevExpress.Data.SummaryItemType.Sum, "GtoOperacion").DisplayFormat = "c";
+        settings.TotalSummary.Add(DevExpress.Data.SummaryItemType.Sum, "Importe").DisplayFormat = "c";
+        settings.Settings.ShowFooter = true;
+
+
+        settings.SetEditFormTemplateContent(c =>
+        {
+            var PEF = ViewData["dataItem"] ?? c.DataItem;
+            //ViewContext.Writer.Write("<p style='color:orange; font-size:14px; left:5px; position:relative' >Distribución del Presupuesto</p>");
+            Html.DevExpress().Label(
+                edtSettings =>
+                {
+                    edtSettings.ControlStyle.CssClass = "label";
+                    edtSettings.Text = c.KeyValue == null ? "Ingresa El Año" : "Edita el año";
+                    edtSettings.Style["font-size"] = "18px";
+                    edtSettings.Style["color"] = "orange";
+                }
+            )
+            .Render();
+            ViewContext.Writer.Write("<table>" + "<tr>" + "<td>");
+
+            //***Año
+            Html.DevExpress().Label(
+                edtSettings =>
+                {
+                    edtSettings.ControlStyle.CssClass = "label";
+                    edtSettings.Text = "Año";
+                    edtSettings.AssociatedControlName = "FK_IdAnio";
+                }
+            )
+            .Render();
+            Html.DevExpress().ComboBox(
+               edtSettings =>
+               {
+                   edtSettings.Name = "FK_IdAnio";
+                   edtSettings.ControlStyle.CssClass = "editor";
+                   edtSettings.Properties.TextField = "Anio1";
+                   edtSettings.Properties.ValueField = "PK_IdAnio";
+                   edtSettings.Properties.ValueType = typeof(int);
+                   edtSettings.ShowModelErrors = true;
+                   edtSettings.Width = Unit.Pixel(80);
+                   edtSettings.Properties.IncrementalFilteringMode = IncrementalFilteringMode.Contains;
+                   edtSettings.Properties.IncrementalFilteringDelay = 5;
+                   edtSettings.ToolTip = c.KeyValue == null ? "Seleccione el año de aplicación del Presupuesto" : "Cambiar Año";
+               }
+            )
+            .BindList(DXMVCWebApplication1.Models.Senasica.GetAnios())
+            .Bind(DataBinder.Eval(PEF, "FK_IdAnio"))
+            .Render();
+
+            ViewContext.Writer.Write("</td>");
+
+            ViewContext.Writer.Write("<td>");
+
+            //***Estado 
+            Html.DevExpress().Label(
+                edtSettings =>
+                {
+                    edtSettings.ControlStyle.CssClass = "label";
+                    edtSettings.Text = "Nombre del Estado";
+                    edtSettings.AssociatedControlName = "Fk_IdEstado";
+                }
+            )
+            .Render();
+            Html.DevExpress().ComboBox(
+               edtSettings =>
+               {
+                   edtSettings.Name = "Fk_IdEstado";
+                   edtSettings.ControlStyle.CssClass = "editor";
+                   edtSettings.Properties.TextField = "Nombre";
+                   edtSettings.Properties.ValueField = "Pk_IdEstado";
+                   edtSettings.Properties.ValueType = typeof(int);
+                   edtSettings.ShowModelErrors = true;
+                   edtSettings.Width = Unit.Pixel(300);
+                   edtSettings.Properties.IncrementalFilteringMode = IncrementalFilteringMode.Contains;
+                   edtSettings.Properties.IncrementalFilteringDelay = 5;
+                   edtSettings.ToolTip = c.KeyValue == null ? "Seleccione un Estado" : "Cambiar Estado";
+               }
+            )
+            .BindList(DXMVCWebApplication1.Models.Senasica.GetEstados())
+            .Bind(DataBinder.Eval(PEF, "Fk_IdEstado"))
+            .Render();
+
+            ViewContext.Writer.Write("</td>");
+
+            ViewContext.Writer.Write("</tr>");
+
+            ViewContext.Writer.Write("<tr>");
+            ViewContext.Writer.Write("<td>");
+            //*** Importe
+            Html.DevExpress().Label(
+                edtSettings =>
+                {
+                    edtSettings.ControlStyle.CssClass = "label";
+                    edtSettings.Text = "Importe";
+                    edtSettings.AssociatedControlName = "Importe";
+                }
+            )
+            .Render();
+            Html.DevExpress().TextBox(
+                edtSettings =>
+                {
+                    edtSettings.Name = "Importe";
+                    edtSettings.Properties.NullText = "Campo Requerido";
+                    edtSettings.ControlStyle.CssClass = "editor";
+                    edtSettings.ShowModelErrors = true;
+                    edtSettings.Width = Unit.Pixel(200);
+                    edtSettings.ToolTip = c.KeyValue == null ? "Ingrese Importe Autorizado para el estado" : "Edite Importe Autorizado para el estado";
+                }
+            )
+            .Bind(DataBinder.Eval(PEF, "Importe"))
+            .Render();
+            ViewContext.Writer.Write("</td>");
+
+            ViewContext.Writer.Write("<td>");
+            //
+            Html.DevExpress().Label(
+              edtSettings =>
+              {
+                  edtSettings.ControlStyle.CssClass = "label";
+                  edtSettings.Text = "Gastos de Operación";
+                  edtSettings.AssociatedControlName = "GtoOperacion";
+              }
+          )
+          .Render();
+            Html.DevExpress().TextBox(
+                edtSettings =>
+                {
+                    edtSettings.Name = "GtoOperacion";
+                    edtSettings.Properties.NullText = "Campo Requerido";
+                    edtSettings.ControlStyle.CssClass = "editor";
+                    edtSettings.ShowModelErrors = true;
+                    edtSettings.Width = Unit.Pixel(200);
+                    edtSettings.ToolTip = c.KeyValue == null ? "Importe Recomendado 5% del Presupuesto asignado para el estado " : "Edite Importe Recomendado 5% del Presupuesto asignado para el estado";
+                }
+            )
+            .Bind(DataBinder.Eval(PEF, "GtoOperacion"))
+            .Render();
+            //
+
+            ViewContext.Writer.Write("</td>");
+            ViewContext.Writer.Write("</tr>");
+            ViewContext.Writer.Write("</table>");
+
+            ViewContext.Writer.Write("<p style='color:orange; font-size:14px; left:5px; position:relative' >Importe de Proyectos Transversales</p>");
+            //Proyectos transversales
+            ViewContext.Writer.Write("<table>" + "<tr>" + "<td>");
+            //*** Sistema Informático
+            Html.DevExpress().Label(
+                edtSettings =>
+                {
+                    edtSettings.ControlStyle.CssClass = "label";
+                    edtSettings.Text = "Sistema Informático";
+                    edtSettings.AssociatedControlName = "SistemaInform";
+                }
+            )
+            .Render();
+            Html.DevExpress().TextBox(
+                edtSettings =>
+                {
+                    edtSettings.Name = "SistemaInform";
+                    edtSettings.Properties.NullText = "Campo Requerido";
+                    edtSettings.ControlStyle.CssClass = "editor";
+                    edtSettings.ShowModelErrors = true;
+                    edtSettings.Width = Unit.Pixel(200);
+                    edtSettings.ToolTip = c.KeyValue == null ? "Importe Recomendado 1% del Gasto de Inversión " : "Edite Importe Recomendado 1% del Gasto de Inversión";
+                }
+            )
+            .Bind(DataBinder.Eval(PEF, "SistemaInform"))
+            .Render();
+
+            ViewContext.Writer.Write("</td>");
+            ViewContext.Writer.Write("<td>");
+
+            Html.DevExpress().Label(
+               edtSettings =>
+               {
+                   edtSettings.ControlStyle.CssClass = "label";
+                   edtSettings.Text = "Capacitacion";
+                   edtSettings.AssociatedControlName = "Capacitacion";
+               }
+           )
+           .Render();
+            Html.DevExpress().TextBox(
+                edtSettings =>
+                {
+                    edtSettings.Name = "Capacitacion";
+                    edtSettings.Properties.NullText = "Campo Requerido";
+                    edtSettings.ControlStyle.CssClass = "editor";
+                    edtSettings.ShowModelErrors = true;
+                    edtSettings.Width = Unit.Pixel(200);
+                    edtSettings.ToolTip = c.KeyValue == null ? "Importe Recomendado 1% del Gasto de Inversión " : "Edite Importe Recomendado 1% del Gasto de Inversión";
+                }
+            )
+            .Bind(DataBinder.Eval(PEF, "Capacitacion"))
+            .Render();
+
+            ViewContext.Writer.Write("</td>");
+
+            ViewContext.Writer.Write("<td>");
+
+            Html.DevExpress().Label(
+               edtSettings =>
+               {
+                   edtSettings.ControlStyle.CssClass = "label";
+                   edtSettings.Text = "Divulgacion";
+                   edtSettings.AssociatedControlName = "Divulgacion";
+               }
+           )
+           .Render();
+            Html.DevExpress().TextBox(
+                edtSettings =>
+                {
+                    edtSettings.Name = "Divulgacion";
+                    edtSettings.Properties.NullText = "Campo Requerido";
+                    edtSettings.ControlStyle.CssClass = "editor";
+                    edtSettings.ShowModelErrors = true;
+                    edtSettings.Width = Unit.Pixel(200);
+                    edtSettings.ToolTip = c.KeyValue == null ? "Importe Recomendado 1% del Gasto de Inversión " : "Edite Importe Recomendado 1% del Gasto de Inversión";
+                }
+            )
+            .Bind(DataBinder.Eval(PEF, "Divulgacion"))
+            .Render();
+
+            ViewContext.Writer.Write("</td>");
+
+            ViewContext.Writer.Write("<td>");
+
+            Html.DevExpress().Label(
+               edtSettings =>
+               {
+                   edtSettings.ControlStyle.CssClass = "label";
+                   edtSettings.Text = "Emergencias Sanitarias";
+                   edtSettings.AssociatedControlName = "Emergencias";
+               }
+           )
+           .Render();
+            Html.DevExpress().TextBox(
+                edtSettings =>
+                {
+                    edtSettings.Name = "Emergencias";
+                    edtSettings.Properties.NullText = "Campo Requerido";
+                    edtSettings.ControlStyle.CssClass = "editor";
+                    edtSettings.ShowModelErrors = true;
+                    edtSettings.Width = Unit.Pixel(200);
+                    edtSettings.ToolTip = c.KeyValue == null ? "Importe Recomendado 7% del Gasto de Inversión " : "Edite Importe Recomendado 7% del Gasto de Inversión";
+                }
+            )
+            .Bind(DataBinder.Eval(PEF, "Emergencias"))
+            .Render();
+
+            //Termina Proyectos Transversales
+            ViewContext.Writer.Write("</td>" + "</tr>" + "</table>");
+
+            ViewContext.Writer.Write("<p style='color:orange; font-size:14px; left:5px; position:relative' >Componentes Previstos en el PEF</p>");
+            //Componentes
+            ViewContext.Writer.Write("<table>" + "<tr>" + "<td>");
+            Html.DevExpress().Label(
+              edtSettings =>
+              {
+                  edtSettings.ControlStyle.CssClass = "label";
+                  edtSettings.Text = "Campañas FitoZoosanitarias";
+                  edtSettings.AssociatedControlName = "Comp_CampFitoZoo";
+              }
+          )
+          .Render();
+            Html.DevExpress().TextBox(
+                edtSettings =>
+                {
+                    edtSettings.Name = "Comp_CampFitoZoo";
+                    edtSettings.Properties.NullText = "Campo Requerido";
+                    edtSettings.ControlStyle.CssClass = "editor";
+                    edtSettings.ShowModelErrors = true;
+                    edtSettings.Width = Unit.Pixel(200);
+                    edtSettings.ToolTip = c.KeyValue == null ? "Importe asignado para Campañas Fitozoosanitarias" : "Edite Importe asignado para Campañas Fitozoosanitarias";
+                }
+            )
+            .Bind(DataBinder.Eval(PEF, "Comp_CampFitoZoo"))
+            .Render();
+
+            ViewContext.Writer.Write("</td>");
+
+            ViewContext.Writer.Write("<td>");
+
+            Html.DevExpress().Label(
+               edtSettings =>
+               {
+                   edtSettings.ControlStyle.CssClass = "label";
+                   edtSettings.Text = "Inocuidad Agroalimentaria Ac y Pesq ";
+                   edtSettings.AssociatedControlName = "Comp_IAAP";
+               }
+           )
+           .Render();
+            Html.DevExpress().TextBox(
+                edtSettings =>
+                {
+                    edtSettings.Name = "Comp_IAAP";
+                    edtSettings.Properties.NullText = "Campo Requerido";
+                    edtSettings.ControlStyle.CssClass = "editor";
+                    edtSettings.ShowModelErrors = true;
+                    edtSettings.Width = Unit.Pixel(200);
+                    edtSettings.ToolTip = c.KeyValue == null ? "Importe asignado para Inocuidad Agroalimentaria Ac y Pesq" : "Edite Importe asignado para Inocuidad Agroalimentaria Ac y Pesq";
+                }
+            )
+            .Bind(DataBinder.Eval(PEF, "Comp_IAAP"))
+            .Render();
+            ViewContext.Writer.Write("</td>");
+            ViewContext.Writer.Write("<td>");
+
+            Html.DevExpress().Label(
+               edtSettings =>
+               {
+                   edtSettings.ControlStyle.CssClass = "label";
+                   edtSettings.Text = "Inspección y Vigilancia No Cuarentenaria";
+                   edtSettings.AssociatedControlName = "Comp_InspVig";
+               }
+           )
+           .Render();
+            Html.DevExpress().TextBox(
+                edtSettings =>
+                {
+                    edtSettings.Name = "Comp_InspVig";
+                    edtSettings.Properties.NullText = "Campo Requerido";
+                    edtSettings.ControlStyle.CssClass = "editor";
+                    edtSettings.ShowModelErrors = true;
+                    edtSettings.Width = Unit.Pixel(200);
+                    edtSettings.ToolTip = c.KeyValue == null ? "Importe asignado para Inspección y Vigilancia No Cuarentenaria" : "Edite Importe asignado para Inocuidad Agroalimentaria Ac y Pesq";
+                }
+            )
+            .Bind(DataBinder.Eval(PEF, "Comp_InspVig"))
+            .Render();
+            ViewContext.Writer.Write("</td>");
+
+            ViewContext.Writer.Write("<td>");
+
+            Html.DevExpress().Label(
+               edtSettings =>
+               {
+                   edtSettings.ControlStyle.CssClass = "label";
+                   edtSettings.Text = "Vigilancia Cuarentenaria";
+                   edtSettings.AssociatedControlName = "Comp_VigCuarentenaria";
+               }
+           )
+           .Render();
+            Html.DevExpress().TextBox(
+                edtSettings =>
+                {
+                    edtSettings.Name = "Comp_VigCuarentenaria";
+                    edtSettings.Properties.NullText = "Campo Requerido";
+                    edtSettings.ControlStyle.CssClass = "editor";
+                    edtSettings.ShowModelErrors = true;
+                    edtSettings.Width = Unit.Pixel(200);
+                    edtSettings.ToolTip = c.KeyValue == null ? "Importe asignado para Vigilancia Cuarentenaria" : "Edite Importe asignado para Vigilancia Cuarentenaria";
+                }
+            )
+            .Bind(DataBinder.Eval(PEF, "Comp_VigCuarentenaria"))
+            .Render();
+
+            //Termina Componentes
+            ViewContext.Writer.Write("</td>" + "</tr>" + "</table>");
+
+
+
+            //**Botones Guardar & Cancelar
+            ViewContext.Writer.Write("<hr noshade>");
+            Html.DevExpress().Label(
+                       edtSettings =>
+                       {
+                           edtSettings.ControlStyle.CssClass = "label";
+                       }
+                   )
+                   .Render();
+            Html.DevExpress().Button(
+                btnSettings =>
+                {
+                    btnSettings.Name = "btnUpdat";
+                    btnSettings.Text = "Guardar";
+                    btnSettings.ControlStyle.CssClass = "button";
+                    btnSettings.Images.Image.Url = "Content/Images/guardar.png";
+                    btnSettings.ImagePosition = ImagePosition.Right;
+                    btnSettings.Images.Image.Width = 16;
+                    btnSettings.ClientSideEvents.Click = "function(s, e){ PEFXEstadoGridView" + ".UpdateEdit(); }";
+                }
+            )
+            .Render();
+
+            Html.DevExpress().Button(
+                btnSettings =>
+                {
+                    btnSettings.Name = "btnCance";
+                    btnSettings.Text = "Cancelar";
+                    btnSettings.ControlStyle.CssClass = "button";
+                    btnSettings.Images.Image.Url = "Content/Images/cancelar.png";
+                    btnSettings.ImagePosition = ImagePosition.Right;
+                    btnSettings.Style["position"] = "relative";
+                    btnSettings.Style["left"] = "5px";
+                    btnSettings.ClientSideEvents.Click = "function(s, e){ PEFXEstadoGridView" + ".CancelEdit(); }";
+                }
+            )
+            .Render();
+
+            Html.DevExpress().Button(btnSettings =>
+            {
+                btnSettings.Name = "btnAyuda";
+                btnSettings.ControlStyle.CssClass = "button";
+                btnSettings.Text = "Ayuda";
+                btnSettings.Images.Image.Url = "/Content/Images/ayuda.png";
+                btnSettings.ImagePosition = ImagePosition.Right;
+                btnSettings.Images.Image.Width = 16;
+                btnSettings.Style["position"] = "relative";
+                btnSettings.Style["left"] = "20px";
+                btnSettings.ClientSideEvents.Click = "function(s, e){ window.open('https://docs.google.com/document/d/1ZJURCxDAT76zN4TpKa2cBHEdF3RZFUNkAv3o9iyWxG4/edit#heading=h.1qoc8b1','_blank'); }";
+            }).Render();
+
+        });
+        /// Termina Custom
+
+
+
+
+
+    });
+    if (ViewData["EditError"] != null){
+        grid.SetEditErrorText((string)ViewData["EditError"]);
+    }
+}
+
+@grid.Bind(Model).GetHtml()
+
+@Html.DevExpress().PopupControl(settings =>
+{
+    settings.Name = "popUpCerrarDistribucion";
+    settings.Width = 400;
+    settings.AllowDragging = true;
+    settings.CloseAction = CloseAction.CloseButton;
+    settings.PopupAnimationType = AnimationType.None;
+    settings.HeaderText = "¡Movimiento irreversible!";
+    settings.Modal = true;
+    settings.PopupHorizontalAlign = PopupHorizontalAlign.WindowCenter;
+    settings.PopupVerticalAlign = PopupVerticalAlign.WindowCenter;
+
+    settings.SetContent(() =>
+    {
+        using (Html.BeginForm("CierraDistribucionRecurso", "PEFXEstado", FormMethod.Post, new { id = "FormularioCierraDistribucion" }))
+        {
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Una vez cerrado la distribución del recurso, no se podrán hacer modificaciones";
+                edtSettings.ToolTip = "Una vez cerrado la distribución del recurso, no se podrán hacer modificaciones";
+            }).Render();
+
+            ViewContext.Writer.Write("<br />");
+            ViewContext.Writer.Write("<br />");
+
+            Html.DevExpress().Button(btnSettings =>
+            {
+                btnSettings.Name = "btnAceptarCierre";
+                btnSettings.Text = "Aceptar";
+                btnSettings.ControlStyle.CssClass = "button";
+                btnSettings.Images.Image.Url = "/Content/Images/aceptar.png";
+                btnSettings.ImagePosition = ImagePosition.Right;
+                btnSettings.Style["position"] = "relative";
+                btnSettings.Style["left"] = "5px";
+                btnSettings.UseSubmitBehavior = true;
+            }).Render();
+
+            Html.DevExpress().Button(btnSettings =>
+            {
+                btnSettings.Name = "btnCancelarCierre";
+                btnSettings.Text = "Cancelar";
+                btnSettings.ControlStyle.CssClass = "button";
+                btnSettings.Images.Image.Url = "/Content/Images/cancelar.png";
+                btnSettings.ImagePosition = ImagePosition.Right;
+                btnSettings.Style["position"] = "relative";
+                btnSettings.Style["left"] = "5px";
+                btnSettings.ClientSideEvents.Click = "function(s, e){ popUpCerrarDistribucion.Hide(); }";
+            }).Render();
+        }
+    });
+}).GetHtml()

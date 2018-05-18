@@ -1,0 +1,14 @@
+﻿@Html.DevExpress().Button(btnSettings =>
+           {
+               btnSettings.Name = "btnImprimir_reproPT";
+               btnSettings.Text = "Imprimir PT. Histórico";
+               btnSettings.ControlStyle.CssClass = "button";
+               btnSettings.Images.Image.Url = "/Content/Images/ico_print.png";
+               btnSettings.ImagePosition = ImagePosition.Right;
+               btnSettings.Images.Image.Width = 16;
+               btnSettings.Style["position"] = "relative";
+               btnSettings.Style["left"] = "15px";
+               btnSettings.ClientVisible = Senasica.GetExisteHistoricoReproPT(Convert.ToInt32(ViewData["IdCampania"]));
+               btnSettings.ClientSideEvents.Click = "function(s, e) { HistoricoCampaniaPT.Show(); HistoricoCampaniaPT.PerformCallback(); }";
+           }).GetHtml();
+@Html.Partial("_SelectRepro")

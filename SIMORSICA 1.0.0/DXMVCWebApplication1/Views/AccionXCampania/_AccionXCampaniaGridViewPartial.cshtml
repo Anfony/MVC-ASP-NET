@@ -1,0 +1,204 @@
+﻿@{
+    var grid = Html.DevExpress().GridView(settings =>
+    {
+        settings.Name = "AccionesXCampGridView";
+        settings.CallbackRouteValues = new { Controller = "AccionXCampania", Action = "AccionXCampaniaGridViewPartial", IdCampania = ViewData["IdCampania"], IdProyectoAutorizado = ViewData["IdProyectoAutorizado"], IdUnidadEjecutora = ViewData["IdUnidadEjecutora"] };
+
+        settings.SettingsEditing.AddNewRowRouteValues = new { Controller = "AccionXCampania", Action = "AccionXCampaniaGridViewPartialAddNew", IdCampania = ViewData["IdCampania"], IdProyectoAutorizado = ViewData["IdProyectoAutorizado"], IdUnidadEjecutora = ViewData["IdUnidadEjecutora"] };
+        settings.SettingsEditing.UpdateRowRouteValues = new { Controller = "AccionXCampania", Action = "AccionXCampaniaGridViewPartialUpdate", IdCampania = ViewData["IdCampania"], IdProyectoAutorizado = ViewData["IdProyectoAutorizado"], IdUnidadEjecutora = ViewData["IdUnidadEjecutora"] };
+        settings.SettingsEditing.DeleteRowRouteValues = new { Controller = "AccionXCampania", Action = "AccionXCampaniaGridViewPartialDelete", IdCampania = ViewData["IdCampania"], IdProyectoAutorizado = ViewData["IdProyectoAutorizado"], IdUnidadEjecutora = ViewData["IdUnidadEjecutora"] };
+        settings.SettingsEditing.Mode = GridViewEditingMode.PopupEditForm;
+        settings.SettingsBehavior.ConfirmDelete = true;
+
+        settings.SettingsPopup.EditForm.Height = 215;
+        settings.SettingsPopup.EditForm.Width = 350;
+        settings.SettingsPopup.EditForm.HorizontalAlign = PopupHorizontalAlign.WindowCenter;
+        settings.SettingsPopup.EditForm.VerticalAlign = PopupVerticalAlign.WindowCenter;
+
+        settings.SettingsPopup.EditForm.Modal = true;
+
+        settings.Settings.ShowFilterRow = true;
+        settings.Settings.ShowFilterRowMenu = true;
+
+        settings.CommandColumn.Visible = true;
+        settings.SettingsCommandButton.NewButton.Text = "Nueva Acción";
+        settings.CommandColumn.ShowNewButtonInHeader = Convert.ToBoolean(ViewData["Escritura"]);
+        settings.CommandColumn.ShowDeleteButton = Convert.ToBoolean(ViewData["Escritura"]);
+        settings.CommandColumn.ShowEditButton = Convert.ToBoolean(ViewData["Escritura"]) || Convert.ToBoolean(ViewData["Lectura"]);
+        settings.CommandColumn.ShowClearFilterButton = true;
+
+        settings.KeyFieldName = "PK_IdAccionXCampania";
+
+        settings.SettingsPager.Visible = true;
+        settings.SettingsPager.Position = PagerPosition.Bottom;
+        settings.SettingsPager.FirstPageButton.Visible = true;
+        settings.SettingsPager.LastPageButton.Visible = true;
+        settings.SettingsPager.PageSizeItemSettings.Visible = true;
+        settings.SettingsPager.PageSize = 3;
+        settings.SettingsPager.PageSizeItemSettings.Items = new string[] { "5", "10", "15" };
+
+        settings.Columns.Add("TipoAccion", "Tipo de Acción");
+
+        settings.Columns.Add("Persona", "Encargado");
+        settings.Columns.Add("Justificacion", "Justificación");
+
+        settings.SetEditFormTemplateContent(c =>
+        {
+            var accion = ViewData["dataItem"] ?? c.DataItem;
+
+            int IdProyectoAutorizado = Convert.ToInt32(ViewData["IdProyectoAutorizado"]);
+            int IdUnidadEjecutora = Convert.ToInt32(ViewData["IdUnidadEjecutora"]);
+            ViewContext.Writer.Write("<p>Edición de Acción</p>");
+            ViewContext.Writer.Write("<table><tr><td>");
+
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Tipo de Acción:";
+                edtSettings.AssociatedControlName = "Fk_IdTipoDeAccion__SIS";
+            }).Render();
+
+            Html.DevExpress().ComboBox(edtSettings =>
+            {
+                edtSettings.Name = "Fk_IdTipoDeAccion__SIS";
+                edtSettings.ControlStyle.CssClass = "editor";
+                edtSettings.Properties.TextField = "Nombre";
+                edtSettings.Properties.NullText = "Campo Requerido";
+                edtSettings.Properties.ValueField = "Pk_IdTipoDeAccion";
+                edtSettings.Properties.ValueType = typeof(int);
+                edtSettings.ShowModelErrors = true;
+                edtSettings.Width = Unit.Pixel(250);
+                edtSettings.Properties.IncrementalFilteringMode = IncrementalFilteringMode.Contains;
+                edtSettings.Properties.IncrementalFilteringDelay = 5;
+            }).BindList(DXMVCWebApplication1.Models.Senasica.GetTiposDeAccionByProyecto(IdProyectoAutorizado))
+               .Bind(DataBinder.Eval(accion, "Fk_IdTipoDeAccion__SIS"))
+               .Render();
+
+            ViewContext.Writer.Write("</td>");
+            ViewContext.Writer.Write("<td>");
+
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Coordinador de la Acción:";
+                edtSettings.AssociatedControlName = "Fk_IdPersona__SIS";
+            }).Render();
+
+            Html.DevExpress().ComboBox(edtSettings =>
+            {
+                edtSettings.Name = "Fk_IdPersona__SIS";
+                edtSettings.ControlStyle.CssClass = "editor";
+                edtSettings.Properties.TextField = "NombreCompleto";
+                edtSettings.Properties.NullText = "Campo Requerido";
+                edtSettings.Properties.ValueField = "Pk_IdPersona";
+                edtSettings.Properties.ValueType = typeof(int);
+                edtSettings.ShowModelErrors = true;
+                edtSettings.Width = Unit.Pixel(250);
+                edtSettings.Properties.IncrementalFilteringMode = IncrementalFilteringMode.Contains;
+                edtSettings.Properties.IncrementalFilteringDelay = 5;
+            }).BindList(DXMVCWebApplication1.Models.Senasica.GetPersonasByUnidadEjecutora(IdUnidadEjecutora))
+               .Bind(DataBinder.Eval(accion, "Fk_IdPersona__SIS"))
+               .Render();
+
+            ViewContext.Writer.Write("</td>");
+            ViewContext.Writer.Write("</tr>");
+            ViewContext.Writer.Write("</table>");
+
+            ViewContext.Writer.Write("<br>");
+
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Justificación:";
+                edtSettings.AssociatedControlName = "Justificacion";
+            }).Render();
+
+            Html.DevExpress().Memo(edtSettings =>
+            {
+                edtSettings.Name = "Justificacion";
+                edtSettings.ControlStyle.CssClass = "editor";
+                edtSettings.ShowModelErrors = true;
+                edtSettings.Width = Unit.Pixel(1000);
+                edtSettings.Height = Unit.Pixel(50);
+
+            }).Bind(DataBinder.Eval(accion, "Justificacion"))
+            .Render();
+
+            ViewContext.Writer.Write("<br>");
+
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+            }).Render();
+
+            Html.DevExpress().Button(btnSettings =>
+            {
+                btnSettings.Name = "btnUpdatAccionesXCamp";
+                btnSettings.Text = "Guardar";
+                btnSettings.ControlStyle.CssClass = "button";
+                btnSettings.Images.Image.Url = "Content/Images/guardar.png";
+                btnSettings.ImagePosition = ImagePosition.Right;
+                btnSettings.Images.Image.Width = 16;
+                btnSettings.ClientSideEvents.Click = "function(s, e){ AccionesXCampGridView.UpdateEdit(); }";
+                btnSettings.ClientVisible = Convert.ToBoolean(ViewData["Escritura"]);
+            }).Render();
+
+            Html.DevExpress().Button(btnSettings =>
+            {
+                btnSettings.Name = "btnCanceAccionesXCamp";
+                btnSettings.Text = "Cancelar";
+                btnSettings.ControlStyle.CssClass = "button";
+                btnSettings.Images.Image.Url = "Content/Images/cancelar.png";
+                btnSettings.ImagePosition = ImagePosition.Right;
+                btnSettings.Style["position"] = "relative";
+                btnSettings.Style["left"] = "5px";
+                btnSettings.ClientSideEvents.Click = "function(s, e){ AccionesXCampGridView.CancelEdit(); }";
+            }).Render();
+
+            ViewContext.Writer.Write("</div>"); // Termina Codigo de Botones
+
+            @Html.DevExpress().PageControl(PCsettings =>
+            {
+                PCsettings.Name = "pcActividades";
+                PCsettings.ClientVisible = c.KeyValue == null ? false : true;
+
+                PCsettings.TabPages.Add("Actividades por Acción").SetContent(() =>
+                {
+                    ViewContext.Writer.Write("<H3>Actividades a realizar para completar la Acción</H3>");
+
+                    Html.RenderPartial("~/Views/ExportExcelPDF/_ExportExcelPDF.cshtml", new ViewDataDictionary
+                                                                                    {
+                                                                                        { "Clave", DXMVCWebApplication1.Common.ListaPantallas.UE_ACCIONES_CAMPANIA },
+                                                                                        { "IdAccionXCamp", DataBinder.Eval(accion, "PK_IdAccionXCampania") }
+                                                                                    });
+
+
+                    @Html.RenderAction("ActividadesXAccionGridViewPartial", "ActividadXAccion", new { IdAccionXCamp = (accion == null ? null : DataBinder.Eval(accion, "PK_IdAccionXCampania")), IdTipoDeAccion = (accion == null ? null : DataBinder.Eval(accion, "Fk_IdTipoDeAccion__SIS")), IdUnidadEjecutora, IdCampania = ViewData["IdCampania"] });
+                });
+
+                if(FuncionesAuxiliares.GetCurrent_IdAnioPresupuestal() != 5)
+                {
+                    PCsettings.TabPages.Add("Necesidades por Acción").SetContent(() =>
+                    {
+                        ViewContext.Writer.Write("<H3>Necesidades para completar la Acción</H3>");
+
+                        Html.RenderPartial("~/Views/ExportExcelPDF/_ExportExcelPDF.cshtml", new ViewDataDictionary
+                                                                    {
+                                                                                         { "Clave", DXMVCWebApplication1.Common.ListaPantallas.UE_NECESIDADES_POR_ACCION },
+                                                                                         { "IdAccionXCamp", DataBinder.Eval(accion, "PK_IdAccionXCampania") }
+                                                                    });
+
+
+
+                        @Html.RenderAction("NecesidadesGridViewPartial", "ProgramaAnualAdq", new { IdAccionXCamp = (accion == null ? null : DataBinder.Eval(accion, "PK_IdAccionXCampania")), IdTipoDeAccion = (accion == null ? null : DataBinder.Eval(accion, "Fk_IdTipoDeAccion__SIS")), IdUnidadEjecutora, IdCampania = ViewData["IdCampania"] });
+                    });
+                }
+            }).GetHtml();
+        });
+    });
+    if (ViewData["EditError"] != null)
+    {
+        grid.SetEditErrorText((string)ViewData["EditError"]);
+    }
+}
+@grid.Bind(Model).GetHtml()

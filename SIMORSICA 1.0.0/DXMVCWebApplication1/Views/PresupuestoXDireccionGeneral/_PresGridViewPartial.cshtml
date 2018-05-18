@@ -1,0 +1,53 @@
+﻿@{
+    var grid = Html.DevExpress().GridView(settings =>
+    {
+        settings.Name = "ResumenXEstado_DG";
+        settings.CallbackRouteValues = new { Controller = "PresupuestoXDireccionGeneral", Action = "PresGridViewPartial" };
+
+        settings.SettingsEditing.Mode = GridViewEditingMode.PopupEditForm;
+        settings.SettingsBehavior.ConfirmDelete = true;
+
+        settings.SettingsPopup.EditForm.Height = 150;
+        settings.SettingsPopup.EditForm.Width = 70;
+        settings.SettingsPopup.EditForm.HorizontalAlign = PopupHorizontalAlign.WindowCenter;
+        settings.SettingsPopup.EditForm.VerticalAlign = PopupVerticalAlign.WindowCenter;
+        settings.SettingsPopup.EditForm.Modal = true;
+
+        settings.CommandColumn.ShowClearFilterButton = true;
+
+        settings.SettingsPager.Visible = true;
+        settings.SettingsPager.Position = PagerPosition.Bottom;
+        settings.SettingsPager.FirstPageButton.Visible = true;
+        settings.SettingsPager.LastPageButton.Visible = true;
+        settings.SettingsPager.PageSizeItemSettings.Visible = true;
+        settings.SettingsPager.PageSize = 10;
+        settings.SettingsPager.PageSizeItemSettings.Items = new string[] { "5", "10", "15" };
+        settings.Settings.ShowFilterRowMenu = true;
+
+        settings.KeyFieldName = "PresGridViewPartial";
+
+        settings.Settings.ShowGroupPanel = true;
+        settings.Settings.ShowFilterRow = true;
+        settings.SettingsBehavior.AllowSelectByRowClick = true;
+
+        settings.Settings.ShowFooter = true;
+
+        settings.Columns.Add("Estado.Nombre", "Estado");
+        settings.Columns.Add("DGSA", "DGSA").PropertiesEdit.DisplayFormatString = "c";
+        settings.Columns.Add("DGSV", "DGSV").PropertiesEdit.DisplayFormatString = "c";
+        settings.Columns.Add("DGIAAP", "DGIAAP").PropertiesEdit.DisplayFormatString = "c";
+        settings.Columns.Add("DGIF", "DGIF").PropertiesEdit.DisplayFormatString = "c";
+        settings.Columns.Add("totalEstado", "Total por Estado").PropertiesEdit.DisplayFormatString = "c";
+
+        settings.TotalSummary.Add(DevExpress.Data.SummaryItemType.Sum, "DGSA").DisplayFormat = "c";
+        settings.TotalSummary.Add(DevExpress.Data.SummaryItemType.Sum, "DGSV").DisplayFormat = "c";
+        settings.TotalSummary.Add(DevExpress.Data.SummaryItemType.Sum, "DGIAAP").DisplayFormat = "c";
+        settings.TotalSummary.Add(DevExpress.Data.SummaryItemType.Sum, "DGIF").DisplayFormat = "c";
+        settings.TotalSummary.Add(DevExpress.Data.SummaryItemType.Sum, "totalEstado").DisplayFormat = "c";
+    });
+    if (ViewData["EditError"] != null)
+    {
+        grid.SetEditErrorText((string)ViewData["EditError"]);
+    }
+}
+@grid.Bind(Model).GetHtml()

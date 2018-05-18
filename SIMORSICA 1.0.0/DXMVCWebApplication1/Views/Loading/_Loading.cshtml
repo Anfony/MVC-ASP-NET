@@ -1,0 +1,7 @@
+﻿@Html.DevExpress().CallbackPanel(settpanel =>
+                    {
+                        settpanel.Name = "Load";
+                        settpanel.ShowLoadingPanel = false;
+                        settpanel.CallbackRouteValues = new { Controller = "Loading", Action = "LoadingPartial", PK_IdCampania = ViewData["PK_IdCampania"] };                        
+                    }
+                   ).GetHtml()

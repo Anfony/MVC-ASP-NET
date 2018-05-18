@@ -1,0 +1,345 @@
+﻿@model DXMVCWebApplication1.ViewModels.FirmasAutorizadasVM
+
+@{
+    ViewBag.Title = "Firmas Autorizadas";
+}
+
+<h3 style="font-size:17px; font:bold; text-align:center">GESTIÓN DE FIRMAS AUTORIZADAS</h3>
+<h3 style="font-size: 13px; text-align: center; position: relative; top: -10px">Gestione aquí las firmas de los reportes del sistema</h3>
+
+
+
+<br />
+<br />
+<br />
+<br />
+
+@{
+    using (Html.BeginForm("ObtieneFirmas", "FirmasAutorizadas", FormMethod.Post, new { id = "ObtencionFirmas" }))
+    {
+        ViewContext.Writer.Write("<table>");
+        ViewContext.Writer.Write("<tr><td>");
+        Html.DevExpress().Label(edtSettings =>
+        {
+            edtSettings.ControlStyle.CssClass = "label";
+            edtSettings.Text = "Elije Reporte";
+            edtSettings.Name = "labelReporte";
+            edtSettings.Style["left"] = "20px";
+            edtSettings.Style["position"] = "relative";
+        }).GetHtml();
+        ViewContext.Writer.Write("</td>");
+
+        ViewContext.Writer.Write("<td>");
+        Html.DevExpress().ComboBox(settings =>
+        {
+            settings.Name = "nombreReporte";
+            settings.Properties.TextField = "NombreReporte";
+            settings.Properties.NullText = "Campo Requerido";
+            settings.Properties.ValueField = "Pk_IdReportes";
+            settings.Properties.ValueType = typeof(int);
+            settings.ToolTip = "Seleccione el Reporte";
+            settings.Width = Unit.Pixel(250);
+            settings.Style["left"] = "20px";
+            settings.Style["position"] = "relative";
+            settings.Properties.EnableSynchronization = DefaultBoolean.False;
+            settings.Properties.IncrementalFilteringMode = IncrementalFilteringMode.StartsWith;
+        }).BindList(DXMVCWebApplication1.Models.Senasica.GetReportes()).GetHtml();
+        ViewContext.Writer.Write("</td>");
+
+        ViewContext.Writer.Write("<td>");
+        Html.DevExpress().Label(edtSettings =>
+        {
+            edtSettings.ControlStyle.CssClass = "label";
+            edtSettings.Text = "Elije Estado";
+            edtSettings.Name = "labelEstado";
+            edtSettings.Style["left"] = "50px";
+            edtSettings.Style["position"] = "relative";
+        }).GetHtml();
+        ViewContext.Writer.Write("</td>");
+
+        ViewContext.Writer.Write("<td>");
+        Html.DevExpress().ComboBox(settings =>
+        {
+            settings.Name = "nombreEstado";
+            settings.Properties.TextField = "Nombre";
+            settings.Properties.NullText = "Campo Requerido";
+            settings.Properties.ValueField = "Pk_IdEstado";
+            settings.Properties.ValueType = typeof(int);
+            settings.ToolTip = "Seleccione el Estado";
+            settings.Width = Unit.Pixel(250);
+            settings.Style["left"] = "50px";
+            settings.Style["position"] = "relative";
+            settings.Properties.EnableSynchronization = DefaultBoolean.False;
+            settings.Properties.IncrementalFilteringMode = IncrementalFilteringMode.StartsWith;
+        }).BindList(DXMVCWebApplication1.Models.Senasica.GetEstados()).GetHtml();
+        ViewContext.Writer.Write("</td>");
+
+        ViewContext.Writer.Write("<td>");
+        Html.DevExpress().Button(btnSettings =>
+        {
+            btnSettings.Name = "btnObtieneFirmas";
+            btnSettings.Text = "Obtener Firmas";
+            btnSettings.ControlStyle.CssClass = "button";
+            btnSettings.Images.Image.Url = "/Content/Images/lupa.png";
+            btnSettings.ImagePosition = ImagePosition.Right;
+            btnSettings.Images.Image.Width = 16;
+            btnSettings.Style["left"] = "100px";
+            btnSettings.Style["position"] = "relative";
+            btnSettings.UseSubmitBehavior = true;
+        }).Render();
+        ViewContext.Writer.Write("</td>");
+
+        ViewContext.Writer.Write("<td>");
+        Html.DevExpress().Label(edtSettings =>
+        {
+            edtSettings.ControlStyle.CssClass = "label";
+            edtSettings.Text = "NO EXISTEN FIRMAS ASOCIADAS";
+            edtSettings.Name = "labelExistenFirmas";
+            edtSettings.ClientVisible = (ViewData["nombreReporte"] == null && ViewData["nombreEstado"] == null ? false : true)  && !Convert.ToBoolean(ViewData["existenFirmas"]);
+            edtSettings.Style["left"] = "150px";
+            edtSettings.Style["position"] = "relative";
+            edtSettings.Style["color"] = "red";
+        }).GetHtml();
+        ViewContext.Writer.Write("</td></tr>");
+        ViewContext.Writer.Write("</table>");
+    }
+
+    ViewContext.Writer.Write("<br >");
+    ViewContext.Writer.Write("<br >");
+    ViewContext.Writer.Write("<br >");
+
+    Html.DevExpress().Label(edtSettings =>
+    {
+        edtSettings.ControlStyle.CssClass = "label";
+        edtSettings.Text = "TUS FIRMAS SE HAN GUARDADO SATISFACTORIAMENTE";
+        edtSettings.Name = "labelSaveFirmas";
+        edtSettings.ClientVisible = Convert.ToBoolean(ViewData["successfulSave"]);
+        edtSettings.Style["left"] = "100px";
+        edtSettings.Style["position"] = "relative";
+        edtSettings.Style["color"] = "red";
+    }).GetHtml();
+}
+
+
+<br />
+<br />
+<br />
+
+@{
+    if (ViewData["nombreReporte"] != null && ViewData["nombreEstado"] != null)
+    {
+        using (Html.BeginForm("CreateUpdateFirmas", "FirmasAutorizadas", new { nombreReporte = ViewData["nombreReporte"], nombreEstado = ViewData["nombreEstado"] } , FormMethod.Post))
+        {
+            ViewContext.Writer.Write("<hr align='left' width='50%'>");
+            ViewContext.Writer.Write("<table> <tr>");
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Reporte: " + ViewData["nombreReporte"].ToString();
+                edtSettings.Name = "lblnombreReporte";
+                edtSettings.Style["left"] = "20px";
+                edtSettings.Style["position"] = "relative";
+            }).GetHtml();
+            ViewContext.Writer.Write("</tr> </table>");
+
+            ViewContext.Writer.Write("<br >");
+
+            ViewContext.Writer.Write("<table> <tr>");
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Estado: " + ViewData["nombreEstado"].ToString();
+                edtSettings.Name = "lblnombreEstado";
+                edtSettings.Style["left"] = "20px";
+                edtSettings.Style["position"] = "relative";
+            }).GetHtml();
+            ViewContext.Writer.Write("</tr> </table>");
+
+            //Firma 1
+            ViewContext.Writer.Write("<hr align='left' width='50%'>");
+            ViewContext.Writer.Write("<table>");
+            ViewContext.Writer.Write("<tr>");
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Firma 1:";
+                edtSettings.Name = "lblDatosFirma1";
+                edtSettings.Style["left"] = "20px";
+                edtSettings.Style["position"] = "relative";
+            }).GetHtml();
+            ViewContext.Writer.Write("</tr>");
+            ViewContext.Writer.Write("<tr><td>");
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Puesto";
+                edtSettings.Name = "lblPuesto1";
+                edtSettings.Style["left"] = "90px";
+                edtSettings.Style["position"] = "relative";
+            }).GetHtml();
+            ViewContext.Writer.Write("</td>");
+
+            ViewContext.Writer.Write("<td>");
+            Html.DevExpress().TextBox(settings =>
+            {
+                settings.Name = "Puesto1";
+                settings.Style["left"] = "120px";
+                settings.Style["position"] = "relative";
+                settings.Width = Unit.Pixel(250);
+            }).Bind(DataBinder.Eval(Model, "Puesto1")).GetHtml();
+
+            ViewContext.Writer.Write("<td>");
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Nombre Firmante";
+                edtSettings.Name = "lblFirma1";
+                edtSettings.Style["left"] = "120px";
+                edtSettings.Style["position"] = "relative";
+            }).GetHtml();
+            ViewContext.Writer.Write("</td>");
+
+            ViewContext.Writer.Write("<td>");
+            Html.DevExpress().TextBox(settings =>
+            {
+                settings.Name = "Firmante1";
+                settings.Style["left"] = "120px";
+                settings.Style["position"] = "relative";
+                settings.Width = Unit.Pixel(250);
+            }).Bind(DataBinder.Eval(Model, "Firmante1")).GetHtml();
+
+            ViewContext.Writer.Write("</td></tr>");
+            ViewContext.Writer.Write("</table>");
+
+            //Firma 2
+            ViewContext.Writer.Write("<hr align='left' width='50%'>");
+            ViewContext.Writer.Write("<table>");
+            ViewContext.Writer.Write("<tr>");
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Firma 2:";
+                edtSettings.Name = "lblDatosFirma2";
+                edtSettings.Style["left"] = "20px";
+                edtSettings.Style["position"] = "relative";
+            }).GetHtml();
+            ViewContext.Writer.Write("</tr>");
+            ViewContext.Writer.Write("<tr><td>");
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Puesto";
+                edtSettings.Name = "lblPuesto2";
+                edtSettings.Style["left"] = "90px";
+                edtSettings.Style["position"] = "relative";
+            }).GetHtml();
+            ViewContext.Writer.Write("</td>");
+
+            ViewContext.Writer.Write("<td>");
+            Html.DevExpress().TextBox(settings =>
+            {
+                settings.Name = "Puesto2";
+                settings.Style["left"] = "120px";
+                settings.Style["position"] = "relative";
+                settings.Width = Unit.Pixel(250);
+            }).Bind(DataBinder.Eval(Model, "Puesto2")).GetHtml();
+
+            ViewContext.Writer.Write("<td>");
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Nombre Firmante";
+                edtSettings.Name = "lblFirma2";
+                edtSettings.Style["left"] = "120px";
+                edtSettings.Style["position"] = "relative";
+            }).GetHtml();
+            ViewContext.Writer.Write("</td>");
+
+            ViewContext.Writer.Write("<td>");
+            Html.DevExpress().TextBox(settings =>
+            {
+                settings.Name = "Firmante2";
+                settings.Style["left"] = "120px";
+                settings.Style["position"] = "relative";
+                settings.Width = Unit.Pixel(250);
+            }).Bind(DataBinder.Eval(Model, "Firmante2")).GetHtml();
+
+            ViewContext.Writer.Write("</td></tr>");
+            ViewContext.Writer.Write("</table>");
+
+            //Firma 3
+            ViewContext.Writer.Write("<hr align='left' width='50%'>");
+            ViewContext.Writer.Write("<table>");
+            ViewContext.Writer.Write("<tr>");
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Firma 3:";
+                edtSettings.Name = "lblDatosFirma3";
+                edtSettings.Style["left"] = "20px";
+                edtSettings.Style["position"] = "relative";
+            }).GetHtml();
+            ViewContext.Writer.Write("</tr>");
+            ViewContext.Writer.Write("<tr><td>");
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Puesto";
+                edtSettings.Name = "lblPuesto3";
+                edtSettings.Style["left"] = "90px";
+                edtSettings.Style["position"] = "relative";
+            }).GetHtml();
+            ViewContext.Writer.Write("</td>");
+
+            ViewContext.Writer.Write("<td>");
+            Html.DevExpress().TextBox(settings =>
+            {
+                settings.Name = "Puesto3";
+                settings.Style["left"] = "120px";
+                settings.Style["position"] = "relative";
+                settings.Width = Unit.Pixel(250);
+            }).Bind(DataBinder.Eval(Model, "Puesto3")).GetHtml();
+
+            ViewContext.Writer.Write("<td>");
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Nombre Firmante";
+                edtSettings.Name = "lblFirma3";
+                edtSettings.Style["left"] = "120px";
+                edtSettings.Style["position"] = "relative";
+            }).GetHtml();
+            ViewContext.Writer.Write("</td>");
+
+            ViewContext.Writer.Write("<td>");
+            Html.DevExpress().TextBox(settings =>
+            {
+                settings.Name = "Firmante3";
+                settings.Style["left"] = "120px";
+                settings.Style["position"] = "relative";
+                settings.Width = Unit.Pixel(250);
+            }).Bind(DataBinder.Eval(Model, "Firmante3")).GetHtml();
+
+            ViewContext.Writer.Write("</td></tr>");
+            ViewContext.Writer.Write("</table>");
+
+            ViewContext.Writer.Write("<br >");
+            ViewContext.Writer.Write("<br >");
+            ViewContext.Writer.Write("<br >");
+
+            Html.DevExpress().Button(btnSettings =>
+            {
+                btnSettings.Name = "btnGuardarFirmas";
+                btnSettings.Text = Convert.ToBoolean(ViewData["existenFirmas"]) ? "Actualizar Firmas" : "Generar Firmas";
+                btnSettings.ControlStyle.CssClass = "button";
+                btnSettings.Images.Image.Url = "/Content/Images/guardar.png";
+                btnSettings.ImagePosition = ImagePosition.Right;
+                btnSettings.Images.Image.Width = 16;
+                btnSettings.Style["left"] = "650px";
+                btnSettings.Style["position"] = "relative";
+                btnSettings.UseSubmitBehavior = true;
+                btnSettings.ClientVisible = Convert.ToBoolean(ViewData["Escritura"]);
+            }).Render();
+        }
+    }
+}

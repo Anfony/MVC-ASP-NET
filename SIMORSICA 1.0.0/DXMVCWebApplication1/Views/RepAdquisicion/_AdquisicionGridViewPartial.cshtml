@@ -1,0 +1,231 @@
+@{
+    var grid = Html.DevExpress().GridView(settings =>
+    {
+        settings.Name = "AdquisicionGridView" + ViewData["IdCampania"];
+        settings.SettingsDetail.MasterGridName = "AdquisicionGridViewPartial";
+        settings.CallbackRouteValues = new { Controller = "RepAdquisicion", Action = "AdquisicionGridViewPartial", IdCampania = ViewData["IdCampania"] };
+
+        settings.SettingsEditing.AddNewRowRouteValues = new { Controller = "RepAdquisicion", Action = "AdquisicionGridViewPartialAddNew", IdCampania = ViewData["IdCampania"] };
+        settings.SettingsEditing.UpdateRowRouteValues = new { Controller = "RepAdquisicion", Action = "AdquisicionGridViewPartialUpdate", IdCampania = ViewData["IdCampania"] };
+        settings.SettingsEditing.DeleteRowRouteValues = new { Controller = "RepAdquisicion", Action = "AdquisicionGridViewPartialDelete", IdCampania = ViewData["IdCampania"] };
+        settings.SettingsEditing.Mode = GridViewEditingMode.PopupEditForm;
+       
+        settings.SettingsBehavior.ConfirmDelete = true;
+
+        settings.CommandColumn.Visible = true;
+        settings.SettingsCommandButton.NewButton.Text = "Nueva Adquisición";
+        settings.CommandColumn.ShowNewButtonInHeader = true;
+        settings.CommandColumn.ShowDeleteButton = true;
+        settings.CommandColumn.ShowEditButton = true;
+
+        settings.KeyFieldName = "Pk_IdRepAdquisicion";
+
+        /*settings.CommandColumn = new DataColumn();
+        settings.CommandColumn.DataType = System.Type.GetType("System.Int32");
+        settings.CommandColumn.AutoIncrement = true;
+        settings.CommandColumn.AutoIncrementSeed = 1;
+        settings.CommandColumn.AutoIncrementStep = 1; */
+
+        settings.SettingsPager.Visible = true;
+        settings.Settings.ShowGroupPanel = true;
+        settings.Settings.ShowFilterRow = true;
+        settings.SettingsBehavior.AllowSelectByRowClick = true;
+
+        //settings.Columns.Add(column =>
+        //{
+        //    column.FieldName = "Fk_IdNecesidadXAccion";
+        //    column.Caption = "NecesidadProgramada";
+        //    column.ColumnType = MVCxGridViewColumnType.ComboBox;
+        //    var comboBoxProperties = column.PropertiesEdit as ComboBoxProperties;
+        //    comboBoxProperties.DataSource = DXMVCWebApplication1.Models.Senasica.GetNecesidadesByUnidadEjecutora(ViewBag.UEID);
+        //    comboBoxProperties.TextField = "Descripcion";
+        //    comboBoxProperties.ValueField = "Pk_IdNecesidadXAccion";
+        //    comboBoxProperties.ValueType = typeof(int);
+        //    comboBoxProperties.IncrementalFilteringMode = IncrementalFilteringMode.StartsWith;
+        //});
+        settings.Columns.Add("NecesidadXAccion.BienOServ.Nombre", "Necesidad Programada");
+
+        settings.Columns.Add("FechaAdquisicion", MVCxGridViewColumnType.DateEdit);
+        settings.Columns.Add("Concepto");
+        settings.Columns.Add("Importe");
+        settings.Columns.Add("Comentario");
+
+
+        //nuevoPk_IdProgramaAnualAdq
+        settings.SetEditFormTemplateContent(c =>
+        {
+            var actividad = ViewData["dataItem"] ?? c.DataItem;
+            ViewContext.Writer.Write("<p>Edición de Adquisiciones</p>");
+            ViewContext.Writer.Write(
+   "<table>" +
+     "<tr>" +
+         "<td>");
+
+            Html.DevExpress().Label(
+                   edtSettings =>
+                   {
+                       edtSettings.ControlStyle.CssClass = "label";
+                       edtSettings.Text = "Necesidad Programada.";
+                       edtSettings.AssociatedControlName = "Fk_IdNecesidadXAccion";
+                   }
+               )
+               .Render();
+            Html.DevExpress().ComboBox(
+                edtSettings =>
+                {
+                    edtSettings.Name = "Fk_IdNecesidadXAccion";
+                    edtSettings.ControlStyle.CssClass = "editor";
+                    edtSettings.Properties.TextField = "BienOServ.Nombre";
+                    edtSettings.Properties.ValueField = "Pk_IdNecesidadXAccion";
+                    edtSettings.Properties.ValueType = typeof(int);
+                    edtSettings.ShowModelErrors = true;
+                    edtSettings.Width = Unit.Pixel(250);
+                    edtSettings.Properties.IncrementalFilteringMode = IncrementalFilteringMode.Contains;
+                    edtSettings.Properties.IncrementalFilteringDelay = 5;
+                }
+            )
+
+            .BindList(DXMVCWebApplication1.Models.Senasica.GetNecesidadesByUnidadEjecutora(ViewBag.UEID))
+               .Bind(DataBinder.Eval(actividad, "Fk_IdNecesidadXAccion"))
+               .Render();
+
+
+            ViewContext.Writer.Write("</td>");
+
+            ViewContext.Writer.Write("<td>");
+            Html.DevExpress().Label(
+                       edtSettings =>
+                       {
+                           edtSettings.ControlStyle.CssClass = "label";
+                           edtSettings.Text = "Concepto:";
+                           edtSettings.AssociatedControlName = "Concepto";
+                       }
+                   )
+                   .Render();
+            Html.DevExpress().TextBox(
+                edtSettings =>
+                {
+                    edtSettings.Name = "Concepto";
+                    edtSettings.ControlStyle.CssClass = "editor";
+                    edtSettings.ShowModelErrors = true;
+                    edtSettings.Width = Unit.Pixel(250);
+                }
+            )
+            .Bind(DataBinder.Eval(actividad, "Concepto"))
+            .Render();
+            ViewContext.Writer.Write("</td>");
+
+            ViewContext.Writer.Write("<td>");
+            Html.DevExpress().Label(
+                       edtSettings =>
+                       {
+                           edtSettings.ControlStyle.CssClass = "label";
+                           edtSettings.Text = "Fecha Adquisición";
+                           edtSettings.AssociatedControlName = "FechaAdquisicion";
+                       }
+                   )
+                   .Render();
+            Html.DevExpress().DateEdit(
+                edtSettings =>
+                {
+                    edtSettings.Name = "FechaAdquisicion";
+                    edtSettings.ControlStyle.CssClass = "editor";
+                    edtSettings.ShowModelErrors = true;
+                    edtSettings.Width = Unit.Pixel(80);
+
+                }
+            )
+            .Bind(DataBinder.Eval(actividad, "FechaAdquisicion"))
+            .Render();
+
+            ViewContext.Writer.Write("</td>");
+            ViewContext.Writer.Write("</tr>");
+
+            ViewContext.Writer.Write("<tr>");
+            ViewContext.Writer.Write("<td>");
+            Html.DevExpress().Label(
+                       edtSettings =>
+                       {
+                           edtSettings.ControlStyle.CssClass = "label";
+                           edtSettings.Text = "Importe:";
+                           edtSettings.AssociatedControlName = "Importe";
+                       }
+                   )
+                   .Render();
+            Html.DevExpress().TextBox(
+                edtSettings =>
+                {
+                    edtSettings.Name = "Importe";
+                    edtSettings.ControlStyle.CssClass = "editor";
+                    edtSettings.ShowModelErrors = true;
+                    edtSettings.Width = Unit.Pixel(250);
+                }
+            )
+            .Bind(DataBinder.Eval(actividad, "Importe"))
+            .Render();
+            ViewContext.Writer.Write("</td>");
+            ViewContext.Writer.Write("<td>");
+            Html.DevExpress().Label(
+                       edtSettings =>
+                       {
+                           edtSettings.ControlStyle.CssClass = "label";
+                           edtSettings.Text = "Comentario:";
+                           edtSettings.AssociatedControlName = "Comentario";
+                       }
+                   )
+                   .Render();
+            Html.DevExpress().TextBox(
+                edtSettings =>
+                {
+                    edtSettings.Name = "Comentario";
+                    edtSettings.ControlStyle.CssClass = "editor";
+                    edtSettings.ShowModelErrors = true;
+                    edtSettings.Width = Unit.Pixel(250);
+                }
+            )
+            .Bind(DataBinder.Eval(actividad, "Comentario"))
+            .Render();
+            ViewContext.Writer.Write("</td>");
+            ViewContext.Writer.Write("</tr>");
+            ViewContext.Writer.Write("</table>");
+            Html.DevExpress().Label(
+                       edtSettings =>
+                       {
+                           edtSettings.ControlStyle.CssClass = "label";
+                       }
+                   )
+                   .Render();
+            Html.DevExpress().Button(
+                btnSettings =>
+                {
+                    btnSettings.Name = "btnUpdat";
+                    btnSettings.ControlStyle.CssClass = "button";
+                    btnSettings.Text = "Guardar";
+                    btnSettings.ClientSideEvents.Click = "function(s, e){ AdquisicionGridView" + ViewData["IdCampania"] + ".UpdateEdit(); }";
+                }
+            )
+            .Render();
+
+            Html.DevExpress().Button(
+                        btnSettings =>
+                        {
+                            btnSettings.Name = "btnCance";
+                            btnSettings.ControlStyle.CssClass = "button";
+                            btnSettings.Text = "Cancelar";
+                            btnSettings.ClientSideEvents.Click = "function(s, e){ AdquisicionGridView" + ViewData["IdCampania"] + ".CancelEdit(); }";
+                        }
+                    )
+                    .Render();
+
+
+
+        });
+
+    });
+
+    if (ViewData["EditError"] != null)
+    {
+        grid.SetEditErrorText((string)ViewData["EditError"]);
+    }
+}
+@grid.Bind(Model).GetHtml()

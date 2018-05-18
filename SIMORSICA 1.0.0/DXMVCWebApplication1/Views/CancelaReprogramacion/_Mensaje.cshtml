@@ -1,0 +1,63 @@
+﻿@{
+    var popup = Html.DevExpress().PopupControl(settings =>
+    {
+        settings.Name = "showMensaje";
+        settings.HeaderText = "Cancelar Reprogramación";
+        settings.CallbackRouteValues = new { Controller = "CancelaReprogramacion", Action = "SowMensaje", IdCampania = ViewData["IdCampania"] };
+        settings.Height = Unit.Pixel(100);
+        settings.Width = Unit.Pixel(480);
+        settings.PopupHorizontalAlign = DevExpress.Web.ASPxClasses.PopupHorizontalAlign.WindowCenter;
+        settings.PopupVerticalAlign = DevExpress.Web.ASPxClasses.PopupVerticalAlign.WindowCenter;
+        settings.PopupAlignCorrection = DevExpress.Web.ASPxClasses.PopupAlignCorrection.Auto;
+        settings.LoadContentViaCallback = LoadContentViaCallback.None;
+
+        settings.SetContent(() =>
+        {
+            int campania = Convert.ToInt32(ViewData["IdCampania"]);
+
+
+            using (Html.BeginForm("aceptaCancelar", "CancelaReprogramacion", new { PK_IdCampania = campania }, FormMethod.Post))
+            {
+                Html.DevExpress().Image(btnSettings =>
+                {
+                    btnSettings.Name = "boton";
+                    btnSettings.ImageUrl = "/Content/Images/precaucion.png";
+                    btnSettings.Width = 35;
+                }).Render();
+                Html.DevExpress().Label(edtSettings =>
+                    {
+                        edtSettings.Name = "mensaje";
+
+                        edtSettings.Text = "¡ Si continúa, perdera los cambios que ha realizado!  \n ¿Desea continuar? ";
+                        edtSettings.ControlStyle.Font.Size = 14;
+                    }).GetHtml();
+
+                ViewContext.Writer.Write("<br >");
+                ViewContext.Writer.Write("<br >");
+                Html.DevExpress().Button(btnSettings =>
+                {
+                    btnSettings.Name = "btnaceptar_Repro";
+                    btnSettings.Text = "Aceptar";
+                    btnSettings.ControlStyle.CssClass = "button";
+                    btnSettings.Images.Image.Url = "/Content/Images/guardar.png";
+                    btnSettings.ImagePosition = ImagePosition.Right;
+                    btnSettings.Images.Image.Width = 16;
+                    btnSettings.UseSubmitBehavior = true;
+                }).Render();
+
+                Html.DevExpress().Button(btnSettings =>
+                {
+                    btnSettings.Name = "btnCancelar_Repro";
+                    btnSettings.Text = "Cancelar";
+                    btnSettings.ControlStyle.CssClass = "button";
+                    btnSettings.Images.Image.Url = "/Content/Images/cancelar.png";
+                    btnSettings.ImagePosition = ImagePosition.Right;
+                    btnSettings.Style["position"] = "relative";
+                    btnSettings.Style["left"] = "5px";
+                    btnSettings.ClientSideEvents.Click = "function(s, e){ showMensaje.Hide(); }";
+                }).Render();
+            }
+        });
+    });
+}
+@popup.GetHtml()

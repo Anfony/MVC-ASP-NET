@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<items>
+  <group Text="Catálogos de Sistema">
+    <item Text="Registro de Usuarios" NavigateUrl="~/Account/Register"  />
+  </group>
+  <group Text="Planeación">
+    <item Text="Programas de Trabajo S" NavigateUrl="~/CampaniaN" />
+    <item Text="Programas de Trabajo U" NavigateUrl="~/CampaniaU" />
+  </group>
+</items>

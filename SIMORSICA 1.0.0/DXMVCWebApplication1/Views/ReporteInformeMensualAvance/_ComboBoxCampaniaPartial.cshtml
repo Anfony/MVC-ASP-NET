@@ -1,0 +1,20 @@
+﻿@Html.DevExpress().ComboBox(settings =>
+{
+    settings.CallbackRouteValues = new { Controller = "ReporteInformeMensualAvance", Action = "_ComboBoxCampaniaPartial" };
+    settings.Name = "ComboCampania";
+
+    settings.Properties.TextField = "Nombre";
+    settings.Properties.TextFormatString = "{0}";
+    settings.Properties.NullText = "Campo Requerido";
+    settings.Properties.ValueField = "Pk_IdCampania";
+    settings.Properties.ValueType = typeof(int);
+    settings.ToolTip = "Seleccione una Campaña";
+    settings.Width = Unit.Pixel(450);
+    settings.ShowModelErrors = true;
+    settings.Properties.Columns.Add("Nombre", "Proyecto Autorizado").Width = Unit.Pixel(550);
+    settings.Properties.Columns.Add("RecSol_Fed", "Programado Federal");
+    settings.Properties.Columns.Add("RecSol_Est", "Programado Estatal");
+    settings.Properties.EnableSynchronization = DefaultBoolean.True;
+    settings.Properties.IncrementalFilteringMode = IncrementalFilteringMode.Contains;
+    settings.Properties.ClientSideEvents.BeginCallback = "function(s, e){ e.customArgs['IdInstanciaEjecutora'] = ComboComites.GetValue(); }";
+}).BindList(Model).GetHtml()

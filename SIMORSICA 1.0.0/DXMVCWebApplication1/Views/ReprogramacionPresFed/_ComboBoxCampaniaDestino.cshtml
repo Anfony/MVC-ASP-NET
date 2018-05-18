@@ -1,0 +1,29 @@
+﻿@Html.DevExpress().ComboBox(settingsCombo =>
+{
+    settingsCombo.Name = "IdCampaniaDestino";
+    settingsCombo.CallbackRouteValues = new { Controller = "ReprogramacionPresFed", Action = "ComboBoxCampaniaDestino" };
+
+    settingsCombo.Style["position"] = "relative";
+    settingsCombo.Style["left"] = "20px";
+    settingsCombo.Properties.TextFormatString = "{1} - {2}";
+    settingsCombo.Properties.NullText = "Campo Requerido";
+    settingsCombo.Properties.ValueField = "Pk_IdCampania";
+    settingsCombo.Properties.ValueType = typeof(int);
+    settingsCombo.ToolTip = "Seleccione una Campaña";
+    settingsCombo.Width = Unit.Pixel(600);
+    settingsCombo.ShowModelErrors = true;
+    settingsCombo.Properties.EnableSynchronization = DefaultBoolean.True;
+    settingsCombo.Properties.IncrementalFilteringMode = IncrementalFilteringMode.Contains;
+    settingsCombo.Properties.ClientSideEvents.ValueChanged = "SeleccionaCampaniaDestino";
+
+    settingsCombo.Properties.Columns.Add("UnidadResponsable", "Unidad Responsable").Width = Unit.Pixel(280);
+    settingsCombo.Properties.Columns.Add("UnidadEjecutora", "Instancia Ejecutora").Width = Unit.Pixel(300);
+    settingsCombo.Properties.Columns.Add("Proyecto", "Campaña").Width = Unit.Pixel(350);
+
+    settingsCombo.Properties.Columns.Add("RecFed", "Autorizado").Width = Unit.Pixel(100);
+    settingsCombo.Properties.Columns.Add("RecSol_Fed", "Programado").Width = Unit.Pixel(100);
+    settingsCombo.Properties.Columns.Add("Rec_Gastado", "Gastado").Width = Unit.Pixel(100);
+    settingsCombo.Properties.Columns.Add("SaldoDisponible", "Disponible").Width = Unit.Pixel(100);
+
+    settingsCombo.Properties.EnableClientSideAPI = true;
+}).BindList(Model).GetHtml()

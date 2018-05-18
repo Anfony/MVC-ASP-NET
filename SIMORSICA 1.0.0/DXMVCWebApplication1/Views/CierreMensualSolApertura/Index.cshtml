@@ -1,0 +1,13 @@
+﻿@{
+    ViewBag.Title = "Cierre Mensual - Sol. Apertura";
+}
+
+<h3 style="font-size:17px; font:bold; text-align:center">SOLICITUD DE APERTURA DE CAMPAÑAS</h3>
+<h3 style="font-size: 13px; text-align: center; position: relative; top: -10px">Lista de las campañas que se han solicitado su apertura</h3>
+<br>
+
+@Html.Partial("~/Views/ExportExcelPDF/_ExportExcelPDF.cshtml", new ViewDataDictionary { { "Clave", DXMVCWebApplication1.Common.ListaPantallas.UE_CIERRE_MENSUAL_SOLAPERTURA } })
+
+<br>
+<br>
+@Html.Action("CierreMensualGridViewPartial")

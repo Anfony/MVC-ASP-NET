@@ -1,0 +1,37 @@
+﻿@model System.Collections.IEnumerable
+<script type="text/javascript">
+    function OnClick(s, e) {
+        document.forms[0].submit();
+    }
+</script>
+<style>
+    #title {
+        text-align: center;
+        margin-top: 0;
+        font-family: 'Times New Roman';
+        color: gray;
+    }
+</style>
+
+@Html.DevExpress().GetStyleSheets(
+            new StyleSheet { ExtensionSuite = ExtensionSuite.NavigationAndLayout, Theme = "Default" },
+            new StyleSheet { ExtensionSuite = ExtensionSuite.Editors, Theme = "Default" },
+            new StyleSheet { ExtensionSuite = ExtensionSuite.HtmlEditor, Theme = "Default" },
+            new StyleSheet { ExtensionSuite = ExtensionSuite.PivotGrid, Theme = "Default" }
+
+)
+
+<h2 id="title">Avance Financiero Federal</h2>
+@using (Html.BeginForm("ExportToXLS", "PivotAvanceFisicoFinanciero_Federal"))
+{
+    @Html.DevExpress().Button(btn =>
+    {
+        btn.Name = "btnExportToXLS";
+        btn.Text = "Export to XLS";
+        btn.UseSubmitBehavior = true;
+        btn.ClientSideEvents.Click = "OnClick";
+
+    }).GetHtml()
+    @Html.Partial("PivotAvanceFisicoFinancieroPartial_Federal", Model)
+}
+

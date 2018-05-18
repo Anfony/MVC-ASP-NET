@@ -1,0 +1,149 @@
+﻿@{
+    var grid = Html.DevExpress().GridView(settings =>
+    {
+        settings.Name = "MinistracionDetalleGridView";
+        settings.CallbackRouteValues = new { Controller = "MinistracionesDetalles", Action = "DetalleMinistracionesGridViewPartial", IdMinistracionesXComite = ViewData["IdMinistracionesXComite"], permisoCreacion = Convert.ToBoolean(ViewData["permisoCreacion"]) };
+        settings.SettingsEditing.AddNewRowRouteValues = new { Controller = "MinistracionesDetalles", Action = "DetalleMinistracionesGridViewPartialAddNew", IdMinistracionesXComite = ViewData["IdMinistracionesXComite"], permisoCreacion = Convert.ToBoolean(ViewData["permisoCreacion"]) };
+        settings.SettingsEditing.UpdateRowRouteValues = new { Controller = "MinistracionesDetalles", Action = "DetalleMinistracionesGridViewPartialUpdate", IdMinistracionesXComite = ViewData["IdMinistracionesXComite"], permisoCreacion = Convert.ToBoolean(ViewData["permisoCreacion"]) };
+        settings.SettingsEditing.DeleteRowRouteValues = new { Controller = "MinistracionesDetalles", Action = "DetalleMinistracionesGridViewPartialDelete", IdMinistracionesXComite = ViewData["IdMinistracionesXComite"], permisoCreacion = Convert.ToBoolean(ViewData["permisoCreacion"]) };
+        settings.SettingsEditing.Mode = GridViewEditingMode.PopupEditForm;
+
+        settings.SettingsBehavior.ConfirmDelete = true;
+
+        settings.SettingsPopup.EditForm.Height = 220;
+        settings.SettingsPopup.EditForm.Width = 500;
+        settings.SettingsPopup.EditForm.HorizontalAlign = PopupHorizontalAlign.WindowCenter;
+        settings.SettingsPopup.EditForm.VerticalAlign = PopupVerticalAlign.WindowCenter;
+        settings.SettingsPopup.EditForm.Modal = true;
+
+        settings.SettingsText.PopupEditFormCaption = "Creación del Detalle";
+        settings.KeyFieldName = "Pk_IdMinistracionDetalle";
+
+        settings.CommandColumn.Visible = true;
+        settings.CommandColumn.ShowClearFilterButton = true;
+        settings.CommandColumn.ShowNewButtonInHeader = Convert.ToBoolean(ViewData["Escritura"]);
+        settings.CommandColumn.ShowDeleteButton = Convert.ToBoolean(ViewData["Escritura"]);
+        settings.CommandColumn.ShowEditButton = Convert.ToBoolean(ViewData["Escritura"]) || Convert.ToBoolean(ViewData["Lectura"]);
+
+        settings.SettingsPager.Visible = true;
+        settings.SettingsPager.Position = PagerPosition.Bottom;
+        settings.SettingsPager.FirstPageButton.Visible = true;
+        settings.SettingsPager.LastPageButton.Visible = true;
+        settings.SettingsPager.PageSizeItemSettings.Visible = true;
+        settings.SettingsPager.PageSize = 10;
+        settings.SettingsPager.PageSizeItemSettings.Items = new string[] { "5", "10", "15" };
+        settings.Settings.ShowGroupPanel = true;
+        settings.Settings.ShowFilterRow = true;
+        settings.Settings.ShowFilterRowMenu = true;
+        settings.SettingsBehavior.AllowSelectByRowClick = true;
+
+        settings.Columns.Add("Campania.ProyectoPresupuesto.ProyectoAutorizado.Nombre", "Proyecto Autorizado");
+        settings.Columns.Add("Importe", "Importe").PropertiesEdit.DisplayFormatString = "c";
+
+        settings.Settings.ShowFooter = true;
+        settings.TotalSummary.Add(DevExpress.Data.SummaryItemType.Sum, "Importe").DisplayFormat = "c";
+
+        settings.SetEditFormTemplateContent(c =>
+        {
+            var dataMinistracionesDetalle = ViewData["dataItem"] ?? c.DataItem;
+
+            ViewContext.Writer.Write("<table>");
+            ViewContext.Writer.Write("<tr>");
+            ViewContext.Writer.Write("<td>");
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Proyecto Autorizado";
+                edtSettings.Name = "ProyectoAutorizadoLabel";
+            }).Render();
+
+            Html.DevExpress().ComboBox(edtSettings =>
+            {
+                edtSettings.Name = "Fk_IdCampania";
+                edtSettings.ControlStyle.CssClass = "editor";
+                edtSettings.Properties.TextField = "ProyectoPresupuesto.ProyectoAutorizado.Nombre";
+                edtSettings.Properties.NullText = "Campo Requerido";
+                edtSettings.Properties.ValueField = "Pk_IdCampania";
+                edtSettings.Properties.ValueType = typeof(int);
+                edtSettings.Properties.IncrementalFilteringMode = IncrementalFilteringMode.Contains;
+                edtSettings.ShowModelErrors = true;
+                edtSettings.Width = Unit.Pixel(530);
+                edtSettings.ToolTip = c.KeyValue == null ? "Seleccione una Instancia Ejecutora" : "Cambiar Instancia Ejecutora";
+
+                edtSettings.Properties.Columns.Add("ProyectoPresupuesto.ProyectoAutorizado.SubComponente.Nombre", "Concepto de Apoyo");
+                edtSettings.Properties.Columns.Add("ProyectoPresupuesto.ProyectoAutorizado.Nombre", "Proyecto Autorizado");
+
+            }).BindList(DXMVCWebApplication1.Models.Senasica.GetCampaniaByIE())
+               .Bind(DataBinder.Eval(dataMinistracionesDetalle, "Fk_IdCampania"))
+               .Render();
+            ViewContext.Writer.Write("</td>");
+            ViewContext.Writer.Write("</tr>");
+            ViewContext.Writer.Write("</table>");
+
+            ViewContext.Writer.Write("<br >");
+
+            ViewContext.Writer.Write("<table cellspacing='20'>");
+            ViewContext.Writer.Write("<tr>");
+            ViewContext.Writer.Write("<td>");
+            Html.DevExpress().Label(edtSettings =>
+            {
+                edtSettings.ControlStyle.CssClass = "label";
+                edtSettings.Text = "Importe";
+                edtSettings.Name = "ImporteLAbel";
+            }).Render();
+
+            Html.DevExpress().SpinEdit(edtSettings =>
+            {
+                edtSettings.Name = "ImporteDetalle";
+                edtSettings.Properties.MinValue = 0;
+                edtSettings.Properties.MaxValue = 999999999;
+                edtSettings.Properties.DecimalPlaces = 2;
+                edtSettings.Properties.NumberType = SpinEditNumberType.Float;
+                edtSettings.Properties.Increment = 0.1M;
+                edtSettings.Properties.LargeIncrement = 1;
+                edtSettings.Properties.SpinButtons.ShowLargeIncrementButtons = true;
+                edtSettings.ControlStyle.CssClass = "editor";
+                edtSettings.ShowModelErrors = true;
+                edtSettings.Width = Unit.Pixel(250);
+                edtSettings.Properties.DisplayFormatString = "n";
+            }).Bind(DataBinder.Eval(dataMinistracionesDetalle, "Importe"))
+            .Render();
+            ViewContext.Writer.Write("</td>");
+            ViewContext.Writer.Write("</tr>");
+            ViewContext.Writer.Write("</table>");
+
+            ViewContext.Writer.Write("<br >");
+            ViewContext.Writer.Write("<br >");
+            ViewContext.Writer.Write("<br >");
+
+            ViewContext.Writer.Write("<div style='float:right'>");
+            Html.DevExpress().Button(btnSettings =>
+            {
+                btnSettings.Name = "btnUpdateDetalle";
+                btnSettings.Text = "Guardar";
+                btnSettings.ClientVisible = Convert.ToBoolean(ViewData["permisoCreacion"]);
+                btnSettings.Images.Image.Url = "/Content/Images/guardar.png";
+                btnSettings.Images.Image.Width = 16;
+                btnSettings.ClientSideEvents.Click = "function(s, e){ MinistracionDetalleGridView.UpdateEdit(); }";
+                btnSettings.ClientVisible = Convert.ToBoolean(ViewData["Escritura"]);
+            }).Render();
+
+            Html.DevExpress().Button(btnSettings =>
+            {
+                btnSettings.Name = "btnCancelDetalle";
+                btnSettings.Text = "Cancelar";
+                btnSettings.Images.Image.Url = "/Content/Images/cancelar.png";
+                btnSettings.Style[HtmlTextWriterStyle.MarginLeft] = "5px";
+                btnSettings.ClientSideEvents.Click = "function(s, e){ MinistracionDetalleGridView.CancelEdit(); }";
+            }).Render();
+            ViewContext.Writer.Write("</div>");
+        });
+    });
+
+    if (ViewData["EditError"] != null)
+    {
+        grid.SetEditErrorText((string)ViewData["EditError"]);
+    }
+}
+
+@grid.Bind(Model).GetHtml()

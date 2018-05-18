@@ -1,0 +1,20 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+}
+
+<div style="text-align:center; 
+            padding-left:20px;
+            padding-right:20px;
+            background-color:#f0f0f0; 
+            height:90%;">
+
+    <h2 style="color:#808080">INFOSANIDAD > Licitaciónes </h2>
+    <P>
+        Bienvenido, aquí puedes consultar licitaciones creadas a nivel nacional, así como obtener los documentos en PDF.
+    </P>
+    <hr/>
+    @Html.Action("GridViewPartial")
+</div>
+
+

@@ -1,0 +1,322 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Data.Entity;
+using System.Linq;
+using System.Net;
+using System.Web;
+using System.Web.Mvc;
+using DXMVCWebApplication1.Models;
+using DXMVCWebApplication1.Common;
+using DevExpress.Web.Mvc;
+using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.EntityFramework;
+
+namespace DXMVCWebApplication1.Controllers
+{
+    [Authorize(Roles = "Admin, User")]
+    public class PersonaController : Controller
+    {
+        private DB_SENASICAEntities db = new DB_SENASICAEntities();
+        private UserManager<ApplicationUser> manager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(new ApplicationDbContext()));
+        // GET: /Persona/
+        public ActionResult Index()
+        {
+            var personas = db.Personas.Include(p => p.Estado).Include(p => p.Municipio).Include(p => p.UnidadEjecutora);
+            return View(personas.ToList());
+        }
+
+        // GET: /Persona/Details/5
+        public ActionResult Details(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            Persona persona = db.Personas.Find(id);
+            if (persona == null)
+            {
+                return HttpNotFound();
+            }
+            return View(persona);
+        }
+
+        // GET: /Persona/Create
+        public ActionResult Create()
+        {
+            ViewBag.Fk_IdEstado__SIS = new SelectList(db.Estadoes, "Pk_IdEstado", "Nombre");
+            ViewBag.Fk_IdMunicipio__SIS = new SelectList(db.Municipios, "Pk_IdMunicipio", "Nombre");
+            ViewBag.Fk_IdUnidadEjecutora__UE = new SelectList(db.UnidadEjecutoras, "Pk_IdUnidadEjecutora", "Nombre");
+            return View();
+        }
+
+        // POST: /Persona/Create
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Create([Bind(Include = "Pk_IdPersona,Fk_IdUnidadEjecutora__UE,Ap_Paterno,Ap_Materno,Nombre,Direccion,Colonia,Fk_IdEstado__SIS,Fk_IdMunicipio__SIS,Telefono,Email,Ubicacion,Fk_IdCargo")] Persona persona)
+        {
+            if (ModelState.IsValid)
+            {
+                db.Personas.Add(persona);
+                db.SaveChanges();
+                return RedirectToAction("Index");
+            }
+
+            ViewBag.Fk_IdEstado__SIS = new SelectList(db.Estadoes, "Pk_IdEstado", "Nombre", persona.Fk_IdEstado__SIS);
+            ViewBag.Fk_IdMunicipio__SIS = new SelectList(db.Municipios, "Pk_IdMunicipio", "Nombre", persona.Fk_IdMunicipio__SIS);
+            ViewBag.Fk_IdUnidadEjecutora__UE = new SelectList(db.UnidadEjecutoras, "Pk_IdUnidadEjecutora", "Nombre", persona.Fk_IdUnidadEjecutora__UE);
+            return View(persona);
+        }
+
+        // GET: /Persona/Edit/5
+        public ActionResult Edit(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            Persona persona = db.Personas.Find(id);
+            if (persona == null)
+            {
+                return HttpNotFound();
+            }
+            ViewBag.Fk_IdEstado__SIS = new SelectList(db.Estadoes, "Pk_IdEstado", "Nombre", persona.Fk_IdEstado__SIS);
+            ViewBag.Fk_IdMunicipio__SIS = new SelectList(db.Municipios, "Pk_IdMunicipio", "Nombre", persona.Fk_IdMunicipio__SIS);
+            ViewBag.Fk_IdUnidadEjecutora__UE = new SelectList(db.UnidadEjecutoras, "Pk_IdUnidadEjecutora", "Nombre", persona.Fk_IdUnidadEjecutora__UE);
+            return View(persona);
+        }
+
+        // POST: /Persona/Edit/5
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Edit([Bind(Include = "Pk_IdPersona,Fk_IdUnidadEjecutora__UE,Ap_Paterno,Ap_Materno,Nombre,Direccion,Colonia,Fk_IdEstado__SIS,Fk_IdMunicipio__SIS,Telefono,Email,Ubicacion,Fk_IdCargo")] Persona persona)
+        {
+            if (ModelState.IsValid)
+            {
+                db.Entry(persona).State = EntityState.Modified;
+                db.SaveChanges();
+                return RedirectToAction("Index");
+            }
+            ViewBag.Fk_IdEstado__SIS = new SelectList(db.Estadoes, "Pk_IdEstado", "Nombre", persona.Fk_IdEstado__SIS);
+            ViewBag.Fk_IdMunicipio__SIS = new SelectList(db.Municipios, "Pk_IdMunicipio", "Nombre", persona.Fk_IdMunicipio__SIS);
+            ViewBag.Fk_IdUnidadEjecutora__UE = new SelectList(db.UnidadEjecutoras, "Pk_IdUnidadEjecutora", "Nombre", persona.Fk_IdUnidadEjecutora__UE);
+            return View(persona);
+        }
+
+        // GET: /Persona/Delete/5
+        public ActionResult Delete(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            Persona persona = db.Personas.Find(id);
+            if (persona == null)
+            {
+                return HttpNotFound();
+            }
+            return View(persona);
+        }
+
+        // POST: /Persona/Delete/5
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public ActionResult DeleteConfirmed(int id)
+        {
+            Persona persona = db.Personas.Find(id);
+            db.Personas.Remove(persona);
+            db.SaveChanges();
+            return RedirectToAction("Index");
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                db.Dispose();
+            }
+            base.Dispose(disposing);
+        }
+
+        DXMVCWebApplication1.Models.DB_SENASICAEntities db1 = new DXMVCWebApplication1.Models.DB_SENASICAEntities();
+
+        [ValidateInput(false)]
+        public ActionResult PersonaGridViewPartial()
+        {
+            int? _Fk_IdUnidadEjecutora = ((UserData)Session["DataUsuario"]).setFilter(((UserData)Session["DataUsuario"]).FK_IdUnidadEjecutora__UE);
+            return PartialView("_PersonaGridViewPartial", DXMVCWebApplication1.Models.Senasica.GetFiltradoUnidadEjecutoraPersona(_Fk_IdUnidadEjecutora));			
+        }
+
+        [HttpPost, ValidateInput(false)]
+        public ActionResult PersonaGridViewPartialAddNew(DXMVCWebApplication1.Models.Persona item)
+        {
+            int? _Fk_IdUnidadEjecutora = ((UserData)Session["DataUsuario"]).setFilter(((UserData)Session["DataUsuario"]).FK_IdUnidadEjecutora__UE);
+            var model = db1.Personas;
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    model.Add(item);
+                    db1.SaveChanges();
+                }
+                catch (Exception e)
+                {
+                    ViewData["EditError"] = e.Message;
+                }
+            }
+            else
+                ViewData["EditError"] = "Por favor corrija los errores marcados.";
+            return PartialView("_PersonaGridViewPartial", DXMVCWebApplication1.Models.Senasica.GetFiltradoUnidadEjecutoraPersona(_Fk_IdUnidadEjecutora));			
+        }
+        [HttpPost, ValidateInput(false)]
+        public ActionResult PersonaGridViewPartialUpdate(DXMVCWebApplication1.Models.Persona item)
+        {
+            int? _Fk_IdUnidadEjecutora = ((UserData)Session["DataUsuario"]).setFilter(((UserData)Session["DataUsuario"]).FK_IdUnidadEjecutora__UE);
+            var model = db1.Personas;
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    var modelItem = model.FirstOrDefault(it => it.Pk_IdPersona == item.Pk_IdPersona);
+                    if (modelItem != null)
+                    {
+                        this.UpdateModel(modelItem);
+                        db1.SaveChanges();
+                    }
+                }
+                catch (Exception e)
+                {
+                    ViewData["EditError"] = e.Message;
+                }
+            }
+            else
+                ViewData["EditError"] = "Por favor corrija los errores marcados.";
+            return PartialView("_PersonaGridViewPartial", DXMVCWebApplication1.Models.Senasica.GetFiltradoUnidadEjecutoraPersona(_Fk_IdUnidadEjecutora));			
+        }
+        [HttpPost, ValidateInput(false)]
+        public ActionResult PersonaGridViewPartialDelete(System.Int32 Pk_IdPersona)
+        {
+            int? _Fk_IdUnidadEjecutora = ((UserData)Session["DataUsuario"]).setFilter(((UserData)Session["DataUsuario"]).FK_IdUnidadEjecutora__UE);
+            var model = db1.Personas;
+            if (Pk_IdPersona >= 0)
+            {
+                try
+                {
+                    var item = model.FirstOrDefault(it => it.Pk_IdPersona == Pk_IdPersona);
+                    if (item != null)
+                        model.Remove(item);
+                    db1.SaveChanges();
+                }
+                catch (Exception e)
+                {
+                    ViewData["EditError"] = e.Message;
+                }
+            }
+            return PartialView("_PersonaGridViewPartial", DXMVCWebApplication1.Models.Senasica.GetFiltradoUnidadEjecutoraPersona(_Fk_IdUnidadEjecutora));			
+        }
+        
+        public ActionResult _ComboBoxMunicipioPartial()
+        {
+            int Pk_IdEstado = (Request.Params["Fk_IdEstado__SIS"] != null) ? int.Parse(Request.Params["Fk_IdEstado__SIS"]) : -1;
+            return PartialView(DXMVCWebApplication1.Models.Senasica.GetMunicipios(Pk_IdEstado));
+        }
+
+<<<<<<< HEAD
+        //***********************************Certificaciones por Empleado*************************************
+=======
+
+        //Certificaciones por Empleado
+>>>>>>> 0c932da299e7def1de8ede5462037a1dae1f52d9
+
+
+
+        DXMVCWebApplication1.Models.DB_SENASICAEntities db2 = new DXMVCWebApplication1.Models.DB_SENASICAEntities();
+
+        [ValidateInput(false)]
+        public ActionResult CertificadosPersonaGridViewPartial( int? persona)
+        {
+            var model = from certificadospersona in  db2.CertificadoPersonas where certificadospersona.Fk_IdPersona == persona select certificadospersona;
+            return PartialView("_CertificadosPersonaGridViewPartial", model.ToList());
+        }
+
+        [HttpPost, ValidateInput(false)]
+        public ActionResult CertificadosPersonaGridViewPartialAddNew(DXMVCWebApplication1.Models.CertificadoPersona item)
+        {
+            var model = db2.CertificadoPersonas;
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    model.Add(item);
+                    db2.SaveChanges();
+                }
+                catch (Exception e)
+                {
+                    ViewData["EditError"] = e.Message;
+                }
+            }
+            else
+                ViewData["EditError"] = "Corrija por favor todos los errores marcados.";
+            return PartialView("_CertificadosPersonaGridViewPartial", model.ToList());
+        }
+        [HttpPost, ValidateInput(false)]
+        public ActionResult CertificadosPersonaGridViewPartialUpdate(DXMVCWebApplication1.Models.CertificadoPersona item)
+        {
+            var model = db2.CertificadoPersonas;
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    var modelItem = model.FirstOrDefault(it => it.Pk_IdCertificadoPersona == item.Pk_IdCertificadoPersona);
+                    if (modelItem != null)
+                    {
+                        this.UpdateModel(modelItem);
+                        db2.SaveChanges();
+                    }
+                }
+                catch (Exception e)
+                {
+                    ViewData["EditError"] = e.Message;
+                }
+            }
+            else
+                ViewData["EditError"] = "Por favor corrija los errores marcados.";
+            return PartialView("_CertificadosPersonaGridViewPartial", model.ToList());
+        }
+        [HttpPost, ValidateInput(false)]
+        public ActionResult CertificadosPersonaGridViewPartialDelete(System.Int32 Pk_IdCertificadoPersona)
+        {
+            var model = db2.CertificadoPersonas;
+            if (Pk_IdCertificadoPersona >= 0)
+            {
+                try
+                {
+                    var item = model.FirstOrDefault(it => it.Pk_IdCertificadoPersona == Pk_IdCertificadoPersona);
+                    if (item != null)
+                        model.Remove(item);
+                    db2.SaveChanges();
+                }
+                catch (Exception e)
+                {
+                    ViewData["EditError"] = e.Message;
+                }
+            }
+            return PartialView("_CertificadosPersonaGridViewPartial", model.ToList());
+        }
+
+        public ActionResult Estado_ComboBoxPartial()
+        {
+            return PartialView("Estado_ComboBoxPartial");
+        }
+
+
+        public ActionResult Municipio_ComboBoxPartial()
+        {
+            return PartialView("Municipio_ComboBoxPartial");
+        }
+    }
+}

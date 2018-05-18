@@ -1,0 +1,1841 @@
+﻿using System.Linq;
+using System.Collections;
+
+
+namespace DXMVCWebApplication1.Models
+{
+    public static class Senasica
+    {
+        const string SenasicaDataContextKey = "DXSenasicaDataContext";
+
+        #region Acciones
+
+        /// <summary>
+        ///Devuelve las Acciones de la tabla UE.Acccion
+        /// </summary>
+        /// <returns></returns>
+        public static IEnumerable GetAcciones()
+        {
+            DB_SENASICAEntities db1 = new DB_SENASICAEntities();
+
+            var _m = from accion in db1.Accions select accion;
+
+            return _m.ToList();
+        }
+
+        /// <summary>
+        /// Devuelve las Acciones de la tabla UE.Accion, filtra los registros por la Campania
+        /// </summary>
+        /// <param name="IdCampania"></param>
+        /// <returns></returns>
+
+        public static IEnumerable GetAcionesByCampania(int? IdCampania)
+        {
+            DB_SENASICAEntities db1 = new DB_SENASICAEntities();
+
+            var _m = from accion in db1.Accions where accion.Fk_IdCampania__UE == IdCampania select accion;
+
+            return _m.ToList();
+        }
+
+        //***********************AccionesXCamp**********************************
+
+        /// <summary>
+        ///  Devuelve las Acciones de la tabla UE.AccionXCampania, filtra los registros por la Campania
+        /// </summary>
+        /// <param name="IdCampania"></param>
+        /// <returns></returns>
+        public static IEnumerable GetAccionesPorCampaniaByCampania(int? IdCampania)
+        {
+            DB_SENASICAEntities db1 = new DB_SENASICAEntities();
+
+            var _m = from accion in db1.AccionXCampanias where accion.Fk_IdCampania__UE == IdCampania select accion;
+
+            return _m.ToList();
+        }
+
+        #endregion
+
+        #region Actividades
+
+        /// <summary>
+        /// Devuelve las Actividades de la tabla UE.Actividad
+        /// </summary>
+        /// <returns></returns>
+        public static IEnumerable GetActividades()
+        {
+            DB_SENASICAEntities db1 = new DB_SENASICAEntities();
+
+            var _m = from actividad in db1.Actividads select actividad;
+
+            return _m.ToList();
+        }
+
+        ///// <summary>
+        ///// Devuelve las Actividades de la tabla UE.Actividad, filtra los registros por Acción
+        ///// </summary>
+        ///// <param name="IdActividad"></param>
+        ///// <returns></returns>
+        //public static IEnumerable GetActividadesByAlcance(int? IdActividad)
+        //{
+        //    DB_SENASICAEntities db1 = new DB_SENASICAEntities();
+        //    var _m = from actividad in db1.Actividads where actividad.Fk_IdActividadXAccion == IdActividad select actividad;
+        //    return _m.ToList();
+        //}
+
+        /// <summary>
+        /// Devuelve las Actividades de la tabla UE.Actividad, filtra los registros por Campaña
+        /// </summary>
+        /// <param name="IdCampania"></param>
+        /// <returns>Devuelve las Actividades de la tabla UE.Actividad, filtra los registros por Campaña</returns>
+        public static IEnumerable GetActividadesByCampania(int? IdCampania, int? IdUnidadEjecutora)
+        {
+
+            DB_SENASICAEntities db1 = new DB_SENASICAEntities();
+
+            if (IdCampania == 0)
+            {
+                var _m = from actividad in db1.Actividads
+<<<<<<< Updated upstream
+                         where actividad.ActividadXAccion.AccionXCampania.Campania.Fk_IdUnidadEjecutora__UE  == IdUnidadEjecutora
+=======
+                         where actividad.ActividadXAccion.AccionXCampania.Campania.Fk_IdUnidadEjecutora__UE == UEID
+>>>>>>> Stashed changes
+                         select actividad;
+                return _m.ToList();
+            }
+            else
+            {
+
+                var _m = from actividad in db1.Actividads where actividad.ActividadXAccion.AccionXCampania.Fk_IdCampania__UE == IdCampania select actividad;
+                return _m.ToList();
+            }
+        }
+
+        /// <summary>
+        /// Devuelve las Actividades de la tabla UE.Actividad, filtra los registros por Acción
+        /// </summary>
+        /// <param name="IdCampania"></param>
+        /// <returns></returns>
+        public static IEnumerable GetActividadesParaAsignarByCampania(int? IdCampania, int IdUnidadEjecutora)
+        {
+            DB_SENASICAEntities db1 = new DB_SENASICAEntities();
+
+            if (IdCampania == 0)
+            {
+                var _m = from actividadXaccion in db1.ActividadXAccions
+<<<<<<< Updated upstream
+                         where actividadXaccion.AccionXCampania.Campania.Fk_IdUnidadEjecutora__UE == IdUnidadEjecutora 
+=======
+                         where actividadXaccion.AccionXCampania.Campania.Fk_IdUnidadEjecutora__UE == UEID
+>>>>>>> Stashed changes
+                         select actividadXaccion;
+                return _m.ToList();
+            }
+            else
+            {
+
+                var _m = from actividadXaccion in db1.ActividadXAccions where actividadXaccion.AccionXCampania.Fk_IdCampania__UE == IdCampania select actividadXaccion;
+                return _m.ToList();
+            }
+            //ToDo: falta filtrar las acctividades que ya han sido asignadas, es decir actividadXaccion que no tengan un
+        }
+
+
+
+        //***********************ActividadesXAccion**********************************
+        /// <summary>
+        /// Devuelve las Actividades de la tabla UE.ActividadXAccion, filtra los registros por Acción
+        /// </summary>
+        /// <param name="IdAccion"></param>
+        /// <returns></returns>
+
+        public static IEnumerable GetActividadesByAccion(int? IdAccion)
+        {
+            DB_SENASICAEntities db1 = new DB_SENASICAEntities();
+
+            var _m = from actividad in db1.ActividadXAccions where actividad.Fk_IdAccionXCampania == IdAccion select actividad;
+
+            return _m.ToList();
+        }
+        #endregion
+
+        #region Anios
+        /// <summary>
+        /// Devuelve el Año de la tabla SIS.Anio
+        /// </summary>
+        /// <returns></returns>
+        public static IEnumerable GetAnios()
+        {
+            DB_SENASICAEntities db1 = new DB_SENASICAEntities();
+
+            var _m = from anio in db1.Anios select anio;
+
+            return _m.ToList();
+        }
+        #endregion
+
+        #region BienOServ
+        /// <summary>
+        /// Devuelve el Bien o Servicio de la tabla SIS.BienOServ
+        /// </summary>
+        /// <returns></returns>
+        public static IEnumerable GetBienesOServ()
+        {
+            DB_SENASICAEntities db1 = new DB_SENASICAEntities();
+
+            var _m = from bien in db1.BienOServs select bien;
+
+            return _m.ToList();
+        }
+        #endregion
+
+        #region CampaniasByUnidadEjecutora
+        /// <summary>
+        /// Devuelve las Campañas de la tabla UE.Campania de acuerdo a la Unidad Ejecutora
+        /// </summary>
+        /// <param name="UnidadEjecutora"></param>
+        /// <returns></returns>
+        public static IEnumerable GetCampaniasByUnidadEjecutora(int UnidadEjecutora)
+        {
+            DB_SENASICAEntities db1 = new DB_SENASICAEntities();
+
+            var _m = from campania in db1.Campanias
+                     where campania.Fk_IdUnidadEjecutora__UE == UnidadEjecutora
+                     select campania;
+
+            return _m.ToList();
+        }
+        #endregion
+
+        #region Campania Salud Animal
+
+        //**********************Sanidad Animal*******************************
+        /// <summary>
+        /// Devuelve los registros de Importancia de la enfermedad SA, de la tabla UE.SA_ImportanciaEnfermedad, lo filtra por la Campaña
+        /// </summary>
+        /// <param name="IdCampania"></param>
+        /// <returns></returns>
+        public static IEnumerable GetSAImportanciaByCampania(int? IdCampania)
+        {
+            DB_SENASICAEntities db1 = new DB_SENASICAEntities();
+            var _m = from importancaenfermedad in db1.SA_ImportanciaEnfermedad where importancaenfermedad.Fk_IdCampania == IdCampania select importancaenfermedad;
+            return _m.ToList();
+        }
+        /// <summary>
+        /// Devuelve los registros de Atendido SA, de la tabla UE.SA_Atendido, lo filtra por la Campaña
+        /// </summary>
+        /// <param name="IdCampania"></param>
+        /// <returns></returns>
+        public static IEnumerable GetSAAtendidoByCampania(int? IdCampania)
+        {
+            DB_SENASICAEntities db1 = new DB_SENASICAEntities();
+            var _m = from atendido in db1.SA_Atendido where atendido.Fk_IdCampania == IdCampania select atendido;
+            return _m.ToList();
+        }
+
+        /// <summary>
+        /// Devuelve los registros de Población SA, de la tabla UE.SA_Poblacion, lo filtra por la Campaña
+        /// </summary>
+        /// <param name="IdCampania"></param>
+        /// <returns></returns>
+        public static IEnumerable GetSAPoblacionByCampania(int? IdCampania)
+        {
+            DB_SENASICAEntities db1 = new DB_SENASICAEntities();
+            var _m = from poblacion in db1.SA_Poblacion where poblacion.Fk_IdCampania == IdCampania select poblacion;
+            return _m.ToList();
+        }
+        #endregion
+
+        #region CampaniaInocuidad
+
+        //--------------------------------------------------------------
+        //**********************Salud Animal*******************************       
+
+        /// <summary>
+        /// Devuelve los registros de Inocuidad Salud Animal, de la tabla UE.InoCompSA, lo filtra por la Campaña
+        /// </summary>
+        /// <param name="IdCampania"></param>
+        /// <returns></returns>
+        public static IEnumerable GetInoCompSAByCampania(int? IdCampania)
+        {
+            DB_SENASICAEntities db1 = new DB_SENASICAEntities();
+            var _m = from inocompSA in db1.InoCompSAs where inocompSA.FK_IdCampania == IdCampania select inocompSA;
+            return _m.ToList();
+        }
+        /// <summary>
+        /// Devuelve los registros de Inocuidad Salud Animal, de la tabla UE.InoImportanciaSA, lo filtra por la Campaña
+        /// </summary>
+        /// <param name="IdCampania"></param>
+        /// <returns></returns>
+        public static IEnumerable GetInoImportanciaSAByCampania(int? IdCampania)
+        {
+            DB_SENASICAEntities db1 = new DB_SENASICAEntities();
+            var _m = from inoimportanciaSA in db1.InoImportanciaSAs where inoimportanciaSA.FK_IdCampania == IdCampania select inoimportanciaSA;
+            return _m.ToList();
+        }
+        /// <summary>
+        /// Devuelve los registros de Inocuidad Salud Animal, de la tabla UE.InoUnidadesCertSA, lo filtra por la Campaña
+        /// </summary>
+        /// <param name="IdCampania"></param>
+        /// <returns></returns>
+        public static IEnumerable GetInoUnidadesCertSAByCampania(int? IdCampania)
+        {
+            DB_SENASICAEntities db1 = new DB_SENASICAEntities();
+            var _m = from inounidades in db1.InoUnidadesCertSAs where inounidades.FK_IdCampania == IdCampania select inounidades;
+            return _m.ToList();
+        }
+
+        //**********************Sanidad Acuicola*******************************       
+        /// <summary>
+        /// Devuelve los registros de Inocuidad Sanidad Acuícola y Pesquera, de la tabla UE.InoCompSAC, lo filtra por la Campaña
+        /// </summary>
+        /// <param name="IdCampania"></param>
+        /// <returns></returns>
+        public static IEnumerable GetInoCompSACByCampania(int? IdCampania)
+        {
+            DB_SENASICAEntities db1 = new DB_SENASICAEntities();
+            var _m = from inocompSAC in db1.InoCompSACs where inocompSAC.FK_IdCampania == IdCampania select inocompSAC;
+            return _m.ToList();
+        }
+
+        /// <summary>
+        /// Devuelve los registros de Inocuidad Snidad Acuícola y Pesquera, de la tabla UE.InoImportanciaSAC, lo filtra por la Campaña
+        /// </summary>
+        /// <param name="IdCampania"></param>
+        /// <returns></returns>
+        public static IEnumerable GetInoImportanciaSACByCampania(int? IdCampania)
+        {
+            DB_SENASICAEntities db1 = new DB_SENASICAEntities();
+            var _m = from inoimportanciaSAC in db1.InoImportanciaSACs where inoimportanciaSAC.FK_IdCampania == IdCampania select inoimportanciaSAC;
+            return _m.ToList();
+        }
+
+        /// <summary>
+        ///  Devuelve los registros de Inocuidad Snidad Acuícola y Pesquera, de la tabla UE.InoUnidadesCertSAC, lo filtra por la Campaña
+        /// </summary>
+        /// <param name="IdCampania"></param>
+        /// <returns></returns>
+        public static IEnumerable GetInoUnidadesCertSACByCampania(int? IdCampania)
+        {
+            DB_SENASICAEntities db1 = new DB_SENASICAEntities();
+            var _m = from inounidadesSAC in db1.InoUnidadesCertSACs where inounidadesSAC.FK_IdCampania == IdCampania select inounidadesSAC;
+            return _m.ToList();
+        }
+
+        #endregion
+
+        #region Campania Sanidad Vegetal
+        //**********************Sanidad Vegetal*******************************
+        /// <summary>
+        /// Devuelve los registros de Importancia del Cultivo de la Campaña Sanidad Vegetal, la tabla es UE.SVImportanciaCultivo, lo filtra por la Campaña
+        /// </summary>
+        /// <param name="IdCampania"></param>
+        /// <returns></returns>
+        public static IEnumerable GetSVImportanciaCultivoByCampania(int? IdCampania)
+        {
+            DB_SENASICAEntities db1 = new DB_SENASICAEntities();
+            var _m = from svimportanciaCultivo in db1.SVImportanciaCultivoes where svimportanciaCultivo.Fk_IdCampania == IdCampania select svimportanciaCultivo;
+            return _m.ToList();
+        }
+
+        /// <summary>
+        /// Devuelve los registros Atendido de la Campaña Sanidad Vegetal, la tabla es UE.SVAtendido, lo filtra por la Campaña
+        /// </summary>
+        /// <param name="IdCampania"></param>
+        /// <returns></returns>
+        public static IEnumerable GetSVAtendidoByCampania(int? IdCampania)
+        {
+            DB_SENASICAEntities db1 = new DB_SENASICAEntities();
+            var _m = from svAtendido in db1.SVAtendidoes where svAtendido.Fk_IdCampania == IdCampania select svAtendido;
+            return _m.ToList();
+        }
+
+        /// <summary>
+        /// Devuelve los registros Importancia de la Plaga, de la Campaña Sanidad Vegetal, la tabla es UE.SVImportanciaPlaga, lo filtra por la Campaña
+        /// </summary>
+        /// <param name="IdCampania"></param>
+        /// <returns></returns>
+        public static IEnumerable GetSVImportanciaPlagaByCampania(int? IdCampania)
+        {
+            DB_SENASICAEntities db1 = new DB_SENASICAEntities();
+            var _m = from svimportanciaplaga in db1.SVImportanciaPlagas where svimportanciaplaga.Fk_IdCampania == IdCampania select svimportanciaplaga;
+            return _m.ToList();
+        }
+        #endregion
+
+        #region Campania Movilidad
+        //************************** Movilidad*******************************
+        /// <summary>
+        /// Devuelve los registros Importancia de la Campaña Movilización, la tabla es UE.Mov_ImportanciaPIV, lo filtra por la Campaña
+        /// </summary>
+        /// <param name="IdCampania"></param>
+        /// <returns></returns>
+        public static IEnumerable GetMovImportanciaPIVByCampania(int? IdCampania)
+        {
+            DB_SENASICAEntities db1 = new DB_SENASICAEntities();
+            var _m = from mov_importanciapiv in db1.Mov_ImportanciaPIV where mov_importanciapiv.Fk_IdCampania == IdCampania select mov_importanciapiv;
+            return _m.ToList();
+        }
+        /// <summary>
+        /// Devuelve los registros Atendido de la Campaña Movilización, la tabla es UE.Mov_Atendido, lo filtra por la Campaña
+        /// </summary>
+        /// <param name="IdCampania"></param>
+        /// <returns></returns>
+        public static IEnumerable GetMovAtendidoByCampania(int? IdCampania)
+        {
+            DB_SENASICAEntities db1 = new DB_SENASICAEntities();
+            var _m = from mov_atendido in db1.Mov_Atendido where mov_atendido.Fk_IdCampania == IdCampania select mov_atendido;
+            return _m.ToList();
+        }
+        /// <summary>
+        /// Devuelve los registros Importancia del  Programa de la Campaña Movilización, la tabla es UE.Mov_ImportanciaProg, lo filtra por la Campaña
+        /// </summary>
+        /// <param name="IdCampania"></param>
+        /// <returns></returns>
+        public static IEnumerable GetMovImportanciaProgByCampania(int? IdCampania)
+        {
+            DB_SENASICAEntities db1 = new DB_SENASICAEntities();
+            var _m = from mov_importanciapiv in db1.Mov_ImportanciaProg where mov_importanciapiv.Fk_IdCampania == IdCampania select mov_importanciapiv;
+            return _m.ToList();
+        }
+        #endregion
+
+        #region Campania Sanidad Acuicola y Pesquera
+        // ********************** Sanidad Acuicola y Pesquera********************
+        /// <summary>
+        /// Devuelve los registros, Importancia Cultivo de la Campaña Sanidad Acuícola y Pesquera, la tabla es UE.SACImportanciaCultivo, lo filtra por la Campaña
+        /// </summary>
+        /// <param name="IdCampania"></param>
+        /// <returns></returns>
+        public static IEnumerable GetSACImportanciaCultByCampania(int? IdCampania)
+        {
+            DB_SENASICAEntities db1 = new DB_SENASICAEntities();
+            var _m = from SACImportanciaCultivoes in db1.SACImportanciaCultivoes where SACImportanciaCultivoes.Fk_IdCampania == IdCampania select SACImportanciaCultivoes;
+            return _m.ToList();
+        }
+        /// <summary>
+        /// Devuelve los registros, Atendido de la Campaña Sanidad Acuícola y Pesquera, la tabla es UE.SAC_Atendido, lo filtra por la Campaña
+        /// </summary>
+        /// <param name="IdCampania"></param>
+        /// <returns></returns>
+        public static IEnumerable GetSACAtendidoByCampania(int? IdCampania)
+        {
+            DB_SENASICAEntities db1 = new DB_SENASICAEntities();
+            var _m = from sac_atendido in db1.SAC_Atendido where sac_atendido.Fk_IdCampania == IdCampania select sac_atendido;
+            return _m.ToList();
+        }
+        /// <summary>
+        /// Devuelve los registros, Importancia de la Enfermedad - de la Campaña Sanidad Acuícola y Pesquera, la tabla es UE.SACImportanciaEnfermedad, lo filtra por la Campaña
+        /// </summary>
+        /// <param name="IdCampania"></param>
+        /// <returns></returns>
+        public static IEnumerable GetSACImportanciaEnfermedadesByCampania(int? IdCampania)
+        {
+            DB_SENASICAEntities db1 = new DB_SENASICAEntities();
+            var _m = from sac_importanciaenf in db1.SACImportanciaEnfermedads where sac_importanciaenf.Fk_IdCampania == IdCampania select sac_importanciaenf;
+            return _m.ToList();
+        }
+        #endregion
+
+        #region CapituloPartida
+
+        /// <summary>
+        /// Devuelve Capítulo de la Partida de la tabla SIS.CapituloPartida
+        /// </summary>
+        /// <returns></returns>
+        public static IEnumerable GetCapitulosPartida()
+        {
+            DB_SENASICAEntities db1 = new DB_SENASICAEntities();
+
+            var _m = from capitulopartida in db1.CapituloPartidas select capitulopartida;
+
+            return _m.ToList();
+        }
+
+        #endregion
+
+        #region Cargo
+        /// <summary>
+        /// Devuelve los Cargo de la tabla SIS.Cargo
+        /// </summary>
+        /// <returns></returns>
+        public static IEnumerable GetCargo()
+        {
+            DB_SENASICAEntities db1 = new DB_SENASICAEntities();
+
+            var _m = from cargo in db1.Cargoes where cargo.Fk_IdTipoDeUnidad == 12 select cargo;
+
+            return _m.ToList();
+        }
+        #endregion
+
+        #region Certificacion
+        /// <summary>
+        /// Devuelve los registros de tabla SIS.Certificacion
+        /// </summary>
+        /// <returns></returns>
+        public static IEnumerable GetCertificacion()
+        {
+            DB_SENASICAEntities db1 = new DB_SENASICAEntities();
+
+            var _m = from certificacion in db1.Certificacions select certificacion;
+
+            return _m.ToList();
+        }
+        #endregion
+
+        #region ConceptoPartida
+        /// <summary>
+        /// Devuelve los registros de Tabla SIS.ConceptosPartida
+        /// </summary>
+        /// <returns></returns>
+        public static IEnumerable GetConceptosPartida()
+        {
+            DB_SENASICAEntities db1 = new DB_SENASICAEntities();
+
+            var _m = from Conceptopartida in db1.ConceptoPartidas select Conceptopartida;
+
+            return _m.ToList();
+        }
+        #endregion
+
+        #region EstadoBien
+        /// <summary>
+        /// Realiza la consulta de la tabla SIS.EstadoBien
+        /// </summary>
+        /// <returns></returns>
+        public static IEnumerable GetEstadoBien()
+        {
+            DB_SENASICAEntities db1 = new DB_SENASICAEntities();
+
+            var _m = from estadobien in db1.EstadoBiens select estadobien;
+
+            return _m.ToList();
+        }
+        #endregion
+
+        #region EstadoMunicipio
+        /// <summary>
+        /// Devuelve una lista de los Estados que se encuentran en la tabla SIS.Estado
+        /// </summary>
+        /// <returns></returns>
+        public static IEnumerable GetEstados()
+        {
+            DB_SENASICAEntities db1 = new DB_SENASICAEntities();
+
+            var _m = from estados in db1.Estadoes select estados;
+
+            return _m.ToList();
+        }
+
+        /// <summary>
+        /// Devuelve una lista de los Municipios que se encuentran en la tabla SIS.Municipio, se filtra por el Estado
+        /// </summary>
+        /// <param name="Pk_IdEstado"></param>
+        /// <returns></returns>
+        public static IEnumerable GetMunicipiosByEstado(int? Pk_IdEstado)
+        {
+            DB_SENASICAEntities db1 = new DB_SENASICAEntities();
+            if (Pk_IdEstado == null)
+            {
+                var _m = from municipio in db1.Municipios
+                         select municipio;
+                return _m.ToList();
+            }
+            else
+            {
+                var _m = from municipio in db1.Municipios
+                         where municipio.Fk_IdEstado__SIS == Pk_IdEstado
+                         select municipio;
+                return _m.ToList();
+            }
+        }
+
+        #endregion
+
+        #region Filtros de los Grids
+
+        //AQUÍ EMPIEZAN LOS FILTROS DE LOS GRIDS ***************************************************************************
+        //INSTANCIA EJECUTORA/UNIDAD EJECUTORA ***************************************************************************
+        //Esta funcion se sobrecarga para alimentar el combo en las pantallas de Campaña  SA,SV,SAC,MOV
+        //que pueden manejar mas de un subcomponente
+
+        /// <summary>
+        /// Filtrado la Unidad Ejecutora por el Estado, y dos tipos de Subcomponente
+        /// </summary>
+        /// <param name="_Fk_IdEstado"></param>
+        /// <param name="subcomponente"></param>
+        /// <param name="subcomponente2"></param>
+        /// <returns></returns>
+        public static IEnumerable GetEstadoUnidadEjecutoraBySubComponente(int? _Fk_IdEstado, int subcomponente, int? subcomponente2)
+        {
+            DB_SENASICAEntities db1 = new DB_SENASICAEntities();
+
+            if (_Fk_IdEstado == null)
+            {
+                var _m = from unidadejecutora in db1.UnidadEjecutoras
+                         where unidadejecutora.Fk_IdSubComponente == subcomponente || unidadejecutora.Fk_IdSubComponente == subcomponente2
+                         select unidadejecutora;
+                return _m.ToList();
+            }
+            else
+            {
+                var _m = from unidadejecutora in db1.UnidadEjecutoras
+                         where unidadejecutora.Fk_IdEstado__SIS == _Fk_IdEstado && (unidadejecutora.Fk_IdSubComponente == subcomponente || unidadejecutora.Fk_IdSubComponente == subcomponente2)
+                         select unidadejecutora;
+                return _m.ToList();
+            }
+        }
+
+        //PADRON DE UNIDADES DE PRODUCCION/PRODUCTOR ***************************************************************************
+        /// <summary>
+        /// Devuelve los Productores de la tabla UE.Productor, lo filtra por Estado
+        /// </summary>
+        /// <param name="_Fk_IdEstado"></param>
+        /// <returns></returns>
+        public static IEnumerable GetProductorByEstado(int? _Fk_IdEstado)
+        {
+            DB_SENASICAEntities db1 = new DB_SENASICAEntities();
+
+            if (_Fk_IdEstado == null)
+            {
+                var _m = from productor in db1.Productors select productor;
+                return _m.ToList();
+            }
+            else
+            {
+                var _m = from productor in db1.Productors
+                         where productor.Fk_IdEstado__SIS == _Fk_IdEstado
+                         select productor;
+                return _m.ToList();
+            }
+        }
+
+        //PROGRAMAS DE TRABAJO/CAMPANIA ***************************************************************************
+
+        //********************Comienza la Funcion**************************************
+        //PERSONAL A CARGO DE LA UNIDAD ADMINISTRATIVA/PERSONA ***************************************************************************
+        /// <summary>
+        ///Devuelve las Personas de la tabla SIS.Persona, lo filtra por Unidad Ejecutora
+        /// </summary>
+        /// <param name="_Fk_IdUnidadEjecutora"></param>
+        /// <returns></returns>
+        public static IEnumerable GetPersonaByUnidadEjecutora(int? _Fk_IdUnidadEjecutora)
+        {
+            DB_SENASICAEntities db1 = new DB_SENASICAEntities();
+            if (_Fk_IdUnidadEjecutora == null)
+            {
+                var _m = from persona in db1.Personas select persona;
+                return _m.ToList();
+            }
+            else
+            {
+                var _m = from persona in db1.Personas
+                         where persona.Fk_IdUnidadEjecutora__UE == _Fk_IdUnidadEjecutora
+                         select persona;
+                return _m.ToList();
+            }
+        }
+        //INVENTARIO DE LA UNIDAD ADMINISTRATIVA/INVENTARIO ***************************************************************************
+        /// <summary>
+        /// Devuelve los Inventarios de la tabla UE.Inventario, lo filtra por Unidad Ejecutora
+        /// </summary>
+        /// <param name="_Fk_IdUnidadEjecutora"></param>
+        /// <returns></returns>
+        public static IEnumerable GetInventariosByUnidadEjecutora(int? _Fk_IdUnidadEjecutora)
+        {
+            DB_SENASICAEntities db1 = new DB_SENASICAEntities();
+            if (_Fk_IdUnidadEjecutora == null)
+            {
+                var _m = from inventario in db1.Inventarios select inventario;
+                return _m.ToList();
+            }
+            else
+            {
+                var _m = from inventario in db1.Inventarios
+                         where inventario.Fk_IdUnidadEjecutora == _Fk_IdUnidadEjecutora
+                         select inventario;
+                return _m.ToList();
+            }
+        }
+        //INSTALACIONES DE LA UNIDAD ADMINISTRATIVA/INSTALACION ***************************************************************************
+        /// <summary>
+        /// Devuelve las Intalaciones de la tabla UE.Instalacion, lo filtra por Unidad Ejecutora
+        /// </summary>
+        /// <param name="_Fk_IdUnidadEjecutora"></param>
+        /// <returns></returns>
+        public static IEnumerable GetInstalacionByUnidadEjecutora(int? _Fk_IdUnidadEjecutora)
+        {
+            DB_SENASICAEntities db1 = new DB_SENASICAEntities();
+            if (_Fk_IdUnidadEjecutora == null)
+            {
+                var _m = from instalacion in db1.Instalacions select instalacion;
+                return _m.ToList();
+            }
+            else
+            {
+                var _m = from instalacion in db1.Instalacions
+                         where instalacion.Fk_IdUnidadEjecutora == _Fk_IdUnidadEjecutora
+                         select instalacion;
+                return _m.ToList();
+            }
+        }
+        //PROGRAMA ANUAL DE AQUISICIONES/PROGRAMA ANUAL DE ADQ ***************************************************************************
+        /// <summary>
+        /// Devuelve los Programas Anual de Adquisición de la tabla UE.ProgramaAnualAdqs, lo filtra por Unidad Ejecutora
+        /// </summary>
+        /// <param name="_Fk_IdUnidadEjecutora"></param>
+        /// <returns></returns>
+        public static IEnumerable GetProgramaAnualAdqByUnidadEjecutora(int? _Fk_IdUnidadEjecutora)
+        {
+            DB_SENASICAEntities db1 = new DB_SENASICAEntities();
+            if (_Fk_IdUnidadEjecutora == null)
+            {
+                var _m = from programaanual in db1.ProgramaAnualAdqs select programaanual;
+                return _m.ToList();
+            }
+            else
+            {
+                var _m = from programaanual in db1.ProgramaAnualAdqs
+                         where programaanual.Fk_IdUnidadEjecutora__UE == _Fk_IdUnidadEjecutora
+                         select programaanual;
+                return _m.ToList();
+            }
+        }
+        //ADMINISTRACION DE ACCIONES/ACTIVIDAD ***************************************************************************
+        /// <summary>
+        /// Devuelve las Actividades de la tabla UE.Actividad, lo filtra por Acción
+        /// </summary>
+        /// <param name="_Fk_IdAccion"></param>
+        /// <returns></returns>
+        public static IEnumerable GetactividadByAccion(int? _Fk_IdAccion)
+        {
+            DB_SENASICAEntities db1 = new DB_SENASICAEntities();
+            if (_Fk_IdAccion == null)
+            {
+                var _m = from actividad in db1.Actividads select actividad;
+                return _m.ToList();
+            }
+            else
+            {
+                var _m = from actividad in db1.Actividads
+                         where actividad.ActividadXAccion.Fk_IdAccionXCampania == _Fk_IdAccion
+                         select actividad;
+                return _m.ToList();
+            }
+        }
+
+        //ADMINISTRACION DE ACCTIVIDADES/ALCANCE ***************************************************************************
+        /// <summary>
+        /// Devuelve las Acciones de las Campanias, los filtra por UnidadEjecutora y Acciones
+        /// </summary>
+        /// <param name="_Fk_IdAccion"></param>
+        /// <param name="_Fk_IdUnidadEjecutora"></param>
+        /// <returns></returns>
+        public static IEnumerable GetCampaniaAlcanceByUnidadEjecutora(int? _Fk_IdAccion, int? _Fk_IdUnidadEjecutora)
+        {
+            DB_SENASICAEntities db1 = new DB_SENASICAEntities();
+
+            if (_Fk_IdAccion == null)
+            {
+                var _m = from accion in db1.Accions
+                         where accion.Campania.Fk_IdUnidadEjecutora__UE == _Fk_IdUnidadEjecutora
+                         select accion;
+                return _m.ToList();
+            }
+            else
+            {
+                var _m = from accion in db1.Accions
+                         where accion.Fk_IdCampania__UE == _Fk_IdAccion
+                         select accion;
+                return _m.ToList();
+            }
+        }
+        #endregion
+
+        #region Instalaciones
+
+        /// <summary>
+        /// Devuelve las Instalaciones de la tabla UE.Instalacion, se filtra es por Unidad Ejecutora
+        /// </summary>
+        /// <param name="IdUnidadEjecutora"></param>
+        /// <returns></returns>
+        public static IEnumerable GetInstalacionesByUnidadEjecutora(int? IdUnidadEjecutora)
+        {
+            DB_SENASICAEntities db1 = new DB_SENASICAEntities();
+
+            var _m = from instalacion in db1.Instalacions where instalacion.Fk_IdUnidadEjecutora == IdUnidadEjecutora select instalacion;
+
+            return _m.ToList();
+        }
+        #endregion
+
+        #region Inventario
+
+        /// <summary>
+        /// Devuelve los Inventarios de la tabla UE.Inventario, los filtra por Unidad Ejecutora
+        /// </summary>
+        /// <param name="IdUnidadEjecutora"></param>
+        /// <returns></returns>
+        public static IEnumerable GetInventarioByUnidadEjecutora(int? IdUnidadEjecutora)
+        {
+            DB_SENASICAEntities db1 = new DB_SENASICAEntities();
+
+            var _m = from inventario in db1.Inventarios where inventario.Fk_IdUnidadEjecutora == IdUnidadEjecutora select inventario;
+
+            return _m.ToList();
+        }
+        #endregion
+
+        #region NecesidadesXAccion
+        /// <summary>
+        /// Devuelve las Necesidades de la tabla UE.NecesidadXAccion, filtrando los registros por Acción
+        /// </summary>
+        /// <param name="IdAccion"></param>
+        /// <returns></returns>
+        public static IEnumerable GetNecesidadesByAccion(int? IdAccion)
+        {
+            DB_SENASICAEntities db1 = new DB_SENASICAEntities();
+            if (IdAccion == null)
+            {
+                var _m = from necesidadesXaccion in db1.NecesidadXAccions
+                         select necesidadesXaccion;
+                return _m.ToList();
+            }
+            else
+            {
+                var _m = from necesidadesXaccion in db1.NecesidadXAccions
+                         where necesidadesXaccion.Fk_IdAccionXCampania == IdAccion
+                         select necesidadesXaccion;
+                return _m.ToList();
+            }
+        }
+        #endregion
+
+        #region Programa_Componente_Incentivo
+
+        /// <summary>
+        /// Devuelve una consulta de los programas que estan en la Tabla SIS.Programa
+        /// </summary>
+        /// <returns></returns>
+        public static IEnumerable GetProgramas()
+        {
+            DB_SENASICAEntities db1 = new DB_SENASICAEntities();
+
+            var _m = from programas in db1.Programas select programas;
+
+            return _m.ToList();
+        }
+
+        /// <summary>
+        /// Devuelve una consulta de los Componentes que estan en la Tabla SIS.Componente
+        /// </summary>
+        /// <returns></returns>
+        public static IEnumerable GetComponente()
+        {
+            DB_SENASICAEntities db1 = new DB_SENASICAEntities();
+
+            var _m = from componentes in db1.Componentes select componentes;
+
+            return _m.ToList();
+        }
+        /// <summary>
+        /// Devuelve una consulta de los Incentivos que estan en la Tabla SIS.Incentivo
+        /// </summary>
+        /// <returns></returns>
+        public static IEnumerable GetIncentivo()
+        {
+            DB_SENASICAEntities db1 = new DB_SENASICAEntities();
+
+            var _m = from incentivo in db1.Incentivoes select incentivo;
+
+            return _m.ToList();
+        }
+
+        #endregion
+
+        #region ProyectoAutorizado
+
+        /// <summary>
+        /// Devuelve los Productos Autorizados de la tabla SIS.ProyectoAutorizado
+        /// </summary>
+        /// <returns></returns>
+        public static IEnumerable GetProyectosAutorizados()
+        {
+            DB_SENASICAEntities db1 = new DB_SENASICAEntities();
+
+            var _m = from proyectoautorizado in db1.ProyectoAutorizadoes select proyectoautorizado;
+
+            return _m.ToList();
+        }
+        /// <summary>
+        /// Devuelve los Proyectos Autorizados de la tabla SIS.ProyectoAutorizado, lo filtra por SubComponenteponente)
+        /// </summary>
+        /// <param name="subcomponente"></param>
+        /// <returns></returns>
+        public static IEnumerable GetProyectosAutorizadosBySubComponente(int subcomponente)
+        {
+            DB_SENASICAEntities db1 = new DB_SENASICAEntities();
+
+            var _m = from proyectoautorizado in db1.ProyectoAutorizadoes
+                     where proyectoautorizado.Fk_IdSubComponente__SIS == subcomponente
+                     select proyectoautorizado;
+            return _m.ToList();
+        }
+
+        #endregion
+
+        #region ProgramaAnual
+
+        /// <summary>
+        /// Devuelve los Programas Anuales de la tabla UE.ProgramaAnualAdqs, lo filtra por la Campania
+        /// </summary>
+        /// <param name="IdCampania"></param>
+        /// <returns></returns>
+        public static IEnumerable GetProgramaAnualByCampania(int? IdCampania)
+        {
+            DB_SENASICAEntities db1 = new DB_SENASICAEntities();
+            var _m = from programaanual in db1.ProgramaAnualAdqs where programaanual.Fk_IdCampania__UE == IdCampania select programaanual;
+            return _m.ToList();
+        }
+
+        /// <summary>
+        /// Concatena Anio,BienOServ,NombreCampania de la tabla UE.ProgramaAnualAdqs
+        /// </summary>
+        /// <returns> </returns>
+        public static IEnumerable GetProgramaAnualAdq()
+        {
+            DB_SENASICAEntities db1 = new DB_SENASICAEntities();
+
+            var _m =
+                    from repadquisicion in db1.ProgramaAnualAdqs
+                    select new
+                    {
+                        Pk_IdProgramaAnualAdq = repadquisicion.Pk_IdProgramaAnualAdq,
+                        Descripcion = repadquisicion.Anio.Anio1 + " | " + repadquisicion.BienOServ.Nombre + " | " + repadquisicion.Campania.NombreCampania
+                    };
+
+            return _m.ToList();
+        }
+        #endregion
+
+        #region Productores
+
+        /// <summary>
+        /// Devuelve los Productores de la tabla UE.Productor
+        /// </summary>
+        /// <returns></returns>
+        public static IEnumerable GetProductores()
+        {
+            DB_SENASICAEntities db1 = new DB_SENASICAEntities();
+
+            var _m = from productor in db1.Productors select productor;
+
+            return _m.ToList();
+        }
+        #endregion
+
+        #region Personas
+        /// <summary>
+        /// Devuelve las Personas de la tabla SIS.Persona
+        /// </summary>
+        /// <returns></returns>
+        public static IEnumerable GetPersonas()
+        {
+            DB_SENASICAEntities db1 = new DB_SENASICAEntities();
+
+            var _m = from persona in db1.Personas select persona;
+
+            return _m.ToList();
+        }
+        /// <summary>
+        /// Devuelve las el nombre completo de las personas (Apellido Paterno, Apellido Materno, Nombres) de la tabla SIS.Persona
+        /// </summary>
+        /// <returns></returns>
+        public static IEnumerable GetPersonasParaCombo()
+        {
+            DB_SENASICAEntities db1 = new DB_SENASICAEntities();
+
+            // var _m = from persona in db1.Personas select (i => new { i., i.category_name }) select persona;
+            var _m =
+
+        from data in db1.Personas
+        orderby data.Ap_Paterno ascending
+        select new { Pk_IdPersona = data.Pk_IdPersona, Nombre = data.Ap_Paterno + data.Ap_Materno + data.Nombre };
+
+            return _m.ToList();
+        }
+        /// <summary>
+        /// Devuelve las Personas de la tabla SIS.Persona, filtrando los registros por Unidad Ejecutora
+        /// </summary>
+        /// <param name="IdUnidadEjecutora"></param>
+        /// <returns></returns>
+        public static IEnumerable GetPersonasByUnidadEjecutora(int? IdUnidadEjecutora)
+        {
+            DB_SENASICAEntities db1 = new DB_SENASICAEntities();
+
+            var _m = from persona in db1.Personas where persona.Fk_IdUnidadEjecutora__UE == IdUnidadEjecutora select persona;
+
+            return _m.ToList();
+        }
+
+        #endregion
+
+        #region ReporteGasto
+        /// <summary>
+        ///  Devuelve el Reporte de Gasto de la tabla UE.RepGasto, filtrando los registros por la Actividad
+        /// </summary>
+        /// <param name="IdActividad"></param>
+        /// <returns></returns>
+        public static IEnumerable GetRepGastosByActividad(int? IdActividad)
+        {
+            DB_SENASICAEntities db1 = new DB_SENASICAEntities();
+            var _m = from repgastos in db1.RepGastoes where repgastos.Fk_IdRepActividad == IdActividad select repgastos;
+            return _m.ToList();
+        }
+        #endregion
+
+        #region SubComponente
+
+        /// <summary>
+        /// Devuelve los Subcomponentes de la tabla SIS.SubComponente, lo filtra para cuando la campaña solo tengan un Subcomponente
+        /// </summary>
+        /// <param name="subcomponente"></param>
+        /// <returns></returns>
+        public static IEnumerable GetSubComponenteBySubComponente(int subcomponente)
+        {
+            DB_SENASICAEntities db1 = new DB_SENASICAEntities();
+
+            var _m = from subcomponentes in db1.SubComponentes
+                     where subcomponentes.Pk_IdSubComponente == subcomponente
+                     select subcomponentes;
+            return _m.ToList();
+        }
+
+        //Esta funcion se sobrecarga para alimentar el combo en las pantallas de Campaña  SA,SV,SAC,MOV
+        //que pueden manejar mas de un subcomponente
+
+        /// <summary>
+        /// Devuelve los Subcomponentes de la tabla SIS.SubComponente, lo filtra para cuando la campaña tenga dos Subcomponente
+        /// </summary>
+        /// <param name="subcomponente"></param>
+        /// <param name="subcomponente2"></param>
+        /// <returns></returns>
+        public static IEnumerable GetSubComponente2BySubComponente(int subcomponente, int subcomponente2)
+        {
+            DB_SENASICAEntities db1 = new DB_SENASICAEntities();
+
+            var _m = from subcomponentes in db1.SubComponentes
+                     where subcomponentes.Pk_IdSubComponente == subcomponente || subcomponentes.Pk_IdSubComponente == subcomponente2
+                     select subcomponentes;
+            return _m.ToList();
+        }
+
+        #endregion
+
+        #region StatusActividad
+
+        /// <summary>
+        /// Devuelve el Estatus de la Actividad de la tabla SIS.StatusActividad
+        /// </summary>
+        /// <returns></returns>
+        public static IEnumerable GetStatusActividad()
+        {
+            DB_SENASICAEntities db1 = new DB_SENASICAEntities();
+
+            var _m = from statusactividad in db1.StatusActividads select statusactividad;
+
+            return _m.ToList();
+        }
+        #endregion
+
+        #region StatuAlcance
+        /// <summary>
+        /// Devuelve el Estatus Alcance de la tabla SIS.StatusAlcance
+        /// </summary>
+        /// <returns></returns>
+        public static IEnumerable GetStatusAlcance()
+        {
+            DB_SENASICAEntities db1 = new DB_SENASICAEntities();
+
+            var _m = from statusalcance in db1.StatusAlcances select statusalcance;
+
+            return _m.ToList();
+        }
+        #endregion
+
+        #region StatusCampania
+        /// <summary>
+        /// Devuelve el Estatus Capania de la tabla SIS.StatusCampania
+        /// </summary>
+        /// <returns></returns>
+        public static IEnumerable GetStatusCampania()
+        {
+            DB_SENASICAEntities db1 = new DB_SENASICAEntities();
+
+            var _m = from statuscampania in db1.StatusCampanias select statuscampania;
+
+            return _m.ToList();
+        }
+        /// <summary>
+        /// Devuelve el Estatus Capania de la tabla SIS.StatusCampania, lo filtra por Status Origen y el Rol del Usuario
+        /// </summary>
+        /// <param name="statusorigen"></param>
+        /// <param name="rol"></param>
+        /// <returns></returns>
+        public static IEnumerable GetStatusSiguienteCampaniaByStatusCampania(int statusorigen, string rol)
+        {
+            DB_SENASICAEntities db1 = new DB_SENASICAEntities();
+
+            var innerJoinQuery =
+            from statuscampania in db1.StatusCampanias
+            join flujocampania in db1.FlujoCampanias on statuscampania.PK_IdStatusCampania equals flujocampania.Fk_IdEstatusDestino
+            where flujocampania.Fk_IdEstatusOrigen == statusorigen && flujocampania.Rol == rol
+            select new { Pk_IdEstado = flujocampania.Fk_IdEstatusDestino, Nombre = statuscampania.Nombre }; //produces flat sequence
+            return innerJoinQuery.ToList();
+        }
+        //********************Funciones para poblar Detalle de Acciones en las Acciones
+        //StatusCampaniaKardexes
+
+        /// <summary>
+        /// Devuelve el Estatus Capania de la tabla SIS.StatusCampania, lo filtra por la Campania
+        /// </summary>
+        /// <param name="IdCampania"></param>
+        /// <returns>Filtrado del Tabs de Status por la Campaña</returns>
+        public static IEnumerable GetStatusCampaniaKardexesByCampania(int? IdCampania)
+        {
+            DB_SENASICAEntities db1 = new DB_SENASICAEntities();
+            var _m = from statuscampania in db1.StatusCampaniaKardexes where statuscampania.FK_IdCampania__UE == IdCampania select statuscampania;
+            return _m.ToList();
+        }
+        #endregion
+
+        #region StatusUnidadEjecutora
+
+        /// <summary>
+        /// Devuelve consulta de registros de la tabla SIS.StatusUE
+        /// </summary>
+        /// <returns></returns>
+
+        public static IEnumerable GetStatusUnidadEjecutora()
+        {
+            DB_SENASICAEntities db1 = new DB_SENASICAEntities();
+
+            var _m = from statusUE in db1.StatusUEs select statusUE;
+
+            return _m.ToList();
+        }
+
+        #endregion
+
+        #region TipoDeRecurso
+
+        /// <summary>
+        /// Devuelve consulta de Tipo de Recursos de la tabla SIS.TipoDeRecurso
+        /// </summary>
+        /// <returns></returns>
+        public static IEnumerable GetTiposDeRecurso()
+        {
+            DB_SENASICAEntities db1 = new DB_SENASICAEntities();
+
+            var _m = from tipoderecurso in db1.TipoDeRecursoes select tipoderecurso;
+
+            return _m.ToList();
+        }
+
+        #endregion
+
+        #region TipoDeAccions
+
+        /// <summary>
+        /// Devuelve los Tipos de Acción de la tabla SIS.TipoDeAccion
+        /// </summary>
+        /// <returns></returns>
+        public static IEnumerable GetTiposDeAccion()
+        {
+            DB_SENASICAEntities db1 = new DB_SENASICAEntities();
+
+            var _m = from accion in db1.TipoDeAccions select accion;
+
+            return _m.ToList();
+        }
+
+        /// <summary>
+        /// Devuelve los Tipos de Acción de la tabla SIS.TipoDeAccion, filtrando los registros por el Proyecto Autorizado
+        /// </summary>
+        /// <param name="Proyecto"></param>
+        /// <returns></returns>
+        public static IEnumerable GetTiposDeAccionByProyecto(int Proyecto)
+        {
+            DB_SENASICAEntities db1 = new DB_SENASICAEntities();
+
+            var _m = from accion in db1.TipoDeAccions where accion.FK_IdProyectoAutorizado == Proyecto select accion;
+
+            return _m.ToList();
+        }
+
+        #endregion
+
+        #region TipoDeActividades
+
+        /// <summary>
+        /// Devuelve los Tipos de Actividades de la tabla SIS.TipoActividad
+        /// </summary>
+        /// <returns></returns>
+        public static IEnumerable GetTiposDeActividad()
+        {
+            DB_SENASICAEntities db1 = new DB_SENASICAEntities();
+
+            var _m = from actividad in db1.TipoActividads select actividad;
+
+            return _m.ToList();
+        }
+
+        /// <summary>
+        /// Devuelve los Tipos de Actividades de la tabla SIS.TipoActividad, filtrando los registros por Tipo de Acción
+        /// </summary>
+        /// <param name="Pk_IdTipoDeAccion"></param>
+        /// <returns></returns>
+        public static IEnumerable GetTiposDeActividadByTipoDeAccion(int Pk_IdTipoDeAccion)
+        {
+            DB_SENASICAEntities db1 = new DB_SENASICAEntities();
+            var _m = from actividad in db1.TipoActividads
+                     where actividad.Fk_IdTipoAccion == Pk_IdTipoDeAccion
+                     select actividad;
+            return _m.ToList();
+        }
+        #endregion
+
+        #region TiposDeBien
+
+        /// <summary>
+        /// Devuelve los Tipos de Bienes de la tabla SIS.TipoDeBien
+        /// </summary>
+        /// <returns></returns>
+        public static IEnumerable GetTiposDeBien()
+        {
+            DB_SENASICAEntities db1 = new DB_SENASICAEntities();
+
+            var _m = from tipodebien in db1.TipoDeBiens select tipodebien;
+
+            return _m.ToList();
+        }
+
+        #endregion
+
+        #region TipoDeInstalacion
+        /// <summary>
+        /// Devuelve los Tipos de Instalación de la tabla SIS.TipoInstalacion
+        /// </summary>
+        /// <returns></returns>
+        public static IEnumerable GetTipoDeInstalacion()
+        {
+            DB_SENASICAEntities db1 = new DB_SENASICAEntities();
+
+            var _m = from tipodeinstalacion in db1.TipoInstalacions select tipodeinstalacion;
+
+            return _m.ToList();
+        }
+        #endregion
+
+        #region TiposdeUnidad
+        /// <summary>
+        /// Devuelve los Tipos de Unidad de la tabla SIS.TipoDeUnidad
+        /// </summary>
+        /// <returns></returns>
+        public static IEnumerable GetTiposDeUnidad()
+        {
+            DB_SENASICAEntities db1 = new DB_SENASICAEntities();
+
+            var _m = from tipodeunidad in db1.TipoDeUnidads select tipodeunidad;
+
+            return _m.ToList();
+        }
+        #endregion
+
+        #region UnidadDeMedidas
+
+        /// <summary>
+        /// Devuelve las Unidades de Medida de la tabla SIS.UnidadDeMedida
+        /// </summary>
+        /// <returns></returns>
+        public static IEnumerable GetUnidadesDeMedida()
+        {
+            DB_SENASICAEntities db1 = new DB_SENASICAEntities();
+
+            var _m = from unidadmedida in db1.UnidadDeMedidas select unidadmedida;
+
+            return _m.ToList();
+        }
+
+        #endregion
+
+        #region UnidadEjecutora
+        /// <summary>
+        /// Devuelve las Unidades Ejecutoras de la tabla UE.UnidadEjecutora
+        /// </summary>
+        /// <returns></returns>
+        public static IEnumerable GetUnidadesEjecutoras()
+        {
+            DB_SENASICAEntities db1 = new DB_SENASICAEntities();
+
+            var _m = from unidadejecutora in db1.UnidadEjecutoras select unidadejecutora;
+
+            return _m.ToList();
+        }
+        #endregion
+
+        #region UnidadesResponsables
+        /// <summary>
+        /// Devuelve las Unidades Responsables de la tabla UE.UnidadResponsable
+        /// </summary>
+        /// <returns></returns>
+        public static IEnumerable GetUnidadesResponsables()
+        {
+            DB_SENASICAEntities db1 = new DB_SENASICAEntities();
+
+            var _m = from unidadresponsable in db1.UnidadResponsables select unidadresponsable;
+
+            return _m.ToList();
+        }
+        #endregion
+
+        #region UnidadDeMedida
+        /// <summary>
+        /// Devuelve las Unidades de Medida de la tabla SIS.UnidadDeMedida, filtrando por Tipo de Actividad
+        /// </summary>
+        /// <param name="Pk_IdTipoDeActividad"></param>
+        /// <returns></returns>
+        public static IEnumerable GetUnidadesDeMedidaByTipodeActividad(int Pk_IdTipoDeActividad)
+        {
+            DB_SENASICAEntities db1 = new DB_SENASICAEntities();
+            var _m = (from p in db1.UnidadDeMedidas
+                      join pts in db1.TipoActividads on Pk_IdTipoDeActividad equals pts.Pk_IdTipoActividad
+                      where pts.FK_IdUnidadDeMedida == p.Pk_IdUnidadDeMedida
+                      select p);
+            return _m.ToList();
+        }
+        #endregion
+
+        #region Vigencia
+        /// <summary>
+        /// Devuelve las Vigencias de la tabla UE.Vigencia, filtrando los registros por Unidad Ejecutora
+        /// </summary>
+        /// <param name="IdUnidadEjecutora"></param>
+        /// <returns></returns>
+        public static IEnumerable GetVigenciasByUnidadEjecutora(int? IdUnidadEjecutora)
+        {
+            DB_SENASICAEntities db1 = new DB_SENASICAEntities();
+
+            var _m = from vigencia in db1.Vigencias where vigencia.Fk_IdUnidadEjecutora == IdUnidadEjecutora select vigencia;
+
+            return _m.ToList();
+        }
+        #endregion
+
+        #region Puesto
+        /// <summary>
+        /// Devuelve los puestos de la tabla SIS.Puesto
+        /// </summary>
+        /// <returns></returns>
+        public static IEnumerable GetPuestos()
+        {
+            DB_SENASICAEntities db1 = new DB_SENASICAEntities();
+
+            var _m = from puestos in db1.Puestoes select puestos;
+
+            return _m.ToList();
+        }
+        #endregion
+
+        #region Profesion
+        /// <summary>
+        /// Devuelve las profesiones de SIS.Profesion
+        /// </summary>
+        /// <returns></returns>
+        public static IEnumerable GetProfesiones()
+        {
+            DB_SENASICAEntities db1 = new DB_SENASICAEntities();
+
+            var _m = from profesiones in db1.Profesions select profesiones;
+
+            return _m.ToList();
+        }
+        #endregion
+
+        public static IEnumerable GetCampaniasFiltradas(string userroll, int? _Fk_IdEstado, int? _Fk_IdUnidadEjecutora, int? _Fk_IdSubComponente__SIS, int? _Fk_IdSubComponente__SIS2)
+        {
+            DB_SENASICAEntities db1 = new DB_SENASICAEntities();
+
+
+            if (userroll == "Admin") // Solo Ocupa los Filtros de la pantalla _Fk_IdSubComponente__SIS2 previene el caso de que la Unidad Respondable del Usuario maneje mas de un subcomponente
+            {
+                if (_Fk_IdSubComponente__SIS2 == null)
+                {
+                    var _m = from campania in db1.Campanias
+                             where campania.Fk_IdSubComponente__SIS == _Fk_IdSubComponente__SIS
+                             select campania;
+                    return _m.ToList();
+                }
+                else
+                {
+                    var _m = from campania in db1.Campanias
+                             where campania.Fk_IdSubComponente__SIS == _Fk_IdSubComponente__SIS || campania.Fk_IdSubComponente__SIS == _Fk_IdSubComponente__SIS2
+                             select campania;
+                    return _m.ToList();
+                }
+            }
+
+            if (userroll == "Administrador de Unidad Responsable de Inocuidad" || userroll == "Administrador de Unidad Responsable de Movilizacion" || userroll == "Administrador de Unidad Responsable de Salud Animal" || userroll == "Administrador de Unidad Responsable de Sanidad Acuicola y Pesquera" || userroll == "Administrador de Unidad Responsable de Sanidad Vegetal") // Ven TODOS los estados y el subcomponente
+            {
+
+                if (_Fk_IdSubComponente__SIS2 == null)
+                {
+                    var _m = from campania in db1.Campanias
+                             where campania.Fk_IdSubComponente__SIS == _Fk_IdSubComponente__SIS
+                             select campania;
+                    return _m.ToList();
+                }
+                else
+                {
+                    var _m = from campania in db1.Campanias
+                             where (campania.Fk_IdSubComponente__SIS == _Fk_IdSubComponente__SIS || campania.Fk_IdSubComponente__SIS == _Fk_IdSubComponente__SIS2)
+                             select campania;
+                    return _m.ToList();
+                }
+
+            }
+
+            if (userroll == "Administrador de Instancia Ejecutora de Sanidad Vegetal" || userroll == "Administrador de Instancia Ejecutora de Salud Animal" || userroll == "Administrador de Instancia Ejecutora de Inocuidad" || userroll == "Administrador de Instancia Ejecutora de Movilizacion" || userroll == "Administrador de Instancia Ejecutora de Sanidad Acuicola y Pesquera")  // Solo es Es necesario filtrar por la unidad Ejecutora
+            {
+                var _m = from campania in db1.Campanias
+                         where campania.Fk_IdUnidadEjecutora__UE == _Fk_IdUnidadEjecutora
+                         select campania;
+                return _m.ToList();
+            }
+            else
+            {
+                var _m = from campania in db1.Campanias
+                         where campania.Fk_IdSubComponente__SIS == _Fk_IdSubComponente__SIS //En cualquier otro caso solo se filtra por el subcomponente del usuario
+                         select campania;
+                return _m.ToList();
+            }
+        }
+        public static IEnumerable GetSubComponentexUsuario(string userroll)
+        {
+            DXMVCWebApplication1.Models.DB_SENASICAEntities db1 = new DXMVCWebApplication1.Models.DB_SENASICAEntities();
+
+            IQueryable<SubComponente> _m;
+
+            switch (userroll)
+            {
+                case "Admin":
+                    _m = from subcomponentes in db1.SubComponentes
+                         select subcomponentes;
+                    break;
+                case "Administrador de Unidad Responsable de Salud Animal":
+                    _m = from subcomponentes in db1.SubComponentes
+                         where subcomponentes.Pk_IdSubComponente == 1 || subcomponentes.Pk_IdSubComponente == 2
+                         select subcomponentes;
+                    break;
+                case "Administrador de Unidad Responsable de Sanidad Acuicola y Pesquera":
+                    _m = from subcomponentes in db1.SubComponentes
+                         where subcomponentes.Pk_IdSubComponente == 3
+                         select subcomponentes;
+                    break;
+                case "Administrador de Unidad Responsable de Sanidad Vegetal":
+                    _m = from subcomponentes in db1.SubComponentes
+                         where subcomponentes.Pk_IdSubComponente == 4 || subcomponentes.Pk_IdSubComponente == 5
+                         select subcomponentes;
+                    break;
+                case "Administrador de Unidad Responsable de Inocuidad":
+                    _m = from subcomponentes in db1.SubComponentes
+                         where subcomponentes.Pk_IdSubComponente == 1026
+                         select subcomponentes;
+                    break;
+                case "Administrador de Unidad Responsable de Movilizacion":
+                    _m = from subcomponentes in db1.SubComponentes
+                         where subcomponentes.Pk_IdSubComponente == 1028
+                         select subcomponentes;
+                    break;
+                default:
+                    _m = from subcomponentes in db1.SubComponentes
+                         select subcomponentes;
+                    break;
+            }
+
+            return _m.ToList();
+        }
+        public static IEnumerable GetProyectosAutorizados(string userroll)
+        {
+            DXMVCWebApplication1.Models.DB_SENASICAEntities db1 = new DXMVCWebApplication1.Models.DB_SENASICAEntities();
+
+            IQueryable<ProyectoAutorizado> _m;
+
+            switch (userroll)
+            {
+                case "Admin":
+                    _m = from proyectoautorizado in db1.ProyectoAutorizadoes
+                         select proyectoautorizado;
+                    break;
+                case "Administrador de Unidad Responsable de Salud Animal":
+                    _m = from proyectoautorizado in db1.ProyectoAutorizadoes
+                         where proyectoautorizado.Fk_IdSubComponente__SIS == 1 || proyectoautorizado.Fk_IdSubComponente__SIS == 2
+                         select proyectoautorizado;
+                    break;
+                case "Administrador de Unidad Responsable de Sanidad Acuicola y Pesquera":
+                    _m = from proyectoautorizado in db1.ProyectoAutorizadoes
+                         where proyectoautorizado.Fk_IdSubComponente__SIS == 3
+                         select proyectoautorizado;
+                    break;
+                case "Administrador de Unidad Responsable de Sanidad Vegetal":
+                    _m = from proyectoautorizado in db1.ProyectoAutorizadoes
+                         where proyectoautorizado.Fk_IdSubComponente__SIS == 4 || proyectoautorizado.Fk_IdSubComponente__SIS == 5
+                         select proyectoautorizado;
+                    break;
+                case "Administrador de Unidad Responsable de Inocuidad":
+                    _m = from proyectoautorizado in db1.ProyectoAutorizadoes
+                         where proyectoautorizado.Fk_IdSubComponente__SIS == 1026
+                         select proyectoautorizado;
+                    break;
+                case "Administrador de Unidad Responsable de Movilizacion":
+                    _m = from proyectoautorizado in db1.ProyectoAutorizadoes
+                         where proyectoautorizado.Fk_IdSubComponente__SIS == 1028
+                         select proyectoautorizado;
+                    break;
+                default:
+                    _m = from proyectoautorizado in db1.ProyectoAutorizadoes
+                         select proyectoautorizado;
+                    break;
+            }
+            return _m.ToList();
+        }
+        public static IEnumerable GetProyectoAutorizadoXUsuarios(string userroll)
+        {
+            DB_SENASICAEntities db1 = new DB_SENASICAEntities();
+
+
+            if (userroll == "Admin")
+            {
+                var _m = from proyectoautorizado in db1.ProyectoAutorizadoes
+                         select proyectoautorizado;
+                return _m.ToList();
+            }
+            if (userroll == "Administrador de Unidad Responsable de Salud Animal")
+            {
+                var _m = from proyectoautorizado in db1.ProyectoAutorizadoes
+                         where proyectoautorizado.Fk_IdSubComponente__SIS == 1 || proyectoautorizado.Fk_IdSubComponente__SIS == 2
+                         select proyectoautorizado;
+                return _m.ToList();
+            }
+            if (userroll == "Administrador de Unidad Responsable de Sanidad Acuicola y Pesquera")
+            {
+                var _m = from proyectoautorizado in db1.ProyectoAutorizadoes
+                         where proyectoautorizado.Fk_IdSubComponente__SIS == 3
+                         select proyectoautorizado;
+                return _m.ToList();
+            }
+            if (userroll == "Administrador de Unidad Responsable de Sanidad Vegetal") // Ven TODOS los estados y el subcomponente
+            {
+                var _m = from proyectoautorizado in db1.ProyectoAutorizadoes
+                         where proyectoautorizado.Fk_IdSubComponente__SIS == 4 || proyectoautorizado.Fk_IdSubComponente__SIS == 5
+                         select proyectoautorizado;
+                return _m.ToList();
+            }
+
+            if (userroll == "Administrador de Unidad Responsable de Inocuidad")
+            {
+                var _m = from proyectoautorizado in db1.ProyectoAutorizadoes
+                         where proyectoautorizado.Fk_IdSubComponente__SIS == 1026
+                         select proyectoautorizado;
+                return _m.ToList();
+            }
+
+            if (userroll == "Administrador de Unidad Responsable de Movilizacion")
+            {
+                var _m = from proyectoautorizado in db1.ProyectoAutorizadoes
+                         where proyectoautorizado.Fk_IdSubComponente__SIS == 1028
+                         select proyectoautorizado;
+                return _m.ToList();
+            }
+            else
+            {
+                var _m = from proyectoautorizado in db1.ProyectoAutorizadoes
+                         select proyectoautorizado;
+                return _m.ToList();
+            }
+        }
+        public static IEnumerable GetProyectosAutorizadosXUR(int? UR)
+        {
+
+            DB_SENASICAEntities db1 = new DB_SENASICAEntities();
+
+            if (UR == 6) // Dirección General de Sanidad Vegetal
+            {
+                var _m = from proyectoautorizado in db1.ProyectoAutorizadoes
+                         where proyectoautorizado.Fk_IdSubComponente__SIS == 4 || proyectoautorizado.Fk_IdSubComponente__SIS == 5
+                         select proyectoautorizado;
+                return _m.ToList();
+            }
+
+            if (UR == 14) // Dirección General de Salud Animal Falta la UR acuicola y Pesquera porque al parecer es parte de Salud Animal 
+            {
+                var _m = from proyectoautorizado in db1.ProyectoAutorizadoes
+                         where proyectoautorizado.Fk_IdSubComponente__SIS == 1 || proyectoautorizado.Fk_IdSubComponente__SIS == 2 || proyectoautorizado.Fk_IdSubComponente__SIS == 3
+                         select proyectoautorizado;
+                return _m.ToList();
+            }
+
+            if (UR == 16) // Dirección General de Inocuidad Agroalimentaria
+            {
+                var _m = from proyectoautorizado in db1.ProyectoAutorizadoes
+                         where proyectoautorizado.Fk_IdSubComponente__SIS == 1028
+                         select proyectoautorizado;
+                return _m.ToList();
+            }
+
+            if (UR == 17) // Dirección General de Inspección Fitozoosanitaria
+            {
+                var _m = from proyectoautorizado in db1.ProyectoAutorizadoes
+                         where proyectoautorizado.Fk_IdSubComponente__SIS == 1028
+                         select proyectoautorizado;
+                return _m.ToList();
+            }
+            else
+            {
+                var _m = from proyectoautorizado in db1.ProyectoAutorizadoes
+                         select proyectoautorizado;
+                return _m.ToList();
+            }
+
+        }
+        public static IEnumerable GetTiposDeAccion(string userroll)
+        {
+            DB_SENASICAEntities db1 = new DB_SENASICAEntities();
+
+            IQueryable<TipoDeAccion> _m;
+
+            switch (userroll)
+            {
+                case "Admin":
+                    _m = from tipodeaccion in db1.TipoDeAccions
+                         select tipodeaccion;
+                    break;
+                case "Administrador de Unidad Responsable de Salud Animal":
+                    _m = from tipodeaccion in db1.TipoDeAccions
+                         where tipodeaccion.ProyectoAutorizado.SubComponente.Pk_IdSubComponente == 1 || tipodeaccion.ProyectoAutorizado.SubComponente.Pk_IdSubComponente == 2
+                         select tipodeaccion;
+                    break;
+                case "Administrador de Unidad Responsable de Sanidad Acuicola y Pesquera":
+                    _m = from tipodeaccion in db1.TipoDeAccions
+                         where tipodeaccion.ProyectoAutorizado.SubComponente.Pk_IdSubComponente == 3
+                         select tipodeaccion;
+                    break;
+                case "Administrador de Unidad Responsable de Sanidad Vegetal":
+                    _m = from tipodeaccion in db1.TipoDeAccions
+                         where tipodeaccion.ProyectoAutorizado.SubComponente.Pk_IdSubComponente == 4 || tipodeaccion.ProyectoAutorizado.SubComponente.Pk_IdSubComponente == 5
+                         select tipodeaccion;
+                    break;
+                case "Administrador de Unidad Responsable de Inocuidad":
+                    _m = from tipodeaccion in db1.TipoDeAccions
+                         where tipodeaccion.ProyectoAutorizado.SubComponente.Pk_IdSubComponente == 1026
+                         select tipodeaccion;
+                    break;
+                case "Administrador de Unidad Responsable de Movilizacion":
+                    _m = from tipodeaccion in db1.TipoDeAccions
+                         where tipodeaccion.ProyectoAutorizado.SubComponente.Pk_IdSubComponente == 1028
+                         select tipodeaccion;
+                    break;
+                default:
+                    _m = from tipodeaccion in db1.TipoDeAccions
+                         select tipodeaccion;
+                    break;
+            }
+
+            return _m.ToList();
+        }
+        public static IEnumerable GetTiposDeAccionXSubComp(string userroll)
+        {
+            DB_SENASICAEntities db1 = new DB_SENASICAEntities();
+
+            if (userroll == "Admin")
+            {
+                var _m = from accion in db1.TipoDeAccions
+                         select accion;
+                return _m.ToList();
+            }
+            if (userroll == "Administrador de Unidad Responsable de Salud Animal")
+            {
+                var _m = from accion in db1.TipoDeAccions
+                         where accion.ProyectoAutorizado.SubComponente.Pk_IdSubComponente == 1 || accion.ProyectoAutorizado.SubComponente.Pk_IdSubComponente == 2
+                         select accion;
+                return _m.ToList();
+            }
+            if (userroll == "Administrador de Unidad Responsable de Sanidad Acuicola y Pesquera")
+            {
+                var _m = from accion in db1.TipoDeAccions
+                         where accion.ProyectoAutorizado.SubComponente.Pk_IdSubComponente == 3
+                         select accion;
+                return _m.ToList();
+            }
+            if (userroll == "Administrador de Unidad Responsable de Sanidad Vegetal")
+            {
+                var _m = from accion in db1.TipoDeAccions
+                         where accion.ProyectoAutorizado.SubComponente.Pk_IdSubComponente == 4 || accion.ProyectoAutorizado.SubComponente.Pk_IdSubComponente == 5
+                         select accion;
+                return _m.ToList();
+            }
+
+            if (userroll == "Administrador de Unidad Responsable de Inocuidad")
+            {
+                var _m = from accion in db1.TipoDeAccions
+                         where accion.ProyectoAutorizado.SubComponente.Pk_IdSubComponente == 1026
+                         select accion;
+                return _m.ToList();
+            }
+
+            if (userroll == "Administrador de Unidad Responsable de Movilizacion")
+            {
+                var _m = from accion in db1.TipoDeAccions
+                         where accion.ProyectoAutorizado.SubComponente.Pk_IdSubComponente == 1028
+                         select accion;
+                return _m.ToList();
+            }
+            else
+            {
+                var _m = from accion in db1.TipoDeAccions
+                         select accion;
+                return _m.ToList();
+            }
+        }
+        public static IEnumerable GetTiposDeActividadesXSubComp(string userroll)
+        {
+            DB_SENASICAEntities db1 = new DB_SENASICAEntities();
+
+            if (userroll == "Admin")
+            {
+                var _m = from actividad in db1.TipoActividads
+                         select actividad;
+                return _m.ToList();
+            }
+            if (userroll == "Administrador de Unidad Responsable de Salud Animal")
+            {
+                var _m = from actividad in db1.TipoActividads
+                         where actividad.TipoDeAccion.ProyectoAutorizado.SubComponente.Pk_IdSubComponente == 1 || actividad.TipoDeAccion.ProyectoAutorizado.SubComponente.Pk_IdSubComponente == 2
+                         select actividad;
+                return _m.ToList();
+            }
+            if (userroll == "Administrador de Unidad Responsable de Sanidad Acuicola y Pesquera")
+            {
+                var _m = from actividad in db1.TipoActividads
+                         where actividad.TipoDeAccion.ProyectoAutorizado.SubComponente.Pk_IdSubComponente == 3
+                         select actividad;
+                return _m.ToList();
+            }
+            if (userroll == "Administrador de Unidad Responsable de Sanidad Vegetal")
+            {
+                var _m = from actividad in db1.TipoActividads
+                         where actividad.TipoDeAccion.ProyectoAutorizado.SubComponente.Pk_IdSubComponente == 4 || actividad.TipoDeAccion.ProyectoAutorizado.SubComponente.Pk_IdSubComponente == 5
+                         select actividad;
+                return _m.ToList();
+            }
+
+            if (userroll == "Administrador de Unidad Responsable de Inocuidad")
+            {
+                var _m = from actividad in db1.TipoActividads
+                         where actividad.TipoDeAccion.ProyectoAutorizado.SubComponente.Pk_IdSubComponente == 1026
+                         select actividad;
+                return _m.ToList();
+            }
+
+
+            if (userroll == "Administrador de Unidad Responsable de Movilizacion")
+            {
+                var _m = from actividad in db1.TipoActividads
+                         where actividad.TipoDeAccion.ProyectoAutorizado.SubComponente.Pk_IdSubComponente == 1028
+                         select actividad;
+                return _m.ToList();
+            }
+            else
+            {
+                var _m = from actividad in db1.TipoActividads
+                         select actividad;
+                return _m.ToList();
+            }
+        }
+        public static IEnumerable GetUnidadEjecutoraXUsuario(string userroll, int? Fk_IdUnidadEjecutora)
+        {
+            DB_SENASICAEntities db1 = new DB_SENASICAEntities();
+            if (userroll == "Admin")
+            {
+
+                var _m = from unidadejecutora in db1.UnidadEjecutoras
+                         select unidadejecutora;
+                return _m.ToList();
+
+            }
+
+            if (userroll == "Administrador de Unidad Responsable de Inocuidad")
+            {
+
+                var _m = from unidadejecutora in db1.UnidadEjecutoras
+                         where unidadejecutora.Fk_IdSubComponente == 1026
+                         select unidadejecutora;
+                return _m.ToList();
+            }
+
+            if (userroll == "Administrador de Unidad Responsable de Movilizacion")
+            {
+
+                var _m = from unidadejecutora in db1.UnidadEjecutoras
+                         where (unidadejecutora.Fk_IdSubComponente == 1028)// || unidadejecutora.Fk_IdSubComponente == _Fk_IdSubComponente__SIS2)
+                         select unidadejecutora;
+                return _m.ToList();
+            }
+
+            if (userroll == "Administrador de Unidad Responsable de Salud Animal")
+            {
+
+                var _m = from unidadejecutora in db1.UnidadEjecutoras
+                         where (unidadejecutora.Fk_IdSubComponente == 1 || unidadejecutora.Fk_IdSubComponente == 2)
+                         select unidadejecutora;
+                return _m.ToList();
+            }
+
+            if (userroll == "Administrador de Unidad Responsable de Sanidad Acuicola y Pesquera")
+            {
+
+                var _m = from unidadejecutora in db1.UnidadEjecutoras
+                         where (unidadejecutora.Fk_IdSubComponente == 3)// || unidadejecutora.Fk_IdSubComponente == 2)
+                         select unidadejecutora;
+                return _m.ToList();
+            }
+
+
+            if (userroll == "Administrador de Unidad Responsable de Sanidad Vegetal")
+            {
+
+                var _m = from unidadejecutora in db1.UnidadEjecutoras
+                         where (unidadejecutora.Fk_IdSubComponente == 4 || unidadejecutora.Fk_IdSubComponente == 5)
+                         select unidadejecutora;
+                return _m.ToList();
+            }
+
+            if (userroll == "Administrador de Instancia Ejecutora de Sanidad Vegetal" || userroll == "Administrador de Instancia Ejecutora de Salud Animal" || userroll == "Administrador de Instancia Ejecutora de Inocuidad" || userroll == "Administrador de Instancia Ejecutora de Movilizacion" || userroll == "Administrador de Instancia Ejecutora de Sanidad Acuicola y Pesquera")  // Solo es Es necesario filtrar por la unidad Ejecutora
+            {
+                var _m = from unidadejecutora in db1.UnidadEjecutoras
+                         where (unidadejecutora.Pk_IdUnidadEjecutora == Fk_IdUnidadEjecutora)
+                         select unidadejecutora;
+                return _m.ToList();
+            }
+            else
+            {
+                var _m = from unidadejecutora in db1.UnidadEjecutoras
+                         select unidadejecutora;
+                return _m.ToList();
+            }
+
+        }
+    }
+}

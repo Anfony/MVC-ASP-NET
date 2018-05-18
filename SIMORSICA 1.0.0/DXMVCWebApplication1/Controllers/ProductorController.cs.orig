@@ -1,0 +1,255 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Data.Entity;
+using System.Linq;
+using System.Net;
+using System.Web;
+using System.Web.Mvc;
+using DXMVCWebApplication1.Models;
+using DXMVCWebApplication1.Common;
+using DevExpress.Web.Mvc;
+using DXMVCWebApplication1.ViewsModels;
+using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.EntityFramework;
+
+namespace DXMVCWebApplication1.Controllers
+{
+    [Authorize(Roles = "Admin, User")]
+    public class ProductorController : Controller
+    {
+        private DB_SENASICAEntities db = new DB_SENASICAEntities();
+        private UserManager<ApplicationUser> manager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(new ApplicationDbContext()));
+        // GET: /Productor/
+        public ActionResult Index()
+        {
+            var productors = db.Productors.Include(p => p.Estado).Include(p => p.Municipio);
+            return View(productors.ToList());
+        }
+
+        // GET: /Productor/Details/5
+        public ActionResult Details(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            Productor productor = db.Productors.Find(id);
+            if (productor == null)
+            {
+                return HttpNotFound();
+            }
+            return View(productor);
+        }
+
+        // GET: /Productor/Create
+        public ActionResult Create()
+        {
+            ViewBag.Fk_IdEstado__SIS = new SelectList(db.Estadoes, "Pk_IdEstado", "Nombre");
+            ViewBag.Fk_IdMunicipio__SIS = new SelectList(db.Municipios, "Pk_IdMunicipio", "Nombre");
+            return View();
+        }
+
+        // POST: /Productor/Create
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Create([Bind(Include="Pk_IdProductor,RazonSocial,ApellidoPaterno,ApellidoMaterno,Nombre,Direccion,Colonia,Fk_IdEstado__SIS,Fk_IdMunicipio__SIS,Telefono,Email,Ubicacion")] Productor productor)
+        {
+            if (ModelState.IsValid)
+            {
+                db.Productors.Add(productor);
+                db.SaveChanges();
+                return RedirectToAction("Index");
+            }
+
+            ViewBag.Fk_IdEstado__SIS = new SelectList(db.Estadoes, "Pk_IdEstado", "Nombre", productor.Fk_IdEstado__SIS);
+            ViewBag.Fk_IdMunicipio__SIS = new SelectList(db.Municipios, "Pk_IdMunicipio", "Nombre", productor.Fk_IdMunicipio__SIS);
+            return View(productor);
+        }
+
+        // GET: /Productor/Edit/5
+        public ActionResult Edit(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            Productor productor = db.Productors.Find(id);
+            if (productor == null)
+            {
+                return HttpNotFound();
+            }
+            ViewBag.Fk_IdEstado__SIS = new SelectList(db.Estadoes, "Pk_IdEstado", "Nombre", productor.Fk_IdEstado__SIS);
+            ViewBag.Fk_IdMunicipio__SIS = new SelectList(db.Municipios, "Pk_IdMunicipio", "Nombre", productor.Fk_IdMunicipio__SIS);
+            return View(productor);
+        }
+
+        // POST: /Productor/Edit/5
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Edit([Bind(Include="Pk_IdProductor,RazonSocial,ApellidoPaterno,ApellidoMaterno,Nombre,Direccion,Colonia,Fk_IdEstado__SIS,Fk_IdMunicipio__SIS,Telefono,Email,Ubicacion")] Productor productor)
+        {
+            if (ModelState.IsValid)
+            {
+                db.Entry(productor).State = EntityState.Modified;
+                db.SaveChanges();
+                return RedirectToAction("Index");
+            }
+            ViewBag.Fk_IdEstado__SIS = new SelectList(db.Estadoes, "Pk_IdEstado", "Nombre", productor.Fk_IdEstado__SIS);
+            ViewBag.Fk_IdMunicipio__SIS = new SelectList(db.Municipios, "Pk_IdMunicipio", "Nombre", productor.Fk_IdMunicipio__SIS);
+            return View(productor);
+        }
+
+        // GET: /Productor/Delete/5
+        public ActionResult Delete(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            Productor productor = db.Productors.Find(id);
+            if (productor == null)
+            {
+                return HttpNotFound();
+            }
+            return View(productor);
+        }
+
+        // POST: /Productor/Delete/5
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public ActionResult DeleteConfirmed(int id)
+        {
+            Productor productor = db.Productors.Find(id);
+            db.Productors.Remove(productor);
+            db.SaveChanges();
+            return RedirectToAction("Index");
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                db.Dispose();
+            }
+            base.Dispose(disposing);
+        }
+
+        DXMVCWebApplication1.Models.DB_SENASICAEntities db1 = new DXMVCWebApplication1.Models.DB_SENASICAEntities();
+
+        [ValidateInput(false)]
+        public ActionResult ProductorGridViewPartial()
+        {
+            int? _Fk_IdEstado = ((UserData)Session["DataUsuario"]).setFilter(((UserData)Session["DataUsuario"]).FK_IdEstado__SIS);
+            return PartialView("_ProductorGridViewPartial", DXMVCWebApplication1.Models.Senasica.GetFiltradoEstadoProductor(_Fk_IdEstado));
+        }
+
+        [HttpPost, ValidateInput(false)]
+        public ActionResult ProductorGridViewPartialAddNew(ProductorVM ProductorVM)
+        {
+            int? _Fk_IdEstado = ((UserData)Session["DataUsuario"]).setFilter(((UserData)Session["DataUsuario"]).FK_IdEstado__SIS);
+
+            // se parsea el punto de forma manual
+            string punto = string.Format("POINT({0} {1})", ProductorVM.Longitud.Replace(",", "."), ProductorVM.Latitud.Replace(",", "."));
+            System.Data.Entity.Spatial.DbGeography Ubicacion = System.Data.Entity.Spatial.DbGeography.PointFromText(punto, 4326);
+
+            var model = db1.Productors;
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    Productor item = new Productor();
+                    item.RazonSocial = ProductorVM.RazonSocial;
+                    item.ApellidoPaterno = ProductorVM.ApellidoPaterno;
+                    item.ApellidoMaterno = ProductorVM.ApellidoMaterno;
+                    item.Nombre = ProductorVM.Nombre;
+                    item.Direccion = ProductorVM.Direccion;
+                    item.Colonia = ProductorVM.Colonia;
+                    item.Fk_IdEstado__SIS = ProductorVM.Fk_IdEstado__SIS;
+                    item.Fk_IdMunicipio__SIS = ProductorVM.Fk_IdMunicipio__SIS;
+                    item.Telefono = ProductorVM.Telefono;
+                    item.Email = ProductorVM.Email;
+                    item.Ubicacion = Ubicacion;
+
+                    model.Add(item);
+                    db1.SaveChanges();
+                }
+                catch (Exception e)
+                {
+                    ViewData["EditError"] = e.Message;
+                }
+            }
+            else
+                ViewData["EditError"] = "Por favor corrija los errores marcados.";
+            return PartialView("_ProductorGridViewPartial", DXMVCWebApplication1.Models.Senasica.GetFiltradoEstadoProductor(_Fk_IdEstado));
+        }
+        [HttpPost, ValidateInput(false)]
+        public ActionResult ProductorGridViewPartialUpdate(ProductorVM ProductorVM)
+        {
+            int? _Fk_IdEstado = ((UserData)Session["DataUsuario"]).setFilter(((UserData)Session["DataUsuario"]).FK_IdEstado__SIS);
+
+            // se parsea el punto de forma manual
+            string punto = string.Format("POINT({0} {1})", ProductorVM.Longitud.Replace(",", "."), ProductorVM.Latitud.Replace(",", "."));
+            System.Data.Entity.Spatial.DbGeography Ubicacion = System.Data.Entity.Spatial.DbGeography.PointFromText(punto, 4326);
+
+            var model = db1.Productors;
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    var modelItem = model.FirstOrDefault(it => it.Pk_IdProductor == ProductorVM.Pk_IdProductor);
+                    if (modelItem != null)
+                    {
+                        modelItem.RazonSocial = ProductorVM.RazonSocial;
+                        modelItem.ApellidoPaterno = ProductorVM.ApellidoPaterno;
+                        modelItem.ApellidoMaterno = ProductorVM.ApellidoMaterno;
+                        modelItem.Nombre = ProductorVM.Nombre;
+                        modelItem.Direccion = ProductorVM.Direccion;
+                        modelItem.Colonia = ProductorVM.Colonia;
+                        modelItem.Fk_IdEstado__SIS = ProductorVM.Fk_IdEstado__SIS;
+                        modelItem.Fk_IdMunicipio__SIS = ProductorVM.Fk_IdMunicipio__SIS;
+                        modelItem.Telefono = ProductorVM.Telefono;
+                        modelItem.Email = ProductorVM.Email;
+                        modelItem.Ubicacion = Ubicacion;
+
+                        this.UpdateModel(modelItem);
+                        db1.SaveChanges();
+                    }
+                }
+                catch (Exception e)
+                {
+                    ViewData["EditError"] = e.Message;
+                }
+            }
+            else
+                ViewData["EditError"] = "Por favor corrija los errores marcados.";
+            return PartialView("_ProductorGridViewPartial", DXMVCWebApplication1.Models.Senasica.GetFiltradoEstadoProductor(_Fk_IdEstado));
+        }
+        [HttpPost, ValidateInput(false)]
+        public ActionResult ProductorGridViewPartialDelete(System.Int32 Pk_IdProductor)
+        {
+            int? _Fk_IdEstado = ((UserData)Session["DataUsuario"]).setFilter(((UserData)Session["DataUsuario"]).FK_IdEstado__SIS);
+            var model = db1.Productors;
+            if (Pk_IdProductor >= 0)
+            {
+                try
+                {
+                    var item = model.FirstOrDefault(it => it.Pk_IdProductor == Pk_IdProductor);
+                    if (item != null)
+                        model.Remove(item);
+                    db1.SaveChanges();
+                }
+                catch (Exception e)
+                {
+                    ViewData["EditError"] = e.Message;
+                }
+            }
+            return PartialView("_ProductorGridViewPartial", DXMVCWebApplication1.Models.Senasica.GetFiltradoEstadoProductor(_Fk_IdEstado));
+        }
+    }
+}
